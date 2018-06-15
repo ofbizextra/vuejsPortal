@@ -1,0 +1,63 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+import java.nio.file.Files
+import java.nio.file.Paths
+apply plugin: 'java'
+
+/*
+dependencies {
+    pluginLibsRuntime 'org.postgresql:postgresql:42.2.1'
+}
+*/
+def replaceTextInFile(targetFileName, toReplace, replaceWith) {
+     def targetFile = new File(targetFileName)
+     String targetFileText = targetFile.getText()
+     String newText = targetFileText.replaceAll(toReplace, replaceWith)
+     targetFile.withWriter { def writer ->
+         writer.write(newText)
+     }
+}
+
+
+task install {
+	doLast { 
+		println 'copy files and applying patches for my plugin'
+/*
+         //copy selenium js to images's webapp
+         java.nio.file.Path src = java.nio.file.Paths.get("${project.projectDir}/documents/selenium.js")
+         java.nio.file.Path dst = java.nio.file.Paths.get("${project.rootProject.projectDir}/framework/images/webapp/images/selenium.js")
+         java.nio.file.Files.copy(src, dst)
+
+         def file = "${project.rootProject.projectDir}/framework/common/widget/CommonScreens.xml"
+         def toReplace = '<set field="layoutSettings.javaScripts[+0]" value="/images/jquery/jquery-1.11.0.min.js" global="true"/>'
+         def replaceWith = '<set field="layoutSettings.javaScripts[+0]" value="/images/jquery/jquery-1.11.0.min.js" global="true"/>\n                <set field="layoutSettings.javaScripts[]" value="/images/selenium.js" global="true" /><!-- added by selenium plugin-->'
+         replaceTextInFile(file, toReplace, replaceWith) 
+		exec{ commandLine 'patch', '-d../..', '-p0', '-i', "${rootDir}/plugins/postgresPlugin/entityengine.xml.patch" }
+*/
+	}
+}
+
+task uninstall {
+	doLast { 
+		println 'copy back (and remove) files and revert patches for my plugin'
+		//exec{ commandLine 'patch', '-R', '-d../..', '-p0', '-i', "${rootDir}/plugins/postgresPlugin/entityengine.xml.patch" }
+	}
+}
+
