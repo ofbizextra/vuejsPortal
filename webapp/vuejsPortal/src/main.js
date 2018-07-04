@@ -4,6 +4,7 @@ import App from './components/App.vue'
 import Search from './components/Search.vue'
 import List from './components/List.vue'
 
+
 Vue.use(VueResource)
 
 Vue.component('search', Search)

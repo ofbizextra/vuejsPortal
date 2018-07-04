@@ -34,7 +34,7 @@ under the License.
     <webapp name="vuejsPortal"
         title="vuejsPortal"
         server="default-server"
-	location="widget/VuejsPortalScreens.xml"
+	    location="webapp/vuejsPortal/dist"
         mount-point="/portal"
         app-bar-display="false"/>
 
