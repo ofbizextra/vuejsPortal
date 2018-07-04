@@ -8,7 +8,7 @@
     <h3>content</h3>
     <ul>
       <li v-for="module in Object.keys(props)" :key="module" v-if="module !== '$'">
-        {{module}}
+        <div v-for="iteration in Object.keys(props[module])" :key="iteration" v-bind:is="'vue-' + module" v-bind:props="props[module][iteration]"></div>
       </li>
     </ul>
   </div>
