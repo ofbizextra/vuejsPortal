@@ -31,5 +31,11 @@ under the License.
     <!-- service resources: model(s), eca(s) and group definitions -->
 
     <!-- web applications; will be mounted when using the embedded container -->
+    <webapp name="vuejsPortal"
+        title="vuejsPortal"
+        server="default-server"
+	location="widget/VuejsPortalScreens.xml"
+        mount-point="/portal"
+        app-bar-display="false"/>
 
 </ofbiz-component>
