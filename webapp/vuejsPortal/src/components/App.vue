@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <h1>{{ msg }}</h1>
-    <div v-for="module in all" v-bind:is="module.type">
+    <div v-for="module in Object.keys(xmlParsed)" v-bind:is="'vue-' + module" v-bind:props="xmlParsed[module]">
 
     </div>
   </div>
@@ -54,7 +54,7 @@
   },
   mounted () {
     Xml2js.parseString(this.xml, (err, result) => {
-      console.log(result)
+      this.xmlParsed = result
     })
   }
 }
