@@ -36,6 +36,10 @@ module.exports = {
         options: {
           name: '[name].[ext]?[hash]'
         }
+      },
+      {
+        test: /\.xml$/,
+        loader: 'xml-loader'
       }
     ]
   },

@@ -1,18 +1,16 @@
 <template>
   <div id="vue-hyperlink">
-    <h2>vue-hyperlink</h2>
-    <h3>attributes :</h3>
-    <ul>
-      <li v-for="attribute in Object.keys(props.$)" :key="attribute">{{attribute + ' : ' + props.$[attribute]}}</li>
-    </ul>
+    <a href="somewhere">go to somewhere</a>
   </div>
 </template>
 
 <script>
   export default {
     name: "VueHyperlink",
-    props: ['props']
-  }
+    props: [
+      'props',
+      'name'
+    ]  }
 </script>
 
 <style scoped>

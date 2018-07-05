@@ -1,17 +1,25 @@
 <template>
   <div id="vue-text-find">
-    <h2>vue-text-find</h2>
-    <h3>attributes :</h3>
-    <ul>
-      <li v-for="attribute in Object.keys(props.$)" :key="attribute">{{attribute + ' : ' + props.$[attribute]}}</li>
-    </ul>
+    <select class="selectBox">
+      <option value="equals">egal</option>
+      <option value="like">debute</option>
+      <option value="contain" selected="selected">contient</option>
+      <option value="empty">est vide</option>
+      <option value="notEqual">Diff.</option>
+    </select>
+    <input type="text" size="25"/>
+    <input type="checkbox" value="Y" checked="checked"/>
+    (Maj/min)
   </div>
 </template>
 
 <script>
   export default {
     name: "VueTextFind",
-    props: ['props']
+    props: [
+      'props',
+      'name'
+    ]
   }
 </script>
 

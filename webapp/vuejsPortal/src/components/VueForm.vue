@@ -1,13 +1,11 @@
 <template>
-  <div id="vue-form">
-    <h2>vue-form</h2>
-    <h3>attributes :</h3>
-    <ul>
-      <li v-for="attribute in Object.keys(props.$)" :key="attribute">{{attribute + ' : ' + props.$[attribute]}}</li>
-    </ul>
-    <h3>Fields :</h3>
-    <vue-field v-for="field in props.field" v-bind:props="field"/>
-  </div>
+  <form id="vue-form">
+    <table>
+      <tbody>
+        <vue-field v-for="field in Object.keys(props.field)" :key="field" v-bind:props="props.field[field]"/>
+      </tbody>
+    </table>
+  </form>
 </template>
 
 <script>

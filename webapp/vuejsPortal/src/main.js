@@ -12,6 +12,7 @@ import VueHyperlink from './components/VueHyperlink'
 import VueRadio from './components/VueRadio'
 import VueSubmit from './components/VueSubmit'
 import VueTextFind from './components/VueTextFind'
+import VueLabel from './components/VueLabel'
 
 Vue.use(VueResource)
 
@@ -25,6 +26,7 @@ Vue.component('vue-hyperlink', VueHyperlink)
 Vue.component('vue-radio', VueRadio)
 Vue.component('vue-submit', VueSubmit)
 Vue.component('vue-text-find', VueTextFind)
+Vue.component('vue-label', VueLabel)
 
 new Vue({
   el: '#app',

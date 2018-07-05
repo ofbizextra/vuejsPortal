@@ -1,17 +1,19 @@
 <template>
   <div id="vue-radio">
-    <h2>vue-radio</h2>
-    <h3>attributes :</h3>
-    <ul>
-      <li v-for="attribute in Object.keys(props.$)" :key="attribute">{{attribute + ' : ' + props.$[attribute]}}</li>
-    </ul>
+    <span v-for="option in Object.keys(props.option)" :key="option">
+      <input :value="props.option[option].$.key" type="radio" :name="name">
+      {{props.option[option].$.key}}
+    </span>
   </div>
 </template>
 
 <script>
   export default {
     name: "VueRadio",
-    props: ['props']
+    props: [
+      'props',
+      'name'
+    ]
   }
 </script>
 

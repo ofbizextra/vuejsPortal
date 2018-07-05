@@ -1,8 +1,6 @@
 <template>
   <div id="app">
-    <h1>{{ msg }}</h1>
     <div v-for="module in Object.keys(xmlParsed)" v-bind:is="'vue-' + module" v-bind:props="xmlParsed[module]">
-
     </div>
   </div>
 </template>
@@ -14,12 +12,6 @@
   name: 'app',
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App',
-      all: {
-        moduleA: { type: 'search' },
-        moduleB: { type: 'list' },
-        moduleC: { type: 'search' }
-      },
       xml: '<form name="FindExamples" type="single" target="FindExample" default-entity-name="Example">\n' +
       '        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn\'t there then with all fields empty no query will be done --></field>\n' +
       '        <field name="exampleId" title="${uiLabelMap.ExampleExampleId}"><text-find/></field>\n' +
