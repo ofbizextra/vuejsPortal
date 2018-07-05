@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<patch>
+<x:add path="/" previous="/request-map[findExampleFeatures]/">
+    <!--#Bam# vuejs-portal -->
+    <request-map uri="listForDropDown">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="listForDropDown"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    <!--#Eam# vuejs-portal--></x:add>
+</patch>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<patch>
+<x:add path="/" previous="//">
+<!--#Bam# vuejs-portal -->
+    <service name="listForDropDown" engine="simple"
+            location="component://example/minilang/example/ExampleServices.xml" invoke="listForDropDown" auth="true">
+        <description>List values for populate a drop-down</description>
+        <permission-service service-name="exampleGenericPermission" main-action="VIEW"/>
+        <attribute name="entityName" mode="IN" type="String" optional="false"/>
+        <attribute name="keyFieldName" mode="IN" type="String" optional="false"/>
+        <attribute name="keyFieldValue" mode="IN" type="String" optional="false"/>
+        <attribute name="orderByFieldName" mode="IN" type="String" optional="true"/>
+        <attribute name="dropDownList" mode="OUT" type="List" optional="false"/>
+    </service>
+<!--#Eam# vuejs-portal -->
+</x:add>
+</patch>
+    
