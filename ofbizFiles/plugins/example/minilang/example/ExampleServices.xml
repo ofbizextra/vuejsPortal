@@ -4,13 +4,15 @@
 <!--#Bam# vuejs-portal -->
     <!-- drop-down populate -->
     <simple-method method-name="listForDropDown" short-description="List values for populate a drop-down">
-	        <entity-and entity-name="parameters.entityName" list="dropDownList">
-	            <field-map field-name="parameters.keyFieldName" from-field="parameters.keyFieldValue"/>
-	        </entity-and>
+    	<log message="verif-entityName=${parameters.entityName} and keyFieldName=${parameters.keyFieldName}" level="info"/>
+        <entity-and entity-name="${parameters.entityName}" list="dropDownList">
+            <field-map field-name="${parameters.keyFieldName}" from-field="parameters.keyFieldValue"/>
+        </entity-and>
         <if-not-empty field="parameters.orderByFieldName">
 	        <set field="orderByFieldName[]" from-field="parameters.orderByFieldName"/>
 	        <order-value-list order-by-list="orderByFieldName" list="dropDownList"/>
         </if-not-empty>
+        <field-to-result field="dropDownList"/>
     </simple-method>
 <!--#Eam# vuejs-portal -->
 </x:add>

@@ -39,6 +39,8 @@ def replaceTextInFile(targetFileName, toReplace, replaceWith) {
 task install {
 	doLast { 
 		println 'copy files and applying patches for my plugin'
+		println 'copier manuellement toutes les images du répertoire image_example_fr dans doc/images/example_fr'
+		
 /*
          //copy selenium js to images's webapp
          java.nio.file.Path src = java.nio.file.Paths.get("${project.projectDir}/documents/selenium.js")
