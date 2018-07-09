@@ -4,9 +4,10 @@
 <!--#Bam# vuejs-portal -->
     <!-- drop-down populate -->
     <simple-method method-name="listForDropDown" short-description="List values for populate a drop-down">
-    	<log message="verif-entityName=${parameters.entityName} and keyFieldName=${parameters.keyFieldName}" level="info"/>
+<!--     	<set field="keyFieldName" from="parameters.keyFieldName"/> -->
+<!--     	<log message="verif-entityName=${parameters.entityName} and keyFieldName=${parameters.orderByFieldName} and keyFieldName2=${keyFieldName}" level="info"/> -->
         <entity-and entity-name="${parameters.entityName}" list="dropDownList">
-            <field-map field-name="${parameters.keyFieldName}" from-field="parameters.keyFieldValue"/>
+            <field-map field-name="" />
         </entity-and>
         <if-not-empty field="parameters.orderByFieldName">
 	        <set field="orderByFieldName[]" from-field="parameters.orderByFieldName"/>
