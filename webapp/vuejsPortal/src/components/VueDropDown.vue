@@ -1,6 +1,8 @@
 <template>
   <div id="vue-drop-down">
     <select>
+      <option v-if="props.$['allow-empty']"></option>
+      <option v-for="option in options" :key="option[props['entity-options'][0].$['key-field-name']]" v-bind:value="options[props['entity-options'][0].$['key-field-name']]">{{ option.description }}</option>
     </select>
   </div>
 </template>
@@ -32,7 +34,7 @@
         {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}
       ).then(response => {
         console.log(response)
-        this.option = response.body.dropDownList
+        this.options = response.body.dropDownList
       }, error => {
         console.log(error)
       })
