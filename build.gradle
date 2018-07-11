@@ -23,6 +23,7 @@ apply plugin: 'java'
 
 /*
 dependencies {
+    // we must add dependencies to rbstvuejs the theme dedicated for vuejsportal
     pluginLibsRuntime 'org.postgresql:postgresql:42.2.1'
 }
 */
