@@ -16,6 +16,7 @@ import VueLabel from './components/VueLabel'
 import VueOption from './components/VueOption'
 import VueTitle from './components/VueTitle'
 import VueText from './components/VueText'
+import VueTextArea from './components/VueTextArea'
 
 Vue.use(VueResource)
 
@@ -33,6 +34,7 @@ Vue.component('vue-label', VueLabel)
 Vue.component('vue-option', VueOption)
 Vue.component('vue-title', VueTitle)
 Vue.component('vue-text', VueText)
+Vue.component('vue-text-area', VueTextArea)
 
 Vue.mixin({
   created: function () {
