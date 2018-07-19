@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/services.xsd">
+    <description>Common API Services</description>
+    <vendor></vendor>
+    <version>1.0</version>
+    <service name="apisService" engine="interface">
+      <attribute name="username" mode="IN" type="String"/>
+    </service>
+    
+    <service name="apisLogin" engine="java" location="org.apache.ofbiz.common.CommonAPISServices" invoke="apisLogin">
+        <implements service="authenticationInterface"/>
+        <attribute name="username" mode="IN" type="String"/>
+        <attribute name="password" mode="IN" type="String"/>
+        <attribute name="token" mode="OUT" type="String"/>
+    </service>
+    
+    <service name="checkAuthToken" engine="java" location="org.apache.ofbiz.common.CommonAPISServices" invoke="checkAuthToken">
+        <attribute name="token" mode="IN" type="String"/>
+        <attribute name="username" mode="OUT" type="String"/>
+    </service>
+    
+
+</services>

@@ -21,12 +21,13 @@ import java.nio.file.Files
 import java.nio.file.Paths
 apply plugin: 'java'
 
-/*
+
 dependencies {
+	compile 'com.auth0:java-jwt:3.4.0'
     // we must add dependencies to rbstvuejs the theme dedicated for vuejsportal
-    pluginLibsRuntime 'org.postgresql:postgresql:42.2.1'
+    // pluginLibsRuntime 'org.postgresql:postgresql:42.2.1'
 }
-*/
+
 def replaceTextInFile(targetFileName, toReplace, replaceWith) {
      def targetFile = new File(targetFileName)
      String targetFileText = targetFile.getText()
