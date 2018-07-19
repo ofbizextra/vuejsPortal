@@ -1,5 +1,7 @@
 import Vue from 'vue'
 import VueResource from 'vue-resource'
+import Vuex from 'vuex'
+import VueRouter from 'vue-router'
 
 import App from './components/App.vue'
 import Search from './components/Search.vue'
@@ -17,8 +19,12 @@ import VueOption from './components/VueOption'
 import VueTitle from './components/VueTitle'
 import VueText from './components/VueText'
 import VueTextArea from './components/VueTextArea'
+import VueDateTime from './components/VueDateTime'
+
+import store from './store'
 
 Vue.use(VueResource)
+Vue.use(Vuex)
 
 Vue.component('search', Search)
 Vue.component('list', List)
@@ -35,6 +41,7 @@ Vue.component('vue-option', VueOption)
 Vue.component('vue-title', VueTitle)
 Vue.component('vue-text', VueText)
 Vue.component('vue-text-area', VueTextArea)
+Vue.component('vue-date-time', VueDateTime)
 
 Vue.mixin({
   created: function () {
@@ -55,8 +62,52 @@ Vue.mixin({
   }
 })
 
+const router = new VueRouter({
+  mode: 'hash',
+  routes: [
+    { path: '/', component: Hello, beforeEnter: requireAuth },
+    { path: '/home', component: Hello, beforeEnter: requireAuth },
+    { path: '/login', component: Login, beforeEnter: requireAuth }
+  ]
+})
+
+function requireAuth (to, from, next) {
+  function proceed () {
+    if (store.getters['login/isLoggedIn']) {
+      if (to.path === '/login') {
+        console.log("Already logged in -> redirect to /home")
+        next('/')
+      } else {
+        console.log("Authorized")
+        next()
+      }
+    } else {
+      if (to.path === '/login') {
+        next()
+      } else {
+        console.log("You are not logged in redirect to login")
+        next('/login')
+      }
+    }
+  }
+  console.log('Routing ...')
+  if (store.getters['login/pending']()) {
+    console.log('Pending ...')
+    store.watch(store.getters['login/pending'], () => {
+      if (!store.getters['login/pending']()) {
+        console.log('Proceed ...')
+        proceed()
+      }
+    })
+  } else {
+    console.log('Proceed ...')
+    proceed()
+  }
+}
+
 new Vue({
   el: '#app',
   props: ['content'],
+  store: store,
   render: h => h(App)
 })
