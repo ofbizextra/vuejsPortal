@@ -13,6 +13,9 @@ import VueRadio from './components/VueRadio'
 import VueSubmit from './components/VueSubmit'
 import VueTextFind from './components/VueTextFind'
 import VueLabel from './components/VueLabel'
+import VueOption from './components/VueOption'
+import VueTitle from './components/VueTitle'
+import VueText from './components/VueText'
 
 Vue.use(VueResource)
 
@@ -27,6 +30,28 @@ Vue.component('vue-radio', VueRadio)
 Vue.component('vue-submit', VueSubmit)
 Vue.component('vue-text-find', VueTextFind)
 Vue.component('vue-label', VueLabel)
+Vue.component('vue-option', VueOption)
+Vue.component('vue-title', VueTitle)
+Vue.component('vue-text', VueText)
+
+Vue.mixin({
+  created: function () {
+    if (this.$props) {
+      let props = this.$props.props;
+      if (props) {
+        this.props.attributes.map(attr => {
+          if (attr.value === 'false') {
+            this.data[attr.key] = false
+          }else if (attr.value === 'true') {
+            this.data[attr.key] = true
+          }else {
+            this.data[attr.key] = attr.value
+          }
+        })
+      }
+    }
+  }
+})
 
 new Vue({
   el: '#app',

@@ -1,22 +1,23 @@
 <template>
-  <div id="vue-submit">
-    <input type="submit" :value="data.title" v-bind="data"/>
-  </div>
+  <option id="vue-option" :value="data.value">
+    {{data.description}}
+  </option>
 </template>
 
 <script>
   export default {
-    name: "VueSubmit",
-    props: ['props'],
+    name: "VueOption",
     data() {
       return {
         data: {}
       }
     },
+    props: ['props'],
     created() {
       this.props.attributes.map(attr => {
         this.data[attr.key] = attr.value
       })
+      console.log(this.data)
     }
   }
 </script>
