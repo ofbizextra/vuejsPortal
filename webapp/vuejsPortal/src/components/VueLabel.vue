@@ -1,6 +1,6 @@
 <template>
   <div id="vue-label">
-    <label>{{label}}</label>
+    {{data.description}}
   </div>
 </template>
 
@@ -13,7 +13,8 @@
     props: ['props'],
     data () {
       return {
-        language: navigator.language
+        language: navigator.language,
+        data: {}
       }
     },
     computed: {

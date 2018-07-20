@@ -13,7 +13,7 @@ const state = {
     partyId: ''
   },
   isLoggedIn: false,
-  pending: true
+  pending: false
 }
 
 const mutations = {
@@ -31,9 +31,7 @@ const mutations = {
   },
   LOGIN_SUCCESS: (state, params) => {
     state.isLoggedIn = true
-    state.credentials.token = params.token
-    state.credentials.username = params.userLogin.userLoginId
-    state.credentials.partyId = params.userLogin.partyId
+    state.credentials.username = params.username
     state.pending = false
   },
   LOGIN_FAILURE: (state, error) => {
@@ -58,7 +56,7 @@ const mutations = {
   },
   CHECK_FAILURE: (state) => {
     state.isLoggedIn = false
-    state.pending = false
+    state.pending = true
   }
 }
 
@@ -75,18 +73,20 @@ const actions = {
       setTimeout(() => {
         commit('LOGIN')
         Vue.http.post(
-          constantes.apiUrl + '/authentication',
-          queryString.stringify(credentials),
+          constantes.apiUrl + constantes.login.path,
+          queryString.stringify({
+            JavaScriptEnabled: 'Y',
+            USERNAME: credentials.username,
+            PASSWORD: credentials.password
+          }),
           {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}
         ).then(response => {
-          if(response.body._EVENT_MESSAGE_ === 'indentifiant / mot de passe acceptés'
+          console.log(response)
+          if(response.body.includes('PONG')
             && !response.body._ERROR_MESSAGE_
             && !response.body._ERROR_MESSAGES_LIST_) {
-            if (credentials.rememberMe) {
-              localStorage.setItem('token', response.body.token)
-            }
-            console.log('login success', 'token : ' + response.body.token, response)
-            commit('LOGIN_SUCCESS', response.body)
+            console.log('login success')
+            commit('LOGIN_SUCCESS', credentials)
             resolve()
           } else {
             if (response.body._ERROR_MESSAGE_) {
@@ -136,8 +136,7 @@ const actions = {
             {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}
           ).then(response => {
             console.log(response.body)
-            if(response.body.responseMessage === "success"
-              && response.body.username
+            if(response.body.username
               && !response.body._ERROR_MESSAGE_
               && !response.body._ERROR_MESSAGES_LIST_) {
               console.log('login success', 'token : ' + token,"\nusername: " + response.body.username, response)

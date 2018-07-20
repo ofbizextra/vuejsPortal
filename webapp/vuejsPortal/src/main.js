@@ -3,9 +3,11 @@ import VueResource from 'vue-resource'
 import Vuex from 'vuex'
 import VueRouter from 'vue-router'
 
-import App from './components/App.vue'
-import Search from './components/Search.vue'
-import List from './components/List.vue'
+import App from './components/App'
+import Search from './components/Search'
+import List from './components/List'
+import Login from './components/Login'
+import Portal from './components/Portal'
 import VueForm from './components/VueForm'
 import VueField from './components/VueField'
 import VueDropDown from './components/VueDropDown'
@@ -24,7 +26,7 @@ import VueDateTime from './components/VueDateTime'
 import store from './store'
 
 Vue.use(VueResource)
-Vue.use(Vuex)
+Vue.use(VueRouter)
 
 Vue.component('search', Search)
 Vue.component('list', List)
@@ -42,6 +44,8 @@ Vue.component('vue-title', VueTitle)
 Vue.component('vue-text', VueText)
 Vue.component('vue-text-area', VueTextArea)
 Vue.component('vue-date-time', VueDateTime)
+Vue.component('login', Login)
+Vue.component('portal', Portal)
 
 Vue.mixin({
   created: function () {
@@ -65,8 +69,8 @@ Vue.mixin({
 const router = new VueRouter({
   mode: 'hash',
   routes: [
-    { path: '/', component: Hello, beforeEnter: requireAuth },
-    { path: '/home', component: Hello, beforeEnter: requireAuth },
+    { path: '/', component: Portal, beforeEnter: requireAuth },
+    { path: '/portal', component: Portal, beforeEnter: requireAuth },
     { path: '/login', component: Login, beforeEnter: requireAuth }
   ]
 })
@@ -109,5 +113,6 @@ new Vue({
   el: '#app',
   props: ['content'],
   store: store,
+  router: router,
   render: h => h(App)
 })

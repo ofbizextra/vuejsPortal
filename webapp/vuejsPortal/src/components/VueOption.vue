@@ -1,5 +1,5 @@
 <template>
-  <option id="vue-option" :value="data.value">
+  <option id="vue-option" v-bind="data" :selected="selected">
     {{data.description}}
   </option>
 </template>
@@ -12,7 +12,7 @@
         data: {}
       }
     },
-    props: ['props'],
+    props: ['props','selected'],
     created() {
       this.props.attributes.map(attr => {
         this.data[attr.key] = attr.value
