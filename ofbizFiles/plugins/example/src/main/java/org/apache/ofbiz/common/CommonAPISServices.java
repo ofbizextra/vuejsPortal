@@ -127,14 +127,17 @@ public class CommonAPISServices {
                 return ServiceUtil.returnError(ServiceUtil.getErrorMessage(results));
             } else {
                 Security security =  dctx.getSecurity();
+                results.put("token", generateUserToken((String)context.get("username")));
+                results.putAll(ServiceUtil.returnSuccess("indentifiant / mot de passe acceptés"));
+                return results;
+                // TODO tester s'il vérifie bien l'autorisation du composant appelé
+                /*
                 if(security.hasPermission("SH-SUPPL-PORT_ADMIN", userLogin)) {
-                    results.put("token", generateUserToken((String)context.get("username")));
-                    results.putAll(ServiceUtil.returnSuccess("indentifiant / mot de passe acceptés"));
-                    return results;
                 }
                 else {
                     return ServiceUtil.returnError("Vous n'êtes pas autorisé à vous connecter à cette application !");
                 }
+                */
             }
         }
         catch(GenericServiceException gse) {

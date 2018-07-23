@@ -1,12 +1,12 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <patch>
-<x:add path="/" previous="/request-map[findExampleFeatures]/">
-    <!--#Bam# vuejs-portal -->
+    <x:add-element path="/site-conf[1]" previous="/request-map[@uri='main'][1]">
+    <!--#START CUSTOM CODE# tmpModifVuejsPortlet-->
     <request-map uri="listForDropDown">
         <security https="true" auth="true"/>
         <event type="service" invoke="listForDropDown"/>
         <response name="success" type="request" value="json"/>
         <response name="error" type="request" value="json"/>
     </request-map>
-    <!--#Eam# vuejs-portal--></x:add>
+    <!--#END CUSTOM CODE# tmpModifVuejsPortlet--></x:add-element>
 </patch>
