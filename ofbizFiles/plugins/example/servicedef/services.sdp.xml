@@ -1,7 +1,8 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <patch>
-<x:add path="/" previous="//">
-<!--#Bam# vuejs-portal -->
+    <x:add-element path="/services[1]" previous="/service[@name='deleteExampleFeatureApplType'][1]">
+    <!--#START CUSTOM CODE# tmpModifVuejsPortlet-->
+
     <service name="listForDropDown" engine="simple"
             location="component://example/minilang/example/ExampleServices.xml" invoke="listForDropDown" auth="true">
         <description>List values for populate a drop-down</description>
@@ -12,7 +13,5 @@
         <attribute name="orderByFieldName" mode="IN" type="String" optional="true"/>
         <attribute name="dropDownList" mode="OUT" type="List" optional="false"/>
     </service>
-<!--#Eam# vuejs-portal -->
-</x:add>
-</patch>
-    
+    <!--#END CUSTOM CODE# tmpModifVuejsPortlet--></x:add-element>
+</patch>    

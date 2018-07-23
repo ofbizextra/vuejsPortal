@@ -23,7 +23,8 @@ under the License.
     <!-- The controller elements that are common to all OFBiz components
          can be found in the following xml file. A component can override the
          elements found in the common-controller.xml file. -->
-    <include location="component://common/webcommon/WEB-INF/common-controller.xml"/>
+    <include location="component://common/webcommon/WEB-INF/handlers-controller.xml"/>
+<!--     <include location="component://common/webcommon/WEB-INF/common-controller.xml"/> -->
 
     <description>Example API Component Site Configuration File</description>
 
@@ -34,16 +35,26 @@ under the License.
     </preprocessor>
     <request-map uri="authentication">
         <security https="true" auth="false"/>
-        <event type="service" invoke="apisLoginsp"/>
+        <event type="service" invoke="apisLogin"/>
         <response name="success" type="request" value="json"/>
         <response name="error" type="request" value="json"/>
     </request-map>
     <request-map uri="checkAuthToken">
         <security https="true" auth="false"/>
-        <event type="service" invoke="checkAuthTokensp"/>
+        <event type="service" invoke="checkAuthToken"/>
         <response name="success" type="request" value="json"/>
         <response name="error" type="request" value="json"/>
     </request-map>
+
+    <!-- Common json response events, chain these after events to send json responses -->
+    <!-- Standard json response, For security reason (OFBIZ-5409) tries to keep only the initially called service attributes -->
+    <request-map uri="json">
+        <security direct-request="false"/>
+        <event type="java" path="org.apache.ofbiz.common.CommonEvents" invoke="jsonResponseFromRequestAttributes"/>
+        <response name="success" type="none"/>
+    </request-map>
+
+    <request-map uri="EditExampleLayer"><security https="true" auth="true"/><response name="success" type="view" value="EditExampleLayer"/></request-map>
     <!-- à titre d'exemple de nouvelle uri 
     <request-map uri="getOrderToPrepare">
       <security https="true" auth="false"/>
@@ -61,5 +72,6 @@ under the License.
 
     <!-- View Mappings -->
     <view-map name="ping" type="ftl" page="component://webtools/template/Ping.ftl"/>
+    <view-map name="EditExampleLayer" type="screen" page="component://example/widget/example/ExampleScreens.xml#EditExampleLayer"/>
 
 </site-conf>
