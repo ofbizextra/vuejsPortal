@@ -7,9 +7,13 @@
 <script>
   export default {
     name: "VueTitle",
-    data() {
+    ddata() {
       return {
-        data: {}
+      }
+    },
+    computed: {
+      data() {
+        return this.parseProps()
       }
     },
     props: [

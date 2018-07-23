@@ -48,21 +48,28 @@ Vue.component('login', Login)
 Vue.component('portal', Portal)
 
 Vue.mixin({
-  created: function () {
-    if (this.$props) {
-      let props = this.$props.props;
-      if (props) {
-        this.props.attributes.map(attr => {
-          if (attr.value === 'false') {
-            this.data[attr.key] = false
-          }else if (attr.value === 'true') {
-            this.data[attr.key] = true
-          }else {
-            this.data[attr.key] = attr.value
-          }
-        })
+  methods: {
+    parseProps() {
+      if (this.$props && this.$props.props) {
+        let props = this.$props.props;
+        let data = {}
+        if (props) {
+          this.props.attributes.map(attr => {
+            if (attr.value === 'false') {
+              data[attr.key] = false
+            }else if (attr.value === 'true') {
+              data[attr.key] = true
+            }else {
+              data[attr.key] = attr.value
+            }
+          })
+          return data
+        }
       }
     }
+  },
+  created: function () {
+    // this.data = this.parseProps()
   }
 })
 

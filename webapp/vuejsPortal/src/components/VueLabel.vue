@@ -9,14 +9,30 @@
   export default {
     name: "VueLabel",
     props: ['props'],
-    data () {
+    data() {
       return {
-        data: {}
       }
     },
-    mounted() {
-      console.log(this.data)
-      this.$store.dispatch('data/addDataToExample', this.data.idName, this.data)
+    computed: {
+      data() {
+        return this.parseProps()
+      },
+      storeData() {
+        return {
+          id: this.$store.getters['data/currentId'],
+          key: this.parseProps().idName,
+          value: this.parseProps().description ? this.parseProps().description : ''
+        }
+      }
+    },
+    watch: {
+      data: function(from, to) {
+        console.log('vue-label : ', this.storeData)
+        this.$store.dispatch('data/addDataToExample', this.storeData)
+      }
+    },
+    created() {
+      this.$store.dispatch('data/addDataToExample', this.storeData)
     }
   }
 </script>

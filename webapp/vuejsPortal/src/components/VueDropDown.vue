@@ -18,14 +18,32 @@
 <script>
   export default {
     name: "VueDropDown",
-    data () {
+    props: ['props'],
+    data() {
       return {
-        data: {}
       }
     },
-    props: [
-      'props'
-    ]
+    computed: {
+      data() {
+        return this.parseProps()
+      },
+      storeData() {
+        return {
+          id: this.$store.getters['data/currentId'],
+          key: this.parseProps().id,
+          value: this.parseProps().currentValue ? this.parseProps().currentValue : ''
+        }
+      }
+    },
+    watch: {
+      data: function(from, to) {
+        console.log('vue-text-area : ', this.storeData)
+        this.$store.dispatch('data/addDataToExample', this.storeData)
+      }
+    },
+    created() {
+      this.$store.dispatch('data/addDataToExample', this.storeData)
+    }
   }
 </script>
 

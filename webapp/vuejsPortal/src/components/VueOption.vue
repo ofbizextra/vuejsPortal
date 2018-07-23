@@ -17,7 +17,6 @@
       this.props.attributes.map(attr => {
         this.data[attr.key] = attr.value
       })
-      console.log(this.data)
     }
   }
 </script>

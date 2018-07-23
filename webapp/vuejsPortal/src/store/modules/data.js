@@ -6,19 +6,19 @@ import constantes from './../../js/constantes'
 Vue.use(Vuex)
 
 const state = {
-  Example: {},
-  CurrentId: ''
+  example: {},
+  currentId: ''
 }
 
 const mutations = {
   ADD_EXAMPLE: (state, id) => {
-    state.Example[id] = {}
+    state.example[id] = {}
   },
-  ADD_DATA_TO_EXAMPLE: (state, id, data) => {
-    state.Example[id].push(data)
+  ADD_DATA_TO_EXAMPLE: (state, data) => {
+    state.example[data.id][data.key] = data.value
   },
   SET_CURRENT_ID: (state, id) => {
-    state.CurrentId = id
+    state.currentId = id
   }
 }
 
@@ -30,8 +30,8 @@ const actions = {
   addExample({commit}, id) {
     commit('ADD_EXAMPLE', id)
   },
-  addDataToExample({commit}, id) {
-    commit('ADD_DATA_TO_EXAMPLE', id, data)
+  addDataToExample({commit}, data) {
+    commit('ADD_DATA_TO_EXAMPLE', data)
   },
   setCurrentId({commit}, id) {
     commit('SET_CURRENT_ID', id)

@@ -7,12 +7,32 @@
 <script>
   export default {
     name: "VueTextArea",
+    props: ['props'],
     data() {
       return {
-        data: {}
       }
     },
-    props: ['props']
+    computed: {
+      data() {
+        return this.parseProps()
+      },
+      storeData() {
+        return {
+          id: this.$store.getters['data/currentId'],
+          key: this.parseProps().id,
+          value: this.parseProps().value ? this.parseProps().value : ''
+        }
+      }
+    },
+    watch: {
+      data: function(from, to) {
+        console.log('vue-text-area : ', this.storeData)
+        this.$store.dispatch('data/addDataToExample', this.storeData)
+      }
+    },
+    created() {
+      this.$store.dispatch('data/addDataToExample', this.storeData)
+    }
   }
 </script>
 
