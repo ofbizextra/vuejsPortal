@@ -13,7 +13,7 @@ const state = {
     partyId: ''
   },
   isLoggedIn: false,
-  pending: false
+  pending: true
 }
 
 const mutations = {
@@ -50,13 +50,11 @@ const mutations = {
   },
   CHECK_SUCCESS: (state, params) => {
     state.isLoggedIn = true
-    state.credentials.token = params.token
-    state.credentials.username = params.username
     state.pending = false
   },
   CHECK_FAILURE: (state) => {
     state.isLoggedIn = false
-    state.pending = true
+    state.pending = false
   }
 }
 
@@ -64,11 +62,13 @@ const getters = {
   username: state => state.credentials.username,
   token: state => state.credentials.token,
   isLoggedIn: state => state.isLoggedIn,
-  pending: (state) => () => { return state.pending }
+  pending: (state) => () => {
+    return state.pending
+  }
 }
 
 const actions = {
-  login({ commit }, credentials) {
+  login({commit}, credentials) {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         commit('LOGIN')
@@ -82,7 +82,7 @@ const actions = {
           {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}
         ).then(response => {
           console.log(response)
-          if(response.body.includes('PONG')
+          if (response.body.includes('PONG')
             && !response.body._ERROR_MESSAGE_
             && !response.body._ERROR_MESSAGES_LIST_) {
             console.log('login success')
@@ -111,12 +111,11 @@ const actions = {
       }, 1000)
     })
   },
-  logout({ commit }) {
+  logout({commit}) {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         commit('LOGIN')
         localStorage.removeItem('token')
-        this.dispatch('offers/clear')
         commit('LOGOUT')
         resolve()
       }, 1000)
@@ -125,39 +124,27 @@ const actions = {
   check({commit}) {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
-        if (!!localStorage.getItem("token")) {
-          var token = localStorage.getItem("token")
-          console.log('token found: ' + token)
-          commit('CHECK')
-          // retrieve user infos
-          Vue.http.post(
-            constantes.apiUrl + constantes.checkAuthToken.path,
-            queryString.stringify({token: token}),
-            {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}
-          ).then(response => {
-            console.log(response.body)
-            if(response.body.username
-              && !response.body._ERROR_MESSAGE_
-              && !response.body._ERROR_MESSAGES_LIST_) {
-              console.log('login success', 'token : ' + token,"\nusername: " + response.body.username, response)
-              commit('CHECK_SUCCESS', {
-                token: token,
-                username: response.body.username
-              })
-              resolve()
-            } else {
-              console.log(response.body._ERROR_MESSAGE_)
-              commit('CHECK_FAILURE')
-              reject()
-            }
-          }, error => {
-            console.log('error : ', error)
+        Vue.http.post(
+          constantes.apiUrl + constantes.ajaxCheckLogin.path,
+          queryString.stringify({
+          }),
+          {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}).then(response => {
+          if (response.body.includes('PONG')
+            && !response.body._ERROR_MESSAGE_
+            && !response.body._ERROR_MESSAGES_LIST_) {
+            console.log('login success')
+            commit('CHECK_SUCCESS')
+            resolve()
+          } else {
+            console.log(response.body._ERROR_MESSAGE_)
             commit('CHECK_FAILURE')
             reject()
-          })
-        }else{
+          }
+        }, error => {
+          console.log('error : ', error)
           commit('CHECK_FAILURE')
-        }
+          reject()
+        })
       }, 1000)
     })
   }

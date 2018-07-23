@@ -86,9 +86,6 @@
         console.log("Connecting ...",this.credentials)
         this.$store.dispatch('login/login', this.credentials).then(response => {
           this.$router.push('/')
-          console.log('recherche des offres ...')
-          this.$store.dispatch('offers/setOffers')
-          this.$store.dispatch('offers/setCategories')
         }, error => {
           console.log('Echec de la connexion')
         })

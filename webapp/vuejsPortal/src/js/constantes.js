@@ -6,5 +6,7 @@ export default {
   editExampleLayer: {path: '/EditExampleLayer', tokenRequired: false},
   authentication: {path: '/authentification', tokenRequired: false},
   checkAuthToken: {path: '/checkAuthToken', tokenRequired: true},
-  login: {path: '/login', tokenRequired: false}
+  login: {path: '/login', tokenRequired: false},
+  ping: {path: '/ping', tokenRequired: false},
+  ajaxCheckLogin: {path: '/ajaxCheckLogin', tokenRequired: false}
 }

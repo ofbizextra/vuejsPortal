@@ -8,9 +8,10 @@
   export default {
     name: 'app',
     mounted() {
-      this.$store.dispatch('login/check').then(response => {
+      console.log(this.$route.path)
+      this.$store.dispatch('login/check').then(() => {
         this.$router.push('/')
-      }, error => {
+      }, () => {
         this.$router.push('/login')
       })
     }

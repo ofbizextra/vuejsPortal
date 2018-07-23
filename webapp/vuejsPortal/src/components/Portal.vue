@@ -17,24 +17,41 @@
 <script>
   import constantes from './../js/constantes'
   import {parse} from 'himalaya'
-  import queryString from 'query-string'
 
   export default {
     name: "Portal",
     data () {
       return {
         data: '',
-        parsedData: {}
+        parsedData: {},
+        id: ''
       }
     },
     mounted () {
-      this.$http.get(constantes.apiUrl + constantes.editExampleLayer.path + '?exampleId=EX11').then(response => {
+      this.$http.get(constantes.apiUrl + constantes.editExampleLayer.path + (this.$route.params['id'] ? `?exampleId=${this.$route.params['id']}` : '')).then(response => {
         console.log(response.body)
         this.data = response.body
         this.parsedData = parse(this.data)
+        this.id = this.parsedData[2].children[5].children[0].children[1].children[0].attributes.find(attr => attr.key === 'description').value
+        this.$store.dispatch('data/addExample', this.id)
+        this.$store.dispatch('data/setCurrentId', this.id)
       }, error => {
         console.log(error.body)
       })
+    },
+    watch: {
+      '$route'(to, from) {
+        this.$http.get(constantes.apiUrl + constantes.editExampleLayer.path + (this.$route.params['id'] ? `?exampleId=${this.$route.params['id']}` : '')).then(response => {
+          console.log(response.body)
+          this.data = response.body
+          this.parsedData = parse(this.data)
+          this.id = this.parsedData[2].children[5].children[0].children[1].children[0].attributes.find(attr => attr.key === 'description').value
+          this.$store.dispatch('data/addExample',this.id)
+          this.$store.dispatch('data/setCurrentId', this.id)
+        }, error => {
+          console.log(error.body)
+        })
+      }
     }
   }
 </script>
