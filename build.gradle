@@ -23,7 +23,7 @@ apply plugin: 'java'
 
 
 dependencies {
-	compile 'com.auth0:java-jwt:3.4.0'
+	pluginLibsCompile 'com.auth0:java-jwt:2.1.0'
     // we must add dependencies to rbstvuejs the theme dedicated for vuejsportal
     // pluginLibsRuntime 'org.postgresql:postgresql:42.2.1'
 }
