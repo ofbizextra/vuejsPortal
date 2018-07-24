@@ -23,7 +23,10 @@ const mutations = {
 }
 
 const getters = {
-  currentId: state => state.currentId
+  currentId: state => state.currentId,
+  dataFromExample: state => (data) => {
+    return state.example[data.id][data.key]
+  }
 }
 
 const actions = {

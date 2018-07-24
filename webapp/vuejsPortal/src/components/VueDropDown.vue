@@ -1,48 +1,64 @@
 <template>
   <div id="vue-drop-down">
-    <select v-bind="data">
+    <select v-bind:currentValue="getValue" v-bind="data">
       <option value="" v-if="data.allowEmpty || (data.allowEmpty && props.children.length === 0)"></option>
-      <option v-if="data.firstInList && data.currentValue && !data.multiple" selected="selected" :value="data.currentValue" >{{data.explicitDescription}}</option>
+      <option v-if="data.firstInList && getValue && !data.multiple" selected="selected" :value="getValue" >{{data.explicitDescription}}</option>
       <vue-option
         v-for="option in props.children"
         :key="option.attributes[0].value"
         v-if="option.type === 'element' &&
         option.tagName === 'vue-option'"
         :props="option"
-        :selected="option.attributes[0].value === data.currentValue">
+        :selected="option.attributes[0].value === getValue">
       </vue-option>
     </select>
   </div>
 </template>
 
 <script>
+  import { mapGetters } from 'vuex'
+
   export default {
     name: "VueDropDown",
-    props: ['props'],
+    props: ['props', 'updateStore'],
     data() {
       return {
       }
     },
     computed: {
-      data() {
-        return this.parseProps()
+      data () {
+        let data = this.parseProps()
+        delete data['currentValue']
+        return data
       },
-      storeData() {
+      storeData () {
         return {
           id: this.$store.getters['data/currentId'],
           key: this.parseProps().id,
           value: this.parseProps().currentValue ? this.parseProps().currentValue : ''
         }
-      }
+      },
+      getValue () {
+        return this.updateStore ? this.dataFromExample(this.storeData) : ''
+      },
+      ...mapGetters({
+        dataFromExample: 'data/dataFromExample',
+        currentId: 'data/currentId'
+      })
     },
     watch: {
       data: function(from, to) {
-        console.log('vue-text-area : ', this.storeData)
-        this.$store.dispatch('data/addDataToExample', this.storeData)
+        if (this.updateStore) {
+          console.log('vue-text-area : ', this.storeData)
+          this.$store.dispatch('data/addDataToExample', this.storeData)
+        }
       }
     },
     created() {
-      this.$store.dispatch('data/addDataToExample', this.storeData)
+      if (this.updateStore) {
+        console.log('vue-text-area : ', this.storeData)
+        this.$store.dispatch('data/addDataToExample', this.storeData)
+      }
     }
   }
 </script>

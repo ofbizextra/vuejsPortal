@@ -1,37 +1,53 @@
 <template>
   <div id="vue-text-area">
-    <textarea v-bind="data"></textarea>
+    <textarea v-bind:value="getValue" v-bind="data"></textarea>
   </div>
 </template>
 
 <script>
+  import { mapGetters } from 'vuex'
+
   export default {
     name: "VueTextArea",
-    props: ['props'],
+    props: ['props', 'updateStore'],
     data() {
       return {
       }
     },
     computed: {
-      data() {
-        return this.parseProps()
+      data () {
+        let data = this.parseProps()
+        delete data['value']
+        return data
       },
-      storeData() {
+      storeData () {
         return {
           id: this.$store.getters['data/currentId'],
           key: this.parseProps().id,
           value: this.parseProps().value ? this.parseProps().value : ''
         }
-      }
+      },
+      getValue () {
+        return this.updateStore ? this.dataFromExample(this.storeData) : ''
+      },
+      ...mapGetters({
+        dataFromExample: 'data/dataFromExample',
+        currentId: 'data/currentId'
+      })
     },
     watch: {
       data: function(from, to) {
-        console.log('vue-text-area : ', this.storeData)
-        this.$store.dispatch('data/addDataToExample', this.storeData)
+        if (this.updateStore) {
+          console.log('vue-text-area : ', this.storeData)
+          this.$store.dispatch('data/addDataToExample', this.storeData)
+        }
       }
     },
     created() {
-      this.$store.dispatch('data/addDataToExample', this.storeData)
+      if (this.updateStore) {
+        console.log('vue-text-area : ', this.storeData)
+        this.$store.dispatch('data/addDataToExample', this.storeData)
+      }
     }
   }
 </script>

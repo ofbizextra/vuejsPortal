@@ -1,14 +1,14 @@
 <template>
   <div id="vue-label">
-    {{data.description}}
+    {{getValue}}
   </div>
 </template>
 
 <script>
-
+  import {mapGetters} from 'vuex'
   export default {
     name: "VueLabel",
-    props: ['props'],
+    props: ['props', 'updateStore'],
     data() {
       return {
       }
@@ -23,16 +23,28 @@
           key: this.parseProps().idName,
           value: this.parseProps().description ? this.parseProps().description : ''
         }
-      }
+      },
+      getValue () {
+        return this.updateStore ? this.dataFromExample(this.storeData) : ''
+      },
+      ...mapGetters({
+        dataFromExample: 'data/dataFromExample',
+        currentId: 'data/currentId'
+      })
     },
     watch: {
       data: function(from, to) {
-        console.log('vue-label : ', this.storeData)
-        this.$store.dispatch('data/addDataToExample', this.storeData)
+        if (this.updateStore) {
+          console.log('vue-label : ', this.storeData)
+          this.$store.dispatch('data/addDataToExample', this.storeData)
+        }
       }
     },
     created() {
-      this.$store.dispatch('data/addDataToExample', this.storeData)
+      if (this.updateStore) {
+        console.log('vue-label : ', this.storeData)
+        this.$store.dispatch('data/addDataToExample', this.storeData)
+      }
     }
   }
 </script>

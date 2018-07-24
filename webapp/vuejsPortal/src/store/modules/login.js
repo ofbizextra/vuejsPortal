@@ -82,7 +82,7 @@ const actions = {
           {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}
         ).then(response => {
           console.log(response)
-          if (response.body.includes('PONG')
+          if (response.body.includes('login successful')
             && !response.body._ERROR_MESSAGE_
             && !response.body._ERROR_MESSAGES_LIST_) {
             console.log('login success')
@@ -129,7 +129,7 @@ const actions = {
           queryString.stringify({
           }),
           {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}).then(response => {
-          if (response.body.includes('PONG')
+          if (response.body.includes('login successful')
             && !response.body._ERROR_MESSAGE_
             && !response.body._ERROR_MESSAGES_LIST_) {
             console.log('login success')

@@ -8,6 +8,7 @@ import Search from './components/Search'
 import List from './components/List'
 import Login from './components/Login'
 import Portal from './components/Portal'
+import EditExampleLayer from './components/EditExampleLayer'
 import VueForm from './components/VueForm'
 import VueField from './components/VueField'
 import VueDropDown from './components/VueDropDown'
@@ -46,6 +47,7 @@ Vue.component('vue-text-area', VueTextArea)
 Vue.component('vue-date-time', VueDateTime)
 Vue.component('login', Login)
 Vue.component('portal', Portal)
+Vue.component('edit-example-layer', EditExampleLayer)
 
 Vue.mixin({
   methods: {

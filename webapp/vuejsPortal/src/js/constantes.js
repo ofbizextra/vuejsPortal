@@ -8,5 +8,6 @@ export default {
   checkAuthToken: {path: '/checkAuthToken', tokenRequired: true},
   login: {path: '/login', tokenRequired: false},
   ping: {path: '/ping', tokenRequired: false},
-  ajaxCheckLogin: {path: '/ajaxCheckLogin', tokenRequired: false}
+  ajaxCheckLogin: {path: '/ajaxCheckLogin', tokenRequired: false},
+  findExampleLayer: {path: '/FindExampleLayer', tokenRequired: false}
 }
