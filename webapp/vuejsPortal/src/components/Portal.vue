@@ -1,5 +1,7 @@
 <template>
   <div id="portal">
+    <find-example-layer />
+    <list-example-layer />
     <edit-example-layer />
   </div>
 </template>

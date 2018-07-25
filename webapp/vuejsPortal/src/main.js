@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import VueResource from 'vue-resource'
-import Vuex from 'vuex'
 import VueRouter from 'vue-router'
 
 import App from './components/App'
@@ -9,6 +8,8 @@ import List from './components/List'
 import Login from './components/Login'
 import Portal from './components/Portal'
 import EditExampleLayer from './components/EditExampleLayer'
+import FindExampleLayer from './components/FindExampleLayer'
+import ListExampleLayer from './components/ListExampleLayer'
 import VueForm from './components/VueForm'
 import VueField from './components/VueField'
 import VueDropDown from './components/VueDropDown'
@@ -23,12 +24,20 @@ import VueTitle from './components/VueTitle'
 import VueText from './components/VueText'
 import VueTextArea from './components/VueTextArea'
 import VueDateTime from './components/VueDateTime'
+import VueError from './components/VueError'
+import VueTooltip from './components/VueTooltip'
+import VueAsterisks from './components/VueAsterisks'
 
 import store from './store'
 
 Vue.use(VueResource)
 Vue.use(VueRouter)
 
+Vue.component('login', Login)
+Vue.component('portal', Portal)
+Vue.component('edit-example-layer', EditExampleLayer)
+Vue.component('find-example-layer', FindExampleLayer)
+Vue.component('list-example-layer', ListExampleLayer)
 Vue.component('search', Search)
 Vue.component('list', List)
 Vue.component('vue-form', VueForm)
@@ -45,9 +54,9 @@ Vue.component('vue-title', VueTitle)
 Vue.component('vue-text', VueText)
 Vue.component('vue-text-area', VueTextArea)
 Vue.component('vue-date-time', VueDateTime)
-Vue.component('login', Login)
-Vue.component('portal', Portal)
-Vue.component('edit-example-layer', EditExampleLayer)
+Vue.component('vue-error', VueError)
+Vue.component('vue-tooltip', VueTooltip)
+Vue.component('vue-asterisks', VueAsterisks)
 
 Vue.mixin({
   methods: {
@@ -79,8 +88,10 @@ const router = new VueRouter({
   mode: 'hash',
   routes: [
     { path: '/', component: Portal, beforeEnter: requireAuth },
-    { path: '/portal', component: Portal, beforeEnter: requireAuth },
-    { path: '/editExample/:id', component: Portal, beforeEnter: requireAuth },
+    { path: '/findExampleLayer', component: FindExampleLayer, beforeEnter: requireAuth },
+    { path: '/editExampleLayer', component: EditExampleLayer, beforeEnter: requireAuth },
+    { path: '/editExampleLayer/:id', component: EditExampleLayer, beforeEnter: requireAuth },
+    { path: '/listExampleLayer', component: ListExampleLayer, beforeEnter: requireAuth},
     { path: '/login', component: Login, beforeEnter: requireAuth }
   ]
 })

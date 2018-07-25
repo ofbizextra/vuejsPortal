@@ -9,5 +9,6 @@ export default {
   login: {path: '/login', tokenRequired: false},
   ping: {path: '/ping', tokenRequired: false},
   ajaxCheckLogin: {path: '/ajaxCheckLogin', tokenRequired: false},
-  findExampleLayer: {path: '/FindExampleLayer', tokenRequired: false}
+  findExampleLayer: {path: '/FindExampleLayer', tokenRequired: false},
+  listExampleLayer: {path: '/ListExampleLayer', tokenRequired: false}
 }

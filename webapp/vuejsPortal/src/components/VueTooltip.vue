@@ -1,15 +1,14 @@
 <template>
-  <div id="vue-hidden">
-    <input v-if="data.conditionGroup" type="hidden" :name="data.name + '_grp'" v-bind:value="data.conditionGroup" />
-    <input type="hidden" v-bind:name="data.name" v-bind:value="getValue" v-bind:id="data.id" v-bind:event="data.action ? data.action : false"/>
-  </div>
+  <span id="vue-tooltip" v-if="data.tooltip" v-bind:class="data.tooltipStyle ? data.tooltipStyle : ''">
+    {{data.tooltip}}
+  </span>
 </template>
 
 <script>
   import { mapGetters } from 'vuex'
 
   export default {
-    name: "VueHidden",
+    name: "VueTooltip",
     props: ['props', 'updateStore'],
     data() {
       return {

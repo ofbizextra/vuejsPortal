@@ -1,15 +1,12 @@
 <template>
-  <div id="vue-hidden">
-    <input v-if="data.conditionGroup" type="hidden" :name="data.name + '_grp'" v-bind:value="data.conditionGroup" />
-    <input type="hidden" v-bind:name="data.name" v-bind:value="getValue" v-bind:id="data.id" v-bind:event="data.action ? data.action : false"/>
-  </div>
+  <span id="vue-asterisks" v-if="data.requiredField && !data.requiredStyle">*</span>
 </template>
 
 <script>
   import { mapGetters } from 'vuex'
 
   export default {
-    name: "VueHidden",
+    name: "VueAsterisks",
     props: ['props', 'updateStore'],
     data() {
       return {
