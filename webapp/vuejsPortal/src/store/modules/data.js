@@ -33,7 +33,10 @@ const actions = {
   addExample({commit}, id) {
     commit('ADD_EXAMPLE', id)
   },
-  addDataToExample({commit}, data) {
+  addDataToExample({commit, state}, data) {
+    if (!state.example[data.id]) {
+      commit('ADD_EXAMPLE', data.id)
+    }
     commit('ADD_DATA_TO_EXAMPLE', data)
   },
   setCurrentId({commit}, id) {

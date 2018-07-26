@@ -18,6 +18,7 @@
 <script>
   import constantes from './../js/constantes'
   import {parse} from 'himalaya'
+  import queryString from 'query-string'
 
   export default {
     name: "ListExampleLayer",
@@ -34,7 +35,12 @@
     },
     mounted () {
       console.log('findExampleLayer : Mounted')
-      this.$http.get(constantes.apiUrl + constantes.listExampleLayer.path).then(response => {
+      this.$http.post(constantes.apiUrl + constantes.listExampleLayer.path,
+        queryString.stringify({
+          listOtherElements: 'items',
+          searchButton: 'Search'
+        }),
+        {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}).then(response => {
         this.data = response.body
         this.parsedData = parse(this.data)
       }, error => {

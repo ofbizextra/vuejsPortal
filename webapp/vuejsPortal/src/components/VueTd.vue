@@ -1,5 +1,5 @@
 <template>
-  <form id="vue-form" v-bind="data">
+  <td id="vue-td" v-bind="data">
     <div
       v-for="component in props.children"
       v-if="component.type === 'element' && (component.tagName.includes('vue-'))"
@@ -7,14 +7,14 @@
       :props="component"
       :updateStore="updateStore">
     </div>
-  </form>
+  </td>
 </template>
 
 <script>
   import {mapGetters} from 'vuex'
 
   export default {
-    name: "VueForm",
+    name: "VueTd",
     props: ['props', 'updateStore'],
     data() {
       return {}
@@ -31,19 +31,28 @@
           key: this.parseProps().id,
           value: this.parseProps().value ? this.parseProps().value : ''
         }
-      }
+      },
+      getValue() {
+        return this.updateStore ? this.dataFromExample(this.storeData) : ''
+      },
+      ...mapGetters({
+        dataFromExample: 'data/dataFromExample',
+        currentId: 'data/currentId'
+      })
     },
     watch: {
       data: function (from, to) {
         if (this.updateStore) {
-          console.log('vue-form : ', to.name + '|  was : ' + from.name)
-          this.$store.dispatch('form/addForm', to.name)
+          console.log('vue-hidden : ', this.storeData)
+          this.$store.dispatch('data/addDataToExample', this.storeData)
         }
       }
     },
     created() {
-      console.log('vue-form : ', this.data.name)
-      this.$store.dispatch('form/addForm', this.data.name)
+      if (this.updateStore) {
+        console.log('vue-hidden : ', this.storeData)
+        this.$store.dispatch('data/addDataToExample', this.storeData)
+      }
     }
   }
 </script>

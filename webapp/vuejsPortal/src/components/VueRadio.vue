@@ -7,6 +7,7 @@
              :tabIndex="data.currentValue && data.tabIndex ? data.tabIndex : false"
              :name="data.name"
              :value="childrenData(index).key"
+             v-model="value"
       />
         {{childrenData(index).description}}
     </span>
@@ -26,18 +27,31 @@
     computed: {
       data() {
         let data = this.parseProps()
-        delete data['value']
+        delete data['currentValue']
         return data
       },
-      storeData() {
+      storeForm() {
         return {
-          id: this.$store.getters['data/currentId'],
-          key: this.parseProps().id,
-          value: this.parseProps().value ? this.parseProps().value : ''
+          formId: document.getElementsByName(this.data.name)[0].form.name,
+          key: this.parseProps().name,
+          value: this.parseProps().currentValue ? this.parseProps().currentValue : ''
         }
       },
-      getValue() {
-        return this.updateStore ? this.dataFromExample(this.storeData) : ''
+      value: {
+        get () {
+          if (document.getElementsByName(this.data.name)[0] && this.getForm(this.storeForm.formId)) {
+            return this.getDataFromForm(this.storeForm)
+          } else {
+            return ''
+          }
+        },
+        set (value) {
+          this.$store.dispatch('form/setFieldToForm', {
+            formId: document.getElementsByName(this.data.name)[0].form.name,
+            key: this.parseProps().name,
+            value: value
+          })
+        }
       },
       childrenData() {
         return (index) => {
@@ -55,23 +69,19 @@
         }
       },
       ...mapGetters({
-        dataFromExample: 'data/dataFromExample',
-        currentId: 'data/currentId'
+        getDataFromForm: 'form/fieldInForm',
+        getForm: 'form/form'
       })
     },
     watch: {
       data: function (from, to) {
-        if (this.updateStore) {
-          console.log('vue-radio : ', this.storeData)
-          this.$store.dispatch('data/addDataToExample', this.storeData)
-        }
+        console.log('vue-radio : ', this.storeForm)
+        this.$store.dispatch('form/setFieldToForm', this.storeForm)
       }
     },
-    created() {
-      if (this.updateStore) {
-        console.log('vue-radio : ', this.storeData)
-        this.$store.dispatch('data/addDataToExample', this.storeData)
-      }
+    mounted() {
+      console.log('vue-radio : ', document.getElementsByName(this.data.name))
+      this.$store.dispatch('form/setFieldToForm', this.storeForm)
     }
   }
 </script>

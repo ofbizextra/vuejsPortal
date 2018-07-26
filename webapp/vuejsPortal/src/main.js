@@ -27,6 +27,10 @@ import VueDateTime from './components/VueDateTime'
 import VueError from './components/VueError'
 import VueTooltip from './components/VueTooltip'
 import VueAsterisks from './components/VueAsterisks'
+import VueTable from './components/VueTable'
+import VueTr from './components/VueTr'
+import VueTd from './components/VueTd'
+import Test from './components/Test'
 
 import store from './store'
 
@@ -57,6 +61,10 @@ Vue.component('vue-date-time', VueDateTime)
 Vue.component('vue-error', VueError)
 Vue.component('vue-tooltip', VueTooltip)
 Vue.component('vue-asterisks', VueAsterisks)
+Vue.component('vue-table', VueTable)
+Vue.component('vue-tr', VueTr)
+Vue.component('vue-td', VueTd)
+Vue.component('test', Test)
 
 Vue.mixin({
   methods: {
@@ -92,6 +100,7 @@ const router = new VueRouter({
     { path: '/editExampleLayer', component: EditExampleLayer, beforeEnter: requireAuth },
     { path: '/editExampleLayer/:id', component: EditExampleLayer, beforeEnter: requireAuth },
     { path: '/listExampleLayer', component: ListExampleLayer, beforeEnter: requireAuth},
+    { path: '/test', component: Test, beforeEnter: requireAuth},
     { path: '/login', component: Login, beforeEnter: requireAuth }
   ]
 })
