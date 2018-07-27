@@ -272,11 +272,13 @@ displays search results.
 
 ==== Database
 
-//Example
+//doc coming from Webhelp Example
 include::../../plugins/vuejsPortal/src/docs/asciidoc/webhelp_example_fr.adoc[leveloffset=+2]
 
 
 === Web tools
+
+include::../../plugins/example/src/docs/asciidoc/example_fr.adoc[leveloffset=+2]
 
 == Testing
 

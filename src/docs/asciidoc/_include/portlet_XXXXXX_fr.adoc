@@ -1,0 +1,46 @@
+
+[[_portlet_category_example]]
+= Catégorie Example
+
+Cette catégorie de portlet regroupe toutes les portlets du composant Example, qui peuvent servir d'exemple.
+
+[[_portlet_model]]
+== portletName
+
+portalPortletId : portletdescription
+
+
+[source,xml]
+----
+image::portlets/xxxxxxxx.png[]
+----
+
+
+xxxxxxxxxxxxxxxxx
+
+à compléter
+
+=== Les paramètre de la Portlet
+
+* xxxxxxxxxxxx
+* aucun
+
+
+
+=== Limitations ou futures fonctionnalitées
+
+* xxxxxxxxxxxxxxxxx
+
+
+=== Règles de Securité
+
+* xxxxxxxxxxx
+* aucune, (celles du composant)
+* utilise le service portalPermissionIsCustomer avec VIEW
+
+
+=== Remarques Techniques
+
+xxxxxxxxxxxxxxxxxxx
+
+Portlet de OFBiz de base, pas d'usage de "Type de portlet" et sans usage de show-portlet (ajax)

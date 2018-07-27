@@ -1,0 +1,833 @@
+
+= Unknown Title!
+
+[[_about]]
+== The Example Main page.
+
+What is the component example? how to use it? what it's goal?... for all these questions refer to the help index in the Sample In this page, you can create or search an example 
+
+<<_help_example,About the Example application>>
+
+[[_help_example]]
+== The Example Main Help page.
+
+The Example application will allow you to discover the possibilities to create an application, with a lot of search boxes, lists and many more.
+
+This application could be used to have an example of the bests practices in user interface development in Apache - OFBiz.
+
+Look help for each example screen, help will explain which part of development is used in this case.
+
+For example, if you want to see how you should do to add some help you can look to help files in data/helpdata directory in example  component and data/ExempleHelpData.xml in content component.
+
+=== Help file organization
+
+Help is managed by using content component functionality.
+For more detail, look at the example help sub tree.
+
+Help can be for : 
+
+* one component or sub-component, access is possible by navigation in help index tree and select it, contentId is associated to HELP_ROOT with contentAssocTypeId="TREE_CHILD" ;
+* one screen, access is done by help icon in screen (most of time on top), contentId is search on ContentAssoc.mapKey with  a value (helpTopic) build with component webSite and uri used to show this screen ;
+* one portlet, access is done by a link on the portalPages (which contain this portlet) help, link is a showHelp (like  for a screen) with helpTopic build with "HELP_" and portletId
+* one portal page, access is done by help icon if parameters.portalPageId is not empty, contentId is read on PortalPage (or originalPortalPage if exist) and is show on top of portlet list contain on it.
+
+
+=== Development help sub-subject
+
+To have the complete list you should click on index button and look to example tree option, but here is a list of main shortcut : 
+
+* How is organize <<_documentation_system,The Apache OFBiz documentation system>>
+* <<_example_devel,Best practices for development>>
+* <<_example_docbook,What it's possible to do in help file>>
+
+
+[[_help_example_devel]]
+==== Practices of development
+
+The use of portal pages and of portlets to define the user interfaces is heavily recommended.
+
+A portal page contains generic or specific portlets, which configurations can completely be changed: title, page arrangement, menus, scripts, ...
+
+A group of templates has been defined in order to meet the most standard needs during the development of the interfaces.
+
+Thus, all you have to do, for most of cases, is to define a "Form" at the right place, in the right file.
+Then, the portlet is straight usable.
+
+This part aims to describe the tools and recommendations that you have in order to create standard interfaces which configurations can be changed as soon as possible.
+
+===== Creation of portal pages and portlets
+
+First, you have to identify the type of portlet.
+
+Go, in the index, to "Use of Portlets" - "Types of portlets", or straight to link:Types of portlets
+
+Once you have chosen the template, you have to configure the portlet according to the needs of your screen. 
+
+* configuration of the portlet's title
+* configuration of the screen or of the "Form" that is used
+* use of a script before the loading of the portlet (recovery of a list, data test, various actions)
+* use of a menu (at the top of the title bar of the screenlet)
+* use of a test on a variable in order to, or not to, display the contents of the portlet
+* $$...$$
+
+Most part of the elements which configurations can be changed, on a portlet, have default values that avoid having to define them during the creation of the portlets.
+
+Thus, when you look at the file ExamplePortletData.xml that defines the portlets, very few fields (mainly the ones regarding the portlet itself) are filled in. 
+
+* configuration of the portlet's title
+* configuration of the screen or of the "Form" that is used
+* use of a script before the loading of the portlet (recovery of a list, data test, various actions)
+* use of a menu (at the top of the title bar of the screenlet)
+* use of a test on a variable in order to, or not to, display the contents of the portlet
+* $$...$$
+
+And here are some extracts: 
+[source]
+----
+
+                  <PortalPortlet portalPortletId="FindExample"
+                     portletName="Find Example (with portletType and showPortlet)" description="portlet to define search criteria for Example list"
+                     portletTypeId="Screenlet"  component="example" subComponent="Example" helpName="HELP_Screenlet"/>
+                  <PortalPortlet portalPortletId="ListExample"
+                     portletName="List Examples (with portletType and showPortlet)" description="portlet to list example depending on search criteria, this portlet is call by FindExample"
+                     portletTypeId="ScreenletList" component="example" subComponent="Example" helpName="HELP_ScreenletList"/>
+----
+
+===== Naming rules
+
+In order to make the comprehension of the names of the portal pages and of the portlets easier, naming conventions have been established: 
+
+* Portal page: 
++
+** xxxxSummary: it contains a group of portlets to display and/or to manage an object and its associated entities (pages like Actor Profile or Project Summary, for example). <<_help_ppage_recap,For more details>>
+** xxxxMgmt: it enables to do a search, to get a list, and, after the selection of an element, to display/manage associated entities by associated entities
+** sub...: it is a page used as part of a screen
+* Portlet: 
++
+** Findxxxs: search form
+** Listxxxs: portlet that lists the record of the entity, often as result of the portlet Findxxxs
+** xxxRecap: small or medium portlet, only on display, meant to be in a column (25% or 33%) in order to remind the object on which you are working
+** xxxDetailsMenu: same contents as in xxxSummary, with a menu enabling to display the details of associated entities somewhere else on the screen
+** xxxDetail: empty portlet that enables to define the slot (the container) where the details of associated entities will be displayed (see xxxMenuDetail)
+** xxxOverview: medium or big portlet, only on display, meant to be in the main column (50% and more) which presents a general view of the object, if needed from elements of associated entities (synthesis of a Project, Command)
+** xxxCreate: creation portlet. Can contain fields linked to associated entities in order to enable to create the object and the associated entities in only one operation. There can be a similarity of form with xxxOverview
+** xxxUpdate: update portlet. Only contains fields linked to the object. The update of the associated entities is done via the suitable portlets
+** xxxyyyys or xxxyyyysList: xxx is the name of the major entity (the object); yyyy is the name of the associated entity; the s shows that it is a list
+
+
+===== Migration of a standard screen
+
+For the migration of an ofbiz standard screen in a portlet, the projective is to use at the maximum: 
+
+. the elements of the ofbiz standard
+. the available tools, thanks to the addon portletWidget.
+
+
+===== Rules to follow:
+
+
+
+. If you have any doubt, watch how the portlets' parameters are defined in Example (/ofbiz/framework/data/ExamplePortletData/xml). This corresponds to good practices (a good practice that is not in Example is not a good practice)
+. except in very special situations, files' name and location (form, menu, script, screen) should use default values.
+. except in very special situations, a portlet should have a portletType (Screenlet, ScreenletList, Decorator or Empty)
+. field component, sub-component and webapp must be correclty filled in, webap can be empty
+. choose the correct component for the portlet. A portlet coming from a form in projectmgr but which uses workeffort items without projectmgr personalisation should be defined in WorkEffort with component = "WorkEffort" (ex: WorkEffortNotes). It's possible to override a uiLabel in a component, so a specifics title is not a correct reason. If a form drop-down is defined with constraints (parentType = xxx, xxxType= , ...), it's easly resolved by defining and using a portlet attribute.
+. except in very special situations, the screenlet title should use an existing label. You must search twice before creating a new one, and if you create it, you must put it in the right component
+. if possible, use only one form. If possible, extend the standard (which is used by screen) Form, and override only link fields (edit, remove) by show-portlets, and add an on-event-update-area if a submit button exists
+. update and create targets must have to use a return json, so as to have a display of error (or success) messages. 
+. edition actions (in the editArea area) should be uri, and not portlets (except if EditXXX is used directly as a portlet in an other PortalPage); to be clearer, put screen and form in same place as the portlets that use them.
+. currently, for edit actions (or create in sub-list), a "cancel" button or a "refresh" button should exist.
+. the json uri (and the edit uri) should be put in portlet-controllers, with ofbiz best practice presentation (request without service call in only one line, ...)
+. if possible, use a portlet (mini-lang) script rather than a screen. If the script is a copy from an action screen section, add a comment; Use a script only if it is used in more than one portlet or screen or if the result is used in the menu or title of the screenlet. Otherwise it's better to put it in the action section of the Form.
+. any part of the spread code (form, screen, menu, script, java) must own a comment to indicate the origin of the copy and the justification of the copy (think about the one who will need to delete the copy)
+. every link to another page (in other components, for example) should be moved to a showPortalPage with portalPageId as a portlet attribute, most of the time it should be xxxxRecap; Of course the editForm should define correctly.
+. in every portlet editForm, field's names and tooltips should be very explicit; all attributes should have a default value (portlet should be usable without adding any attribute)
+. most of the time, you should add 2 portal pages (xxxMgmt and xxxRecap). Update it each time you add a new portlet
+. when it's possible, use icons, and not text for menu. To do that, you should : 
++
+** search the correct icon in the "Icon list" Page, and therefore find the icon's logical name
+** give the image-location by using the iconsPurpose map
+** if the icon default tooltips (you can see it in the "Icon List" page) is clear in your case, use it via the IconsTooltips_ labels, otherwise use a specific image-title uiLabel.
+
+
+===== more help
+
+For further information, (Portal page type, portlet type), click on the "index" button and go to Example / Development Tree. 
+
+[[_help_example_docbook]]
+==== Help on writing docBook documents
+
+This file aims to contain an example of what is possible to put in a docBook file that is used as an ofbiz helping page.
+
+It has to be opened as an xml file.
+To display the helping page, only a few docBook tags are interpreted.
+This file contains all the ones that are interpreted.
+
+The interpretation of these tags is made by the ftl file HelpTemplate.ftl
+
+It is advisable to only take a 2-character indentation, in order to limit the width of the file.
+
+The tag "para" enables to manage the paragraphs and, for the moment, it enables to manage the chosen carriage returns.
+The number of spaces or carriage returns in the docBook text is ignored.
+For instance, an empty line between two paragraphs in a docBook file does not generate any space between the paragraphs.
+
+When forcing this action is necessary, in exceptional situations, it is possible to include html code,  to generate spaces or carriage returns for instance.
+But attention! During the creation of pdf files or according to the type of transformation in html,
+
+<br \>these elements will appear and won't be interpreted. 
+[source]
+----
+
+              <para>Short paragraph</para>
+              to insert an empty line between two paragraphs <para>&nbsp;</para>
+              <para>Short paragraphe with a carriage&lt;br \>in the middle</para>
+----
+
+===== [[_whatissection]]What is a section? (H2)
+
+When the user asks for the display of the helping page (clicks on the icon), the system looks for the associated file(s) and displays it (for more details about the organization of the helping page, read <<_documentation_system,Principles and organization of the Apache OfBoz Documentation>>).
+
+The tag "Title" of the file will be the title of the page (H1 in html), and it will be possible to have as many subsections (H2) as we want, and with as many levels (H3, H4, H5, ...) as we want.
+This is the aim of the tag.
+In the tag Title, it is possible to put a tag Anchor in order to link it (with an internal or external link) straight to this section.
+
+====== Subsection (H3)
+
+and we could go on...
+
+===== Example of an ordered list
+
+There will be a number in front of each item.
+
+. First item of my list
+. Second item
+. Third...
+. Forth...
+. and so on...
+
+
+===== Example of an itemized list
+
+There will only be a symbol (a point) at the beginning of each line.
+
+* First item of my list
+* Second item
+* Third...
+* Forth...
+* and so on...
+
+
+===== Examples of text formatting
+
+In formatting, there are 2 notions: 
+
+* formatting the text _in progress_
+* a paragraph with a specific formatting. In this case, you can put a title at that paragraph, but it is not compulsory. Currently, in any case, this title will be on level H3.
+
+Each formatting corresponds to a style.
+Currently, 4 have been created. 
+
+* caution: caution (but softer than warning)
+* important: as its name implies
+* note: as its name implies
+* tip: trick
+* warning: warning (stronger than caution)
+
+
+.Caution title
+[CAUTION]
+====
+Here is a caution text
+====
+
+.Important title
+[IMPORTANT]
+====
+Here is an important text
+====
+
+.Note title
+[NOTE]
+====
+Here is a note
+====
+
+.Tip title
+[TIP]
+====
+Here is a tip
+====
+
+[WARNING]
+====
+Here is a warning
+====
+
+===== Possible inclusion
+
+During the display of the helping page, according to the links between elements of contents, it is possible to display several elements of contents 
+
+* another helping file
+* a picture
+* a form (or a screen) so as to be able to see the helping page of each field
+
+During the display of the helping page on the <<_example_main,home page>> of the component Example, 2 helping files are displayed.
+
+Example of a display of a picture, _only the field fileref is compulsory, but for a good page setting, the fields width and depth are recommended._
+
+
+
+
+image::../example_en_images/MgmtPage.png[A typical portal page]
+
+So as to enable the user to display the helping page of each field (which appears when the mouse is situated on the field's label), it is sometimes interesting to display a form in a helping page text.
+To do this, you have to create an associated element of contents (dataresource) which is associated to a screen.xml, with a dataTemplateTypeId="SCREEN_COMBINED". It is advisable to do a dedicated screen that does not include the general decorator.<br \> Then, you have to associate the element of contents with the same parent as for the helping page with which the screen has to appear.
+Here are the data for the display of the following screen. 
+[source]
+----
+
+              <DataResource dataResourceId="EXAMPLE_EditForm"  objectInfo="component://example/widget/example/ExampleScreens.xml#ExampleEditForm" dataResourceTypeId="URL_RESOURCE" dataTemplateTypeId="SCREEN_COMBINED"/>
+              <Content contentId="EXAMPLE_EditForm" contentTypeId="DOCUMENT" contentName="Example Fields" dataResourceId="EXAMPLE_EditForm"/>
+              <ContentAssoc contentId="HELP_EXAMPLE_docbook" contentIdTo="EXAMPLE_EditForm" mapKey="EXAMPLE_docbook" fromDate="2006-01-12 01:01:01" sequenceNum="005" contentAssocTypeId="INSTANCE"/>
+----
+
+[[_help_example_helpfile]]
+=== Use of the help files
+
+==== Several spaces
+
+The help files are contained in the corresponding component (directory /data/helpdata/). Thus, for the component Example, you can find, for instance, the help file that you are reading right now (as well as every available subject in the help page of the component Example): 
+[source]
+----
+
+                /ofbiz/specialpurpose/example/data/helpdata/HELP_EXAMPLE_helpfile.xml
+----
+
+The configuration of the use of these files in the various help menus is done in the component Content (directory /data/helpdata/) with one file per component.
+There, you can find the definition of the Contents and DataResource corresponding to the help files defined in the component, in the language configurations, in the browsing tree configurations of the help page, ... 
+[source]
+----
+
+                /ofbiz/applications/content/data/ExampleHelpData.xml
+----
+
+==== The drafting of the help file
+
+See the help page about docBook and its syntax, as well as the various help files that exists in the component Example (/ofbiz/specialpurpose/example/data/helpdata). 
+
+==== The help page configuration
+
+In these configuration files, one content (Content) and one resource (DataResource) are defined for each help file.
+Here is an example of a definition for the help file specialpurpose/example/data/helpdata/HELP_EXAMPLE_main.xml: 
+[source]
+----
+
+                <DataResource dataResourceId="EXAMPLE_main" localeString="en" dataResourceTypeId="OFBIZ_FILE" 
+                    objectInfo="specialpurpose/example/data/helpdata/HELP_EXAMPLE_main.xml" dataTemplateTypeId="NONE" statusId="CTNT_IN_PROGRESS" dataResourceName="Main page" mimeTypeId="text/xml" isPublic="Y" />
+                <Content contentId="EXAMPLE_main" contentTypeId="DOCUMENT" contentName="Main menu." templateDataResourceId="HELP_TEMPL" dataResourceId="EXAMPLE_main" statusId="CTNT_IN_PROGRESS" mimeTypeId="text/html"/>
+----
+
+The configuration of the tree is done by means of associations ContentAssoc of the kind TREE_CHILD and of the seequenceNum that enables to put the items in order: 
+[source]
+----
+
+                <ContentAssoc contentId="HELP_EXAMPLE" contentIdTo="EXAMPLE_main"     contentAssocTypeId="TREE_CHILD" sequenceNum="001"" mapKey="EXAMPLE_main"/>
+                <ContentAssoc contentId="HELP_EXAMPLE" contentIdTo="EXAMPLE_help"     contentAssocTypeId="TREE_CHILD" sequenceNum="002" mapKey="EXAMPLE_docbook"/>
+                  <ContentAssoc contentId="EXAMPLE_help" contentIdTo="EXAMPLE_docbook"  contentAssocTypeId="TREE_CHILD" sequenceNum="001" mapKey="EXAMPLE_docbook"/>
+                  <ContentAssoc contentId="EXAMPLE_help" contentIdTo="EXAMPLE_helpfile" contentAssocTypeId="TREE_CHILD" sequenceNum="002" mapKey="EXAMPLE_helpfile"/>
+                <ContentAssoc contentId="HELP_EXAMPLE" contentIdTo="EXAMPLE_devel"    contentAssocTypeId="TREE_CHILD" sequenceNum="003" mapKey="EXAMPLE_docbook"/>
+                ...
+----
+
+The pages for each language can be associated by using ContentAssoc of the kind ALTERNATE_LOCALE: 
+[source]
+----
+
+                <DataResource dataResourceId="EXAMPLE_main_FR" localeString="fr" dataResourceTypeId="OFBIZ_FILE" 
+                    objectInfo="specialpurpose/example/data/helpdata/HELP_EXAMPLE_main_FR.xml" dataTemplateTypeId="NONE" statusId="CTNT_IN_PROGRESS" dataResourceName="Accueil" mimeTypeId="text/xml" isPublic="Y" />
+                <Content contentId="EXAMPLE_main_FR" contentTypeId="DOCUMENT" contentName="Accueil" templateDataResourceId="HELP_TEMPL" localeString="fr" dataResourceId="EXAMPLE_main_FR" statusId="CTNT_IN_PROGRESS" mimeTypeId="text/html"/>
+                <ContentAssoc contentId="EXAMPLE_main" contentIdTo="EXAMPLE_main_FR" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2006-01-12 01:01:01"/>
+----
+
+==== Organization of the help files
+
+The Help page is managed by using the component Content's functionality.
+
+The Help page is meant to: 
+
+* __a component or a sub-component__; the access is possible in the browsing tree; the content is associated to the help page root (contentId=HELP_ROOT) with the child type (contentAssocTypeId="TREE_CHILD");
+* __a screen__; the access is possible thanks to the help icon (on the top right hand corner of most themes); contentId is searched on ContentAssoc.mapKey with  a "helpTopic" value built on the component webSite and the uri used to display this screen ;
+* __a portlet__; the access is made possible by a link on the Help portalPage (which contains this portlet); the link is a showHelp (as well as for a screen) with the helpTopic value built with "HELP_" and portletId
+* __a portal page__; the access is made possible thanks to the help icon if the portalPageId is not empty; the content is linked by the portal page and is displayed at the top of the list of the portlets that contain it.
+
+
+[[_help_example_help]]
+=== The Example Main Help page.
+
+For example, if you want to see how you should do to add some help you can look to help files in data/helpdata directory in example  component and data/ExempleHelpData.xml in content component.
+
+==== Development help sub-subject
+
+To have the complete list you should click on index button and look to example tree option, but here is a list of main shortcut : 
+
+* How is organize <<_documentation_system,The Apache OFBiz documentation system>>
+* <<_example_devel,Portlet development Best Practice>>
+* <<_example_docbook,What it's possible to do in help file>>
+
+
+[[_help_example_pages]]
+== The PortalPage usage.
+
+In this page, you can create or search an example
+
+A portal page is composed of one or more portlets organized around columns and sequencing
+
+Below is a PortalPage configuration example : 
+[source]
+----
+
+        <PortalPage portalPageId="ExampleMgmt"  sequenceNum="200" parentPortalPageId="EXAMPLE" 
+                           portalPageName="Example management" description="Search, list, navigation menu, edit area" ownerUserLoginId="_NA_"/>
+        <PortalPageColumn portalPageId="ExampleMgmt" columnSeqId="00001" columnWidthPercentage="25"/>
+        <PortalPagePortlet portalPageId="ExampleMgmt" portalPortletId="FindExample" portletSeqId="00001" columnSeqId="00001" sequenceNum="1"/>
+        <PortalPagePortlet portalPageId="ExampleMgmt" portalPortletId="ExampleDetailsMenu" portletSeqId="00001" columnSeqId="00001" sequenceNum="10"/>
+        <PortalPageColumn portalPageId="ExampleMgmt" columnSeqId="00002"/>
+        <PortalPagePortlet portalPageId="ExampleMgmt" portalPortletId="ListExample" portletSeqId="00001" columnSeqId="00002" sequenceNum="20"/>
+        <PortalPagePortlet portalPageId="ExampleMgmt" portalPortletId="ExampleDetail" portletSeqId="00001" columnSeqId="00002" sequenceNum="30"/>
+----
+
+To ensure the quality of this portal page, it is important to think about translations (CommonPortalEntityLabels.xml) : 
+[source]
+----
+
+        <property key="PortalPage.portalPageName.ExampleMgmt">
+            <value xml:lang="en">Examples management </value>
+            <value xml:lang="fr">Gestion des exemples </value>
+        </property>
+----
+
+=== Portal Page Type
+
+The notion of  "portal page - type" exists only in terms of good practices.
+You can organize the content of your pages portals as you wish, but three pages type are found in most components.
+During the creation of portal page for a new component, it is advisable to start with these three types pages
+
+To have the complete list you should click on index button and look to example tree option, but here is a list of main shortcut : 
+
+* <<_help_ppage_mgmt,Management pages>>
+* <<_help_ppage_recap,Recap (Summary) pages>>
+* <<_help_ppage_new,Creation pages>>
+
+
+[[_help_ppage_mgmt]]
+==== Portal Page to search and manage a main business entity.
+
+This page type allows to search on a "business entity", and from the results list to view each associated entities.
+From the results list, there is also a link to a page synthesis of the entity, ie view all related entities, for an entity instance. 
+
+
+
+
+image::../example_en_images/MgmtPage.png[Management PortalPage - Type]
+
+
+===== Other Portal Page Type
+
+
+
+* <<_help_ppage_recap,Recap Page>>
+* <<_help_ppage_new,Creation Page>>
+
+
+[[_help_ppage_new]]
+==== Portal page to create a record for a major business entity
+
+This type of page is to create a record of a business entity and then complete it by adding one to a set of association related entities.
+
+
+
+
+image::../example_en_images/NewPage.png[Page Portail Type : Creation]
+
+
+===== Other Portal Page Type
+
+
+
+* <<_help_ppage_mgmt,"Management Page (search, list)">>
+* <<_help_ppage_recap,Recap Page>>
+
+
+[[_help_ppage_recap]]
+==== Summary Portal Page for one record of a main business entity
+
+This type of page should show, for a Business entity, a set (or all) of associated entities portlet (like PartyProfile, ViewProject, ...). 
+
+
+
+
+image::../example_en_images/RecapPage.png[Recap (or Summary) PortalPage - Type]
+
+
+===== Other Portal Page Type
+
+
+
+* <<_help_ppage_mgmt,"Management Page (search, list)">>
+* <<_help_ppage_new,Creation Page>>
+
+
+[[_help_example_portlets]]
+== The PortalPortlets usage.
+
+=== 
+
+After Portlet type selection, We can proceed to its configuration depending on our screen needs 
+
+* Configure portlet title
+* Configure the widget to be used (screen or form)
+* Configure whether it should call a script, before rendering process start. For example : get some data, check passed parameters or any action that may be needed to get portlet working
+* Configure wheter it shoud should incllud a menu on its screenlet title bar
+* Is there a variable to must be checked do decide if the portlet should be rendered or not(For example : a workEffort resume portlet may chek that it gets a workEffortId otherwise it does show anything to avoid a form with field labels only rendered)
+* $$...$$
+
+Most of portlet cofigurable elements has default values deduced by renderers to facilitate portlet creation process.
+
+So looking at a portlet définition file like  ExempleExamplePortletData.xml, we can see that very litlle of theme are set,  mainly portlet own field. 
+
+here are some excerpts: 
+[source]
+----
+
+              <PortalPortlet portalPortletId="FindExample"
+                 portletName="Find Example (with portletType and showPortlet)" description="portlet to define search criteria for Example list"
+                 portletTypeId="Screenlet"  component="example" subComponent="Example" helpName="HELP_Screenlet"/>
+              <PortalPortlet portalPortletId="ListExample"
+                 portletName="List Examples (with portletType and showPortlet)" description="portlet to list example depending on search criteria, this portlet is call by FindExample"
+                 portletTypeId="ScreenletList" component="example" subComponent="Example" helpName="HELP_ScreenletList"/>
+----
+
+To ensure this portal page quality, its important to take care of translation files (CommonPortalEntityLabels.xml) : 
+[source]
+----
+
+        <property key="PortalPortlet.portletName.FindExample">
+            <value xml:lang="en">Find Example </value>
+            <value xml:lang="fr">Rechercher un exemple </value>
+        </property>
+        <property key="PortalPortlet.description.FindExample">
+            <value xml:lang="en">portlet to define search criteria for Example list </value>
+            <value xml:lang="fr">portlet (type Screenlet) de critères de recherche pour la liste des exemples </value>
+        </property>
+----
+
+[[_help_portletattrs]]
+=== The Portlet Attribute page.
+
+PortalPortlet use PortalAttribute to be able to configure a portlet for different usage.
+
+There are several types of attributes, like standard ones, and user ones, like an type id.
+
+==== Attribute management
+
+See a standard attribute used by Screenlet and ScreenletList portlet types for reducing or not screenlet : 
+[source]
+----
+
+                  <PortletAttribute portalPageId="ExampleNew" portalPortletId="FindExample" attrName="initiallyCollapsed" attrValue="true" portletSeqId="00001"/>
+----
+
+Here, a personal use to configure portlet with a parameted list (role type configuration) : 
+[source]
+----
+
+                  <PortletAttribute portalPageId="ExampleMgmt" portalPortletId="ListExample" attrName="roleTypeId" attrValue="VENDOR" portletSeqId="00001"/>
+----
+
+[[_help_portletcats]]
+=== The Portlet Category page.
+
+PortalPortlet use PortalCategory to be able to classify portlets according to their component.
+
+You can define specific category or more detailled category.
+
+You can also build a category tree using parent category.
+
+==== Category management
+
+Here, a personal use to associate portlet with a category : 
+[source]
+----
+
+                  <PortletPortletCategory portalPortletId="FindExample2" portletCategoryId="EXAMPLE"/>
+----
+
+[[_help_portletfields]]
+=== The Portlet Fields description.
+
+All fields used to define a portlet are listed below.
+
+Some field have default value (scriptName, menuName, screenName or formName), other must be filled (portletId, type, component and sub-component,...). 
+
+Default values should be used, when it's possible
+
+[TIP]
+====
+Find above the list of fields and a long description of the field role when you go hover it, long description and its default value.
+====
+
+If the form is not shown below, then <<_portletfields,click here>>
+
+[[_help_portlettypes]]
+=== The Portlet Types usage.
+
+To facilitate portlet creation process, there is several portlet types for classical portal page use-cases 
+
+For each type a given amount of parameter is required to perform type associted actions in order to render portlet and control its behavior.
+
+==== Available types
+
+Here is a list of currently available types : 
+
+* Screenlet : generic type. portlet widget get injected into a screenlet
+* ScreenletList : genric type for list portlet. widget get injected into a screent and preceeded by an empty container for further use
+* Empty : Define an empty container to for futur content injection using ajax mainly
+* Decorator : Type allow loading portlet using URI
+
+To choose appropriate type see detail for each type.
+
+[[_help_screenlet]]
+=====  Portlet Type : screenlet 
+
+_ This is the most common type of portlet. _ It can manage with screens or forms and menu editing area (injection or substitution). 
+
+can also executed a script before loading the portlet to retrieve entity, lists, ... 
+
+When creating a new portlet, you must define a number of fields to ensure its operation and its reuse. 
+
+It's important to consider which component relates this portlet and its features.
+Once the component and subcomponent identified, you should describe the function of the portlet as well as possible. 
+
+
+
+
+image::../example_en_images/Screenlet.png[]
+
+
+====== Main entity Field  in PortalPortlet 
+
+* portalPortletId: identifier of the portlet, max. 20 characters. 
+* portletLongId: identifying complementary, max. 60 char. 
+* portletTypeId: chosen type here screenlet 
+* portletName: short description, don't forget labels in CommonPortalEntityLabels.xml for translations in other language
+* description:  long description, don't forget labels in CommonPortalEntityLabels.xml translations in other language
+* component: component name, very important to generate the default values of other fields ​​used by this type of portlet 
+* subComponent: name of the subcomponent, very important to generate the default values of other fields ​​used by this type of portlet 
+* webapp: to filled in when sub-directory under the component must be used
+* screenshot: png image of the portlet 
+
+complementary or optional fields could be used. 
+
+[TIP]
+====
+With component and subcomponent fields filled in, there will be default values ​​for many other fields. 
+====
+
+======  Field of the entity type used PortalPortlet screenlet (to be completed only if specific value) 
+
+* titleLabel: title to be displayed 
+* formName: optional, depends on the field useScreen, used if useScreen is empty or N 
+* formLocation: see above 
+* useScreen 
+* screenName: optional, is used if there is useScreen 
+* screenLocation: see above 
+* useMenu 
+* MenuName: Adding a menu at the top right of the screenlet, used if useMenu is Y
+* menuLocation: see above 
+* editAreaDivId: edit box at the top of the screen or form used, available to inject content (via the menu, for example) 
+* subAreaDivId: the area containing the form or screen used, available to replace the content of this field (via the menu, for example) 
+* useScript 
+* scriptName, used if useScript is Y 
+* pkIdname 
+
+By default this type of portlet is reducible with save-collapsed = "true" 
+
+[TIP]
+====
+For more information see Help Detailed <<_portletfields, fields of a portlet >>
+
+When making a portlet, when in doubt, it is possible to display the default values ​​generated through page link:/webtools/control/ShowPortalPortlet[ ShowPortalPortlet ] in Adm.
+Sys 
+====
+
+====== Possible generic attributed 
+
+* collapsible: true if it is empty _ not operational: currently always true_
+* saveCollapsed: empty if this is true _ not operational: currently always true_
+* initiallyCollapsed: false if empty
+
+
+======  Additional Links 
+
+* See <<_allportlettype, all portlet types and fields >>
+* See <<_portletfields, complete list of portalPortlet fields and their descriptions >>
+
+
+[[_help_screenletlist]]
+=====  Portlet Type : screenletList 
+
+_ This is the second most common type of portlet. _ It's use to manage list or subList with menu editing area (injection or substitution). 
+
+This portlet type is used when one needs a list.
+Indeed, the lists in screenlet required, due to the paging system, use a form as content.
+So you simply create the Form respecting the rules of naming.
+
+can also executed a script before loading the portlet to retrieve entity, lists, ... 
+
+When creating a new portlet, you must define a number of fields to ensure its operation and its reuse. 
+
+It's important to consider which component relates this portlet and its features.
+Once the component and subcomponent identified, you should describe the function of the portlet as well as possible. 
+
+
+
+
+image::../example_en_images/ScreenletList.png[]
+
+
+====== Main entity Field  in PortalPortlet 
+
+* portalPortletId: identifier of the portlet, max. 20 characters. 
+* portletLongId: identifying complementary, max. 60 char. 
+* portletTypeId: chosen type here screenlet 
+* portletName: short description, don't forget labels in CommonPortalEntityLabels.xml for translations in other language
+* description:  long description, don't forget labels in CommonPortalEntityLabels.xml translations in other language
+* component: component name, very important to generate the default values of other fields ​​used by this type of portlet 
+* subComponent: name of the subcomponent, very important to generate the default values of other fields ​​used by this type of portlet 
+* webapp: to filled in when sub-directory under the component must be used
+* screenshot: png image of the portlet 
+
+complementary or optional fields could be used. 
+
+[TIP]
+====
+With component and subcomponent fields filled in, there will be default values ​​for many other fields. 
+====
+
+======  Field of the entity type used PortalPortlet screenlet (to be completed only if specific value) 
+
+* titleLabel: title to be displayed 
+* formName: optional, depends on the field useScreen, alway used 
+* formLocation: see above 
+* useScreen 
+* screenName: optional, if present, used after showing form 
+* screenLocation: see above 
+* useMenu 
+* MenuName: Adding a menu at the top right of the screenlet, used if useMenu is Y
+* menuLocation: see above 
+* editAreaDivId: edit box at the top of the screen or form used, available to inject content (via the menu, for example) 
+* subAreaDivId: the area containing the form or screen used, available to replace the content of this field (via the menu, for example) 
+* useScript 
+* scriptName, used if useScript is Y 
+* pkIdname 
+
+By default this type of portlet is reducible with save-collapsed = "true" 
+
+[TIP]
+====
+For more information see Help Detailed <<_portletfields, fields of a portlet >>
+
+When making a portlet, when in doubt, it is possible to display the default values ​​generated through page link:/webtools/control/ShowPortalPortlet[ ShowPortalPortlet ] in Adm.
+Sys 
+====
+
+====== Possible generic attributed 
+
+* collapsible: true if it is empty _ not operational: currently always true_
+* saveCollapsed: empty if this is true _ not operational: currently always true_
+* initiallyCollapsed: false if empty
+
+
+======  Additional Links 
+
+* See <<_allportlettype, all portlet types and fields >>
+* See <<_portletfields, complete list of portalPortlet fields and their descriptions >>
+
+
+[[_help_empty]]
+===== Use of the template "Empty"
+
+
+
+
+image::../example_en_images/Empty.png[Empty portlet template]
+
+This designer enables to define a portlet as containing other portlets.
+
+Thus, by means of a browsing menu, a portlet can be loaded in this area of contents.
+Go to the portlet "ExampleDetail" and the portlet containing the menu that manages it.
+
+Standard use: the template "Empty" is used to delimit an area "loading of portlets", controlled by another portlet that contains a menu.
+
+====== Supplementary links
+
+<<_help_portlettypes,Back to the menu "Portlet types">>
+
+Display <<_allportlettype,every portlet type and the fields>>
+
+Display <<_portletfields,the full list of the fields of a portlet>>
+
+[[_help_decorator]]
+===== Use of the template "Decorator".
+
+
+
+
+image::../example_en_images/Decorator.png[Decorator portlet Template]
+
+<<_help_portlettypes,Back to "Portlet Types" Menu>>
+
+The template "Decorator" only contains the decorator that enables the management of translations in the component in which the portlet will be used (loading of the uiLabel files).  This decorator is used by the template "Screenlet" and "ScreenletList".
+
+The use of this portlet template enables to create a portlet from a screen, without worrying about the uiLabel files.
+It is advisable to use it in order to be homogeneous in terms of use of sames uiLabel files structure for every portlet.
+
+It will be used each time a specific screen is needed.
+
+====== Optional fields of the entity PortalPortlet that are used:
+
+* uiLabelLocation
+* useScreen, value should be Y
+* screenName
+* screenLocation
+
+Go to <<_portletfields,the full list of the fields of a portlet>>
+
+==== For more information 
+
+See <<_allportlettype,All portlet types and field>>
+
+[[_help_iconslist]]
+=== Icons List available in OFBiz.
+
+Icons are useful to make the user interface nicer. 
+
+To ensure consistency in the application, a logical name was given to each icon and it is advisable to use only one. 
+
+To be able to change icon sets based on themes, it is advisable not access online the image file but to go through the appropriate properties files.
+
+====  HowTo use of icons in a link (link or show-portlet) 
+
+An example of use of icon Details 
+[source]
+----
+
+                  <show-portlet portlet-id="ShowExample" image-location="${iconsPurpose.Details}" 
+                                                              image-title="${uiLabelMap.IconsTooltips_Details}">
+----
+
+In this page, the first column is: the logical name of the icon (in the example above Details). 
+
+second column is indicated which will be displayed as an "image-title" So when the mouse is over the icon, or in some case which good practice should be use to "image-title". 
+
+If you leave the mouse on the image of the icon you have the "image-title" default. 

@@ -1,0 +1,255 @@
+// à revoir et mixer avec plugin
+[[_dev_addon]]
+= Packager ses développements en addon
+January 24, 2013 +
+en cours de revu en juin 2018
+
+<<ADM_ADDON_MANAGER, L'addon manager>> permet de créer un <<ADDON_OFBIZ, addon>> avec l'ensemble des fichiers modifiés
+ou créer dans le cadre du développement d'une fonctionnalité.
+
+[[_dev_addon_patch_format]]
+== Les différents format de fichier patch
+
+Depuis la création de l'<<ADM_ADDON_MANAGER, adm>>, nous cherchons à avoir un format pour les fichier patch qui soit le plus pratique 
+et le plus résistant aux modifications du fichier source par ailleurs.
+
+=== pop
+
+Les fichiers avec pop dans l'extention du nom de fichier (xxxx.9.pop.patch) utilise ce format, c'est le format  standard des patch unix.
+C'est le format par défaut de l'adm, quand vous ajoutez un fichier dans un addon avec la  commande "adm add-file" .
+
+_exemple de contenu d'un fichier patch de type pop:_
+
+[source]
+----
+
+
+@@ -110,6 +110,8 @@
+     <entity-data-reader name="ext"/>
+     <entity-data-reader name="ext-test"/>
+     <entity-data-reader name="ext-demo"/>
++    <entity-data-reader name="asso"/><!-- #Eam# : association -->
++    <entity-data-reader name="asso-demo"/><!-- #Eam# : association -->
+ 
+     <field-type name="hsql" loader="fieldfile" location="fieldtypehsql.xml"/>
+     <field-type name="derby" loader="fieldfile" location="fieldtypederby.xml"/>
+----
+
+=== dop
+
+Les fichiers avec dop dans l'extention du nom de fichier (xxxx.9.dop.patch) utilise ce format, c'est un format sémantique, 
+il est actuellement utilisé pour la plupart des fichiers xml d'ofbiz.
+
+L'objectif de ce format est de permettre les ajouts ou suppressions d'un ou plusieurs noeuds au niveau de noeud  (balise) existant 
+en utilisant un (ou 2) attribue en tant qu'identifiant pour déterminer où ajouter (ou supprimer).  
+De plus les changement doivent êtres appliqué dans le fichier sans que l'ensemble du formattage du fichier soit modifié.
+L'attribues utilisé dépend du type de fichier xml (menu, form, screen, properties, ...).
+
+Vous devez utiliser l'option -d pour générer le patch au format dop lors de la commande add-file de l'adm.
+
+[NOTE]
+Si la génération du fichier au format dop échoue, c'est le format pop qui est utilisé +
+C'est très simple de créer manuellement des fichiers au format dop
+
+_exemple 1 de contenu d'un fichier patch de type dop:_
+
+[source,xml]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<patch>
+<x:add path="/" previous="/property[CommonBy]/">
+<!--#Bam# addonAjoutCategory -->
+    <property key="CommonCategory">
+        <value xml:lang="en">Category</value>
+        <value xml:lang="es">Categoría</value>
+        <value xml:lang="fr">Catégorie</value>
+    </property>
+<!--#Eam# addonAjoutCategory -->
+</x:add>
+</patch>
+----
+
+_exemple 2 de contenu d'un fichier patch de type dop:_
+
+[source,xml]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<patch>
+<x:add path="/menu[PartyAppBar]/" previous="/menu[PartyAppBar]/menu-item[find]/">
+<!--#Bam# portlet-party -->
+        <menu-item name="portalPage" parent-portal-page-value="PartyMgmt"/>
+<!--#Eam# portlet-party -->
+</x:add>
+</patch>
+----
+
+=== xpp
+
+Les fichiers avec xpp dans l'extention du nom de fichier (xxxx.9.xpp.patch) utilise ce format, 
+c'est un format patch xml utilisant une syntaxe xpath standard, c'est actuellement utilisé pour les patch sur les fichiers  docbook.
+
+Ce format est encore dans une phase expérimentale, nous étudions les possibilités de le généraliser.
+L'application de ce type de patch est faite avec le parser xml standard utilisé par ofbiz, donc le formattage du fichier n'est pas conservé après application d'un patch.
+
+[NOTE]
+Actuellement il n'est pas possible de générer de fichier à ce format à partir de l'adm, il faut écrire le fichier manuellement.
+
+_exemple de contenu d'un fichier patch de type xpp:_
+
+[source,xml]
+----
+<patch>
+<add path="//:section[@xml:id='about']/:para[2]" position="after">
+    <!--#Bam# test-xpath -->
+    <para>This is added by the test addon for xpath based patch fro xml files</para>
+    <!--#Eam# test-xpath -->
+</add>
+<add path="//:section[@xml:id='about']/:sect1[2]/:sect2[2]/:itemizedlist[1]/:listitem[2]/:para" position="before">
+    <!--#Bam# test-xpath -->
+    <para>Manage recruitment (duplicated by the test addon)</para>
+    <!--#Eam# test-xpath -->
+</add>
+<add path="//:section[@xml:id='HUMANRES_EditEmployeeTrainings']/:itemizedlist[2]" position="last">
+    <!--#Bam# test-xpath -->
+    <listitem>
+        <para>this para and its parent are duplicated by the test addon</para>
+    </listitem>
+    <!--#Eam# test-xpath -->
+</add>
+</patch>
+----
+
+[[_help_addon]]
+== Comment et où rédiger l'aide d'un addon
+
+L'aide de l'addon est obligatoire quand on veux suivre le processus qualité (passage dans ofbizextra-incubator).
+
+L'aide de l'addon est à destination des personnes avec une expérience OFBiz pour leur permettre de déterminer si l'addon correspond à leur besoin ou non (sur le plan technique, fonctionnel, niveau de qualité, ..). Il peut contenir des liens vers l'aide utilisateur si elle existe mais il n'a pas  pour objectif d'être l'aide utilisateur final.
+
+=== Conventions et formalismes
+
+L'aide doit être rédigé au format 
+<<FORMAT_DOCBOOK ,docbook>> et doit correspondre à une  section (au sens docbook) car ce contenu sera inclus dans le chapitre des aides des addons installés.
+Donc le fichier doit débuter (après la license) par 
+[source,xml]
+----
+<section xml:id="ADDON_addonName"
+     xmlns="http://docbook.org/ns/docbook"
+     xmlns:xl="http://www.w3.org/1999/xlink"
+     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xsi:schemaLocation="http://docbook.org/ns/docbook">
+----
+avec addonName remplacé par le nom de l'addon, l'orthographe doit être exact. 
+
+Le nom du fichier doit être HELP_ADDON_addonName.xml avec addonName remplacé par le nom de l'addon, l'orthographe doit être exact.
+Il est possible de le suffixer avec le code langue (ex: HELP_ADDON_addonName_FR.xml). Ce fichier doit se trouver dans un répertoire helpdata à la racine de l'addon.
+
+.La convention de nomage est importante
+[WARNING]
+C'est cette convention qui est utilisé par l'adm pour copier au bon emplacement le fichier lors de l'installation de l'addon
+
+
+=== Contenu
+
+Il n'y a rien d'obligatoire mais le plus courament on utilise un certain nombre de sous-section (de simplesect)  avec les titres suivants 
+[source,xml]
+----
+    <simplesect>
+      <title>Business coverage</title>
+      <!-- or User requirements at the development beginning -->
+      <para> </para>
+    </simplesect>
+
+    <simplesect>
+      <title>Technical architecture</title>
+      <!-- Functional choice or parameter, UFO diagram associated, 
+           entity or service to use, menu or screen to define -->
+      <para> </para>
+    </simplesect>
+
+    <simplesect>
+      <title>Version status</title> 
+      <!-- to explain if this addon is usable for what
+           currently is it a alpha version, a beta version, or a usable one
+
+           this simplesect can be remove when addon is published with finish status
+      -->
+        <itemizedlist>
+            <listitem ><para>Version 0.X , work in progress, so not really usable, but show which will exist</para>
+            </listitem>
+        </itemizedlist>
+    </simplesect>
+
+    <simplesect>
+      <title>Install process :</title>
+      <!-- is it necessary to compile, generate helpn, load datat, ....-->
+        <orderedlist>
+            <listitem ><para> </para></listitem>
+        </orderedlist>
+    </simplesect>
+
+    <simplesect>
+      <title>Parameters :</title>
+        <para>currenlty nothing</para>
+        <itemizedlist>
+            <listitem ><para>XXXX : with this parameters you can ..</para></listitem>
+        </itemizedlist>
+    </simplesect>
+
+    <simplesect>
+      <title>How-to test :</title>
+        <para>No automatics testing process exist, user can test after follow install process</para>
+        <!-- 
+        <orderedlist>
+            <listitem ><para>follow install process</para></listitem>
+            <listitem ><para>do xxxx</para></listitem>
+            <listitem ><para>run selenium test</para></listitem>
+            <listitem ><para>result should be ....</para></listitem>
+        </orderedlist>
+        -->
+    </simplesect>
+
+    <simplesect>
+      <title>Dependency :</title>
+        <orderedlist>
+            <listitem ><para>Mandatory, portlet widget, because it use portlet ;-) </para></listitem>
+        </orderedlist>
+    </simplesect>
+----
+
+=== Fichiers patch à ajouter
+
+Actuellement l'inclusion des fichiers d'aide d'addon dans le chapitre des addons installés n'est pas automatique, il faut le faire via des fichiers patch : 
+
+. inclusion dans le chapitre en anglais, ajouter un fichier OFBIZ_ADDONS.xml.0.xpp.patch dans framework/webtools/data/helpdata/docbookhelp 
++
+[source,xml]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<patch xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+       xmlns="http://docbook.org/ns/docbook" 
+       xmlns:xi="http://www.w3.org/2001/XInclude"
+       xmlns:xlink="http://www.w3.org/1999/xlink" 
+       xmlns:xml="http://www.w3.org/XML/1998/namespace" >
+<add path="//:section[@xml:id='INSTALLED_ADDONS']" position="last">
+    <xi:include href="../../../../../.addons/helpdata/HELP_ADDON_addonName.xml" />
+</add>
+</patch>
+----
+avec addonName remplacé par le nom de l'addon, l'orthographe doit être exact.
+. Idem dans le chapitre en français OFBIZ_ADDONS_FR.xml.0.xpp.patch (même si votre fichier d'aide est en anglais)
+. ajout des informations nécessaire pour avoir le lien entre l'addon et l'aide de l'addon dans l'adm-gui. 
+  ajouter un fichier WebtoolsHelpData.xml.0.dop.patch dans framework/webtools/data/helpdata/ 
++
+[source,xmll]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<patch>
+<x:add path="/" previous="//">
+  <WebhelpTarget defaultTargetId="ADDON_addonName" helpTopic="ADDON_addonName" /><!--#Eam# addonName  -->
+</x:add>
+</patch>
+----
+avec addonName remplacé par le nom de l'addon, l'orthographe doit être exact.
+
+

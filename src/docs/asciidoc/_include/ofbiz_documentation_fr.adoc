@@ -1,0 +1,597 @@
+// à complétement revoir et parler de asciidoc
+[[_documentation_system]]
+= La gestion de l'aide utilisateur dans OFBiz
+January 24, 2013 +
+en cours de revu à partir de juin 2018
+
+Actuellement il y a 2 systèmes de gestion de l'aide utilisateur, celui qui est inclus dans le noyau OFBiz et celui que vous êtes entrain d'utiliser ;-) qui est ajouté par l'addon webhelp.
+C'est au niveau du composant qu'est défini le système d'aide qui est utilisé par défaut.
+Les deux moteurs utilise le format 
+docbook::  pour la rédaction des fichiers d'aide.
+
+Le moteur d'aide qui est inclus dans le noyau OFBiz utilise le moteur de gestion de contenu de OFBiz et construit l'aide de manière dynamique, mais pour des raisons de performance, l'interpréteur docbook utilisé dans ce cadre ne traite qu'un nombre réduit de type de balise docbook.
+Ce moteur d'aide est pratique lorsque l'aide doit pouvoir être modifiable par les utilisateurs.
+Dans la suite de l'aide nous le nommerons 
+ofbizhelp::.
+
+Le moteur d'aide fournit par l'addon webhelp est issu du projet ``Webhelp du projet docbook``.
+Il permet de générer un site d'aide (en html) à partir d'un ou de plusieurs  fichiers au format 
+docbook::.
+Le nombre de type de balise docbook supporté est donc très étendu.
+
+Ce chapitre de l'aide du composant Exemple doit vous permettre de comprendre comment rédiger et faire fonctionner l'aide à l'intérieur de OFBiz, avec l'un ou l'autre des moteurs 
+ofbizhelp:: ou 
+webhelp::.
+Il détaille aussi les base du format 
+docbook:: et donne des exemples  d'usage de chacune des balises DocBook utilisé couramment.
+Si nécessaire, ou pour plus de détail, vous pouvez regarder les  fichiers sources pour l'aide du composant Exemple, selon la nature de l'information, ils se trouvent dans le répertoire  ofbiz/specialpurpose/example/data/helpdata pour ofbizHelp ou dans le sous-répertoire docbookhelp pour le webhelp. 
+
+[[_file_organisation]]
+== Organisation des fichiers d'aide
+
+.Attention
+[WARNING]
+====
+L'Organisation des fichiers est vraiment différente entre 
+ofbizhelp::  et 
+webhelp::.
+
+Dans un cas (ofbizhelp) le module gestion de contenu est utilisé, dans l'autre cas un ensemble de fichier static sont généré à partir d'un seul fichier (mais qui peut contenir des includes) 
+
+C'est au niveau du fichier ofbiz-component qu'est indiqué quel système d'aide est utilisé, pour utiliser le webhelp il faut ajouter dans la balise webapp, la propriété use-standard-help avec la valeur false.
+====
+
+[[_ofbizhelp_files]]
+=== Avec ofbizhelp
+
+==== Les différents types de fichier
+
+Comme le module de gestion de contenu est utilisé, il faut 
+
+* d'une part écrire des fichiers 
++
+docbook:: (qui seront chacun un élement de contenu);
+* d'autre part écrire la configuration d'usage de ces fichiers, c'est à dire : 
++
+.. associer chaque fichier 
++
+docbook:: avec un identifiant d'élément de contenu;
+.. décrire la relation entre les éléments de contenu;
+.. décrire les associations entre les clé de recherche utilisateur et les éléments de contenu.
+
+Les fichiers d'aide (au format 
+docbook::) sont contenus dans le répertoire /data/helpdata/ de chacun des  composants.
+Ainsi pour le composant Exemple, on trouve le fichier d'aide que vous êtes en train de lire (ainsi  que tous les sujets accessibles dans l'aide du composant Exemple) dans : 
+[source]
+----
+
+  /ofbiz/specialpurpose/example/data/helpdata/HELP_EXAMPLE_helpfile.xml
+----
+
+La configuration de l'usage de ces fichiers se fait avec un fichier xml (nomé nomDuComposantHelpData.xml) qui  se trouve dans le répertoire /data/helpdata/ de chacun des composant.
+On y trouve la définition des Content et DataResource correspondants aux fichiers d'aide définis dans le composant,  les configurations de langues, la configuration de l'arbre de navigation de l'aide,...
+
+Pour le composant exemple le fichier se trouve : 
+[source]
+----
+
+  /ofbiz/specialpurpose/example/data/ExampleHelpData.xml
+----
+
+==== Le contenu d'un fichier docbook d'aide
+
+Chaque fichier correspond à une section d'un ensemble, il démarre donc par la balise 
+// <![CDATA[<section xxxx>]]>
+$$.$$
+
+Le contenu de la section suit la syntaxe docBook, celle-ci est décrit dans la section <<_docbook_syntaxe,Syntaxe d'un fichier docBook>>.
+
+Les fichiers docBook du composant exemple contienne au moins un exemple de chacun des éléments de syntaxe qu'il est possible d'utiliser
+
+==== La configuration de l'aide
+
+Pour chaque composant, il y a un fichier de configuration.
+Dans celui-ci on définit : 
+
+* pour chaque fichier d'aide, un contenu (Content) et une ressource (DataResource). Voici un  exemple de définition pour le fichier d'aide specialpurpose/example/data/helpdata/HELP_EXAMPLE_main.xml : 
++
+[source]
+----
+
+<DataResource dataResourceId="EXAMPLE_main" localeString="en" dataResourceTypeId="OFBIZ_FILE" 
+    objectInfo="specialpurpose/example/data/helpdata/HELP_EXAMPLE_main.xml" dataTemplateTypeId="NONE" statusId="CTNT_IN_PROGRESS" dataResourceName="Main page" mimeTypeId="text/xml" isPublic="Y" />
+<Content contentId="EXAMPLE_main" contentTypeId="DOCUMENT" contentName="Main menu." templateDataResourceId="HELP_TEMPL" dataResourceId="EXAMPLE_main" statusId="CTNT_IN_PROGRESS" mimeTypeId="text/html"/>
+----
+
+.Bien renseigner les labels
+[IMPORTANT]
+====
+Ils sont utilisés comme labels dans l'arbre de navigation de l'aide (principalement "contentName").
+====
+* On configure l'arborescence de l'aide au moyen d'associations ContentAssoc de type TREE_CHILD et du sequenceNum qui permet d'ordonner les items : 
++
+[source]
+----
+
+<ContentAssoc contentId="HELP_EXAMPLE" contentIdTo="EXAMPLE_main"     contentAssocTypeId="TREE_CHILD" sequenceNum="001"" mapKey="EXAMPLE_main"/>
+<ContentAssoc contentId="HELP_EXAMPLE" contentIdTo="EXAMPLE_help"     contentAssocTypeId="TREE_CHILD" sequenceNum="002" mapKey="EXAMPLE_docbook"/>
+  <ContentAssoc contentId="EXAMPLE_help" contentIdTo="EXAMPLE_docbook"  contentAssocTypeId="TREE_CHILD" sequenceNum="001" mapKey="EXAMPLE_docbook"/>
+  <ContentAssoc contentId="EXAMPLE_help" contentIdTo="EXAMPLE_helpfile" contentAssocTypeId="TREE_CHILD" sequenceNum="002" mapKey="EXAMPLE_helpfile"/>
+<ContentAssoc contentId="HELP_EXAMPLE" contentIdTo="EXAMPLE_devel"    contentAssocTypeId="TREE_CHILD" sequenceNum="003" mapKey="EXAMPLE_docbook"/>
+...
+----
+Le champ mapKey permet de faire le lien entre "NOMduCOMPOSANT_URI" et l'élément de contenu à afficher dans l'aide. 
+* Pour internationaliser l'aide, on peut associer les pages pour chaque langue au moyen de  ContentAssoc de type ALTERNATE_LOCALE : 
++
+[source]
+----
+
+<DataResource dataResourceId="EXAMPLE_main_FR" localeString="fr" dataResourceTypeId="OFBIZ_FILE" 
+    objectInfo="specialpurpose/example/data/helpdata/HELP_EXAMPLE_main_FR.xml" dataTemplateTypeId="NONE" statusId="CTNT_IN_PROGRESS" dataResourceName="Accueil" mimeTypeId="text/xml" isPublic="Y" />
+<Content contentId="EXAMPLE_main_FR" contentTypeId="DOCUMENT" contentName="Accueil" templateDataResourceId="HELP_TEMPL" localeString="fr" dataResourceId="EXAMPLE_main_FR" statusId="CTNT_IN_PROGRESS" mimeTypeId="text/html"/>
+<ContentAssoc contentId="EXAMPLE_main" contentIdTo="EXAMPLE_main_FR" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2006-01-12 01:01:01"/>
+----
+
+
+==== Accès et navigation dans les fichiers d'aides
+
+Il est possible d'y accéder de plusieurs manière : 
+
+* **à un composant ou sous-composant**, l'accès est possible dans  l'arbre de navigation, le contenu est associé à la racine de l'aide (contentId=HELP_ROOT) avec le type enfant  (contentAssocTypeId="TREE_CHILD");
+* **à un écran**, l'accès est possible grâce à l'icône d'aide (en  haut à droite sur la plupart des thèmes), le contentId est recherché sur ContentAssoc.mapKey  avec une valeur "helpTopic" batie sur le webSite du composant et l'URI utilisée pour afficher le screen ;
+* **à une portlet**, l'accès est possible par lien avec la page  portail d'aide (qui contient cette portlet), le lien est un showHelp (comme pour un screen) avec la valeur  "helpTopic" batit avec "PORTLET_" et le portletId
+* **à une page portail**, l'accès est possible grâce à l'icône  d'aide si le portalPageId est renseigné, le contenu est lié par la page portail et est affiché en haut de la liste des portlets la contenant.
+
+
+[[_webhelp_files]]
+=== Avec webhelp
+
+Il y a un fichier docbook par composant et par langue, ils se situent dans le répertoire  data/helpdata/docbookhelp du composant en question, son nom doit être préfixé par webhelp_ et suffixé par le code langue.
+De la même manière, il y a un répertoire préfixé par webhelp_ et suffixé par le code langue et le mot images pour toutes les images nécessaire.
+Pour le composant exemple en français cela donne 
+[source]
+----
+
+  /ofbiz/specialpurpose/example/data/helpdata/docbookhelp/webhelp_exemple_fr.xml
+  /ofbiz/specialpurpose/example/data/helpdata/docbookhelp/webhelp_exemple_fr_image/
+----
+A partir de ce fichier, un ensemble de fichier html sont généré via la commande ant webhelp à la racine de ofbiz ou à la racine d'un composant.
+Ce processus de transformation utilise les outils du projet 
+docbook::,  donc la quasi totalité des balises sont prise en compte 
+
+==== Langue et l'aide et message d'avertissement
+
+Afin de gérer des correspondances entres langues et/ou le message d'avertissement si l'aide n'est pas disponible pour la langue demandé, il y a un fichier property WebhelpForLanguage.xml au niveau du composant commonext.
+Par composant, et pour chaque langue est indiqué si l'aide est disponible dans cette langue (il y a alors le code langue à utiliser)  et si non (il y a warning_ en préfixe) quel langue utiliser à la place.
+Par exemple : 
+[source]
+----
+
+<property key="manufacturing">
+    <value xml:lang="de">de</value>
+    <value xml:lang="en">warning_english_en</value>
+    <value xml:lang="fr">warning_anglais_en</value>
+    <value xml:lang="nl">nl</value>
+</property>
+----
+Pour toutes les code langues qui renvoi "de" ou "nl" l'aide sera affiché dans ces langues, pour tous les codes langue commençant par en, l'aide sera affiché en anglais.
+Pour tous les codes langues non définis, il y aura un message  d'avertissement et c'est l'anglais qui sera affiché.
+Pour les codes langue qui arriverons sur le fr, il y aura un message d'avertissement et c'est l'anglais qui sera affiché. 
+
+==== Accès et navigation dans les fichiers d'aides
+
+L'arbre de navigation est constitué à partir des balises structurants le document (book, chapter, section, section, section, ..., simplesect). Chaque section correspond à une page d'aide, si vous souhaitez subdiviser une page alors utilisez simplesect.
+
+Afin de pouvoir accéder à une page d'aide à partir d'un lien d'aide, il faut lui donner un id ( xml:id ) quelque  soit le niveau (chapter, section, section, section, ..., simplesect), ensuite il faire indiquer la correspondance entre des éléments fonctionnels (view_map, portalPage, portlet) et les id indiqués dans le fichier.
+La correspondance est réalisé via l'entité WebhelpTarget, celle ci est lu lors du click sur un des boutons d'aide.
+
+Si aucune correspondance n'est trouvé dans la table WebhelpTarget entre les éléments fonctionnels et un id de  l'aide alors un message d'avertissement sera affiché pour signaler que la page d'accueil (l'id about) sera affiché.
+
+Il existe deux type de bouton (ou lien) d'aide, un au niveau de chaque page et un en tant que titre de  chacune des portlet.
+Pour déterminer l'id qui sera ouvert : 
+
+* En provenance *d'une portlet* (donc lien au niveau du titre de la  portlet) : 
++
+.. S'il n'y a pas d'aide pour une portlet, le titre d'une portlet peux ne pas être un lien, pour  cela il suffit d'ajouter l'
++
+attribue:: helpAvailable pour  cette portlet - page avec la valeur N
+.. L'élément fonctionnel utilisé pour une portlet (le 3iem paramètre de la fonction lookup_help, avec le 5iem paramètre à Y)  est par défaut PORTLET_portalPortletId mais il est possible de mettre une autre valeur en utilisant le champ helpName de la table PortalPortlet ou en tant qu'
++
+attribue de la portlet ::
+.. La première recherche dans WebhelpTarget est faite en utilisant le portalPageId ( ou  originalPortalPageId s'il est non vide) en tant que préfixe, ( c'est le 4iem paramètre de la fonction lookup_help ) : portalPageId_helpTopic
+.. Si la recherche précédente ne donne pas de résultat, le nom du composant est utilisé en tant que préfixe : component_helpTopic
+.. Si la recherche précédente ne donne pas de résultat, la recherche est réalisé avec helpTopic
+* En provenance *d'une page portail* (donc le bouton en entête de page et le champ portalPageId non vide, c'est le 4iem paramètre de la fonction lookup_help ): 
++
+.. L'élément fonctionnel utilisé pour une page portail (le 4iem paramètre de la fonction lookup_help)  est toujours l'identifiant de la page portail (portalPageId). Avant toutes recherche dans la table WebhelpTarget portalPageId est remplacé par originalPageId si celui-ci est non vide pour cette page portail
+.. La page portail est lu pour vérifier si le champ helpTargetId est vide ou non afin de  déterminer la valeur de helpTopic : portalPageId ou helpTragetId
+.. Ensuite la recherche dans la table WebhelpTarget est réalisé avec le nom du composant en tant que préfixe : component_helpTopic
+.. Si la recherche précédente ne donne pas de résultat, la recherche est réalisé avec helpTopic
+* En provenance *d'un écran* (donc lien d'aide au niveau de la page) : 
++
+.. L'élément fonctionnel utilisé pour un écran (le 3iem paramètre de la fonction lookup_help avec le 5iem élément à N)  correspond à une entrée view-map du controller, c'est cette valeur qui sert de helTopic
+.. Ensuite la recherche dans la table WebhelpTarget est réalisé avec le nom du composant en tant que préfixe : component_helpTopic
+.. Si la recherche précédente ne donne pas de résultat, la recherche est réalisé avec helpTopic
+
+
+[NOTE]
+====
+L'ensemble des recherches dans la table WebHelpTarget est indépendant du code langue, il est donc important que tous les fichiers docbook d'un même composant (mais différent selon la langue) possède la même liste d'ID.
+
+Si un ID appelé par la fonction lookup_help est absent, la page d'erreur renvoyé sera une page technique et pas une page à destination des utilisateurs.
+====
+
+.Détail des champs de l'entité WebhelpTarget
+[cols="1,1", options="header"]
+|===
+| Non du champ
+| Usage
+
+|defaultTargetId
+|la clé constitué selon l'endroit où se trouve le bouton d'aide (cf ci-dessus)
+
+|helpTopic
+|La balise dans le webhelp vers lequel diriger. Soit juste un identifiant si c'est
+                    dans le fichier webhelp de l'application, soit un uri de la webapp ofbizhelp (ex: example_fr/content/WEBHELP_FILES.html) 
+                    si le champ helpTopicIsUri == Y
+
+|warningMessage
+|Y ou N, par défaut à N, si Y alors le message WarningNoHelpAvailableGotoDefault, 
+                    "Il n'y a pas d'aide pour ce sujet, vous allez être redirigé vers la page ${defaultTopic}", apparait à l'utilisateur.  
+                    si defaultTopic n'est pas renseigné c'est about qui est utilisé .
+
+|defaultTopic
+|si vide c'est about qui est utilisé, pour la traduction c'est commonUilabel qui est utilisé
+
+|helpTopicIsUri
+|Y ou N, si vide c'est N
+|===
+
+[[_docbook_syntaxe]]
+== Comment écrire un document au format docbook (fichier d'aide)
+
+Ce fichier a pour objectif de contenir un exemple de ce qu'il est possible de mettre dans un fichier 
+docbook:: utilisé en tant qu'aide d'ofbiz.
+Au delà de sa lecture en tant qu'aide, il faut surtout l'ouvrir en tant que fichier xml.
+Pour l'affichage de l'aide avec 
+ofbizhelp:: seules quelques balises docbook sont interprétées, cette aide est plutôt orienté webhelp, donc sans limitation.
+
+Pour 
+ofbizhelp:: l'interprétation de ces balises est réalisée par un fichier  ftl HelpTemplate.ftl
+
+Il est conseillé de prendre une indentation uniquement de 2 caractères, afin de limiter la largeur du fichier.
+
+
+La balise para permet de gérer les paragraphes et, pour l'instant, c'est ce qui permet de gérer les retours à la ligne choisis.
+Le nombre d'espace ou les retours à la ligne dans le texte docbook sont ignorés, par exemple une ligne vide entre 2 para dans  le fichier docbook ne génère pas d'espace entre les paragraphes.
+Quand il est nécessaire de forçer ce comportement, de manière  exceptionnelle, il est possible d'inclure du code html.
+Par exemple pour générer des espaces ou des retours à la ligne, mais  attention lors de la génération de pdf ou selon le type de transformation en html, ces éléments apparaîtront et ne seront pas  interprétés. 
+[source]
+----
+
+<para>Petit paragraphe</para>
+pour insérer une ligne blanche entre deux paragraphe <para>&amp;nbsp;</para>
+<para>Petit paragraphe avec un retour &amp;lt;br \>à la ligne au milieu</para>
+----
+
+=== Qu'est ce qu'une section 
+
+Lorsque l'utilisateur demande l'affichage de l'aide (click sur l'icone) le système recherche le (ou les fichiers) associé(s)  et l'affiche (pour plus de détail sur l'organisation de l'aide lire <<_documentation_system,Gestion de l'aide 
+          utilisateur dans Apache OFBiz>>).
+
+La balise title du fichier sera le titre de la page, et il est possible d'avoir des sous-section, autant  qu'on en veut et avec autant de niveau que voulu, mais une section est habituellement une page.
+Dans la balise title,  il est possible de mettre une balise anchor (ancre) pour pouvoir faire un lien (interne ou externe) directement  vers cette section 
+
+[source]
+----
+
+<section xml:id="WhatIsSection">
+  <title>Qu'est ce qu'une section</title>
+  <para>Lorsque l'utilisateur demande l'affichage ...</para>
+  <para>La balise title du fichier sera le titre de la page ....</para>
+</section>
+----
+
+==== Sous-section à l'interieur d'un page
+
+Utilisez simplesect, par contre il n'est possible d'avoir qu'un seul niveau dans une page
+
+[source]
+----
+
+<simplesect>
+  <title>Sous-section à l'interieur d'un page</title>
+  <para>Utilisez simplesect, par contre il n'est possible d'avoir qu'un seul niveau dans une page</para>
+</ssimplesect>
+----
+
+=== Liste d'élément
+
+==== Exemple d'une liste simple
+
+Habituellement utilisé avec 1 seule ligne par item. 
+[source]
+----
+
+<simplelist>
+  <member>Premier élément de ma liste</member>
+  <member>Deuxiéme élément</member>
+  <member>Troisiéme ...</member>
+  <member>4 iém ...</member>
+  <member>et ainsi de suite...</member>
+</simplelist>
+----
+// <simplelist>
+//               <member>Premier élément de ma liste</member>
+//               <member>Deuxiéme élément</member>
+//               <member>Troisiéme ...</member>
+//               <member>4 iém ...</member>
+//               <member>et ainsi de suite...</member>
+//             </simplelist>
+
+
+==== Exemple de liste à point
+
+Il y aura jutse un signe (un point)au début de chaque ligne. 
+[source]
+----
+
+<itemizedlist>
+  <listitem><para>Premier élément de ma liste</para></listitem>
+  <listitem><para>Deuxiéme élément</para></listitem>
+  <listitem><para>Troisiéme ...</para></listitem>
+  <listitem><para>4 iém ...</para></listitem>
+  <listitem><para>et ainsi de suite...</para></listitem>
+</itemizedlist>
+----
+
+* Premier élément de ma liste
+* Deuxiéme élément
+* Troisiéme ...
+* 4 iém ...
+* et ainsi de suite...
+
+
+==== Exemple d'une liste numérotée
+
+Il y aura un chiffre en début de chaque ligne. 
+[source]
+----
+
+<orderedlist>
+  <listitem><para>Premier élément de ma liste</para></listitem>
+  <listitem><para>Deuxiéme élément</para></listitem>
+  <listitem><para>Troisiéme ...</para></listitem>
+  <listitem><para>4 iém ...</para></listitem>
+  <listitem><para>et ainsi de suite...</para></listitem>
+</orderedlist>
+----
+
+. Premier élément de ma liste
+. Deuxiéme élément
+. Troisiéme ...
+. 4 iém ...
+. et ainsi de suite...
+
+
+=== Exemples de formattage de texte spécifique
+
+==== sans formattage, de la syntaxe xml
+
+Pour inclure une portion de code source java ou xml ou autre, il faut utiliser la balise programlisting
+
+Dans le cas de code xml, pour empécher que ce code soit interprété, il faut, en plus, encadrer le code de 
+[source]
+----
+
+<![CDATA[
+  <bla-bla> .... </bla-bla>
+] ]>
+----
+dans l'exemple ci-dessus, il y a un espace de trop entre les deux ] pour empécher l'interprétation.
+
+==== Faire ressortir du texte
+
+Pour le formattage il y a deux notions : 
+
+* du formattage en *cours* de texte 
++
+[source]
+----
+
+<para>du formattage en <emphasis role="bold">cours</emphasis> de texte</para>
+----
+* un paragraphe avec un formatage particulier, dans ce cas, il est possible de mettre un titre pour ce paragraphe, mais ce n'est pas obligatoire, en cas d'absence un titre par défaut sera affiché (en anglais).
+
+Chaque formattage correspond à un style, actuellement 4 ont été défini 
+
+* caution : prudence (ou attention mais plus faible que warning)
+* important : comme son nom l'indique
+* note : comme son nom l'indique
+* tip  : astuce
+* warning : attention, mais plus fort que caution
+
+
+.Prudence
+[CAUTION]
+====
+Avec le texte qui explique à quoi faire attention, le titre n'est pas obligatoire
+
+[source]
+----
+
+<caution>
+  <title>Prudence</title>
+  <para>Avec le texte qui explique à quoi faire attention, le titre par défaut est caution</para>
+</caution>
+----
+====
+
+.Important
+[IMPORTANT]
+====
+Voici le texte qui est important
+
+[source]
+----
+
+<important>
+  <title>Important</title>
+  <para>Voici le texte qui est important</para>
+</important>
+----
+====
+
+.une Note
+[NOTE]
+====
+et voici le texte de la note, il peut inclure des section ou autre
+
+[source]
+----
+
+<note>
+  <title>une Note</title>
+  <para>et voici le texte de la note, il peut inclure des section ou autre</para>
+</note>
+----
+====
+
+.Astuce
+[TIP]
+====
+Ne pas mettre le titre ou plutot inclure du formattage en cours de texte
+
+[source]
+----
+
+<tip>
+  <title>Astuce</title>
+  <para>Ne pas mettre le titre ou plutot inclure du formattage en cours de texte</para>
+</tip>
+----
+====
+
+.Attention
+[WARNING]
+====
+Attention, en voila enfin un sans titre
+
+[source]
+----
+
+<warning><title>Attention</title>
+  <para>Attention, en voila enfin un sans titre</para>
+</warning>
+----
+====
+
+[[_docbook_include]]
+=== Inclusion Possible
+
+Lors de l'affichage d'une aide, en fonction des liens entre éléments de contenu, il est possible d'afficher plusieurs éléments de contenu 
+
+* un autre fichier d'aide
+* une image
+* un formulaire (ou un écran) afin de pouvoir voir l'aide de chaque champ
+
+
+==== inclusion d'un autre fichier d'aide
+
+Il est possible de faire des inclusions de fichier à n'importe quel endroit selon la syntaxe xml (en générale), mais afin d'avoir un contrôle de la syntaxe en direct lors de la saisie de fichier xml au format docbook dans eclipse, le fichier xsd docbook (celui qui défini ce qui est autorisé) inclus dans ofbiz a été modifié pour inclure l'autorisation de la balise xi:include uniquement au niveau de chapter ou au niveau de section
+
+L'inclusion est réalisé lors de la génération des fichiers html, le point de départ est donc bien la place du fichier docbook (ce n'est pas la même chose pour les fichiers image) 
+[source]
+----
+
+<xi:include href="../../../../../framework/documents/UnitTest.xml" />
+----
+
+==== inclusion d'une image
+
+Il est possible d'insérer des images, la plupart du temps les images à insérer se trouve dans le répertoire image au même niveau que le fichier docbbok
+
+Exemple d'affichage d'une image, **Seul le champ fileref est obligoire, mais pour une bonne 
+            mise en page, le champs width est conseillés**.
+De la même manière les balises textobject et caption sont  importante.
+
+
+
+
+image::example_fr/MgmtPage_FR.png[Une page portail type]
+
+
+[source]
+----
+
+<mediaobject>
+  <imageobject>
+    <imagedata fileref="example_fr_images/MgmtPage_FR.png" width="100%"/>
+  </imageobject>
+  <textobject><phrase>Une page portail type</phrase></textobject>
+  <caption>Schema d'une page portail type de gestion de recherche et gestion objet métier majeur</caption>
+</mediaobject>
+----
+
+.utiliser des images pas trop grosse
+[TIP]
+====
+Il est conseillé d'utiliser des images ayant une taille de 600 en largueur et de les afficher avec le paramètre width exprimé en % pour que l'image se redimensionne en fonction de la taille de la page d'affichage
+
+Pour convertir (et reduire) une image existante, l'utilitaire convert (sous linux) fonctionne trés bien 
+[source]
+----
+
+convert PortalPage_orig.png -strip -resize 600x450 -quality 70 -interlace line PortalPage.jpg
+----
+====
+
+==== avec ofbizHelp, affichage de multiple page
+
+Lors de l'affichage de l'aide via 
+ofbizhelp:: sur la <<_about,page d'accueil>> du composant example, 2 fichiers d'aide sont affichés, car les deux fichiers sont lié via le même "mapkey".
+
+De la même manière, afin de permettre à l'utilisateur de pouvoir visualiser l'aide de chaque champ  (qui apparait quand la souris est positionné sur le label du champ), il est intéressant, quelque fois,  de faire apparaitre une form dans un texte d'aide.
+Pour cela, il faut créer un élément de contenu associé dataresource qui est associé à un screen.xml, avec un dataTemplateTypeId="SCREEN_COMBINED". Il est conseillé  de faire un screen dédié qui n'inclus pas le decorator general.
+
+Il faut ensuite associer l'élément de contenu avec le même père que l'aide avec lequel le screen doit  s'afficher, mais avec un numéro de séquence supérieur.
+Voici les données pour l'affichage du screen ci-dessous. 
+[source]
+----
+
+<DataResource dataResourceId="EXAMPLE_EditForm"  objectInfo="component://example/widget/example/ExampleScreens.xml#ExampleEditForm" dataResourceTypeId="URL_RESOURCE" dataTemplateTypeId="SCREEN_COMBINED"/>
+<Content contentId="EXAMPLE_EditForm" contentTypeId="DOCUMENT" contentName="Example Fields" dataResourceId="EXAMPLE_EditForm"/>
+<ContentAssoc contentId="HELP_EXAMPLE_docbook" contentIdTo="EXAMPLE_EditForm" mapKey="EXAMPLE_docbook" fromDate="2006-01-12 01:01:01" sequenceNum="005" contentAssocTypeId="INSTANCE"/>
+----
+
+=== Exemple de syntaxe
+
+Cette section regroupe des exemples de syntaxe docbook utilisé mais pas encore documenté en détail
+
+==== Lien avec un terme du glossaire
+
+exemple : 
+ofbizhelp::
+[source]
+----
+
+<glossterm linkend="G_OFBIZHELP">ofbizhelp</glossterm>
+----
+
+==== Lien vers un id interne
+
+exemple : <<_about,page d'accueil>>
+[source]
+----
+
+<link linkend="about">page d'accueil</link>
+----
+
+==== Lien vers un site externe
+
+exemple : `Webhelp du projet docbook`
+[source]
+----
+
+<command xlink:href="http://wiki.docbook.org/WebHelp" xlink:show="new">Webhelp du projet docbook</command>
+----
