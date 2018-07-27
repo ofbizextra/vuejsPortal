@@ -33,7 +33,7 @@ const actions = {
     commit('ADD_FORM', formId)
   },
   setFieldToForm({commit, state}, data) {
-    if(!state.forms[data.formId]){
+    if (!state.forms[data.formId]) {
       commit('ADD_FORM', data.formId)
     }
     commit('SET_FIELD_TO_FORM', data)

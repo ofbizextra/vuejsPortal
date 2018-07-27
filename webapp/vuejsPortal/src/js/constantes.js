@@ -1,6 +1,7 @@
 export default {
   apiUrl: 'https://localhost:8443/exampleapi/control',
   formApiUrl: 'https://localhost:8443/example/control',
+  hostUrl: 'https://localhost:8443',
   listForDropDown: {path: '/listForDropDown', tokenRequired: false},
   main: {path: '/main', tokenRequired: false},
   editExampleLayer: {path: '/EditExampleLayer', tokenRequired: false},

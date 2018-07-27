@@ -35,15 +35,64 @@
     },
     watch: {
       data: function (from, to) {
-        if (this.updateStore) {
-          console.log('vue-form : ', to.name + '|  was : ' + from.name)
-          this.$store.dispatch('form/addForm', to.name)
-        }
+        this.$store.dispatch('form/addForm', to.name)
+        this.$store.dispatch('form/setFieldToForm', {
+          formId: this.parseProps().name,
+          key: 'linkUrl',
+          value: this.parseProps().linkUrl
+        })
+        this.$store.dispatch('form/setFieldToForm', {
+          formId: this.parseProps().name,
+          key: 'viewIndex',
+          value: this.parseProps().viewIndex
+        })
+        this.$store.dispatch('form/setFieldToForm', {
+          formId: this.parseProps().name,
+          key: 'viewIndexField',
+          value: this.parseProps().viewIndexField
+        })
+        this.$store.dispatch('form/setFieldToForm', {
+          formId: this.parseProps().name,
+          key: 'viewSize',
+          value: this.parseProps().viewSize
+        })
+        this.$store.dispatch('form/setFieldToForm', {
+          formId: this.parseProps().name,
+          key: 'viewSizeField',
+          value: this.parseProps().viewSizeField
+        })
+
       }
     },
     created() {
       console.log('vue-form : ', this.data.name)
       this.$store.dispatch('form/addForm', this.data.name)
+      this.$store.dispatch('form/setFieldToForm', {
+        formId: this.parseProps().name,
+        key: 'linkUrl',
+        value: this.parseProps().linkUrl
+      })
+      this.$store.dispatch('form/setFieldToForm', {
+        formId: this.parseProps().name,
+        key: 'viewIndex',
+        value: this.parseProps().viewIndex
+      })
+      this.$store.dispatch('form/setFieldToForm', {
+        formId: this.parseProps().name,
+        key: 'viewIndexField',
+        value: this.parseProps().viewIndexField
+      })
+      this.$store.dispatch('form/setFieldToForm', {
+        formId: this.parseProps().name,
+        key: 'viewSize',
+        value: this.parseProps().viewSize
+      })
+      this.$store.dispatch('form/setFieldToForm', {
+        formId: this.parseProps().name,
+        key: 'viewSizeField',
+        value: this.parseProps().viewSizeField
+      })
+
     }
   }
 </script>

@@ -32,22 +32,18 @@
       },
       storeForm() {
         return {
-          formId: document.getElementsByName(this.data.name)[0].form.name,
+          formId: this.parseProps().formName,
           key: this.parseProps().name,
           value: this.parseProps().currentValue ? this.parseProps().currentValue : ''
         }
       },
       value: {
-        get () {
-          if (document.getElementsByName(this.data.name)[0] && this.getForm(this.storeForm.formId)) {
-            return this.getDataFromForm(this.storeForm)
-          } else {
-            return ''
-          }
+        get() {
+          return this.getDataFromForm(this.storeForm)
         },
-        set (value) {
+        set(value) {
           this.$store.dispatch('form/setFieldToForm', {
-            formId: document.getElementsByName(this.data.name)[0].form.name,
+            formId: this.parseProps().formName,
             key: this.parseProps().name,
             value: value
           })
@@ -79,8 +75,8 @@
         this.$store.dispatch('form/setFieldToForm', this.storeForm)
       }
     },
-    mounted() {
-      console.log('vue-radio : ', document.getElementsByName(this.data.name))
+    created() {
+      console.log('vue-radio : ', this.storeForm)
       this.$store.dispatch('form/setFieldToForm', this.storeForm)
     }
   }

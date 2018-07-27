@@ -34,7 +34,7 @@
         this.data = response.body
         let parsedData = parse(this.data)
         if (this.$route.params['id']) {
-          this.id = parsedData[1].children[3].children[0].children[1].children[0].attributes.find(attr => attr.key === 'description').value
+          this.id = this.$route.params['id']
           this.$store.dispatch('data/addExample', this.id)
           this.$store.dispatch('data/setCurrentId', this.id)
         } else {
@@ -52,7 +52,7 @@
           this.data = response.body
           let parsedData = parse(this.data)
           if (this.$route.params['id']) {
-            this.id = parsedData[2].children[5].children[0].children[1].children[0].attributes.find(attr => attr.key === 'description').value
+            this.id = to.params['id']
             console.log('EditExampleLayer -> id : ' + this.id)
             this.$store.dispatch('data/addExample',this.id)
             this.$store.dispatch('data/setCurrentId', this.id)

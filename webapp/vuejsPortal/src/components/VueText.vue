@@ -28,22 +28,18 @@
       },
       storeForm() {
         return {
-          formId: document.getElementById(this.data.id).form.name,
+          formId: this.parseProps().formName,
           key: this.parseProps().id,
           value: this.parseProps().value ? this.parseProps().value : ''
         }
       },
       value: {
-        get () {
-          if (document.getElementById(this.data.id) && this.getForm(this.storeForm.formId)) {
-            return this.dataFromExample(this.storeData)
-          } else {
-            return ''
-          }
+        get() {
+          return this.getDataFromForm(this.storeForm)
         },
-        set (value) {
+        set(value) {
           this.$store.dispatch('form/setFieldToForm', {
-            formId: document.getElementById(this.data.id).form.name,
+            formId: this.parseProps().formName,
             key: this.parseProps().id,
             value: value
           })
@@ -51,17 +47,19 @@
       },
       ...mapGetters({
         dataFromExample: 'data/dataFromExample',
-        currentId: 'data/currentId'
+        currentId: 'data/currentId',
+        getForm: 'form/form',
+        getDataFromForm: 'form/fieldInForm'
       })
     },
     watch: {
       data: function (from, to) {
-        console.log('vue-text : ', this.storeData)
+        console.log('vue-text : ', this.storeForm)
         this.$store.dispatch('data/addDataToExample', this.storeData)
         this.$store.dispatch('form/setFieldToForm', this.storeForm)
       }
     },
-    mounted() {
+    created() {
       console.log('vue-text : ', this.storeForm)
       this.$store.dispatch('data/addDataToExample', this.storeData)
       this.$store.dispatch('form/setFieldToForm', this.storeForm)

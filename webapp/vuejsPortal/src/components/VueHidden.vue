@@ -1,7 +1,7 @@
 <template>
   <div id="vue-hidden">
     <input v-if="data.conditionGroup" type="hidden" :name="data.name + '_grp'" v-bind:value="data.conditionGroup" />
-    <input type="hidden" v-bind:name="data.name" v-bind:value="getValue" v-bind:id="data.id" v-bind:event="data.action ? data.action : false"/>
+    <input type="hidden" v-bind="data" v-model="value"/>
   </div>
 </template>
 
@@ -28,27 +28,43 @@
           value: this.parseProps().value ? this.parseProps().value : ''
         }
       },
-      getValue () {
-        return this.updateStore ? this.dataFromExample(this.storeData) : ''
+      storeForm() {
+        return {
+          formId: this.parseProps().formName,
+          key: this.parseProps().id,
+          value: this.parseProps().value ? this.parseProps().value : ''
+        }
+      },
+      value: {
+        get() {
+          return this.getDataFromForm(this.storeForm)
+        },
+        set(value) {
+          this.$store.dispatch('form/setFieldToForm', {
+            formId: this.parseProps().formName,
+            key: this.parseProps().id,
+            value: value
+          })
+        }
       },
       ...mapGetters({
         dataFromExample: 'data/dataFromExample',
-        currentId: 'data/currentId'
+        currentId: 'data/currentId',
+        getForm: 'form/form',
+        getDataFromForm: 'form/fieldInForm'
       })
     },
     watch: {
-      data: function(from, to) {
-        if (this.updateStore) {
-          console.log('vue-hidden : ', this.storeData)
-          this.$store.dispatch('data/addDataToExample', this.storeData)
-        }
+      data: function (from, to) {
+        console.log('vue-hidden : ', this.storeForm)
+        this.$store.dispatch('data/addDataToExample', this.storeData)
+        this.$store.dispatch('form/setFieldToForm', this.storeForm)
       }
     },
     created() {
-      if (this.updateStore) {
-        console.log('vue-hidden : ', this.storeData)
-        this.$store.dispatch('data/addDataToExample', this.storeData)
-      }
+      console.log('vue-hidden : ', this.storeForm)
+      this.$store.dispatch('data/addDataToExample', this.storeData)
+      this.$store.dispatch('form/setFieldToForm', this.storeForm)
     }
   }
 </script>

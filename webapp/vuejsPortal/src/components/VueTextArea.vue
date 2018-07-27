@@ -28,18 +28,18 @@
       },
       storeForm() {
         return {
-          formId: document.getElementById(this.data.id).form.name,
+          formId: this.parseProps().formName,
           key: this.parseProps().id,
           value: this.parseProps().value ? this.parseProps().value : ''
         }
       },
       value: {
-        get () {
-          this.dataFromExample(this.storeData)
+        get() {
+          return this.getDataFromForm(this.storeForm)
         },
-        set (value) {
+        set(value) {
           this.$store.dispatch('form/setFieldToForm', {
-            formId: document.getElementById(this.data.id).form.name,
+            formId: this.parseProps().formName,
             key: this.parseProps().id,
             value: value
           })
@@ -47,18 +47,20 @@
       },
       ...mapGetters({
         dataFromExample: 'data/dataFromExample',
-        currentId: 'data/currentId'
+        currentId: 'data/currentId',
+        getForm: 'form/form',
+        getDataFromForm: 'form/fieldInForm'
       })
     },
     watch: {
       data: function (from, to) {
-        console.log('vue-text : ', this.storeData)
+        console.log('vue-text-area (watch) : ', this.storeForm)
         this.$store.dispatch('data/addDataToExample', this.storeData)
         this.$store.dispatch('form/setFieldToForm', this.storeForm)
       }
     },
-    mounted() {
-      console.log('vue-text : ', this.storeForm)
+    created() {
+      console.log('vue-text-area (created) : ', this.storeForm)
       this.$store.dispatch('data/addDataToExample', this.storeData)
       this.$store.dispatch('form/setFieldToForm', this.storeForm)
     }

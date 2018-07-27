@@ -1,18 +1,114 @@
 <template>
   <div id="list">
-    <h2>List</h2>
-    <table>
-      <thead>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Description</th>
-      </thead>
-      <tr v-for="entry in all">
-        <td>{{entry.id}}</td>
-        <td>{{entry.name}}</td>
-        <td>{{entry.description}}</td>
-      </tr>
-    </table>
+    <!-- Begin Macro renderFormatItemRowOpen from file HtmlFormMacroLibrary.ftl -->
+    <tr  >
+      <!-- Begin Macro renderFormatItemRowCellOpen from file HtmlFormMacroLibrary.ftl -->
+      <td >
+        <!-- Begin Macro makeHyperlinkString from file HtmlFormMacroLibrary.ftl -->
+        <a class="buttontext"
+           href="/exampleapi/control/EditExample?exampleId=EX01"
+
+
+
+           title="Example ID">
+          EX01</a>
+        <vue-tooltip
+
+
+        />  <!-- Begin Macro renderFormatItemRowCellClose from file HtmlFormMacroLibrary.ftl -->
+      </td>
+      <!-- Begin Macro renderFormatItemRowCellOpen from file HtmlFormMacroLibrary.ftl -->
+      <td >
+        <vue-label
+          imageLocation=""
+          alert="false"
+          type="text"
+          idName="ListExamples_exampleName_o_0"
+          description="Example 1"
+          title=""
+          class=""
+          inPlaceEditorUrl=""
+          inPlaceEditorParams=""
+          formName="ListExamples"
+        /><vue-tooltip
+
+
+      />  <!-- Begin Macro renderFormatItemRowCellClose from file HtmlFormMacroLibrary.ftl -->
+      </td>
+      <!-- Begin Macro renderFormatItemRowCellOpen from file HtmlFormMacroLibrary.ftl -->
+      <td >
+        <vue-label
+          imageLocation=""
+          alert="false"
+          type=""
+          idName="ListExamples_exampleTypeId_o_0"
+          description="Contrived"
+          title=""
+          class=""
+          inPlaceEditorUrl=""
+          inPlaceEditorParams=""
+          formName="ListExamples"
+        /><vue-tooltip
+
+
+      />  <!-- Begin Macro renderFormatItemRowCellClose from file HtmlFormMacroLibrary.ftl -->
+      </td>
+      <!-- Begin Macro renderFormatItemRowCellOpen from file HtmlFormMacroLibrary.ftl -->
+      <td >
+        <vue-label
+          imageLocation=""
+          alert="false"
+          type=""
+          idName="ListExamples_statusId_o_0"
+          description="In Design"
+          title=""
+          class=""
+          inPlaceEditorUrl=""
+          inPlaceEditorParams=""
+          formName="ListExamples"
+        /><vue-tooltip
+
+
+      />  <!-- Begin Macro renderFormatItemRowCellClose from file HtmlFormMacroLibrary.ftl -->
+      </td>
+      <!-- Begin Macro renderFormatItemRowCellOpen from file HtmlFormMacroLibrary.ftl -->
+      <td >
+        <vue-label
+          imageLocation=""
+          alert="false"
+          type="text"
+          idName="ListExamples_description_o_0"
+          description=""
+          title=""
+          class=""
+          inPlaceEditorUrl=""
+          inPlaceEditorParams=""
+          formName="ListExamples"
+        /><vue-tooltip
+
+
+      />  <!-- Begin Macro renderFormatItemRowCellClose from file HtmlFormMacroLibrary.ftl -->
+      </td>
+      <!-- Begin Macro renderFormatItemRowCellOpen from file HtmlFormMacroLibrary.ftl -->
+      <td >
+        <vue-label
+          imageLocation=""
+          alert="false"
+          type="text"
+          idName="ListExamples_conditionalDesc_o_0"
+          description=""
+          title=""
+          class=""
+          inPlaceEditorUrl=""
+          inPlaceEditorParams=""
+          formName="ListExamples"
+        /><vue-tooltip
+
+
+      />  <!-- Begin Macro renderFormatItemRowCellClose from file HtmlFormMacroLibrary.ftl -->
+      </td>
+      <!-- Begin Macro renderFormatItemRowClose from file HtmlFormMacroLibrary.ftl -->
+    </tr>
   </div>
 </template>
 
