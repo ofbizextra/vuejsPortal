@@ -236,8 +236,6 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(modelFormField.getWidgetStyle());
         sr.append("\" alert=\"");
         sr.append(modelFormField.shouldBeRed(context) ? "true" : "false");
-        sr.append("\" formName=\"");
-        sr.append(formName);
         if (ajaxEnabled) {
             String url = inPlaceEditor.getUrl(context);
             StringBuffer extraParameterBuffer = new StringBuffer();
@@ -311,6 +309,10 @@ public final class MacroFormRenderer implements FormStringRenderer {
             }
             inPlaceEditorParams.append("}");
             sr.append(inPlaceEditorParams.toString());
+        }
+        if (context.get("frontJs") != null && (Boolean)context.get("frontJs")) {
+        	sr.append("\" formName=\"");
+        	sr.append(formName);
         }
         sr.append("\" />");
         executeMacro(writer, sr.toString());
@@ -623,7 +625,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         }
         String id = modelFormField.getCurrentContainerId(context);
         ModelForm modelForm = modelFormField.getModelForm();
-        String formName = modelFormField.getModelForm().getName(); // FormRenderer.getCurrentFormName(modelForm, context);
+        String formName = FormRenderer.getCurrentFormName(modelForm, context);
         String timeDropdown = dateTimeField.getInputMethod();
         String timeDropdownParamName = "";
         String classString = "";
@@ -1561,7 +1563,14 @@ public final class MacroFormRenderer implements FormStringRenderer {
         executeMacro(writer, sr.toString());
 
     }
-
+    public void renderEmptyFormDataMessage(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException {
+        StringWriter sr = new StringWriter();
+        sr.append("<@renderEmptyFormDataMessage");
+        sr.append(" message=\"");
+        sr.append(modelForm.getEmptyFormDataMessage());
+        sr.append("\" />");
+        executeMacro(writer, sr.toString());
+    }
     public void renderFormatListWrapperClose(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException {
         StringWriter sr = new StringWriter();
         sr.append("<@renderFormatListWrapperClose");
