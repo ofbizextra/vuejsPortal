@@ -436,8 +436,10 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(tabindex);
         sr.append("\" delegatorName=\"");
         sr.append(((HttpSession)context.get("session")).getAttribute("delegatorName").toString());
-        sr.append("\" formName=\"");
-        sr.append(formName);
+        if (context.get("frontJs") != null && (Boolean)context.get("frontJs")) {
+            sr.append("\" formName=\"");
+            sr.append(formName);
+        }
         sr.append("\" />");
         executeMacro(writer, sr.toString());
         ModelFormField.SubHyperlink subHyperlink = textField.getSubHyperlink();
@@ -527,8 +529,10 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(buttons);
         sr.append("\" tabindex=\"");
         sr.append(tabindex);
-        sr.append("\" formName=\"");
-        sr.append(formName);
+        if (context.get("frontJs") != null && (Boolean)context.get("frontJs")) {
+            sr.append("\" formName=\"");
+            sr.append(formName);
+        }
         sr.append("\" />");
         executeMacro(writer, sr.toString());
         this.addAsterisks(writer, context, modelFormField);
@@ -1149,8 +1153,10 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(conditionGroup);
         sr.append("\" tabindex=\"");
         sr.append(tabindex);
-        sr.append("\" formName=\"");
-        sr.append(formName);
+        if (context.get("frontJs") != null && (Boolean)context.get("frontJs")) {
+            sr.append("\" formName=\"");
+            sr.append(formName);
+        }
         sr.append("\" />");
         executeMacro(writer, sr.toString());
         this.appendTooltip(writer, context, modelFormField);
@@ -1291,8 +1297,10 @@ public final class MacroFormRenderer implements FormStringRenderer {
         if (action != null) {
             sr.append(action);
         }
-        sr.append("\" formName=\"");
-        sr.append(formName);
+        if (context.get("frontJs") != null && (Boolean)context.get("frontJs")) {
+            sr.append("\" formName=\"");
+            sr.append(formName);
+        }
         sr.append("\" />");
         executeMacro(writer, sr.toString());
     }
@@ -1905,8 +1913,10 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(tabindex);
         sr.append("\" conditionGroup=\"");
         sr.append(conditionGroup);
-        sr.append("\" formName=\"");
-        sr.append(formName);
+        if (context.get("frontJs") != null && (Boolean)context.get("frontJs")) {
+            sr.append("\" formName=\"");
+            sr.append(formName);
+        }
         sr.append("\" />");
         executeMacro(writer, sr.toString());
         this.appendTooltip(writer, context, modelFormField);
@@ -2926,9 +2936,9 @@ public final class MacroFormRenderer implements FormStringRenderer {
             linkUrl = createAjaxParamsFromUpdateAreas(updateAreas, paramMap, null, context);
         } else {
             StringBuilder sb = new StringBuilder("?");
-            Iterator<Map.Entry<String, Object>> iter = paramMap.entrySet().iterator();
+            Iterator<Entry<String, Object>> iter = paramMap.entrySet().iterator();
             while (iter.hasNext()) {
-                Map.Entry<String, Object> entry = iter.next();
+                Entry<String, Object> entry = iter.next();
                 sb.append(entry.getKey()).append("=").append(entry.getValue());
                 if (iter.hasNext()) {
                     sb.append("&amp;");
@@ -2979,9 +2989,9 @@ public final class MacroFormRenderer implements FormStringRenderer {
             parameters.putAll(updateParams);
             UtilHttp.canonicalizeParameterMap(parameters);
             parameters.putAll(extraParams);
-            Iterator<Map.Entry<String, Object>> paramIter = parameters.entrySet().iterator();
+            Iterator<Entry<String, Object>> paramIter = parameters.entrySet().iterator();
             while (paramIter.hasNext()) {
-                Map.Entry<String, Object> entry = paramIter.next();
+                Entry<String, Object> entry = paramIter.next();
                 sb.append(entry.getKey()).append("=").append(entry.getValue());
                 if (paramIter.hasNext()) {
                     sb.append("&");
@@ -3026,7 +3036,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
             ajaxParamsBuffer.append(getAjaxParamsFromTarget(targetUrl));
             //add first parameters from updateArea parameters
             if (UtilValidate.isNotEmpty(parameters)) {
-                for (Map.Entry<String, String> entry : parameters.entrySet()) {
+                for (Entry<String, String> entry : parameters.entrySet()) {
                     String key = entry.getKey();
                     String value = entry.getValue();
                     //test if ajax parameters are not already into extraParams, if so do not add it
@@ -3235,7 +3245,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
             StringBuilder targetParameters = new StringBuilder();
             if (UtilValidate.isNotEmpty(parameterMap) ) {
                 targetParameters.append("{");
-                for (Map.Entry<String, String> parameter : parameterMap.entrySet()) {
+                for (Entry<String, String> parameter : parameterMap.entrySet()) {
                     if (targetParameters.length() > 1) {
                         targetParameters.append(",");
                     }
