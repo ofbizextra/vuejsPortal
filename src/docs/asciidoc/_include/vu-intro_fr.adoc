@@ -1,0 +1,43 @@
+////
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+////
+= Vuejs Portal
+
+Actuellement le premier applicatif javascript permettant d'utiliser les portlets - portal Apache OFBiz est écrit avec
+le framework VueJs.
+
+Il a été choisi pour sa simplicité d'apprentissage et en raison du pilotage de son développement par une communauté plutôt
+que par une société.
+
+== Installation POC VuejsPortal
+
+. à partir d'un ofbiz-framework (trunk) téléchargé à partir du svn (https://ofbiz.apache.org/source-repositories.html[documentation standard  SourceRepository])
+. créer le répertoire plugins dans ofbiz-framework
+. télécharger, avec git, dans le répertoire plugins :
+.. le plugin vuejsportal à partir du https://gitlab.ofbizextra.org/ofbizextra/ofbizplugins/exampleVuejsPortal
+.. le plugin rbstvuejs à partir https://gitlab.ofbizextra.org/ofbizextra/ofbizplugins/rbstvuejs
+.. le plugin example (de Apache OFBiz) modifié pour les besoins du POC à partir de https://gitlab.ofbizextra.org/ofbizextra/ofbizplugins/example
+    et en se mettant sur la branch vuejsPortal
+. il y a quelques fichiers à modifier dans ofbiz-framework, pour l'instant ce n'est pas intégré dans la procédure d'installe du
+  plugin mais ça viendra. +
+  L'ensemble des fichiers ou modification de fichier se trouve dans le répertoire ofbizfile du plugin vuejsPortal.
+.. copie du répertoire docs/asciidoc/images/example_fr dans ofbiz-framework
+.. copie du fichier docs/asciidoc/developer-manual_fr.adoc
+.. modifier dans framework/widget/config/widget.properties la property widget.verbose pour la mettre à false
+.. copie du fichier framework/widget/src/main/java/org/apache/ofbiz/widget/renderer/macro/MacroFormRenderer.java en remplacement de celui de OFBiz
+. Pour le build de l'applicatif vuejs il faut avoir nodejs installé sur son environement

@@ -1,0 +1,59 @@
+////
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+////
+= FrontJs Portal
+
+Le composant frontJsPortal, inclus dans le plugin du même nom, a pour objectif de fournir un moyen de gérer l'interface utilisateur
+avec une technologie de type FrontJs, c'est à dire VueJs, ou React ou Angular.
+
+Il utilise, d'une part le systéme de portlet / portal de ofbiz, défini en XML, et un applicatif développé en javascript.
+
+Pour l'instant ce composant est à l'état de POC (Proof Of Concept), c'est à dire que c'est un concrétisation de différentes idées
+afin de pouvoir en discuter plus facilement. +
+Il est développé dans un état d'esprit "Agile" c'est à dire que les résultats concrets sont privilégiés en acceptant de générer
+une dette technique.  
+
+La documentation qui suit a pour objectif, 
+
+* d'une part d'expliquer où nous en est le composant et comment il fonctionne et quels sonts les points choisis et ceux laissés de coté
+* d'autre part de préparer la futur documentation en détaillant les éléments à destination des futur utilisateurs
+
+L'objectif majeur d'utiliser un framework javascript pour l'interface utilisateur est d'augmenter le nombre d'élément interactif 
+dans les écrans, même quand les écrans sont construit / paramétré à partir de "module" existant en standard :
+
+* mettre à jours une partie de l'écran en fonction d'une action ou d'une mise à jours de donnée;
+* modification de formulaire en cours de saisi en fonction de la saisi des premmier champ;
+* paramétrage simple d'un écran (page portal) sans avoir à se préoccuper de l'interaction entre portlet. 
+
+
+include::_include/vu-intro_fr.adoc[leveloffset=+1]
+
+== Choix pour le POC
+
+Usage de la *branche trunk* de Apache OFBiz.
+
+Le *théme Rainbow Stone* a été retenu comme base pour le POC, il a été dupliqué dans le plugin rbstvuejs. +
+Ce plugin introduits donc 4 nouveaux thèmes : Rainbow Stone Vuejs - xxxx. +
+Les nouveaux thèmes sont dédiés pour l'usage de la webapp Portal, une grande partie des macro ftl de rendu de champ ont
+été adapté en fonction des besoins.
+
+== Portlet type
+
+== Portal Page
+
+== Dev and prod

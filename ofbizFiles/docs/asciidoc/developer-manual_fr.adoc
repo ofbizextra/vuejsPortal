@@ -247,14 +247,7 @@ displays search results.
 
 === Platform Specific Code
 
-== Vuejs portal
-// pour l'instant uniquement en Français
-
-=== Portlet type
-
-=== Portal Page
-
-=== Dev and prod
+include::../../plugins/vuejsPortal/src/docs/asciidoc/FrontJsPortal_fr.adoc[leveloffset=+1]
 
 == Core APIs
 
