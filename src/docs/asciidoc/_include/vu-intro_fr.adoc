@@ -26,7 +26,8 @@ que par une société.
 
 == Installation POC VuejsPortal
 
-. à partir d'un ofbiz-framework (trunk) téléchargé à partir du svn (https://ofbiz.apache.org/source-repositories.html[documentation standard  SourceRepository])
+. à partir d'un ofbiz-framework (trunk) téléchargé à partir du svn (https://ofbiz.apache.org/source-repositories.html[documentation standard  SourceRepository]) 
+  une version svn supérieur à  1837232
 . créer le répertoire plugins dans ofbiz-framework
 . télécharger, avec git, dans le répertoire plugins :
 .. le plugin vuejsportal à partir du https://gitlab.ofbizextra.org/ofbizextra/ofbizplugins/exampleVuejsPortal
@@ -38,6 +39,11 @@ que par une société.
   L'ensemble des fichiers ou modification de fichier se trouve dans le répertoire ofbizfile du plugin vuejsPortal.
 .. copie du répertoire docs/asciidoc/images/example_fr dans ofbiz-framework
 .. copie du fichier docs/asciidoc/developer-manual_fr.adoc
-.. modifier dans framework/widget/config/widget.properties la property widget.verbose pour la mettre à false
 .. copie du fichier framework/widget/src/main/java/org/apache/ofbiz/widget/renderer/macro/MacroFormRenderer.java en remplacement de celui de OFBiz
 . Pour le build de l'applicatif vuejs il faut avoir nodejs installé sur son environement
+.. en attendant une commande intégré à gradle
+.. il faut se positionner à la racine de la webapp vuejs plugins/vuejsPortal/webapp/vuejsPortal
+* npm i  <= pour charger toutes les dépendances
+* npm run build <= pour builder
+. il est maintenant possible de lancer ofbiz classiquement (chargement des donnée puis run puis ...) 
+
