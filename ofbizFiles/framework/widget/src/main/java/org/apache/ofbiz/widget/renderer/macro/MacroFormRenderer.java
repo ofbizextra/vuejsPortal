@@ -117,6 +117,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
     private final VisualTheme visualTheme;
     private boolean renderPagination = true;
     private boolean widgetCommentsEnabled = false;
+    private boolean frontJs = false;
 
     public MacroFormRenderer(String macroLibraryPath, HttpServletRequest request, HttpServletResponse response) throws TemplateException, IOException {
         macroLibrary = FreeMarkerWorker.getTemplate(macroLibraryPath);
@@ -310,7 +311,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
             inPlaceEditorParams.append("}");
             sr.append(inPlaceEditorParams.toString());
         }
-        if (context.get("frontJs") != null && (Boolean)context.get("frontJs")) {
+        if (this.frontJs) {
         	sr.append("\" formName=\"");
         	sr.append(formName);
         }
@@ -436,7 +437,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(tabindex);
         sr.append("\" delegatorName=\"");
         sr.append(((HttpSession)context.get("session")).getAttribute("delegatorName").toString());
-        if (context.get("frontJs") != null && (Boolean)context.get("frontJs")) {
+        if (this.frontJs) {
             sr.append("\" formName=\"");
             sr.append(formName);
         }
@@ -529,7 +530,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(buttons);
         sr.append("\" tabindex=\"");
         sr.append(tabindex);
-        if (context.get("frontJs") != null && (Boolean)context.get("frontJs")) {
+        if (this.frontJs) {
             sr.append("\" formName=\"");
             sr.append(formName);
         }
@@ -1153,7 +1154,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(conditionGroup);
         sr.append("\" tabindex=\"");
         sr.append(tabindex);
-        if (context.get("frontJs") != null && (Boolean)context.get("frontJs")) {
+        if (this.frontJs) {
             sr.append("\" formName=\"");
             sr.append(formName);
         }
@@ -1297,7 +1298,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         if (action != null) {
             sr.append(action);
         }
-        if (context.get("frontJs") != null && (Boolean)context.get("frontJs")) {
+        if (this.frontJs) {
             sr.append("\" formName=\"");
             sr.append(formName);
         }
@@ -1400,7 +1401,12 @@ public final class MacroFormRenderer implements FormStringRenderer {
     }
 
     public void renderFormOpen(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException {
-        this.widgetCommentsEnabled = ModelWidget.widgetBoundaryCommentsEnabled(context);
+        if (context.get("frontJs") != null && (Boolean)context.get("frontJs")) {
+        	this.frontJs = true;
+        	this.widgetCommentsEnabled = false;
+        } else {
+        	this.widgetCommentsEnabled = ModelWidget.widgetBoundaryCommentsEnabled(context);
+        }
         if (modelForm instanceof ModelSingleForm) {
             renderBeginningBoundaryComment(writer, "Form Widget - Form Element", modelForm);
         } else {
@@ -1913,7 +1919,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(tabindex);
         sr.append("\" conditionGroup=\"");
         sr.append(conditionGroup);
-        if (context.get("frontJs") != null && (Boolean)context.get("frontJs")) {
+        if (this.frontJs) {
             sr.append("\" formName=\"");
             sr.append(formName);
         }
@@ -2936,9 +2942,9 @@ public final class MacroFormRenderer implements FormStringRenderer {
             linkUrl = createAjaxParamsFromUpdateAreas(updateAreas, paramMap, null, context);
         } else {
             StringBuilder sb = new StringBuilder("?");
-            Iterator<Entry<String, Object>> iter = paramMap.entrySet().iterator();
+            Iterator<Map.Entry<String, Object>> iter = paramMap.entrySet().iterator();
             while (iter.hasNext()) {
-                Entry<String, Object> entry = iter.next();
+                Map.Entry<String, Object> entry = iter.next();
                 sb.append(entry.getKey()).append("=").append(entry.getValue());
                 if (iter.hasNext()) {
                     sb.append("&amp;");
@@ -2989,9 +2995,9 @@ public final class MacroFormRenderer implements FormStringRenderer {
             parameters.putAll(updateParams);
             UtilHttp.canonicalizeParameterMap(parameters);
             parameters.putAll(extraParams);
-            Iterator<Entry<String, Object>> paramIter = parameters.entrySet().iterator();
+            Iterator<Map.Entry<String, Object>> paramIter = parameters.entrySet().iterator();
             while (paramIter.hasNext()) {
-                Entry<String, Object> entry = paramIter.next();
+                Map.Entry<String, Object> entry = paramIter.next();
                 sb.append(entry.getKey()).append("=").append(entry.getValue());
                 if (paramIter.hasNext()) {
                     sb.append("&");
@@ -3036,7 +3042,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
             ajaxParamsBuffer.append(getAjaxParamsFromTarget(targetUrl));
             //add first parameters from updateArea parameters
             if (UtilValidate.isNotEmpty(parameters)) {
-                for (Entry<String, String> entry : parameters.entrySet()) {
+                for (Map.Entry<String, String> entry : parameters.entrySet()) {
                     String key = entry.getKey();
                     String value = entry.getValue();
                     //test if ajax parameters are not already into extraParams, if so do not add it
@@ -3245,7 +3251,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
             StringBuilder targetParameters = new StringBuilder();
             if (UtilValidate.isNotEmpty(parameterMap) ) {
                 targetParameters.append("{");
-                for (Entry<String, String> parameter : parameterMap.entrySet()) {
+                for (Map.Entry<String, String> parameter : parameterMap.entrySet()) {
                     if (targetParameters.length() > 1) {
                         targetParameters.append(",");
                     }
