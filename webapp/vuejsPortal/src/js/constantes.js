@@ -11,5 +11,6 @@ export default {
   ping: {path: '/ping', tokenRequired: false},
   ajaxCheckLogin: {path: '/ajaxCheckLogin', tokenRequired: false},
   findExampleLayer: {path: '/FindExampleLayer', tokenRequired: false},
-  listExampleLayer: {path: '/ListExampleLayer', tokenRequired: false}
+  listExampleLayer: {path: '/ListExampleLayer', tokenRequired: false},
+  portalPageDetail: {path: '/portalPageDetail', tokenRequired: false}
 }

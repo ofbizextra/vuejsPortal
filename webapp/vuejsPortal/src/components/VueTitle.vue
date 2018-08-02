@@ -7,7 +7,7 @@
 <script>
   export default {
     name: "VueTitle",
-    ddata() {
+    data() {
       return {
       }
     },

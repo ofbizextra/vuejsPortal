@@ -31,6 +31,8 @@ import VueTable from './components/VueTable'
 import VueTr from './components/VueTr'
 import VueTd from './components/VueTd'
 import Test from './components/Test'
+import VueSortField from './components/VueSortField'
+import VueColumnPortlet from './components/VueColumnPortlet'
 
 import store from './store'
 
@@ -65,6 +67,8 @@ Vue.component('vue-table', VueTable)
 Vue.component('vue-tr', VueTr)
 Vue.component('vue-td', VueTd)
 Vue.component('test', Test)
+Vue.component('vue-sort-field', VueSortField)
+Vue.component('vue-column-portlet', VueColumnPortlet)
 
 Vue.mixin({
   methods: {

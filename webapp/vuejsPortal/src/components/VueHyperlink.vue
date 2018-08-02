@@ -1,16 +1,33 @@
 <template>
   <div id="vue-hyperlink">
-    <a href="somewhere">go to somewhere</a>
+    <a href="data.linkUrl">go to somewhere</a>
   </div>
 </template>
 
 <script>
   export default {
     name: "VueHyperlink",
-    props: [
-      'props',
-      'name'
-    ]  }
+    props: ['props'],
+    computed: {
+      data() {
+        let data = this.parseProps()
+        delete data.value
+        return data
+      }
+    },
+    params() {
+      let param = {};
+      if (this.data.uniqueItemName) {
+        param.presentation = 'layer'
+        if (this.data.targetParameters) {
+
+        }
+      }
+    },
+    mounted() {
+      console.log(this.data)
+    }
+  }
 </script>
 
 <style scoped>

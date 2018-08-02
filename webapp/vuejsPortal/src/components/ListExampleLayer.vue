@@ -19,6 +19,7 @@
   import constantes from './../js/constantes'
   import {parse} from 'himalaya'
   import queryString from 'query-string'
+  import {mapGetters} from 'vuex'
 
   export default {
     name: "ListExampleLayer",
@@ -31,10 +32,13 @@
     computed: {
       updateStore() {
         return !!this.$route.params['id']
-      }
+      },
+      ...mapGetters({
+        portlets: 'ui/portlets',
+        portlet: 'ui/portlet'
+      })
     },
     mounted () {
-      console.log('findExampleLayer : Mounted')
       this.$http.post(constantes.apiUrl + constantes.listExampleLayer.path,
         queryString.stringify({
           listOtherElements: 'items',
@@ -43,9 +47,15 @@
         {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}).then(response => {
         this.data = response.body
         this.parsedData = parse(this.data)
+        this.$store.dispatch('ui/setPortlet', {portletId: 'ListExampleLayer', portlet: response.body})
       }, error => {
         console.log(error.body)
       })
+    },
+    watch: {
+      portlets() {
+        this.parsedData = parse(this.portlet('ListExampleLayer'))
+      }
     }
   }
 </script>

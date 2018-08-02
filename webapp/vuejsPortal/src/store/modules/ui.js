@@ -6,29 +6,51 @@ import constantes from './../../js/constantes'
 Vue.use(Vuex)
 
 const state = {
-  components: {}
+  currentPortalPage: '',
+  portalPages: {},
+  portlets: {}
 }
 
 const mutations = {
-  ADD_COMPONENT: (state, data) => {
-    console.log('data : ' + data)
-    let id = data.attributes.find(attr => attr.key === 'id')
-    state.components[id.value] = data
+  SET_CURRENT_PORTAL_PAGE: (state, portalPageId) => {
+    state.currentPortalPage = portalPageId
   },
-  REMOVE_COMPONENT: (state, id) => {
-    state.components.slice(id)
+  SET_PORTAL_PAGE: (state, {portalPageId, portalPage}) => {
+    console.log(portalPageId + ' : ' + portalPage)
+    state.portalPages[portalPageId] = portalPage
+  },
+  REMOVE_PORTAL_PAGE: (state, id) => {
+    state.portalPages.slice(id)
+  },
+  ADD_COLUM: (state, column) => {
+    state.portalPages[column.portalPageId] = column
+  },
+  ADD_PORTLET_TO_COLUMN: (state, {portalPage, column, portlet}) => {
+    state.portalPages[portalPage][column][portlet.name] = portlet
+  },
+  SET_PORTLET: (state, {portletId, portlet}) => {
+    state.portlets[portletId] = portlet
   }
 }
 
 const getters = {
-  component: state => (id) => { return state.components[id] },
-  components: state => state.components
+  currentPortalPage: state => state.currentPortalPage,
+  currentPortalPageDetail: state => state.portalPages[state.currentPortalPage],
+  portalPage: state => (id) => { return state.portalPages[id] },
+  portalPages: state => state.portalPages,
+  column: state => ({portalPageId, columnSeqId}) => { return state.portalPages[portalPageId].listColumnPortlet.find(col => col.columnSeqId === columnSeqId)},
+  portlet: state => (id) => { return state.portlets[id] },
+  portlets: state => state.portlets
 }
 
 const actions = {
-  addComponent({commit}, data) {
-    console.log('data: ' + data)
-    commit('ADD_COMPONENT', data)
+  setPortalPage({commit}, {portalPageId, portalPage}) {
+    console.log(portalPageId + ' : ' + portalPage)
+    commit('SET_PORTAL_PAGE', {portalPageId, portalPage})
+    commit('SET_CURRENT_PORTAL_PAGE', portalPageId)
+  },
+  setPortlet({commit}, {portletId, portlet}) {
+    commit('SET_PORTLET', {portletId, portlet})
   }
 }
 
