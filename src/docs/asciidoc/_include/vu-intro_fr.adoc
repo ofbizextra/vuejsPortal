@@ -30,7 +30,7 @@ que par une société.
   une version svn supérieur à  1837232
 . créer le répertoire plugins dans ofbiz-framework
 . télécharger, avec git, dans le répertoire plugins :
-.. le plugin vuejsportal à partir du https://gitlab.ofbizextra.org/ofbizextra/ofbizplugins/exampleVuejsPortal
+.. le plugin vuejsportal à partir du https://gitlab.ofbizextra.org/ofbizextra/ofbizplugins/vuejsPortal
 .. le plugin rbstvuejs à partir https://gitlab.ofbizextra.org/ofbizextra/ofbizplugins/rbstvuejs
 .. le plugin example (de Apache OFBiz) modifié pour les besoins du POC à partir de https://gitlab.ofbizextra.org/ofbizextra/ofbizplugins/example
     et en se mettant sur la branch vuejsPortal
@@ -45,5 +45,9 @@ que par une société.
 .. il faut se positionner à la racine de la webapp vuejs plugins/vuejsPortal/webapp/vuejsPortal
 * npm i  <= pour charger toutes les dépendances
 * npm run build <= pour builder
-. il est maintenant possible de lancer ofbiz classiquement (chargement des donnée puis run puis ...) 
+. il est maintenant possible de lancer ofbiz classiquement (chargement des donnée puis run puis ...)
+. afin de pouvoir tester le plus confortablement, il est conseillé de se créer un user (autre que admin) et de lui affecter 
+  un groupe de sécurité adéquate (fullAdmin par exemple). Ce user doit rester sur un thème standard.
+. changer le thème du user admin pour choisir un thème avec vuejs.
+. aller se connecter à l'application portal https://localhost:8443/portal
 

@@ -87,11 +87,42 @@ La transmission des éléments d'affichage sont transmis à l'application FrontJ
 
 Il y a *un composant (vuejs) par macro*.
 
-Lors de la réception d'un flux en provenance d'un "screen" un store est créé pour stocker les données (exampleId, exampleName, ...)
+Lors de la réception d'un flux en provenance d'un "screen" *un store est créé pour stocker* les données (exampleId, exampleName, ...),
+nous l'appelons *GenericDataView*, elle correspond à une GenericEntity mais du cotè utilisateur. 
 
+Le *showPortlet est redéfini* dans le POC par simplification, pour faire ce que l'on souhaite et seulement ça.
 
-== Portlet type
+include::_include/poc-situation_fr.adoc[leveloffset=+1]
+
+include::_include/poc-todo_fr.adoc[leveloffset=+1]
+
+== Portlet
+Il faut pouvoir associer à la portlet le nom d'un (ou de plusieurs) identifiant/s correspondant à ce qui sera surveillé pour que 
+la portlet se mette à jour. Par exemple, pour la portlet editExample, l'identifiant est exampleId. Quand cette portlet s'affiche
+pour la première fois via un showPortlet, si il y a un exampleId dans les data alors 
+
 
 == Portal Page
 
 == Dev and prod
+
+== POC Glossary
+
+[CAUTION]
+object2TrackId ou monitorName ou observerId ou trackerId ou ... +
+c'est le nom du champ qui sert de déclancheur pour mettre à jour la portlet
+
+[CAUTION]
+DataView versus DataForm ou data versus html +
+afin de pouvoir différentier dans les phrases parlant d'un flux entre serveur et client Js le type d'information reçu
+ou traiter.
+
+
+[#GENERICDATAVIEW]
+GenericDataView:: C'est un objet stocker par le client Javascript (dans le store pour VueJs) correspondant à une GenericEntity au 
+  niveau du serveur. Il contient les données affichées (ou présente dans le formulaire mais hidden) donc potentiellement différente
+  de ce qu'il y a dans la GenericValue correspondante.
+
+
+
+
