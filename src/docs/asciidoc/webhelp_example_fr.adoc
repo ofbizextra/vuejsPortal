@@ -74,6 +74,11 @@ Ainsi dans la plupart des cas, il suffit de définir un formulaire (une "Form") 
 
 Cette partie a pour but de décrire les outils et les recommandations à disposition pour réaliser des interfaces  standards et configurables dans les meilleurs délais.
 
+Pour une meilleur vision des interactions entre les notions de PortalPage, Portlet, attribues, voici le diagram UML des données 
+utilisés pour la gestion des PortalPages. 
+
+image::PortalUml.png[Diagramme UML des entités Portal]
+
 [[_devel_portlet]]
 === Les portlets
 
