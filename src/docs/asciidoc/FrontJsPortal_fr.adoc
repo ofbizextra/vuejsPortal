@@ -41,62 +41,8 @@ dans les écrans, même quand les écrans sont construit / paramétré à partir
 * paramétrage simple d'un écran (page portal) sans avoir à se préoccuper de l'interaction entre portlet. 
 
 
-include::_include/vu-intro_fr.adoc[leveloffset=+1]
+include::_include/poc-vuejs_fr.adoc[leveloffset=+1]
 
-== Choix pour le POC
-
-Usage de la *branche trunk* de Apache OFBiz.
-
-Usage des principes et architecture de *Portal Page et Portlet* de Apache OFBiz. 
-
-Le *théme Rainbow Stone* a été retenu comme base pour le POC, il a été dupliqué dans le plugin rbstvuejs. +
-Ce plugin introduits donc 4 nouveaux thèmes : Rainbow Stone Vuejs - xxxx. +
-Les nouveaux thèmes sont dédiés pour l'usage de la webapp Portal, une grande partie des macro ftl de rendu de champ ont
-été adapté en fonction des besoins.
-
-L'ensemble des exemples d'usage sont *avec le composant example* et pendant la durée du POC même des fichiers qui devrait
-être dans common sont mis dans example afin de simplifier l'installation et mise à jours.
-
-Une *webapp supplémentaire exampleapi* a été créé pour centraliser les uri autorisé pour le composant vuejsPortal, 
-c'est paramétré dans le fichier constantes.js.
-
-En attendant le login par token dans ofbiz (cf https://issues.apache.org/jira/browse/OFBIZ-9833 ) le login actuel dans 
-le composant portal (  https://localhost:8443/portal ) utilise le méchanisme *ofbiz standard de login via cookies* .
-
-Les *screens, forms, menus* utilisés pour les portlets sont définis *en xml*.
-
-La transmission des éléments d'affichage sont transmis à l'application FrontJs via les templates macro ftl de manière
-à envoyer des *balises dédiées*, une par macro existante) ne comportant *que les paramètres*.
-[source,xml]
-----
-<#macro renderDisplayField imageLocation alert type="" idName="" description="" title="" class="" inPlaceEditorUrl="" inPlaceEditorParams=""  <1>
- ><vue-label  <2>
-          imageLocation="${imageLocation}" <3>
-          alert="${alert}"
-          type="${type}"
-          idName="${idName}"
-          description="${description}"
-          title="${title}"
-          class="${class}"
-          inPlaceEditorUrl="${inPlaceEditorUrl}"
-          inPlaceEditorParams="${inPlaceEditorParams}" /></#macro>
-----
-<1> La macro appelé par le rendrer
-<2> La balise pour l'application VueJsPortal
-<3> les paramètres qui ne sont transmit que si non null
-
-Il y a *un composant (vuejs) par macro*.
-
-Lors de la réception d'un flux en provenance d'un "screen" *un store est créé pour stocker* les données (exampleId, exampleName, ...),
-nous l'appelons *GenericDataView*, elle correspond à une GenericEntity mais du cotè utilisateur. 
-
-Le *showPortlet est redéfini* dans le POC par simplification, pour faire ce que l'on souhaite et seulement ça.
-
-include::_include/poc-situation_fr.adoc[leveloffset=+1]
-
-include::_include/poc-todo_fr.adoc[leveloffset=+1]
-
-include::_include/poc-useCase_fr.adoc[leveloffset=+1]
 
 == Portlet
 [CAUTION]
@@ -115,7 +61,7 @@ C'est la mise à jours de donnée au niveau du store du client Js qui déclanche
 
 == Dev and prod
 
-== POC Glossary
+== FrontJs Glossary
 
 [CAUTION]
 object2TrackId ou monitorName ou observerId ou trackerId ou ... +
