@@ -1,0 +1,41 @@
+////
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+////
+= Les Cas d'Utilisation du POC
+
+== Opérationnels
+Se logger sur l'application portal et afficher la page portail d'acceuil (ExampleFrontJs)
+Celle ci affiche les trois portlet findExample, listExample et editExample.
+
+
+
+== A mettre en oeuvre
+Usage de la fonction recherche example +
+Test portlets FindExample and ListExample :
+
+. search by name with contain (data-obj testContain), result: 11 lines (assert with message "testContain 12")
+. search by name with BeginWith (data-obj testBegin), result: 35 lines (test with FindAndListExamples.checkTotalFound), so 2 pages test presence of nav-next (assert with message "Pb next button")
+. search by id (data-obj testId), result: only one line and id is on list (assert with message "testId link")
+. search by exampleType (data-obj testType), result: 25 lines and a next button (assert with message "Pb next button2") click on next-page and check there is 5 line print (assert with message "testType 5")
+. search by name with contain (data-obj testContain1), result: less than 20 lines, so nav-next disappear, count number of line
+. sort by description (data sortList.sort_0 ) via FindAndListExamples.sortListBy
+. sort by name (data sortList.sort_1 ) via FindAndListExamples.sortListBy
+. check number of line has not change and first line name equal sortList.result_1
+. sort by id (data sortList.sort_2 ) via FindAndListExamples.sortListBy
+. check number of line has not change and first line name equal sortList.result_2
+

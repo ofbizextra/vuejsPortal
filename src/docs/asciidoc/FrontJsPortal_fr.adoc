@@ -96,10 +96,19 @@ include::_include/poc-situation_fr.adoc[leveloffset=+1]
 
 include::_include/poc-todo_fr.adoc[leveloffset=+1]
 
+include::_include/poc-useCase_fr.adoc[leveloffset=+1]
+
 == Portlet
+[CAUTION]
+Hypothèse à confirmer quand il y en aura besoin : +
 Il faut pouvoir associer à la portlet le nom d'un (ou de plusieurs) identifiant/s correspondant à ce qui sera surveillé pour que 
-la portlet se mette à jour. Par exemple, pour la portlet editExample, l'identifiant est exampleId. Quand cette portlet s'affiche
-pour la première fois via un showPortlet, si il y a un exampleId dans les data alors 
+la portlet se mette à jour. Par exemple, pour la portlet editExample, l'identifiant est exampleId. +
+Quand cette portlet s'affiche pour la première fois via un showPortlet, si il y a un exampleId dans les data alors le champ
+exampleId est créer, sur le client Js, avec sa valeur. +
+...
+
+=== Mise à jour Portlet
+C'est la mise à jours de donnée au niveau du store du client Js qui déclanche la mise à jours de la portlet
 
 
 == Portal Page
