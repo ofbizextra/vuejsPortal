@@ -61,6 +61,13 @@ C'est la mise à jours de donnée au niveau du store du client Js qui déclanche
 
 == Dev and prod
 
+=== message de retour 
+
+* _EVENT_MESSAGE_LIST_ : pour obtenir un event message list il faut; faire un creatExample ayant comme statusId="EXST_COMPLETE". 
+* _EVENT_MESSAGE_ : pour obtenir un EventMessage il faut; faire un creatExample ayant comme statusId="EXST_APPROVED".
+* _ERROR_MESSAGE_ : pour obtenir un ErrorMessage il faut; que le exampleTypeId et que le description soient null.
+* _ERROR_MESSAGE_LIST_ : pour obtenir un ErrorMessage list il faut; que le exampleTypeId soit null.
+
 == FrontJs Glossary
 
 [CAUTION]
