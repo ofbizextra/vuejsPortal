@@ -2,6 +2,7 @@ import Vuex from 'vuex'
 import Vue from 'vue'
 import queryString from 'query-string'
 import constantes from './../../js/constantes'
+import {parse} from 'himalaya'
 
 Vue.use(Vuex)
 
@@ -28,8 +29,8 @@ const mutations = {
   ADD_PORTLET_TO_COLUMN: (state, {portalPage, column, portlet}) => {
     state.portalPages[portalPage][column][portlet.name] = portlet
   },
-  SET_PORTLET: (state, {portletId, portlet}) => {
-    state.portlets[portletId] = portlet
+  SET_PORTLET: (state, {portletId, data}) => {
+    state.portlets[portletId] = data
   }
 }
 
@@ -49,8 +50,24 @@ const actions = {
     commit('SET_PORTAL_PAGE', {portalPageId, portalPage})
     commit('SET_CURRENT_PORTAL_PAGE', portalPageId)
   },
-  setPortlet({commit}, {portletId, portlet}) {
-    commit('SET_PORTLET', {portletId, portlet})
+  setPortlet({commit}, {portalPortletId, portletSeqId}) {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        Vue.http.post(constantes.apiUrl + constantes.showPortlet.path,
+          queryString.stringify({
+            portalPortletId: portalPortletId
+          }),
+          {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}
+        ).then(response => {
+          console.log(response)
+          commit('SET_PORTLET', {portletId: portalPortletId + '-' + portletSeqId, data: parse(response.body)})
+          resolve()
+        }, error => {
+          console.log(error)
+          reject()
+        })
+      }, 1000)
+    })
   }
 }
 

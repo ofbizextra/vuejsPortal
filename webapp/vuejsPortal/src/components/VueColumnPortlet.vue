@@ -1,8 +1,8 @@
 <template>
   <td id="vue-column-portlet" :style="'width: ' + width + ';vertical-align: top'">
-    <div v-for="(portlet, id) in components" :key="id" v-bind:is="portlet">
+    <vue-portlet v-for="portlet in column.listPortlet" :key="portlet.portletSeqId" v-bind:props="portlet">
 
-    </div>
+    </vue-portlet>
   </td>
 </template>
 
@@ -18,7 +18,7 @@
     },
     computed: {
       components() {
-        return this.column.listPorlet ? this.column.listPorlet.map(portlet => {return portlet.replace( /([a-z])([A-Z])/g, '$1-$2' ).toLowerCase() + '-layer'}) : []
+        return this.column.listPorlet ? this.column.listPortlet : [] // this.column.listPorlet.map(portlet => {return portlet.replace( /([a-z])([A-Z])/g, '$1-$2' ).toLowerCase() + '-layer'}) : []
       },
       width() {
         return this.column.columnWidthPercentage ? this.column.columnWidthPercentage + '%' : this.column.columnWidthPixels ? this.column.columnWidthPixels : ''
@@ -29,7 +29,7 @@
       })
     },
     mounted() {
-      console.log(this.data)
+      console.log(this.props)
       this.column = this.getColumn({portalPageId: this.props.portalPageId, columnSeqId: this.props.columnSeqId})
     },
     watch: {

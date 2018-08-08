@@ -33,6 +33,7 @@ import VueTd from './components/VueTd'
 import Test from './components/Test'
 import VueSortField from './components/VueSortField'
 import VueColumnPortlet from './components/VueColumnPortlet'
+import VuePortlet from './components/VuePortlet'
 
 import store from './store'
 
@@ -69,6 +70,7 @@ Vue.component('vue-td', VueTd)
 Vue.component('test', Test)
 Vue.component('vue-sort-field', VueSortField)
 Vue.component('vue-column-portlet', VueColumnPortlet)
+Vue.component('vue-portlet', VuePortlet)
 
 Vue.mixin({
   methods: {
@@ -90,15 +92,12 @@ Vue.mixin({
         }
       }
     }
-  },
-  created: function () {
-    // this.data = this.parseProps()
   }
 })
 
 const router = new VueRouter({
   mode: 'hash',
-  routes: [
+routes: [
     { path: '/', component: Portal, beforeEnter: requireAuth },
     { path: '/findExampleLayer', component: FindExampleLayer, beforeEnter: requireAuth },
     { path: '/editExampleLayer', component: EditExampleLayer, beforeEnter: requireAuth },

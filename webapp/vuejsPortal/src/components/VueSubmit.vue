@@ -1,6 +1,6 @@
 <template>
   <div id="vue-submit">
-    <button :value="data.title" v-bind="data" v-on:click="post">{{data.title}}</button>
+    <button :value="data.title" v-bind="data" v-on:click.prevent="post">{{data.title}}</button>
   </div>
 </template>
 
@@ -27,14 +27,19 @@
     methods: {
       post() {
         console.log('post ...')
-        let url = constantes.hostUrl + this.getDataFromForm({formId: this.parseProps().formName, key: 'linkUrl'})
+        let linkUrl = this.getDataFromForm({formId: this.parseProps().formName, key: 'linkUrl'})
+        let url = constantes.hostUrl + linkUrl
         this.$http.post(
           url,
           queryString.stringify(this.getForm(this.parseProps().formName)),
           {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}
         ).then(
-          response => console.log(response),
-          error => console.log(error)
+          response => {
+            console.log(response)
+
+          }, error => {
+            console.log(error)
+          }
         )
       }
     }
