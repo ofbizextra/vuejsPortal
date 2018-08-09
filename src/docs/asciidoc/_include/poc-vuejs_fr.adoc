@@ -40,6 +40,7 @@ que par une société.
 .. copie du répertoire docs/asciidoc/images/example_fr dans ofbiz-framework
 .. copie du fichier docs/asciidoc/images/PortalUml.png dans ofbiz-framework
 .. copie du fichier docs/asciidoc/developer-manual_fr.adoc dans ofbiz-framework
+.. copie du répertoire framework/widget/src/main/java/org/apache/ofbiz/widget/renderer/frontjs dans ofbiz-framework
 .. copie du fichier framework/widget/src/main/java/org/apache/ofbiz/widget/renderer/macro/MacroFormRenderer.java en remplacement de celui de OFBiz
 . Pour le build de l'applicatif vuejs il faut avoir nodejs installé sur son environement
 .. en attendant une commande intégré à gradle
