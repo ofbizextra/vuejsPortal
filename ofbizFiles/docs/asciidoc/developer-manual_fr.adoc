@@ -193,6 +193,14 @@ Continuing the example, the FindInvoices screen contains many details including
 two forms. One form is for entering invoice search fields and the other form
 displays search results.
 
+=== Gestion de la documentation
+
+Comment la documentation est organisé, avec quels outils est-elle réalisé, quels sont les conventions et toutes les
+autres questions concernant la gestion de la document et son élaboration sont traité dans un document dédié.
+
+cf link:documentation_guidelines.html[documentation_guidelines] 
+
+
 == Web Framework
 
 === Web Apps
@@ -263,6 +271,8 @@ include::../../plugins/vuejsPortal/src/docs/asciidoc/FrontJsPortal_fr.adoc[level
 
 ===== Intellij Idea
 
+pour le hotswap, il faut importer (menu file project structure libraries clicker sur plus pour ajouter ofbiz-framework/build/libs/ofbiz.jar tous les modules (Ctrl A)
+
 ==== Database
 
 //doc coming from Webhelp Example
@@ -278,6 +288,14 @@ include::../../plugins/example/src/docs/asciidoc/example_fr.adoc[leveloffset=+2]
 === Unit Tests
 
 === Integration Tests
+
+=== UI Tests
+
+Il existe un projet dédié "OFBiz® Selenium-WebDriver" (OfbSwd) dont le rôle est exclusivement les tests via l'interface utilisateur.
+
+Cela couvre, aussi bien les tests unitaires de l'interface utilisateur que des tests de use case métier.
+
+Pour plus de détail se référer à la https://ofbswdadoc.ofbizextra.org/OFBiz_SeleniumWebDriver_fr.html[documentation de ce projet] 
 
 == Deployment
 
