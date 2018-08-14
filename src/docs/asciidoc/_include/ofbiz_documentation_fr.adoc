@@ -4,6 +4,10 @@
 January 24, 2013 +
 en cours de revu à partir de juin 2018
 
+La documentation de Apache OFBiz® est en cours de refonte complète et ce qui suit concerne les anciennes manière de gestion de la documentation.
+
+Pour plus de détail sur les règles et outils actuels il vaut mieux lire link:documentation_guidelines.html[documentation_guidelines]
+
 Actuellement il y a 2 systèmes de gestion de l'aide utilisateur, celui qui est inclus dans le noyau OFBiz et celui que vous êtes entrain d'utiliser ;-) qui est ajouté par l'addon webhelp.
 C'est au niveau du composant qu'est défini le système d'aide qui est utilisé par défaut.
 Les deux moteurs utilise le format 
