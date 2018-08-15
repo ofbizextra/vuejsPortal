@@ -27,7 +27,7 @@
     computed: {
       data() {
         let data = this.props.attributes
-        delete data['currentValue']
+        //delete data['currentValue']
         Object.keys(data).map(it => {
           if (data[it] === ''){
             delete data[it]

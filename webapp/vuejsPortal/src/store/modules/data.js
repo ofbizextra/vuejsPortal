@@ -7,7 +7,8 @@ Vue.use(Vuex)
 
 const state = {
   example: {},
-  currentId: ''
+  currentId: '',
+  entities: {}
 }
 
 const mutations = {
@@ -19,6 +20,15 @@ const mutations = {
   },
   SET_CURRENT_ID: (state, id) => {
     state.currentId = id
+  },
+  SET_ENTITY: (state, data) => {
+    state.entities[data.entityName] = {
+      list: data.list,
+      primaryKey: data.primaryKey
+    }
+  },
+  SET_ENTITY_ROW: (state, data) => {
+    state.entities[data.entityName].list[data.content[state.entities[data.entityName].primaryKey]] = data.content
   }
 }
 
@@ -26,6 +36,12 @@ const getters = {
   currentId: state => state.currentId,
   dataFromExample: state => (data) => {
     return state.example[data.id][data.key]
+  },
+  entity: state => entityName => {
+    return state.entities[entityName]
+  },
+  entityRow: state => (entityName, id) => {
+    return state.entities[entityName].list.find(row => row[state.entities[entityName]].primaryKey === id)
   }
 }
 
@@ -41,6 +57,14 @@ const actions = {
   },
   setCurrentId({commit}, id) {
     commit('SET_CURRENT_ID', id)
+  },
+  setEntity({commit}, data) {
+    console.log('setEntity : ' + data)
+    commit('SET_ENTITY', data)
+  },
+  setEntityRow({commit}, data) {
+    console.log('setEntityRow : ' + data)
+    commit('SET_ENTITY_ROW', data)
   }
 }
 

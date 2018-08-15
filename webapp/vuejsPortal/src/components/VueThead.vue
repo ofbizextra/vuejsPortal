@@ -2,8 +2,7 @@
   <thead id="vue-thead" v-bind="data">
     <div
       v-for="component in props.children"
-      v-if="component.type === 'element' && (component.tagName.includes('vue-'))"
-      v-bind:is="component.tagName"
+      v-bind:is="constantes.components[component.fieldType]"
       :props="component"
       :updateStore="updateStore">
     </div>
@@ -12,17 +11,20 @@
 
 <script>
   import {mapGetters} from 'vuex'
+  import cst from '../js/constantes'
 
   export default {
     name: "VueThead",
     props: ['props', 'updateStore'],
     data() {
-      return {}
+      return {
+        constantes: cst
+      }
     },
     computed: {
       data() {
-        let data = this.parseProps()
-        delete data['value']
+        let data = this.props.attributes
+        //delete data['value']
         return data
       }
     }

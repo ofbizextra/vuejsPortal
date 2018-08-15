@@ -94,7 +94,17 @@
         key: 'viewSizeField',
         value: this.props.attributes.viewSizeField
       })
-
+      if (this.props.attributes.defaultEntityName) {
+        this.$store.dispatch('data/setEntity', {
+          entityName: this.props.attributes.defaultEntityName,
+          list: {
+            data1: 'blablabla',
+            data2: 'blablablabla',
+            data3: 'blablablablabla',
+          },
+          primaryKey: this.props.attributes.primaryKey ? this.props.attributes.primaryKey : ''
+        })
+      }
     }
   }
 </script>

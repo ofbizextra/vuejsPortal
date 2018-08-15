@@ -2,9 +2,11 @@
 package org.apache.ofbiz.widget.renderer.frontjs;
 
 import com.ibm.icu.util.Calendar;
+import com.lowagie.text.html.simpleparser.IncTable;
 import org.apache.ofbiz.base.util.*;
 import org.apache.ofbiz.base.util.string.FlexibleStringExpander;
 import org.apache.ofbiz.entity.Delegator;
+import org.apache.ofbiz.entity.GenericValue;
 import org.apache.ofbiz.webapp.control.RequestHandler;
 import org.apache.ofbiz.webapp.taglib.ContentUrlTag;
 import org.apache.ofbiz.widget.WidgetWorker;
@@ -175,10 +177,10 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
             }
         }
         String value = modelFormField.getEntry(context, textField.getDefaultValue(context));
-        String textSize = Integer.toString(textField.getSize());
-        String maxlength = "";
+        Integer textSize = textField.getSize();
+        Integer maxlength = -1;
         if (textField.getMaxlength() != null) {
-            maxlength = Integer.toString(textField.getMaxlength());
+            maxlength = textField.getMaxlength();
         }
         String event = modelFormField.getEvent();
         String action = modelFormField.getAction(context);
@@ -216,15 +218,15 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         cb.put("alert", alert);
         cb.put("value", value);
         cb.put("textSize", textSize);
-        cb.put("maxlength", maxlength);
+        cb.put("maxlength", maxlength > -1 ? maxlength : "");
         cb.put("id", id);
         cb.put("event", event);
         cb.put("action", action);
-        cb.put("disabled", Boolean.toString(disabled));
-        cb.put("readonly", Boolean.toString(readonly));
+        cb.put("disabled", disabled);
+        cb.put("readonly", readonly);
         cb.put("clientAutocomplete", clientAutocomplete);
         cb.put("ajaxUrl", ajaxUrl);
-        cb.put("ajaxEnabled", Boolean.toString(ajaxEnabled));
+        cb.put("ajaxEnabled", ajaxEnabled);
         cb.put("mask", mask);
         cb.put("placeholder", placeholder);
         cb.put("tabindex", tabindex);
@@ -242,8 +244,8 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
     public void renderTextareaField(Appendable writer, Map<String, Object> context, TextareaField textareaField) {
         ModelFormField modelFormField = textareaField.getModelFormField();
         String name = modelFormField.getParameterName(context);
-        String cols = Integer.toString(textareaField.getCols());
-        String rows = Integer.toString(textareaField.getRows());
+        Integer cols = textareaField.getCols();
+        Integer rows = textareaField.getRows();
         String id = modelFormField.getCurrentContainerId(context);
         String className = "";
         String alert = "false";
@@ -283,9 +285,9 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         if (userLogin != null) {
             language = UtilValidate.isEmpty((String) userLogin.get("lastLocale")) ? "en" : (String) userLogin.get("lastLocale");
         }
-        String maxlength = "";
+        Integer maxlength = -1;
         if (textareaField.getMaxlength() != null) {
-            maxlength = Integer.toString(textareaField.getMaxlength());
+            maxlength = textareaField.getMaxlength();
         }
         String tabindex = modelFormField.getTabindex();
         String value = modelFormField.getEntry(context, textareaField.getDefaultValue(context));
@@ -297,7 +299,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         cb.put("value", value);
         cb.put("cols", cols);
         cb.put("rows", rows);
-        cb.put("maxlength", maxlength);
+        cb.put("maxlength", maxlength > -1 ? maxlength : "");
         cb.put("id", id);
         cb.put("readonly", readonly);
         cb.put("visualEditorEnable", visualEditorEnable);
@@ -494,26 +496,26 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         cb.put("alert", alert);
         cb.put("value", value);
         cb.put("title", localizedInputTitle);
-        cb.put("size", Integer.toString(size));
-        cb.put("maxlength", Integer.toString(maxlength));
-        cb.put("step", Integer.toString(step));
+        cb.put("size", size);
+        cb.put("maxlength", maxlength);
+        cb.put("step", step);
         cb.put("timeValues", timeValues.toString());
         cb.put("id", id);
         cb.put("event", event);
         cb.put("action", action);
         cb.put("dateType", dateTimeField.getType());
-        cb.put("shortDateInput", Boolean.toString(shortDateInput));
+        cb.put("shortDateInput", shortDateInput);
         cb.put("timeDropdownParamName", timeDropdownParamName);
         cb.put("defaultDateTimeString", defaultDateTimeString);
         cb.put("localizedIconTitle", localizedIconTitle);
         cb.put("timeDropdown", timeDropdown);
         cb.put("timeHourName", timeHourName);
         cb.put("classString", classString);
-        cb.put("hour1", Integer.toString(hour1));
-        cb.put("hour2", Integer.toString(hour2));
+        cb.put("hour1", hour1);
+        cb.put("hour2", hour2);
         cb.put("timeMinutesName", timeMinutesName);
-        cb.put("minutes", Integer.toString(minutes));
-        cb.put("isTwelveHour", Boolean.toString(isTwelveHour));
+        cb.put("minutes", minutes);
+        cb.put("isTwelveHour", isTwelveHour);
         cb.put("ampmName", ampmName);
         cb.put("amSelected", amSelected);
         cb.put("pmSelected", pmSelected);
@@ -704,9 +706,9 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         cb.put("fieldName", fieldName);
         cb.put("otherFieldName", otherFieldName);
         cb.put("otherValue", otherValue);
-        cb.put("otherFieldSize", Integer.toString(otherFieldSize));
+        cb.put("otherFieldSize", otherFieldSize);
         cb.put("dDFCurrent", dDFCurrent);
-        cb.put("ajaxEnabled", Boolean.toString(ajaxEnabled));
+        cb.put("ajaxEnabled", ajaxEnabled);
         cb.put("noCurrentSelectedKey", noCurrentSelectedKey);
         cb.put("ajaxOptions", ajaxOptions.toString());
         cb.put("frequency", frequency);
@@ -770,7 +772,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         cb.put("alert", alert);
         cb.put("id", id);
         cb.put("conditionGroup", conditionGroup);
-        cb.put("allChecked", (allChecked != null ? Boolean.toString(allChecked) : "\"\""));
+        cb.put("allChecked", (allChecked != null ? allChecked : "\"\""));
         cb.put("currentValue", currentValue);
         cb.put("name", name);
         if (event != null) {
@@ -780,7 +782,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
             cb.put("action", action);
         }
         cb.put("tabindex", tabindex);
-        cb.put("disabled", Boolean.toString(disabled));
+        cb.put("disabled", disabled);
         this.appendTooltip(cb, context, modelFormField);
         HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
         hashMapStringObject.put("CheckField", cb);
@@ -1086,9 +1088,11 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         cb.put("hasRequiredField", hasRequiredField);
         cb.put("viewIndexField", viewIndexField);
         cb.put("viewSizeField", viewSizeField);
-        cb.put("viewIndex", Integer.toString(viewIndex));
-        cb.put("viewSize", Integer.toString(viewSize));
-        cb.put("useRowSubmit", Boolean.toString(useRowSubmit));
+        cb.put("viewIndex", viewIndex);
+        cb.put("viewSize", viewSize);
+        cb.put("useRowSubmit", useRowSubmit);
+        cb.put("defaultEntityName", modelForm.getDefaultEntityName());
+        cb.put("primaryKey",((GenericValue) context.get(modelForm.getDefaultMapName())).getPrimaryKey());
         HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
         hashMapStringObject.put("FormOpen", cb);
         this.output.add(hashMapStringObject);
@@ -1157,10 +1161,11 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
             // this is a fix for forms with no fields
             cb.put("columnStyles", columnStyleListString);
         }
+        cb.put("defaultEntityName", modelForm.getDefaultEntityName());
+        cb.put("primaryKey",((GenericValue) context.get(modelForm.getDefaultMapName())).getPrimaryKey());
         HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
         hashMapStringObject.put("FormatListWrapperOpen", cb);
         this.output.add(hashMapStringObject);
-
     }
     public void renderEmptyFormDataMessage(Appendable writer, Map<String, Object> context, ModelForm modelForm) {
         Map<String, Object> cb = new HashMap<>();
@@ -1211,7 +1216,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         String areaStyle = modelFormField.getTitleAreaStyle();
         Map<String, Object> cb = new HashMap<>();
         cb.put("style", areaStyle);
-        cb.put("positionSpan", Integer.toString(positionSpan));
+        cb.put("positionSpan", positionSpan);
         HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
         hashMapStringObject.put("FormatHeaderRowCellOpen", cb);
         this.output.add(hashMapStringObject);
@@ -1242,7 +1247,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         String titleStyle = modelFormField.getTitleStyle();
         Map<String, Object> cb = new HashMap<>();
         cb.put("style", titleStyle);
-        cb.put("isLast", Boolean.toString(isLast));
+        cb.put("isLast", isLast);
         HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
         hashMapStringObject.put("FormatHeaderRowFormCellTitleSeparator", cb);
         this.output.add(hashMapStringObject);
@@ -1285,7 +1290,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         Map<String, Object> cb = new HashMap<>();
         cb.put("fieldName", modelFormField.getName());
         cb.put("style", areaStyle);
-        cb.put("positionSpan", Integer.toString(positionSpan));
+        cb.put("positionSpan", positionSpan);
         HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
         hashMapStringObject.put("FormatItemRowCellOpen", cb);
         this.output.add(hashMapStringObject);
@@ -1365,7 +1370,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
     public void renderFormatFieldRowWidgetCellOpen(Appendable writer, Map<String, Object> context, ModelFormField modelFormField, int positions, int positionSpan, Integer nextPositionInRow) {
         String areaStyle = modelFormField.getWidgetAreaStyle();
         Map<String, Object> cb = new HashMap<>();
-        cb.put("positionSpan", Integer.toString(positionSpan));
+        cb.put("positionSpan", positionSpan);
         cb.put("style", areaStyle);
         HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
         hashMapStringObject.put("FormatFieldRowWidgetCellOpen", cb);
@@ -1396,7 +1401,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         String opIsEmpty = "";
         String opNotEqual = "";
         String name = modelFormField.getParameterName(context);
-        String size = Integer.toString(textFindField.getSize());
+        Integer size = textFindField.getSize();
         String maxlength = "";
         String autocomplete = "";
         if (UtilValidate.isNotEmpty(modelFormField.getWidgetStyle())) {
@@ -1447,8 +1452,8 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         cb.put("maxlength", maxlength);
         cb.put("autocomplete", autocomplete);
         cb.put("titleStyle", titleStyle);
-        cb.put("hideIgnoreCase", Boolean.toString(hideIgnoreCase));
-        cb.put("ignCase", Boolean.toString(ignCase));
+        cb.put("hideIgnoreCase", hideIgnoreCase);
+        cb.put("ignCase", ignCase);
         cb.put("ignoreCase", ignoreCase);
         cb.put("tabindex", tabindex);
         cb.put("conditionGroup", conditionGroup);
@@ -1479,7 +1484,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
             }
         }
         String name = modelFormField.getParameterName(context);
-        String size = Integer.toString(rangeFindField.getSize());
+        Integer size = rangeFindField.getSize();
         String value = modelFormField.getEntry(context, rangeFindField.getDefaultValue(context));
         if (value == null) {
             value = "";
@@ -1509,7 +1514,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         cb.put("value", value);
         cb.put("size", size);
         if (maxlength != null) {
-            cb.put("maxlength", Integer.toString(maxlength));
+            cb.put("maxlength", maxlength);
         }
         cb.put("autocomplete", autocomplete);
         cb.put("titleStyle", titleStyle);
@@ -1620,8 +1625,8 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         cb.put("localizedInputTitle", localizedInputTitle);
         cb.put("value", value);
         cb.put("value2", value2);
-        cb.put("size", Integer.toString(size));
-        cb.put("maxlength", Integer.toString(maxlength));
+        cb.put("size", size);
+        cb.put("maxlength", maxlength);
         cb.put("dateType", dateType);
         cb.put("formName", formName);
         cb.put("defaultDateTimeString", defaultDateTimeString);
@@ -1676,7 +1681,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         if (value == null) {
             value = "";
         }
-        String size = Integer.toString(lookupField.getSize());
+        Integer size = lookupField.getSize();
         Integer maxlength = lookupField.getMaxlength();
         String id = modelFormField.getCurrentContainerId(context);
         List<ModelForm.UpdateArea> updateAreas = modelFormField.getOnChangeUpdateAreas();
@@ -1764,7 +1769,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         cb.put("name", name);
         cb.put("value", value);
         cb.put("size", size);
-        cb.put("maxlength", (maxlength != null ? Integer.toString(maxlength) : ""));
+        cb.put("maxlength", maxlength != null ? maxlength : "");
         cb.put("id", id);
         if (event != null) {
             cb.put("event", event);
@@ -1772,7 +1777,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         if (action != null) {
             cb.put("action", action);
         }
-        cb.put("readonly", Boolean.toString(readonly));
+        cb.put("readonly", readonly);
         cb.put("autocomplete", autocomplete);
         cb.put("descriptionFieldName", descriptionFieldName);
         cb.put("formName", formName);
@@ -1780,7 +1785,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         cb.put("targetParameterIter", targetParameterIter.toString());
         cb.put("imgSrc", imgSrc);
         cb.put("ajaxUrl", ajaxUrl);
-        cb.put("ajaxEnabled", Boolean.toString(ajaxEnabled));
+        cb.put("ajaxEnabled", ajaxEnabled);
         cb.put("presentation", lookupPresentation);
         if (UtilValidate.isNotEmpty(lookupHeight)) {
             cb.put("height", lookupHeight);
@@ -1793,8 +1798,8 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         }
         cb.put("fadeBackground", fadeBackground);
         cb.put("clearText", clearText);
-        cb.put("showDescription", Boolean.toString(showDescription));
-        cb.put("initiallyCollapsed", Boolean.toString(isInitiallyCollapsed));
+        cb.put("showDescription", showDescription);
+        cb.put("initiallyCollapsed", isInitiallyCollapsed);
         cb.put("lastViewName", lastViewName);
         cb.put("conditionGroup", conditionGroup);
         cb.put("tabindex", tabindex);
@@ -1972,12 +1977,12 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         Map<String, Object> cb = new HashMap<>();
         cb.put("paginateStyle", paginateStyle);
         cb.put("paginateFirstStyle", paginateFirstStyle);
-        cb.put("viewIndex", Integer.toString(viewIndex));
-        cb.put("highIndex", Integer.toString(highIndex));
-        cb.put("listSize", Integer.toString(listSize));
-        cb.put("viewSize", Integer.toString(viewSize));
-        cb.put("ajaxEnabled", Boolean.toString(ajaxEnabled));
-        cb.put("javaScriptEnabled", Boolean.toString(javaScriptEnabled));
+        cb.put("viewIndex", viewIndex);
+        cb.put("highIndex", highIndex);
+        cb.put("listSize", listSize);
+        cb.put("viewSize", viewSize);
+        cb.put("ajaxEnabled", ajaxEnabled);
+        cb.put("javaScriptEnabled", javaScriptEnabled);
         cb.put("ajaxFirstUrl", ajaxFirstUrl);
         cb.put("firstUrl", firstUrl);
         cb.put("paginateFirstLabel", paginateFirstLabel);
@@ -2011,7 +2016,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         String alert = "false";
         String name = modelFormField.getParameterName(context);
         String value = modelFormField.getEntry(context, textField.getDefaultValue(context));
-        String size = Integer.toString(textField.getSize());
+        Integer size = textField.getSize();
         String maxlength = "";
         String autocomplete = "";
         if (UtilValidate.isNotEmpty(modelFormField.getWidgetStyle())) {
@@ -2051,7 +2056,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         String className = "";
         String alert = "false";
         String name = modelFormField.getParameterName(context);
-        String size = Integer.toString(passwordField.getSize());
+        Integer size = passwordField.getSize();
         String maxlength = "";
         String id = modelFormField.getCurrentContainerId(context);
         String autocomplete = "";
@@ -2173,9 +2178,9 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         }
         cb.put("id", id);
         cb.put("title", title);
-        cb.put("collapsed", Boolean.toString(collapsed));
+        cb.put("collapsed", collapsed);
         cb.put("collapsibleAreaId", collapsibleAreaId);
-        cb.put("collapsible", Boolean.toString(collapsible));
+        cb.put("collapsible", collapsible);
         cb.put("expandToolTip", expandToolTip);
         cb.put("collapseToolTip", collapseToolTip);
         HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
@@ -2307,7 +2312,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         cb.put("style", sortFieldStyle);
         cb.put("title", titleText);
         cb.put("linkUrl", linkUrl);
-        cb.put("ajaxEnabled", Boolean.toString(ajaxEnabled));
+        cb.put("ajaxEnabled", ajaxEnabled);
         String tooltip = modelFormField.getSortFieldHelpText(context);
         if (!tooltip.isEmpty()) {
             cb.put(" tooltip", tooltip);

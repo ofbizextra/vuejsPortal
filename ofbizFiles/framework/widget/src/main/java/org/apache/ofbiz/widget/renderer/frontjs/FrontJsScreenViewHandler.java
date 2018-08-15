@@ -63,18 +63,14 @@ public class FrontJsScreenViewHandler extends AbstractViewHandler {
             temp = new HashMap<>();
             if (entry.getKey().toString().contains("Open")) {
                 temp.put("fieldType", entry.getKey().toString().replace("Open", ""));
-                temp.put("attribute", entry.getValue());
+                temp.put("attributes", entry.getValue());
                 temp.put("children", this.parse(iterator, entry));
-                HashMap<String, Object> hashMap = new HashMap<>();
-                hashMap.put(entry.getKey().toString().replace("Open", ""), temp);
-                result.add(hashMap);
+                result.add(temp);
             } else {
                 temp.put("fieldType", entry.getKey());
-                temp.put("attribute", entry.getValue());
+                temp.put("attributes", entry.getValue());
                 temp.put("children", new ArrayList<>());
-                HashMap<String, Object> hashMap = new HashMap<>();
-                hashMap.put(entry.getKey().toString().replace("Open", ""), temp);
-                result.add(hashMap);
+                result.add(temp);
             }
         }
         return result;
@@ -93,16 +89,14 @@ public class FrontJsScreenViewHandler extends AbstractViewHandler {
             }
             if (current.getKey().toString().contains("Open")) {
                 temp.put("fieldType", current.getKey().toString().replace("Open", ""));
-                temp.put("attribute", current.getValue());
+                temp.put("attributes", current.getValue());
                 temp.put("children", this.parse(iterator, current));
             } else {
                 temp.put("fieldType", current.getKey());
-                temp.put("attribute", current.getValue());
+                temp.put("attributes", current.getValue());
                 temp.put("children", new ArrayList<>());
             }
-            HashMap<String, Object> hashMap = new HashMap<>();
-            hashMap.put(current.getKey().toString().replace("Open", ""), temp);
-            arrayListMap.add(hashMap);
+            arrayListMap.add(temp);
         }
         return arrayListMap;
     }

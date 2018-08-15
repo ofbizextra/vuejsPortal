@@ -1,6 +1,6 @@
 <template>
   <div id="vue-title">
-    <label v-bind="data">{{data.title}}</label>
+    <label v-bind="data">{{data.title ? data.title : data.description}}</label>
   </div>
 </template>
 

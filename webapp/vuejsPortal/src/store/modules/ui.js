@@ -50,12 +50,13 @@ const actions = {
     commit('SET_PORTAL_PAGE', {portalPageId, portalPage})
     commit('SET_CURRENT_PORTAL_PAGE', portalPageId)
   },
-  setPortlet({commit}, {portalPortletId, portletSeqId}) {
+  setPortlet({commit}, {portalPortletId, portletSeqId, params = {}}) {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         Vue.http.post(constantes.apiUrl + constantes.showPortlet.path,
           queryString.stringify({
-            portalPortletId: portalPortletId
+            portalPortletId: portalPortletId,
+            ...params
           }),
           {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}
         ).then(response => {

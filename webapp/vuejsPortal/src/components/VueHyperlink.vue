@@ -11,7 +11,7 @@
     computed: {
       data() {
         let data = this.props.attributes
-        delete data.value
+        //delete data.value
         return data
       }
     },

@@ -34,6 +34,7 @@ import Test from './components/Test'
 import VueSortField from './components/VueSortField'
 import VueColumnPortlet from './components/VueColumnPortlet'
 import VuePortlet from './components/VuePortlet'
+import VueThead from './components/VueThead'
 
 import store from './store'
 
@@ -71,6 +72,7 @@ Vue.component('test', Test)
 Vue.component('vue-sort-field', VueSortField)
 Vue.component('vue-column-portlet', VueColumnPortlet)
 Vue.component('vue-portlet', VuePortlet)
+Vue.component('vue-thead', VueThead)
 
 Vue.mixin({
   methods: {
