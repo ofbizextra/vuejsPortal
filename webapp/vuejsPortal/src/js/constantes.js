@@ -13,5 +13,5 @@ export default {
   findExampleLayer: {path: '/FindExampleLayer', tokenRequired: false},
   listExampleLayer: {path: '/ListExampleLayer', tokenRequired: false},
   portalPageDetail: {path: '/portalPageDetail', tokenRequired: false},
-  showPortlet: {path: '/showPortlet', tokenRequired: false}
+  showPortlet: {path: '/showPortletFj', tokenRequired: false}
 }

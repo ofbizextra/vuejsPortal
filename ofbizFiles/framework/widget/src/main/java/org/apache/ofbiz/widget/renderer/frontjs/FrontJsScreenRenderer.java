@@ -44,11 +44,11 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
     private static final String NOT_YET_SUPPORTED = "Not yet supported";
     public static final String module = FrontJsScreenRenderer.class.getName();
     private int elementId = 999;
-    private LinkedHashMap<String, Object> output;
+    private ArrayList<Map<String, Object>> output;
     private String rendererName;
     private int screenLetsIdCounter = 1;
 
-    FrontJsScreenRenderer(String name, LinkedHashMap<String, Object> output) {
+    FrontJsScreenRenderer(String name, ArrayList<Map<String, Object>> output) {
         this.output = output;
         rendererName = name;
     }
@@ -61,7 +61,7 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
         executeMacro(output, macro, null);
     }
     private void executeMacro(Appendable writer, String macro, Map<String, Object> parameters) throws IOException {
-        this.output.put(macro, NOT_YET_SUPPORTED);
+        this.output.add(macro, NOT_YET_SUPPORTED);
     }
     */
     public String getRendererName() {
@@ -69,18 +69,18 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
     }
 
     public void renderScreenBegin(Appendable writer, Map<String, Object> context) throws IOException {
-        // this.output.put("ScreenBegin", new HashMap<>());
+        // this.output.add("ScreenBegin", new HashMap<>());
     }
 
     public void renderScreenEnd(Appendable writer, Map<String, Object> context) throws IOException {
-        // this.output.put("ScreenEnd", new HashMap<>());
+        // this.output.add("ScreenEnd", new HashMap<>());
     }
 
     public void renderSectionBegin(Appendable writer, Map<String, Object> context, ModelScreenWidget.Section section) throws IOException {
-        // this.output.put("SectionBegin", new HashMap<>());
+        // this.output.add("SectionBegin", new HashMap<>());
     }
     public void renderSectionEnd(Appendable writer, Map<String, Object> context, ModelScreenWidget.Section section) throws IOException {
-        // this.output.put("SectionEnd", new HashMap<>());
+        // this.output.add("SectionEnd", new HashMap<>());
     }
 
     public void renderContainerBegin(Appendable writer, Map<String, Object> context, ModelScreenWidget.Container container) throws IOException {
@@ -103,12 +103,12 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
         parameters.put("style", container.getStyle(context));
         parameters.put("autoUpdateLink", autoUpdateLink);
         parameters.put("autoUpdateInterval", container.getAutoUpdateInterval(context));
-        this.output.put("ContainerBegin", parameters);
+        this.output.add("ContainerBegin", parameters);
         */
     }
 
     public void renderContainerEnd(Appendable writer, Map<String, Object> context, ModelScreenWidget.Container container) throws IOException {
-        // this.output.put("renderContainerEnd", new HashMap<>());
+        // this.output.add("renderContainerEnd", new HashMap<>());
     }
 
     public void renderLabel(Appendable writer, Map<String, Object> context, ModelScreenWidget.Label label) throws IOException {
@@ -116,14 +116,18 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
         parameters.put("text", label.getText(context));
         parameters.put("id", label.getId(context));
         parameters.put("style", label.getStyle(context));
-        this.output.put("Label", parameters);
+        HashMap<String, Object> hashMapStringObject = new HashMap<>();
+        hashMapStringObject.put("Label", parameters);
+        this.output.add(hashMapStringObject);
     }
 
     public void renderHorizontalSeparator(Appendable writer, Map<String, Object> context, ModelScreenWidget.HorizontalSeparator separator) throws IOException {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("id", separator.getId(context));
         parameters.put("style", separator.getStyle(context));
-        this.output.put("HorizontalSeparator", parameters);
+        HashMap<String, Object> hashMapStringObject = new HashMap<>();
+        hashMapStringObject.put("HorizontalSeparator", parameters);
+        this.output.add(hashMapStringObject);
     }
 
     public void renderLink(Appendable writer, Map<String, Object> context, ModelScreenWidget.ScreenLink link) throws IOException {
@@ -205,7 +209,9 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
         cb.put("linkUrl", linkUrl);
         cb.put("text", text);
         cb.put("imgStr", imgStr.replaceAll("\"", "\\\\\""));
-        this.output.put("Link", cb);
+        HashMap<String, Object> hashMapStringObject = new HashMap<>();
+        hashMapStringObject.put("Link", cb);
+        this.output.add(hashMapStringObject);
     }
 
     public void renderImage(Appendable writer, Map<String, Object> context, ModelScreenWidget.ScreenImage image) throws IOException {
@@ -248,7 +254,9 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
         parameters.put("border", image.getBorder(context));
         parameters.put("alt", image.getAlt(context));
         parameters.put("urlString", urlString);
-        this.output.put("Image", parameters);
+        HashMap<String, Object> hashMapStringObject = new HashMap<>();
+        hashMapStringObject.put("Image", parameters);
+        this.output.add(hashMapStringObject);
     }
 
     public void renderContentBegin(Appendable writer, Map<String, Object> context, ModelScreenWidget.Content content) throws IOException {
@@ -264,7 +272,9 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
         parameters.put("editRequest", editRequest);
         parameters.put("enableEditValue", enableEditValue == null ? "" : enableEditValue);
         parameters.put("editContainerStyle", content.getEditContainerStyle(context));
-        this.output.put("ContentBegin", parameters);
+        HashMap<String, Object> hashMapStringObject = new HashMap<>();
+        hashMapStringObject.put("ContentBegin", parameters);
+        this.output.add(hashMapStringObject);
     }
 
     public void renderContentBody(Appendable writer, Map<String, Object> context, ModelScreenWidget.Content content) throws IOException {
@@ -321,7 +331,7 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
                 }
                 Map<String, Object> cb = new HashMap<>();
                 cb.put("content", renderedContent);
-                this.output.put("ContentBody", cb);
+                this.output.add("ContentBody", cb);
             }
 
         } catch (GeneralException |IOException e) {
@@ -364,7 +374,7 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
             parameters.put("editContainerStyle", content.getEditContainerStyle(context));
             parameters.put("editRequest", editRequest);
             parameters.put("enableEditValue", enableEditValue);
-            this.output.put("ContentEnd", parameters);
+            this.output.add("ContentEnd", parameters);
         }
         */
     }
@@ -387,7 +397,7 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
         parameters.put("width", content.getWidth());
         parameters.put("height", content.getHeight());
         parameters.put("border", content.getBorder());
-        this.output.put("ContentFrame", parameters);
+        this.output.add("ContentFrame", parameters);
         */
     }
 
@@ -400,7 +410,7 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
         parameters.put("editContainerStyle", content.getEditContainerStyle(context));
         parameters.put("editRequest", content.getEditRequest(context));
         parameters.put("enableEditValue", enableEditValue == null ? "" : enableEditValue);
-        this.output.put("SubContentBegin", parameters);
+        this.output.add("SubContentBegin", parameters);
         */
     }
 
@@ -439,7 +449,7 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
                 }
                 Map<String, Object> cb = new HashMap<>();
                 cb.put("content", renderedContent);
-                this.output.put("SubContentBody", cb);
+                this.output.add("SubContentBody", cb);
             }
 
         } catch (GeneralException | IOException e) {
@@ -486,7 +496,7 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
         parameters.put("editContainerStyle", content.getEditContainerStyle(context));
         parameters.put("editRequest", editRequest);
         parameters.put("enableEditValue", enableEditValue == null ? "" : enableEditValue);
-        this.output.put("SubContentEnd", parameters);
+        this.output.add("SubContentEnd", parameters);
         */
     }
 
@@ -586,18 +596,22 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
         parameters.put("showMore", showMore);
         parameters.put("collapsed", collapsed);
         parameters.put("javaScriptEnabled", javaScriptEnabled);
-        this.output.put("ScreenletBegin", parameters);
+        HashMap<String, Object> hashMapStringObject = new HashMap<>();
+        hashMapStringObject.put("ScreenletBegin", parameters);
+        this.output.add(hashMapStringObject);
     }
 
     public void renderScreenletSubWidget(Appendable writer, Map<String, Object> context, ModelScreenWidget subWidget, ModelScreenWidget.Screenlet screenlet) throws GeneralException, IOException  {
-        this.output.put("ScreenletSubWidget", NOT_YET_SUPPORTED);
+        HashMap<String, Object> hashMapStringObject = new HashMap<>();
+        hashMapStringObject.put("ScreenletSubWidget", NOT_YET_SUPPORTED);
+        this.output.add(hashMapStringObject);
         /*
         if (subWidget.equals(screenlet.getNavigationForm())) {
             HttpServletRequest request = (HttpServletRequest) context.get("request");
             HttpServletResponse response = (HttpServletResponse) context.get("response");
             VisualTheme visualTheme = UtilHttp.getVisualTheme(request);
             ModelTheme modelTheme = visualTheme.getModelTheme();
-            this.output.put("ScreenletSubWidget", NOT_YET_SUPPORTED);
+            this.output.add("ScreenletSubWidget", NOT_YET_SUPPORTED);
             if (request != null && response != null) {
                 Map<String, Object> globalCtx = UtilGenerics.checkMap(context.get("globalContext"));
                 globalCtx.put("NO_PAGINATOR", true);
@@ -616,7 +630,9 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
         */
     }
     public void renderScreenletEnd(Appendable writer, Map<String, Object> context, ModelScreenWidget.Screenlet screenlet) throws IOException {
-        this.output.put("ScreenletEnd", null);
+        HashMap<String, Object> hashMapStringObject = new HashMap<>();
+        hashMapStringObject.put("ScreenletEnd", null);
+        this.output.add(hashMapStringObject);
     }
 
     protected void renderScreenletPaginateMenu(Appendable writer, Map<String, Object> context, ModelScreenWidget.Form form) throws IOException {
@@ -752,7 +768,9 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
         parameters.put("paginateFirstStyle", modelForm.getPaginateFirstStyle());
         parameters.put("paginateFirstLabel", modelForm.getPaginateFirstLabel(context));
         parameters.put("firstLinkUrl", firstLinkUrl);
-        this.output.put("ScreenletPaginateMenu", parameters);
+        HashMap<String, Object> hashMapStringObject = new HashMap<>();
+        hashMapStringObject.put("ScreenletPaginateMenu", parameters);
+        this.output.add(hashMapStringObject);
     }
 
     public void renderPortalPageBegin(Appendable writer, Map<String, Object> context, ModelScreenWidget.PortalPage portalPage) throws GeneralException, IOException {
@@ -776,11 +794,15 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
         cb.put("confMode", confMode);
         cb.put("addColumnLabel", addColumnLabel);
         cb.put("addColumnHint", addColumnHint);
-        this.output.put("PortalPageBegin", cb);
+        HashMap<String, Object> hashMapStringObject = new HashMap<>();
+        hashMapStringObject.put("PortalPageBegin", cb);
+        this.output.add(hashMapStringObject);
     }
 
     public void renderPortalPageEnd(Appendable writer, Map<String, Object> context, ModelScreenWidget.PortalPage portalPage) throws GeneralException, IOException {
-        this.output.put("PortalPageEnd", new HashMap<>());
+        HashMap<String, Object> hashMapStringObject = new HashMap<>();
+        hashMapStringObject.put("PortalPageEnd", new HashMap<>());
+        this.output.add(hashMapStringObject);
     }
 
     public void renderPortalPageColumnBegin(Appendable writer, Map<String, Object> context, ModelScreenWidget.PortalPage portalPage, GenericValue portalPageColumn) throws GeneralException, IOException {
@@ -827,11 +849,15 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
         cb.put("addPortletHint", addPortletHint);
         cb.put("colWidthLabel", colWidthLabel);
         cb.put("setColumnSizeHint", setColumnSizeHint);
-        this.output.put("PortalPageColumnBegin", cb);
+        HashMap<String, Object> hashMapStringObject = new HashMap<>();
+        hashMapStringObject.put("PortalPageColumnBegin", cb);
+        this.output.add(hashMapStringObject);
     }
 
     public void renderPortalPageColumnEnd(Appendable writer, Map<String, Object> context, ModelScreenWidget.PortalPage portalPage, GenericValue portalPageColumn) throws GeneralException, IOException {
-        this.output.put("PortalPageColumnEnd", new HashMap<>());
+        HashMap<String, Object> hashMapStringObject = new HashMap<>();
+        hashMapStringObject.put("PortalPageColumnEnd", new HashMap<>());
+        this.output.add(hashMapStringObject);
     }
 
     public void renderPortalPagePortletBegin(Appendable writer, Map<String, Object> context, ModelScreenWidget.PortalPage portalPage, GenericValue portalPortlet) throws GeneralException, IOException {
@@ -876,7 +902,9 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
         cb.put("delPortletHint", delPortletHint);
         cb.put("editAttributeHint", editAttributeHint);
         cb.put("confMode", confMode);
-        this.output.put("PortalPagePortletBegin", cb);
+        HashMap<String, Object> hashMapStringObject = new HashMap<>();
+        hashMapStringObject.put("PortalPagePortletBegin", cb);
+        this.output.add(hashMapStringObject);
     }
 
     public void renderPortalPagePortletEnd(Appendable writer, Map<String, Object> context, ModelScreenWidget.PortalPage portalPage, GenericValue portalPortlet) throws GeneralException, IOException {
@@ -884,7 +912,9 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
 
         Map<String, Object> cb = new HashMap<>();
         cb.put("confMode", confMode);
-        this.output.put("PortalPagePortletEnd", cb);
+        HashMap<String, Object> hashMapStringObject = new HashMap<>();
+        hashMapStringObject.put("PortalPagePortletEnd", cb);
+        this.output.add(hashMapStringObject);
     }
 
     public void renderPortalPagePortletBody(Appendable writer, Map<String, Object> context, ModelScreenWidget.PortalPage portalPage, GenericValue portalPortlet) throws GeneralException, IOException {
@@ -916,14 +946,18 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
         Map<String, Object> cb = new HashMap<>();
         cb.put("id", id);
         cb.put("style", style);
-        this.output.put("ColumnContainerBegin", cb);
+        HashMap<String, Object> hashMapStringObject = new HashMap<>();
+        hashMapStringObject.put("ColumnContainerBegin", cb);
+        this.output.add(hashMapStringObject);
         for (ModelScreenWidget.Column column : columnContainer.getColumns()) {
             id = column.getId(context);
             style = column.getStyle(context);
             cb = new HashMap<>();
             cb.put("id", id);
             cb.put("style", style);
-            this.output.put("ColumnBegin", cb);
+            hashMapStringObject.clear();
+            hashMapStringObject.put("ColumnBegin", cb);
+            this.output.add(hashMapStringObject);
             for (ModelScreenWidget subWidget : column.getSubWidgets()) {
                 try {
                     subWidget.renderWidgetString(writer, context, this);
@@ -931,9 +965,13 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
                     throw new IOException(e);
                 }
             }
-            this.output.put("ColumnEnd", cb);
+            hashMapStringObject.clear();
+            hashMapStringObject.put("ColumnEnd", cb);
+            this.output.add(hashMapStringObject);
         }
-        this.output.put("ColumnContainerEnd", cb);
+        hashMapStringObject.clear();
+        hashMapStringObject.put("ColumnContainerEnd", cb);
+        this.output.add(hashMapStringObject);
     }
 
     // This is a util method to get the style from a property file

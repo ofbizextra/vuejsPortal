@@ -26,7 +26,7 @@ import java.util.*;
 public final class FrontJsFormRenderer implements FormStringRenderer {
     private static final String NOT_YET_SUPPORTED = "Not yet supported";
     public static final String module = MacroFormRenderer.class.getName();
-    private Map<String, Object> output;
+    private ArrayList<Map<String, Object>> output;
     private final UtilCodec.SimpleEncoder internalEncoder;
     private final RequestHandler rh;
     private final HttpServletRequest request;
@@ -37,7 +37,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
     // private boolean widgetCommentsEnabled = false;
     private boolean frontJs = false;
 
-    public FrontJsFormRenderer(Map<String, Object> output, HttpServletRequest request, HttpServletResponse response) {
+    public FrontJsFormRenderer(ArrayList<Map<String, Object>> output, HttpServletRequest request, HttpServletResponse response) {
         this.request = request;
         this.response = response;
         this.visualTheme = ThemeFactory.resolveVisualTheme(request);
@@ -57,7 +57,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
 
 
         private void executeMacro(Appendable writer, String macro) {
-            this.output.put(macro, NOT_YET_SUPPORTED);
+            this.output.add(macro, NOT_YET_SUPPORTED);
         }
     */
     private String encode(String value, ModelFormField modelFormField, Map<String, Object> context) {
@@ -86,7 +86,9 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         Map<String, Object> cb = new HashMap<>();
 
         cb.put("text", labelText);
-        this.output.put("Label", cb);
+        HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
+        hashMapStringObject.put("Label", cb);
+        this.output.add(hashMapStringObject);
     }
 
     public void renderDisplayField(Appendable writer, Map<String, Object> context, DisplayField displayField) {
@@ -121,11 +123,15 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
             cb.put("formName", formName);
         }
         this.appendTooltip(cb, context, modelFormField);
-        this.output.put("DisplayField", cb);
+        HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
+        hashMapStringObject.put("DisplayField", cb);
+        this.output.add(hashMapStringObject);
     }
 
     public void renderHyperlinkField(Appendable writer, Map<String, Object> context, HyperlinkField hyperlinkField) {
-        this.output.put("HyperlinkField", NOT_YET_SUPPORTED);
+        HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
+        hashMapStringObject.put("HyperlinkField", NOT_YET_SUPPORTED);
+        this.output.add(hashMapStringObject);
         /*this.request.setAttribute("image", hyperlinkField.getImageLocation(context));
         ModelFormField modelFormField = hyperlinkField.getModelFormField();
         String encodedAlternate = encode(hyperlinkField.getAlternate(context), modelFormField, context);
@@ -147,7 +153,9 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
     }
 
     public void renderMenuField(Appendable writer, Map<String, Object> context, MenuField menuField) {
-        this.output.put("MenuField", NOT_YET_SUPPORTED);
+        HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
+        hashMapStringObject.put("MenuField", NOT_YET_SUPPORTED);
+        this.output.add(hashMapStringObject);
         /*
         menuField.renderFieldString(writer, context, null);
         */
@@ -226,7 +234,9 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         }
         this.appendTooltip(cb, context, modelFormField);
         this.addAsterisks(cb, context, modelFormField);
-        this.output.put("TextField", cb);
+        HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
+        hashMapStringObject.put("TextField", cb);
+        this.output.add(hashMapStringObject);
     }
 
     public void renderTextareaField(Appendable writer, Map<String, Object> context, TextareaField textareaField) {
@@ -299,7 +309,9 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         }
         this.appendTooltip(cb, context, modelFormField);
         this.addAsterisks(cb, context, modelFormField);
-        this.output.put("TextareaField", cb);
+        HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
+        hashMapStringObject.put("TextareaField", cb);
+        this.output.add(hashMapStringObject);
     }
 
     public void renderDateTimeField(Appendable writer, Map<String, Object> context, DateTimeField dateTimeField) {
@@ -511,7 +523,9 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         cb.put("tabindex", tabindex);
         this.addAsterisks(cb, context, modelFormField);
         this.appendTooltip(cb, context, modelFormField);
-        this.output.put("DateTimeField", cb);
+        HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
+        hashMapStringObject.put("DateTimeField", cb);
+        this.output.add(hashMapStringObject);
     }
 
     public void renderDropDownField(Appendable writer, Map<String, Object> context, DropDownField dropDownField) {
@@ -519,8 +533,8 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         ModelForm modelForm = modelFormField.getModelForm();
         String currentValue = modelFormField.getEntry(context);
         String conditionGroup = modelFormField.getConditionGroup();
-        List<ModelFormField.OptionValue> allOptionValues = dropDownField.getAllOptionValues(context, WidgetWorker.getDelegator(context));
-        ModelFormField.AutoComplete autoComplete = dropDownField.getAutoComplete();
+        List<OptionValue> allOptionValues = dropDownField.getAllOptionValues(context, WidgetWorker.getDelegator(context));
+        AutoComplete autoComplete = dropDownField.getAutoComplete();
         String event = modelFormField.getEvent();
         String action = modelFormField.getAction(context);
         Integer textSize = 0;
@@ -569,7 +583,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         }
         String currentDescription = null;
         if (UtilValidate.isNotEmpty(currentValue)) {
-            for (ModelFormField.OptionValue optionValue : allOptionValues) {
+            for (OptionValue optionValue : allOptionValues) {
                 if (optionValue.getKey().equals(currentValue)) {
                     currentDescription = optionValue.getDescription();
                     break;
@@ -606,10 +620,10 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
             }
         }
 
-        Iterator<ModelFormField.OptionValue> optionValueIter = allOptionValues.iterator();
+        Iterator<OptionValue> optionValueIter = allOptionValues.iterator();
         int count = 0;
         while (optionValueIter.hasNext()) {
-            ModelFormField.OptionValue optionValue = optionValueIter.next();
+            OptionValue optionValue = optionValueIter.next();
 
             Map<String, String> option = new HashMap<>();
             String key = encode(optionValue.getKey(), modelFormField, context);
@@ -707,7 +721,9 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         cb.put("tabindex", tabindex);
 
         this.appendTooltip(cb, context, modelFormField);
-        this.output.put("DropDownField", cb);
+        HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
+        hashMapStringObject.put("DropDownField", cb);
+        this.output.add(hashMapStringObject);
         /*
         ModelFormField.SubHyperlink subHyperlink = dropDownField.getSubHyperlink();
         if (subHyperlink != null && subHyperlink.shouldUse(context)) {
@@ -736,9 +752,9 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
             }
         }
         String tabindex = modelFormField.getTabindex();
-        List<ModelFormField.OptionValue> allOptionValues = checkField.getAllOptionValues(context, WidgetWorker.getDelegator(context));
+        List<OptionValue> allOptionValues = checkField.getAllOptionValues(context, WidgetWorker.getDelegator(context));
         items.append("[");
-        for (ModelFormField.OptionValue optionValue : allOptionValues) {
+        for (OptionValue optionValue : allOptionValues) {
             if (items.length() > 1) {
                 items.append(",");
             }
@@ -766,12 +782,14 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         cb.put("tabindex", tabindex);
         cb.put("disabled", Boolean.toString(disabled));
         this.appendTooltip(cb, context, modelFormField);
-        this.output.put("CheckField", cb);
+        HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
+        hashMapStringObject.put("CheckField", cb);
+        this.output.add(hashMapStringObject);
     }
 
     public void renderRadioField(Appendable writer, Map<String, Object> context, RadioField radioField) {
         ModelFormField modelFormField = radioField.getModelFormField();
-        List<ModelFormField.OptionValue> allOptionValues = radioField.getAllOptionValues(context, WidgetWorker.getDelegator(context));
+        List<OptionValue> allOptionValues = radioField.getAllOptionValues(context, WidgetWorker.getDelegator(context));
         String currentValue = modelFormField.getEntry(context);
         String conditionGroup = modelFormField.getConditionGroup();
         String className = "";
@@ -790,7 +808,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         String tabindex = modelFormField.getTabindex();
         String formName = radioField.getModelFormField().getModelForm().getName();
 
-        for (ModelFormField.OptionValue optionValue : allOptionValues) {
+        for (OptionValue optionValue : allOptionValues) {
             Map<String, String> item = new HashMap<>();
 
             item.put("key", optionValue.getKey());
@@ -816,7 +834,9 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
             cb.put("formName", formName);
         }
         this.appendTooltip(cb, context, modelFormField);
-        this.output.put("RadioField", cb);
+        HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
+        hashMapStringObject.put("RadioField", cb);
+        this.output.add(hashMapStringObject);
     }
 
     public void renderSubmitField(Appendable writer, Map<String, Object> context, SubmitField submitField) {
@@ -878,7 +898,9 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         }
         cb.put("tabindex", tabindex);
         this.appendTooltip(cb, context, modelFormField);
-        this.output.put("SubmitField", cb);
+        HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
+        hashMapStringObject.put("SubmitField", cb);
+        this.output.add(hashMapStringObject);
     }
 
     public void renderResetField(Appendable writer, Map<String, Object> context, ResetField resetField) {
@@ -899,7 +921,9 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         cb.put("name", name);
         cb.put("title", title);
         this.appendTooltip(cb, context, modelFormField);
-        this.output.put("ResetField", cb);
+        HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
+        hashMapStringObject.put("ResetField", cb);
+        this.output.add(hashMapStringObject);
     }
 
     public void renderHiddenField(Appendable writer, Map<String, Object> context, HiddenField hiddenField) {
@@ -929,7 +953,9 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         if (this.frontJs) {
             cb.put("formName", formName);
         }
-        this.output.put("HiddenField", cb);
+        HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
+        hashMapStringObject.put("HiddenField", cb);
+        this.output.add(hashMapStringObject);
     }
 
     public void renderIgnoredField(Appendable writer, Map<String, Object> context, IgnoredField ignoredField) {
@@ -943,7 +969,9 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         StringBuilder sb = new StringBuilder();
         if (UtilValidate.isNotEmpty(titleText)) {
             if (" ".equals(titleText)) {
-                this.output.put("FormatEmptySpace", null);
+                HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
+                hashMapStringObject.put("FormatEmptySpace", null);
+                this.output.add(hashMapStringObject);
             } else {
                 titleText = UtilHttp.encodeAmpersands(titleText);
                 titleText = encode(titleText, modelFormField, context);
@@ -961,7 +989,9 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
                     makeHyperlinkString(cb, modelFormField.getHeaderLinkStyle(), targetType, targetBuffer.toString(), null, titleText, "", modelFormField, this.request, this.response, context, "");
                     cb.put("name", modelFormField.getModelForm().getName());
                     cb.put("title", cb.remove("HyperlinkString"));
-                    this.output.put("FieldTitle", cb);
+                    HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
+                    hashMapStringObject.put("FieldTitle", cb);
+                    this.output.add(hashMapStringObject);
                 } else if (modelFormField.isSortField()) {
                     renderSortField(writer, context, modelFormField, titleText);
                 } else if (modelFormField.isRowSubmit()) {
@@ -969,7 +999,9 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
                     cb.put("name", modelFormField.getModelForm().getName());
                     cb.put("title", titleText);
                     cb.put("showSelectAll", "Y");
-                    this.output.put("HyperlinkTitle", cb);
+                    HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
+                    hashMapStringObject.put("HyperlinkTitle", cb);
+                    this.output.add(hashMapStringObject);
                 } else {
                     sb.append(titleText);
                 }
@@ -1000,7 +1032,9 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
                 cb.put("id", id);
                 cb.put("for", id);
             }
-            this.output.put("FieldTitle", cb);
+            HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
+            hashMapStringObject.put("FieldTitle", cb);
+            this.output.add(hashMapStringObject);
         }
     }
 
@@ -1055,11 +1089,15 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         cb.put("viewIndex", Integer.toString(viewIndex));
         cb.put("viewSize", Integer.toString(viewSize));
         cb.put("useRowSubmit", Boolean.toString(useRowSubmit));
-        this.output.put("FormOpen", cb);
+        HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
+        hashMapStringObject.put("FormOpen", cb);
+        this.output.add(hashMapStringObject);
     }
 
     public void renderFormClose(Appendable writer, Map<String, Object> context, ModelForm modelForm) {
-        this.output.put("FormClose", new HashMap<>());
+        HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
+        hashMapStringObject.put("FormClose", new HashMap<>());
+        this.output.add(hashMapStringObject);
     }
 
     public void renderMultiFormClose(Appendable writer, Map<String, Object> context, ModelForm modelForm) {
@@ -1069,7 +1107,9 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         if (UtilValidate.isNotEmpty(wholeFormContext)) {
             cb.put("wholeFormContext", wholeFormContext);
         }
-        this.output.put("MultiFormClose", cb);
+        HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
+        hashMapStringObject.put("MultiFormClose", cb);
+        this.output.add(hashMapStringObject);
 
     }
 
@@ -1117,40 +1157,54 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
             // this is a fix for forms with no fields
             cb.put("columnStyles", columnStyleListString);
         }
-        this.output.put("FormatListWrapperOpen", cb);
+        HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
+        hashMapStringObject.put("FormatListWrapperOpen", cb);
+        this.output.add(hashMapStringObject);
 
     }
     public void renderEmptyFormDataMessage(Appendable writer, Map<String, Object> context, ModelForm modelForm) {
         Map<String, Object> cb = new HashMap<>();
         cb.put("message", modelForm.getEmptyFormDataMessage());
-        this.output.put("EmptyFormDataMessage", cb);
+        HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
+        hashMapStringObject.put("EmptyFormDataMessage", cb);
+        this.output.add(hashMapStringObject);
     }
     public void renderFormatListWrapperClose(Appendable writer, Map<String, Object> context, ModelForm modelForm) {
         Map<String, Object> cb = new HashMap<>();
         cb.put("formName", modelForm.getName());
-        this.output.put("FormatListWrapperClose", cb);
+        HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
+        hashMapStringObject.put("FormatListWrapperClose", cb);
+        this.output.add(hashMapStringObject);
         if (this.renderPagination) {
             this.renderNextPrev(writer, context, modelForm);
         }
     }
 
     public void renderFormatHeaderOpen(Appendable writer, Map<String, Object> context, ModelForm modelForm) {
-        this.output.put("FormatHeaderOpen", new HashMap<>());
+        HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
+        hashMapStringObject.put("FormatHeaderOpen", new HashMap<>());
+        this.output.add(hashMapStringObject);
     }
 
     public void renderFormatHeaderClose(Appendable writer, Map<String, Object> context, ModelForm modelForm) {
-        this.output.put("FormatHeaderClose", new HashMap<>());
+        HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
+        hashMapStringObject.put("FormatHeaderClose", new HashMap<>());
+        this.output.add(hashMapStringObject);
     }
 
     public void renderFormatHeaderRowOpen(Appendable writer, Map<String, Object> context, ModelForm modelForm) {
         String headerStyle = FlexibleStringExpander.expandString(modelForm.getHeaderRowStyle(), context);
         Map<String, Object> cb = new HashMap<>();
         cb.put("style", headerStyle);
-        this.output.put("FormatHeaderRowOpen", cb);
+        HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
+        hashMapStringObject.put("FormatHeaderRowOpen", cb);
+        this.output.add(hashMapStringObject);
     }
 
     public void renderFormatHeaderRowClose(Appendable writer, Map<String, Object> context, ModelForm modelForm) {
-        this.output.put("FormatHeaderRowClose", new HashMap<>());
+        HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
+        hashMapStringObject.put("FormatHeaderRowClose", new HashMap<>());
+        this.output.add(hashMapStringObject);
     }
 
     public void renderFormatHeaderRowCellOpen(Appendable writer, Map<String, Object> context, ModelForm modelForm, ModelFormField modelFormField, int positionSpan) {
@@ -1158,22 +1212,30 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         Map<String, Object> cb = new HashMap<>();
         cb.put("style", areaStyle);
         cb.put("positionSpan", Integer.toString(positionSpan));
-        this.output.put("FormatHeaderRowCellOpen", cb);
+        HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
+        hashMapStringObject.put("FormatHeaderRowCellOpen", cb);
+        this.output.add(hashMapStringObject);
     }
 
     public void renderFormatHeaderRowCellClose(Appendable writer, Map<String, Object> context, ModelForm modelForm, ModelFormField modelFormField) {
-        this.output.put("FormatHeaderRowCellClose", new HashMap<>());
+        HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
+        hashMapStringObject.put("FormatHeaderRowCellClose", new HashMap<>());
+        this.output.add(hashMapStringObject);
     }
 
     public void renderFormatHeaderRowFormCellOpen(Appendable writer, Map<String, Object> context, ModelForm modelForm) {
         String areaStyle = modelForm.getFormTitleAreaStyle();
         Map<String, Object> cb = new HashMap<>();
         cb.put("style", areaStyle);
-        this.output.put("FormatHeaderRowFormCellOpen", cb);
+        HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
+        hashMapStringObject.put("FormatHeaderRowFormCellOpen", cb);
+        this.output.add(hashMapStringObject);
     }
 
     public void renderFormatHeaderRowFormCellClose(Appendable writer, Map<String, Object> context, ModelForm modelForm) {
-        this.output.put("FormatHeaderRowFormCellClose", new HashMap<>());
+        HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
+        hashMapStringObject.put("FormatHeaderRowFormCellClose", new HashMap<>());
+        this.output.add(hashMapStringObject);
     }
 
     public void renderFormatHeaderRowFormCellTitleSeparator(Appendable writer, Map<String, Object> context, ModelForm modelForm, ModelFormField modelFormField, boolean isLast) {
@@ -1181,7 +1243,9 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         Map<String, Object> cb = new HashMap<>();
         cb.put("style", titleStyle);
         cb.put("isLast", Boolean.toString(isLast));
-        this.output.put("FormatHeaderRowFormCellTitleSeparator", cb);
+        HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
+        hashMapStringObject.put("FormatHeaderRowFormCellTitleSeparator", cb);
+        this.output.add(hashMapStringObject);
     }
 
     public void renderFormatItemRowOpen(Appendable writer, Map<String, Object> context, ModelForm modelForm) {
@@ -1203,13 +1267,17 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         cb.put("altRowStyles", altRowStyles);
         cb.put("evenRowStyle", evenRowStyle);
         cb.put("oddRowStyle", oddRowStyle);
-        this.output.put("FormatItemRowOpen", cb);
+        HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
+        hashMapStringObject.put("FormatItemRowOpen", cb);
+        this.output.add(hashMapStringObject);
     }
 
     public void renderFormatItemRowClose(Appendable writer, Map<String, Object> context, ModelForm modelForm) {
         Map<String, Object> cb = new HashMap<>();
         cb.put("formName", modelForm.getName());
-        this.output.put("FormatItemRowClose", cb);
+        HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
+        hashMapStringObject.put("FormatItemRowClose", cb);
+        this.output.add(hashMapStringObject);
     }
 
     public void renderFormatItemRowCellOpen(Appendable writer, Map<String, Object> context, ModelForm modelForm, ModelFormField modelFormField, int positionSpan) {
@@ -1218,24 +1286,32 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         cb.put("fieldName", modelFormField.getName());
         cb.put("style", areaStyle);
         cb.put("positionSpan", Integer.toString(positionSpan));
-        this.output.put("FormatItemRowCellOpen", cb);
+        HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
+        hashMapStringObject.put("FormatItemRowCellOpen", cb);
+        this.output.add(hashMapStringObject);
     }
 
     public void renderFormatItemRowCellClose(Appendable writer, Map<String, Object> context, ModelForm modelForm, ModelFormField modelFormField) {
         Map<String, Object> cb = new HashMap<>();
         cb.put("fieldName", modelFormField.getName());
-        this.output.put("FormatItemRowCellClose", cb);
+        HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
+        hashMapStringObject.put("FormatItemRowCellClose", cb);
+        this.output.add(hashMapStringObject);
     }
 
     public void renderFormatItemRowFormCellOpen(Appendable writer, Map<String, Object> context, ModelForm modelForm) {
         String areaStyle = modelForm.getFormTitleAreaStyle();
         Map<String, Object> cb = new HashMap<>();
         cb.put("style", areaStyle);
-        this.output.put("FormatItemRowFormCellOpen", cb);
+        HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
+        hashMapStringObject.put("FormatItemRowFormCellOpen", cb);
+        this.output.add(hashMapStringObject);
     }
 
     public void renderFormatItemRowFormCellClose(Appendable writer, Map<String, Object> context, ModelForm modelForm) {
-        this.output.put("FormatItemRowFormCellClose", new HashMap<>());
+        HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
+        hashMapStringObject.put("FormatItemRowFormCellClose", new HashMap<>());
+        this.output.add(hashMapStringObject);
     }
 
     public void renderFormatSingleWrapperOpen(Appendable writer, Map<String, Object> context, ModelForm modelForm) {
@@ -1243,32 +1319,44 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         Map<String, Object> cb = new HashMap<>();
         cb.put("formName", modelForm.getName());
         cb.put("style", style);
-        this.output.put("FormatSingleWrapperOpen", cb);
+        HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
+        hashMapStringObject.put("FormatSingleWrapperOpen", cb);
+        this.output.add(hashMapStringObject);
     }
 
     public void renderFormatSingleWrapperClose(Appendable writer, Map<String, Object> context, ModelForm modelForm) {
         Map<String, Object> cb = new HashMap<>();
         cb.put("formName", modelForm.getName());
-        this.output.put("FormatSingleWrapperClose", cb);
+        HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
+        hashMapStringObject.put("FormatSingleWrapperClose", cb);
+        this.output.add(hashMapStringObject);
     }
 
     public void renderFormatFieldRowOpen(Appendable writer, Map<String, Object> context, ModelForm modelForm) {
-        this.output.put("FormatSingleWrapperClose", new HashMap<>());
+        HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
+        hashMapStringObject.put("FormatFieldRowOpen", new HashMap<>());
+        this.output.add(hashMapStringObject);
     }
 
     public void renderFormatFieldRowClose(Appendable writer, Map<String, Object> context, ModelForm modelForm) {
-        this.output.put("FormatFieldRowClose", new HashMap<>());
+        HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
+        hashMapStringObject.put("FormatFieldRowClose", new HashMap<>());
+        this.output.add(hashMapStringObject);
     }
 
     public void renderFormatFieldRowTitleCellOpen(Appendable writer, Map<String, Object> context, ModelFormField modelFormField) {
         String style = modelFormField.getTitleAreaStyle();
         Map<String, Object> cb = new HashMap<>();
         if (!style.isEmpty()) cb.put("style", style);
-        this.output.put("FormatFieldRowTitleCellOpen", cb);
+        HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
+        hashMapStringObject.put("FormatFieldRowTitleCellOpen", cb);
+        this.output.add(hashMapStringObject);
     }
 
     public void renderFormatFieldRowTitleCellClose(Appendable writer, Map<String, Object> context, ModelFormField modelFormField) {
-        this.output.put("FormatFieldRowTitleCellClose", new HashMap<>());
+        HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
+        hashMapStringObject.put("FormatFieldRowTitleCellClose", new HashMap<>());
+        this.output.add(hashMapStringObject);
     }
 
     public void renderFormatFieldRowSpacerCell(Appendable writer, Map<String, Object> context, ModelFormField modelFormField) {
@@ -1279,15 +1367,21 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         Map<String, Object> cb = new HashMap<>();
         cb.put("positionSpan", Integer.toString(positionSpan));
         cb.put("style", areaStyle);
-        this.output.put("FormatFieldRowWidgetCellOpen", cb);
+        HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
+        hashMapStringObject.put("FormatFieldRowWidgetCellOpen", cb);
+        this.output.add(hashMapStringObject);
     }
 
     public void renderFormatFieldRowWidgetCellClose(Appendable writer, Map<String, Object> context, ModelFormField modelFormField, int positions, int positionSpan, Integer nextPositionInRow) {
-        this.output.put("FormatFieldRowWidgetCellClose", new HashMap<>());
+        HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
+        hashMapStringObject.put("FormatFieldRowWidgetCellClose", new HashMap<>());
+        this.output.add(hashMapStringObject);
     }
 
     public void renderFormatEmptySpace(Appendable writer, Map<String, Object> context, ModelForm modelForm) {
-        this.output.put("FormatEmptySpace", new HashMap<>());
+        HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
+        hashMapStringObject.put("FormatEmptySpace", new HashMap<>());
+        this.output.add(hashMapStringObject);
     }
 
     public void renderTextFindField(Appendable writer, Map<String, Object> context, TextFindField textFindField) {
@@ -1362,7 +1456,9 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
             cb.put("formName", formName);
         }
         this.appendTooltip(cb, context, modelFormField);
-        this.output.put("TextFindField", cb);
+        HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
+        hashMapStringObject.put("TextFindField", cb);
+        this.output.add(hashMapStringObject);
     }
 
     public void renderRangeFindField(Appendable writer, Map<String, Object> context, RangeFindField rangeFindField) {
@@ -1428,7 +1524,9 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         cb.put("conditionGroup", conditionGroup);
         cb.put("tabindex", tabindex);
         this.appendTooltip(cb, context, modelFormField);
-        this.output.put("RangeFindField", cb);
+        HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
+        hashMapStringObject.put("RangeFindField", cb);
+        this.output.add(hashMapStringObject);
     }
 
     public void renderDateFindField(Appendable writer, Map<String, Object> context, DateFindField dateFindField) {
@@ -1544,7 +1642,9 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         cb.put("opIsEmpty", opIsEmpty);
         cb.put("tabindex", tabindex);
         this.appendTooltip(cb, context, modelFormField);
-        this.output.put("DateFindField", cb);
+        HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
+        hashMapStringObject.put("DateFindField", cb);
+        this.output.add(hashMapStringObject);
     }
 
     public void renderLookupField(Appendable writer, Map<String, Object> context, LookupField lookupField) {
@@ -1702,7 +1802,9 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         this.addAsterisks(cb, context, modelFormField);
         this.appendTooltip(cb, context, modelFormField);
         this.makeHyperlinkString(cb, lookupField.getSubHyperlink(), context);
-        this.output.put("LookupField", cb);
+        HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
+        hashMapStringObject.put("LookupField", cb);
+        this.output.add(hashMapStringObject);
     }
 
     public void renderNextPrev(Appendable writer, Map<String, Object> context, ModelForm modelForm) {
@@ -1898,7 +2000,9 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         cb.put("lastUrl", lastUrl);
         cb.put("paginateLastLabel", paginateLastLabel);
         cb.put("paginateViewSizeLabel", paginateViewSizeLabel);
-        this.output.put("NextPrev", cb);
+        HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
+        hashMapStringObject.put("NextPrev", cb);
+        this.output.add(hashMapStringObject);
     }
 
     public void renderFileField(Appendable writer, Map<String, Object> context, FileField textField) {
@@ -1937,7 +2041,9 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         cb.put("tabindex", tabindex);
         this.makeHyperlinkString(cb, textField.getSubHyperlink(), context);
         this.appendTooltip(cb, context, modelFormField);
-        this.output.put("FileField", cb);
+        HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
+        hashMapStringObject.put("FileField", cb);
+        this.output.add(hashMapStringObject);
     }
 
     public void renderPasswordField(Appendable writer, Map<String, Object> context, PasswordField passwordField) {
@@ -1997,7 +2103,9 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         this.addAsterisks(cb, context, modelFormField);
         this.makeHyperlinkString(cb, passwordField.getSubHyperlink(), context);
         this.appendTooltip(cb, context, modelFormField);
-        this.output.put("PasswordField", cb);
+        HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
+        hashMapStringObject.put("PasswordField", cb);
+        this.output.add(hashMapStringObject);
     }
 
     public void renderImageField(Appendable writer, Map<String, Object> context, ImageField imageField) {
@@ -2034,7 +2142,9 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         cb.put("action", action == null ? "" : action);
         this.makeHyperlinkString(cb, imageField.getSubHyperlink(), context);
         this.appendTooltip(cb, context, modelFormField);
-        this.output.put("ImageField", cb);
+        HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
+        hashMapStringObject.put("ImageField", cb);
+        this.output.add(hashMapStringObject);
     }
 
     public void renderFieldGroupOpen(Appendable writer, Map<String, Object> context, ModelForm.FieldGroup fieldGroup) {
@@ -2068,7 +2178,9 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         cb.put("collapsible", Boolean.toString(collapsible));
         cb.put("expandToolTip", expandToolTip);
         cb.put("collapseToolTip", collapseToolTip);
-        this.output.put("FieldGroupOpen", cb);
+        HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
+        hashMapStringObject.put("FieldGroupOpen", cb);
+        this.output.add(hashMapStringObject);
     }
 
     public void renderFieldGroupClose(Appendable writer, Map<String, Object> context, ModelForm.FieldGroup fieldGroup) {
@@ -2087,7 +2199,9 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         if (title != null) {
             cb.put("title", title);
         }
-        this.output.put("FieldGroupClose", cb);
+        HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
+        hashMapStringObject.put("FieldGroupClose", cb);
+        this.output.add(hashMapStringObject);
     }
 
     public void renderBanner(Appendable writer, Map<String, Object> context, ModelForm.Banner banner) {
@@ -2120,7 +2234,9 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         cb.put("leftText", leftText);
         cb.put("text", text);
         cb.put("rightText", rightText);
-        this.output.put("Banner", cb);
+        HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
+        hashMapStringObject.put("Banner", cb);
+        this.output.add(hashMapStringObject);
     }
 
 
@@ -2196,7 +2312,9 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         if (!tooltip.isEmpty()) {
             cb.put(" tooltip", tooltip);
         }
-        this.output.put("SortField", cb);
+        HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
+        hashMapStringObject.put("SortField", cb);
+        this.output.add(hashMapStringObject);
     }
 
     /** Create an ajaxXxxx JavaScript CSV string from a list of UpdateArea objects. See
@@ -2315,7 +2433,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         element.put("tooltip", cb);
     }
 
-    public void makeHyperlinkString(Map<String, Object> element, ModelFormField.SubHyperlink subHyperlink, Map<String, Object> context) {
+    public void makeHyperlinkString(Map<String, Object> element, SubHyperlink subHyperlink, Map<String, Object> context) {
         if (subHyperlink == null) {
             return;
         }
@@ -2519,7 +2637,9 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
             cb.put("imgSrc", imgSrc);
             cb.put("description", description);
             cb.put("confirmation ", confirmation);
-            this.output.put("HiddenFormLinkAnchor", cb);
+            HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
+            hashMapStringObject.put("HiddenFormLinkAnchor", cb);
+            this.output.add(hashMapStringObject);
         }
     }
 /*
@@ -2557,6 +2677,8 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
 
         cb.put("id", id);
         cb.put("className", className);
-        this.output.put("ContainerFindField", cb);
+        HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
+        hashMapStringObject.put("ContainerFindField", cb);
+        this.output.add(hashMapStringObject);
     }
 }

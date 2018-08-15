@@ -23,16 +23,14 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class FrontJsScreenViewHandler extends AbstractViewHandler {
 
     public static final String module = FrontJsScreenViewHandler.class.getName();
 
     protected ServletContext servletContext = null;
+
     @JsonFilter("dynamicFilter")
     public class DynamicMixIn {
     }
@@ -41,9 +39,9 @@ public class FrontJsScreenViewHandler extends AbstractViewHandler {
         this.servletContext = context;
     }
 
-    private ScreenStringRenderer loadRenderers(LinkedHashMap<String, Object> output,
-                       HttpServletRequest request, HttpServletResponse response,
-                                            Map<String, Object> context) {
+    private ScreenStringRenderer loadRenderers(ArrayList<Map<String, Object>> output,
+                                               HttpServletRequest request, HttpServletResponse response,
+                                               Map<String, Object> context) {
         ScreenStringRenderer screenStringRenderer = new FrontJsScreenRenderer(getName(), output);
         FormStringRenderer formStringRenderer = new FrontJsFormRenderer(output, request, response);
         context.put("formStringRenderer", formStringRenderer);
@@ -55,13 +53,67 @@ public class FrontJsScreenViewHandler extends AbstractViewHandler {
         return screenStringRenderer;
     }
 
+    private ArrayList<Map<String, Object>> parseMap(ArrayList<Map<String, Object>> arrayListMap) {
+        ArrayList<Map<String, Object>> result = new ArrayList<>();
+        HashMap<String, Object> temp;
+        Iterator iterator = arrayListMap.iterator();
+        while (iterator.hasNext()) {
+            Map it = (Map) iterator.next();
+            Map.Entry entry = (Map.Entry) it.entrySet().toArray()[0];
+            temp = new HashMap<>();
+            if (entry.getKey().toString().contains("Open")) {
+                temp.put("fieldType", entry.getKey().toString().replace("Open", ""));
+                temp.put("attribute", entry.getValue());
+                temp.put("children", this.parse(iterator, entry));
+                HashMap<String, Object> hashMap = new HashMap<>();
+                hashMap.put(entry.getKey().toString().replace("Open", ""), temp);
+                result.add(hashMap);
+            } else {
+                temp.put("fieldType", entry.getKey());
+                temp.put("attribute", entry.getValue());
+                temp.put("children", new ArrayList<>());
+                HashMap<String, Object> hashMap = new HashMap<>();
+                hashMap.put(entry.getKey().toString().replace("Open", ""), temp);
+                result.add(hashMap);
+            }
+        }
+        return result;
+    }
+
+    private ArrayList<Map<String, Object>> parse(Iterator iterator, Map.Entry parent) {
+        ArrayList<Map<String, Object>> arrayListMap = new ArrayList<>();
+        HashMap<String, Object> temp;
+        String parentName = (String) parent.getKey().toString().replace("Open", "");
+        while (iterator.hasNext()) {
+            temp = new HashMap<>();
+            Map currentMap = (Map) iterator.next();
+            Map.Entry current = (Map.Entry) currentMap.entrySet().toArray()[0];
+            if (current.getKey().toString().contains(parentName.concat("Close"))) {
+                return arrayListMap;
+            }
+            if (current.getKey().toString().contains("Open")) {
+                temp.put("fieldType", current.getKey().toString().replace("Open", ""));
+                temp.put("attribute", current.getValue());
+                temp.put("children", this.parse(iterator, current));
+            } else {
+                temp.put("fieldType", current.getKey());
+                temp.put("attribute", current.getValue());
+                temp.put("children", new ArrayList<>());
+            }
+            HashMap<String, Object> hashMap = new HashMap<>();
+            hashMap.put(current.getKey().toString().replace("Open", ""), temp);
+            arrayListMap.add(hashMap);
+        }
+        return arrayListMap;
+    }
+
     public void render(String name, String page, String info, String contentType, String encoding, HttpServletRequest request, HttpServletResponse response) throws ViewHandlerException {
         try {
             Writer writer = response.getWriter();
             VisualTheme visualTheme = UtilHttp.getVisualTheme(request);
 
             LinkedHashMap<String, Object> output = new LinkedHashMap<>();
-            LinkedHashMap<String, Object> screenOutput = new LinkedHashMap<>();
+            ArrayList<Map<String, Object>> screenOutput = new ArrayList<>();
             MapStack<String> context = MapStack.create();
             //output.put("data", context);
             ScreenRenderer.populateContextForRequest(context, null, request, response, servletContext);
@@ -72,24 +124,25 @@ public class FrontJsScreenViewHandler extends AbstractViewHandler {
             Map<String, Object> data = new HashMap<>();
             //output.put("data", context);
             List<String> toExclude = UtilMisc.toList("globalContext", "request", "session", "rootDir", "security",
-            "checkLoginUrl", "screens", "javaScriptEnabled", "https", "sessionAttributes",
-            "eventMessageList", "externalKeyParam", "webSiteId", "controlPath",
-            "delegator", "Request", "timeZone", "JspTaglibs", "contextRoot",
-            "serverRoot", "application", "person", "response", "modelTheme", "dispatcher",
-            "webappName", "nullField", "screens", "formStringRenderer", "treeStringRenderer",
-            "menuStringRenderer", "requestAttributes", "Application", "entityName", "modelReader");
-            for(String key : context.keySet()) {
-                if ( !toExclude.contains(key) ) {
+                    "checkLoginUrl", "screens", "javaScriptEnabled", "https", "sessionAttributes",
+                    "eventMessageList", "externalKeyParam", "webSiteId", "controlPath",
+                    "delegator", "Request", "timeZone", "JspTaglibs", "contextRoot",
+                    "serverRoot", "application", "person", "response", "modelTheme", "dispatcher",
+                    "webappName", "nullField", "screens", "formStringRenderer", "treeStringRenderer",
+                    "menuStringRenderer", "requestAttributes", "Application", "entityName", "modelReader");
+            for (String key : context.keySet()) {
+                if (!toExclude.contains(key)) {
                     data.put(key, context.get(key));
                 }
             }
             context.put("simpleEncoder", UtilCodec.getEncoder(visualTheme.getModelTheme().getEncoder(getName())));
-            output.put("viewScreenName", page);
-            output.put("viewScreen", screenOutput);
 
             screenStringRenderer.renderScreenBegin(writer, context);
             screens.render(page);
             screenStringRenderer.renderScreenEnd(writer, context);
+
+            output.put("viewScreenName", page);
+            output.put("viewScreen", this.parseMap(screenOutput));
 
             /*
             JSON json = JSON.from(output);

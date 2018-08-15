@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,8 +25,8 @@ import java.util.Map;
 public class FrontJsTreeRenderer implements TreeStringRenderer {
 
     public static final String module = FrontJsTreeRenderer.class.getName();
-    private Map<String, Object> output;
-    FrontJsTreeRenderer(Map<String, Object> output) {
+    private ArrayList<Map<String, Object>> output;
+    FrontJsTreeRenderer(ArrayList<Map<String, Object>> output) {
         this.output = output;
     }
     public void renderNodeBegin(Appendable writer, Map<String, Object> context, ModelTree.ModelNode node, int depth) throws IOException {
@@ -40,7 +41,9 @@ public class FrontJsTreeRenderer implements TreeStringRenderer {
         Map<String, Object> cb = new HashMap<>();
         cb.put("style", style);
 
-        this.output.put("NodeBegin", cb);
+        HashMap<String, Object> hashMapStringObject = new HashMap<>();
+        hashMapStringObject.put("NodeBegin", cb);
+        this.output.add(hashMapStringObject);
 
         String pkName = node.getPkName(context);
         String entityId;
@@ -113,7 +116,9 @@ public class FrontJsTreeRenderer implements TreeStringRenderer {
         Map<String, Object> cb = new HashMap<>();
         cb.put("processChildren", Boolean.toString(processChildren));
         cb.put("isRootNode", Boolean.toString(node.isRootNode()));
-        this.output.put("NodeEnd", cb);
+        HashMap<String, Object> hashMapStringObject = new HashMap<>();
+        hashMapStringObject.put("NodeEnd", cb);
+        this.output.add(hashMapStringObject);
     }
 
     public void renderLastElement(Appendable writer, Map<String, Object> context, ModelTree.ModelNode node) {
@@ -121,7 +126,9 @@ public class FrontJsTreeRenderer implements TreeStringRenderer {
         if (processChildren) {
             Map<String, Object> cb = new HashMap<>();
             cb.put("style", "basic-tree");
-            this.output.put("LastElement", cb);
+            HashMap<String, Object> hashMapStringObject = new HashMap<>();
+            hashMapStringObject.put("LastElement", cb);
+            this.output.add(hashMapStringObject);
         }
     }
 
@@ -134,7 +141,9 @@ public class FrontJsTreeRenderer implements TreeStringRenderer {
         cb.put("id", id);
         cb.put("style", style);
         cb.put("labelText", labelText);
-        this.output.put("Label", cb);
+        HashMap<String, Object> hashMapStringObject = new HashMap<>();
+        hashMapStringObject.put("Label", cb);
+        this.output.add(hashMapStringObject);
     }
 
     public void renderLink(Appendable writer, Map<String, Object> context, ModelTree.ModelNode.Link link) throws IOException {
@@ -172,7 +181,9 @@ public class FrontJsTreeRenderer implements TreeStringRenderer {
         cb.put("linkUrl", linkUrl);
         cb.put("linkText", linkText);
         cb.put("imgStr", imgStr.replaceAll("\"", "\\\\\""));
-        this.output.put("Link", cb);
+        HashMap<String, Object> hashMapStringObject = new HashMap<>();
+        hashMapStringObject.put("Link", cb);
+        this.output.add(hashMapStringObject);
     }
 
     public void renderImage(Appendable writer, Map<String, Object> context, ModelTree.ModelNode.Image image) {
@@ -220,7 +231,9 @@ public class FrontJsTreeRenderer implements TreeStringRenderer {
         cb.put("border", border);
         cb.put("alt", alt);
         cb.put("urlString", urlString);
-        this.output.put("Image", cb);
+        HashMap<String, Object> hashMapStringObject = new HashMap<>();
+        hashMapStringObject.put("Image", cb);
+        this.output.add(hashMapStringObject);
     }
 
     public ScreenStringRenderer getScreenStringRenderer(Map<String, Object> context) {
