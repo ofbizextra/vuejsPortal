@@ -2,9 +2,8 @@
   <div id="vue-portlet">
     <div v-if="portlet">
       <div
-        v-for="component in portlet"
-        v-if="component.type === 'element' && (component.tagName.includes('vue-'))"
-        v-bind:is="component.tagName"
+        v-for="component in portlet.viewScreen"
+        v-bind:is="constantes.components[component.fieldType]"
         :props="component">
       </div>
     </div>
@@ -17,6 +16,7 @@
 
 <script>
   import {mapGetters} from 'vuex'
+  import cst from '../js/constantes'
 
   export default {
     name: "VuePortlet",
@@ -24,7 +24,8 @@
     data() {
       return {
         portletName: '',
-        portletSeqId: ''
+        portletSeqId: '',
+        constantes: cst
       }
     },
     computed: {

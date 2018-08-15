@@ -1,15 +1,15 @@
 <template>
   <div id="vue-radio">
     <input v-if="data.conditionGroup" type="hidden" :name="data.name + '_grp'" v-bind:value="data.conditionGroup"/>
-    <span v-for="(item, index) in props.children" v-if="item.type === 'element' && item.tagName === 'vue-radio-item'">
+    <span v-for="item in props.attributes.items">
       <input type="radio"
-             :checked="!!((data.currentValue && data.currentValue === childrenData(index).key) || (!data.currentValue && data.noCurrentSelectedKey && data.noCurrentSelectedKey === childrenData(index).key))"
+             :checked="!!((data.currentValue && data.currentValue === item.key) || (!data.currentValue && data.noCurrentSelectedKey && data.noCurrentSelectedKey === item.key))"
              :tabIndex="data.currentValue && data.tabIndex ? data.tabIndex : false"
              :name="data.name"
-             :value="childrenData(index).key"
+             :value="item.key"
              v-model="value"
       />
-        {{childrenData(index).description}}
+        {{item.description}}
     </span>
     <vue-error v-if="data.event" component="event"/>
   </div>
@@ -26,15 +26,15 @@
     },
     computed: {
       data() {
-        let data = this.parseProps()
+        let data = this.props.attributes
         delete data['currentValue']
         return data
       },
       storeForm() {
         return {
-          formId: this.parseProps().formName,
-          key: this.parseProps().name,
-          value: this.parseProps().currentValue ? this.parseProps().currentValue : ''
+          formId: this.props.attributes.formName,
+          key: this.props.attributes.name,
+          value: this.props.attributes.currentValue ? this.props.attributes.currentValue : ''
         }
       },
       value: {
@@ -43,25 +43,10 @@
         },
         set(value) {
           this.$store.dispatch('form/setFieldToForm', {
-            formId: this.parseProps().formName,
-            key: this.parseProps().name,
+            formId: this.props.attributes.formName,
+            key: this.props.attributes.name,
             value: value
           })
-        }
-      },
-      childrenData() {
-        return (index) => {
-          let data = {}
-          this.props.children[index].attributes.map(attr => {
-            if (attr.value === 'false') {
-              data[attr.key] = false
-            } else if (attr.value === 'true') {
-              data[attr.key] = true
-            } else {
-              data[attr.key] = attr.value
-            }
-          })
-          return data
         }
       },
       ...mapGetters({

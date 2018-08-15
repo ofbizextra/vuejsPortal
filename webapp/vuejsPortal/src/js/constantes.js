@@ -13,5 +13,24 @@ export default {
   findExampleLayer: {path: '/FindExampleLayer', tokenRequired: false},
   listExampleLayer: {path: '/ListExampleLayer', tokenRequired: false},
   portalPageDetail: {path: '/portalPageDetail', tokenRequired: false},
-  showPortlet: {path: '/showPortletFj', tokenRequired: false}
+  showPortlet: {path: '/showPortletFj', tokenRequired: false},
+
+  components: {
+    HyperlinkField: 'vue-hyperlink',
+    SubmitField: 'vue-submit',
+    RadioField: 'vue-radio',
+    DropDownField: 'vue-drop-down',
+    FieldTitle: 'vue-title',
+    HyperlinkTitle: 'vue-hyperlink',
+    TextFindField: 'vue-text-find',
+    FormatFieldRowWidgetCell: 'vue-td',
+    FormatFieldRowTitleCell: 'vue-td',
+    FormatFieldRow: 'vue-tr',
+    FormatSingleWrapper: 'vue-table',
+    HiddenField: 'vue-hidden',
+    Form: 'vue-form',
+    TextField: 'vue-text',
+    TextareaField: 'vue-text-area',
+    DateTimeField: 'vue-date-time'
+  }
 }

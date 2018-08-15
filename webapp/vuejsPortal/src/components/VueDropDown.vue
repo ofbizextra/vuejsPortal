@@ -6,12 +6,10 @@
         {{data.explicitDescription}}
       </option>
       <vue-option
-        v-for="option in props.children"
-        :key="option.attributes[0].value"
-        v-if="option.type === 'element' &&
-        option.tagName === 'vue-option'"
+        v-for="option in data.options"
+        :key="option.key"
         :props="option"
-        :selected="option.attributes[0].value === value">
+        :selected="option.key === value">
       </vue-option>
     </select>
   </div>
@@ -28,22 +26,27 @@
     },
     computed: {
       data() {
-        let data = this.parseProps()
+        let data = this.props.attributes
         delete data['currentValue']
+        Object.keys(data).map(it => {
+          if (data[it] === ''){
+            delete data[it]
+          }
+        })
         return data
       },
       storeData() {
         return {
           id: this.$store.getters['data/currentId'],
-          key: this.parseProps().id,
-          value: this.parseProps().currentValue ? this.parseProps().currentValue : ''
+          key: this.props.attributes.id,
+          value: this.props.attributes.currentValue ? this.props.attributes.currentValue : this.props.attributes.multiple ? [''] : ''
         }
       },
       storeForm() {
         return {
-          formId: this.parseProps().formName,
-          key: this.parseProps().id,
-          value: this.parseProps().currentValue ? this.parseProps().currentValue : ''
+          formId: this.props.attributes.formName,
+          key: this.props.attributes.id,
+          value: this.props.attributes.currentValue ? this.props.attributes.currentValue : this.props.attributes.multiple ? [''] : ''
         }
       },
       value: {
@@ -52,8 +55,8 @@
         },
         set(value) {
           this.$store.dispatch('form/setFieldToForm', {
-            formId: this.parseProps().formName,
-            key: this.parseProps().id,
+            formId: this.props.attributes.formName,
+            key: this.props.attributes.id,
             value: value
           })
         }

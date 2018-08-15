@@ -15,22 +15,22 @@
     },
     computed: {
       data() {
-        let data = this.parseProps()
+        let data = this.props.attributes
         delete data['value']
         return data
       },
       storeData() {
         return {
           id: this.$store.getters['data/currentId'],
-          key: this.parseProps().id,
-          value: this.parseProps().value ? this.parseProps().value : ''
+          key: this.props.attributes.id,
+          value: this.props.attributes.value ? this.props.attributes.value : ''
         }
       },
       storeForm() {
         return {
-          formId: this.parseProps().formName,
-          key: this.parseProps().id,
-          value: this.parseProps().value ? this.parseProps().value : ''
+          formId: this.props.attributes.formName,
+          key: this.props.attributes.id,
+          value: this.props.attributes.value ? this.props.attributes.value : ''
         }
       },
       value: {
@@ -39,8 +39,8 @@
         },
         set(value) {
           this.$store.dispatch('form/setFieldToForm', {
-            formId: this.parseProps().formName,
-            key: this.parseProps().id,
+            formId: this.props.attributes.formName,
+            key: this.props.attributes.id,
             value: value
           })
         }

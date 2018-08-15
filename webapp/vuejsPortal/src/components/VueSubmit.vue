@@ -17,7 +17,7 @@
     },
     computed: {
       data() {
-        return this.parseProps()
+        return this.props.attributes
       },
       ...mapGetters({
         getForm: 'form/form',
@@ -27,11 +27,11 @@
     methods: {
       post() {
         console.log('post ...')
-        let linkUrl = this.getDataFromForm({formId: this.parseProps().formName, key: 'linkUrl'})
+        let linkUrl = this.getDataFromForm({formId: this.props.attributes.formName, key: 'linkUrl'})
         let url = constantes.hostUrl + linkUrl
         this.$http.post(
           url,
-          queryString.stringify(this.getForm(this.parseProps().formName)),
+          queryString.stringify(this.getForm(this.props.attributes.formName)),
           {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}
         ).then(
           response => {

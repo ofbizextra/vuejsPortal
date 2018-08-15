@@ -10,7 +10,7 @@
     props: ['props'],
     computed: {
       data() {
-        let data = this.parseProps()
+        let data = this.props.attributes
         delete data.value
         return data
       }

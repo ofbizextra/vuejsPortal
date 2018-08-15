@@ -34,50 +34,50 @@
     },
     computed: {
       data() {
-        let data = this.parseProps()
+        let data = this.props.attributes
         delete data['value']
         return data
       },
       storeData() {
         return {
           id: this.$store.getters['data/currentId'],
-          key: this.parseProps().name,
-          value: this.parseProps().value ? this.parseProps().value : ''
+          key: this.props.attributes.name,
+          value: this.props.attributes.value ? this.props.attributes.value : ''
         }
       },
       storeDataOp() {
         return {
           id: this.$store.getters['data/currentId'],
-          key: this.parseProps().name + '_op',
-          value: this.parseProps().defaultOption ? this.parseProps().defaultOption : ''
+          key: this.props.attributes.name + '_op',
+          value: this.props.attributes.defaultOption ? this.props.attributes.defaultOption : ''
         }
       },
       storeDataIc() {
         return {
           id: this.$store.getters['data/currentId'],
-          key: this.parseProps().name + '_ic',
-          value: this.parseProps().ignCase ? this.parseProps().ignCase : ''
+          key: this.props.attributes.name + '_ic',
+          value: this.props.attributes.ignCase ? this.props.attributes.ignCase : ''
         }
       },
       storeForm() {
         return {
-          formId: this.parseProps().formName,
-          key: this.parseProps().name,
-          value: this.parseProps().value ? this.parseProps().value : ''
+          formId: this.props.attributes.formName,
+          key: this.props.attributes.name,
+          value: this.props.attributes.value ? this.props.attributes.value : ''
         }
       },
       storeFormOp() {
         return {
-          formId: this.parseProps().formName,
-          key: this.parseProps().name + '_op',
-          value: this.parseProps().defaultOption ? this.parseProps().defaultOption : ''
+          formId: this.props.attributes.formName,
+          key: this.props.attributes.name + '_op',
+          value: this.props.attributes.defaultOption ? this.props.attributes.defaultOption : ''
         }
       },
       storeFormIc() {
         return {
-          formId: this.parseProps().formName,
-          key: this.parseProps().name + '_ic',
-          value: this.parseProps().ignCase ? this.parseProps().ignCase : ''
+          formId: this.props.attributes.formName,
+          key: this.props.attributes.name + '_ic',
+          value: this.props.attributes.ignCase ? this.props.attributes.ignCase : ''
         }
       },
       value: {
@@ -86,8 +86,8 @@
         },
         set(value) {
           this.$store.dispatch('form/setFieldToForm', {
-            formId: this.parseProps().formName,
-            key: this.parseProps().name,
+            formId: this.props.attributes.formName,
+            key: this.props.attributes.name,
             value: value
           })
         }
@@ -98,8 +98,8 @@
         },
         set(value) {
           this.$store.dispatch('form/setFieldToForm', {
-            formId: this.parseProps().formName,
-            key: this.parseProps().name + '_op',
+            formId: this.props.attributes.formName,
+            key: this.props.attributes.name + '_op',
             value: value
           })
         }
@@ -110,8 +110,8 @@
         },
         set(value) {
           this.$store.dispatch('form/setFieldToForm', {
-            formId: this.parseProps().formName,
-            key: this.parseProps().name + '_ic',
+            formId: this.props.attributes.formName,
+            key: this.props.attributes.name + '_ic',
             value: value
           })
         }

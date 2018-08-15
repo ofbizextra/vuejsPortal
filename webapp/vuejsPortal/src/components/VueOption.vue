@@ -1,6 +1,6 @@
 <template>
-  <option id="vue-option" v-bind="data" :selected="selected">
-    {{data.description}}
+  <option id="vue-option" v-bind:value="props.key" :selected="selected">
+    {{props.description}}
   </option>
 </template>
 
@@ -13,11 +13,6 @@
       }
     },
     props: ['props','selected'],
-    created() {
-      this.props.attributes.map(attr => {
-        this.data[attr.key] = attr.value
-      })
-    }
   }
 </script>
 

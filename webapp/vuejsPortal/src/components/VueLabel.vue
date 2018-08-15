@@ -15,13 +15,13 @@
     },
     computed: {
       data() {
-        return this.parseProps()
+        return this.props.attributes
       },
       storeData() {
         return {
           id: this.$store.getters['data/currentId'],
-          key: this.parseProps().idName,
-          value: this.parseProps().description ? this.parseProps().description : ''
+          key: this.props.attributes.idName,
+          value: this.props.attributes.description ? this.props.attributes.description : ''
         }
       },
       getValue () {

@@ -13,7 +13,7 @@
     },
     computed: {
       data() {
-        return this.parseProps()
+        return this.props.attributes
       }
     },
     props: [

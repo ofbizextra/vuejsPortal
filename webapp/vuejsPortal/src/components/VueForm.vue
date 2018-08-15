@@ -2,8 +2,7 @@
   <form id="vue-form" v-bind="data">
     <div
       v-for="component in props.children"
-      v-if="component.type === 'element' && (component.tagName.includes('vue-'))"
-      v-bind:is="component.tagName"
+      v-bind:is="constantes.components[component.fieldType]"
       :props="component"
       :updateStore="updateStore">
     </div>
@@ -12,24 +11,27 @@
 
 <script>
   import {mapGetters} from 'vuex'
+  import cst from '../js/constantes'
 
   export default {
     name: "VueForm",
     props: ['props', 'updateStore'],
     data() {
-      return {}
+      return {
+        constantes: cst
+      }
     },
     computed: {
       data() {
-        let data = this.parseProps()
+        let data = this.props.attributes
         delete data['value']
         return data
       },
       storeData() {
         return {
           id: this.$store.getters['data/currentId'],
-          key: this.parseProps().id,
-          value: this.parseProps().value ? this.parseProps().value : ''
+          key: this.props.attributes.id,
+          value: this.props.attributes.value ? this.props.attributes.value : ''
         }
       }
     },
@@ -37,29 +39,29 @@
       data: function (from, to) {
         this.$store.dispatch('form/addForm', to.name)
         this.$store.dispatch('form/setFieldToForm', {
-          formId: this.parseProps().name,
+          formId: this.props.attributes.name,
           key: 'linkUrl',
-          value: this.parseProps().linkUrl
+          value: this.props.attributes.linkUrl
         })
         this.$store.dispatch('form/setFieldToForm', {
-          formId: this.parseProps().name,
+          formId: this.props.attributes.name,
           key: 'viewIndex',
-          value: this.parseProps().viewIndex
+          value: this.props.attributes.viewIndex
         })
         this.$store.dispatch('form/setFieldToForm', {
-          formId: this.parseProps().name,
+          formId: this.props.attributes.name,
           key: 'viewIndexField',
-          value: this.parseProps().viewIndexField
+          value: this.props.attributes.viewIndexField
         })
         this.$store.dispatch('form/setFieldToForm', {
-          formId: this.parseProps().name,
+          formId: this.props.attributes.name,
           key: 'viewSize',
-          value: this.parseProps().viewSize
+          value: this.props.attributes.viewSize
         })
         this.$store.dispatch('form/setFieldToForm', {
-          formId: this.parseProps().name,
+          formId: this.props.attributes.name,
           key: 'viewSizeField',
-          value: this.parseProps().viewSizeField
+          value: this.props.attributes.viewSizeField
         })
 
       }
@@ -68,29 +70,29 @@
       console.log('vue-form : ', this.data.name)
       this.$store.dispatch('form/addForm', this.data.name)
       this.$store.dispatch('form/setFieldToForm', {
-        formId: this.parseProps().name,
+        formId: this.props.attributes.name,
         key: 'linkUrl',
-        value: this.parseProps().linkUrl
+        value: this.props.attributes.linkUrl
       })
       this.$store.dispatch('form/setFieldToForm', {
-        formId: this.parseProps().name,
+        formId: this.props.attributes.name,
         key: 'viewIndex',
-        value: this.parseProps().viewIndex
+        value: this.props.attributes.viewIndex
       })
       this.$store.dispatch('form/setFieldToForm', {
-        formId: this.parseProps().name,
+        formId: this.props.attributes.name,
         key: 'viewIndexField',
-        value: this.parseProps().viewIndexField
+        value: this.props.attributes.viewIndexField
       })
       this.$store.dispatch('form/setFieldToForm', {
-        formId: this.parseProps().name,
+        formId: this.props.attributes.name,
         key: 'viewSize',
-        value: this.parseProps().viewSize
+        value: this.props.attributes.viewSize
       })
       this.$store.dispatch('form/setFieldToForm', {
-        formId: this.parseProps().name,
+        formId: this.props.attributes.name,
         key: 'viewSizeField',
-        value: this.parseProps().viewSizeField
+        value: this.props.attributes.viewSizeField
       })
 
     }
