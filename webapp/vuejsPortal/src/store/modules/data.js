@@ -40,7 +40,7 @@ const getters = {
   entity: state => entityName => {
     return state.entities[entityName]
   },
-  entityRow: state => (entityName, id) => {
+  entityRow: state => ({entityName, id}) => {
     return state.entities[entityName].list.find(row => row[state.entities[entityName]].primaryKey === id)
   }
 }

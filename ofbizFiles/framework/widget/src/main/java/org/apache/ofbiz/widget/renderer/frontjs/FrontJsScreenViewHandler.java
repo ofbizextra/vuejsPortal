@@ -53,7 +53,7 @@ public class FrontJsScreenViewHandler extends AbstractViewHandler {
         return screenStringRenderer;
     }
 
-    private ArrayList<Map<String, Object>> parseMap(ArrayList<Map<String, Object>> arrayListMap) {
+    private ArrayList<Map<String, Object>> parseViewScreen(ArrayList<Map<String, Object>> arrayListMap) {
         ArrayList<Map<String, Object>> result = new ArrayList<>();
         HashMap<String, Object> temp;
         Iterator iterator = arrayListMap.iterator();
@@ -64,7 +64,7 @@ public class FrontJsScreenViewHandler extends AbstractViewHandler {
             if (entry.getKey().toString().contains("Open")) {
                 temp.put("fieldType", entry.getKey().toString().replace("Open", ""));
                 temp.put("attributes", entry.getValue());
-                temp.put("children", this.parse(iterator, entry));
+                temp.put("children", this.parseViewScreenRecursive(iterator, entry));
                 result.add(temp);
             } else {
                 temp.put("fieldType", entry.getKey());
@@ -76,7 +76,7 @@ public class FrontJsScreenViewHandler extends AbstractViewHandler {
         return result;
     }
 
-    private ArrayList<Map<String, Object>> parse(Iterator iterator, Map.Entry parent) {
+    private ArrayList<Map<String, Object>> parseViewScreenRecursive(Iterator iterator, Map.Entry parent) {
         ArrayList<Map<String, Object>> arrayListMap = new ArrayList<>();
         HashMap<String, Object> temp;
         String parentName = (String) parent.getKey().toString().replace("Open", "");
@@ -90,7 +90,7 @@ public class FrontJsScreenViewHandler extends AbstractViewHandler {
             if (current.getKey().toString().contains("Open")) {
                 temp.put("fieldType", current.getKey().toString().replace("Open", ""));
                 temp.put("attributes", current.getValue());
-                temp.put("children", this.parse(iterator, current));
+                temp.put("children", this.parseViewScreenRecursive(iterator, current));
             } else {
                 temp.put("fieldType", current.getKey());
                 temp.put("attributes", current.getValue());
@@ -99,6 +99,37 @@ public class FrontJsScreenViewHandler extends AbstractViewHandler {
             arrayListMap.add(temp);
         }
         return arrayListMap;
+    }
+
+    private Map<String, Object> parseData(ArrayList<Map<String, Object>> arrayListMap) {
+        Map<String, Object> data = new HashMap<>();
+        Map<String, Object> currentEntity = new HashMap<>();
+        for (Map<String, Object> current : arrayListMap) {
+            if (((Map<String, Object>) current.get("attributes")).get("entityName") != null) {
+                currentEntity = new HashMap<>();
+                currentEntity.put("entityName", ((Map<String, Object>) current.get("attributes")).get("entityName").toString());
+                data.put(((Map<String, Object>) current.get("attributes")).get("entityName").toString(), currentEntity);
+            }
+            for (Map<String, Object> child : (ArrayList<Map<String, Object>>) current.get("children")) {
+                this.parseDataRecursive(child, currentEntity, data);
+            }
+        }
+        return data;
+    }
+
+    private void parseDataRecursive(Map<String, Object> current, Map<String, Object> currentEntity, Map<String, Object> data) {
+        if (current.get("attributes") != null && ((Map<String, Object>) current.get("attributes")).get("entityName") != null) {
+            currentEntity = new HashMap<>();
+            currentEntity.put("entityName", ((Map<String, Object>) current.get("attributes")).get("entityName").toString());
+            data.put(((Map<String, Object>) current.get("attributes")).get("entityName").toString(), currentEntity);
+        }
+        if (current.get("attributes") != null && ((Map<String, Object>) current.get("attributes")).get("data") != null) {
+            currentEntity.putAll((Map<String, Object>) ((Map<String, Object>) current.get("attributes")).get("data"));
+        }
+        for (Map<String, Object> child : (ArrayList<Map<String, Object>>) current.get("children")) {
+            this.parseDataRecursive(child, currentEntity, data);
+        }
+        return;
     }
 
     public void render(String name, String page, String info, String contentType, String encoding, HttpServletRequest request, HttpServletResponse response) throws ViewHandlerException {
@@ -136,7 +167,8 @@ public class FrontJsScreenViewHandler extends AbstractViewHandler {
             screenStringRenderer.renderScreenEnd(writer, context);
 
             output.put("viewScreenName", page);
-            output.put("viewScreen", this.parseMap(screenOutput));
+            output.put("viewScreen", this.parseViewScreen(screenOutput));
+            output.put("data", this.parseData((ArrayList<Map<String, Object>>) output.get("viewScreen")));
 
             /*
             JSON json = JSON.from(output);
