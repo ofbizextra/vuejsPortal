@@ -29,9 +29,9 @@ public class FrontJsMenuRenderer implements MenuStringRenderer {
     public static final String module = FrontJsMenuRenderer.class.getName();
     private final HttpServletRequest request;
     private final HttpServletResponse response;
-    private ArrayList<Map<String, Object>> output;
+    private FrontJsOutput output;
 
-    FrontJsMenuRenderer(ArrayList<Map<String, Object>> output, HttpServletRequest request, HttpServletResponse response) {
+    FrontJsMenuRenderer(FrontJsOutput output, HttpServletRequest request, HttpServletResponse response) {
         this.output = output;
         this.request = request;
         this.response = response;
@@ -110,7 +110,7 @@ public class FrontJsMenuRenderer implements MenuStringRenderer {
         Map<String, Object> parameters = createImageParameters(context, image);
         HashMap<String, Object> hashMapStringObject = new HashMap<>();
         hashMapStringObject.put("Image", parameters);
-        this.output.add(hashMapStringObject);
+        this.output.putScreen(hashMapStringObject);
     }
 
     @Override
@@ -189,14 +189,18 @@ public class FrontJsMenuRenderer implements MenuStringRenderer {
         parameters.put("imgStr", imgStr);
         HashMap<String, Object> hashMapStringObject = new HashMap<>();
         hashMapStringObject.put("Link", parameters);
-        this.output.add(hashMapStringObject);
+        this.output.putScreen(hashMapStringObject);
     }
 
     @Override
-    public void renderMenuClose(Appendable writer, Map<String, Object> context, ModelMenu menu) {
+    public void renderMenuOpen(Appendable writer, Map<String, Object> context, ModelMenu menu) {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("id", menu.getId());
+        parameters.put("style", menu.getMenuContainerStyle(context));
+        parameters.put("title", menu.getTitle(context));
         HashMap<String, Object> hashMapStringObject = new HashMap<>();
-        hashMapStringObject.put("MenuEnd", new HashMap<>());
-        this.output.add(hashMapStringObject);
+        hashMapStringObject.put("renderMenuBegin", parameters);
+        this.output.pushScreen(hashMapStringObject);
     }
 
     @Override
@@ -244,7 +248,7 @@ public class FrontJsMenuRenderer implements MenuStringRenderer {
         parameters.put("containsNestedMenus", containsNestedMenus);
         HashMap<String, Object> hashMapStringObject = new HashMap<>();
         hashMapStringObject.put("MenuItemBegin", parameters);
-        this.output.add(hashMapStringObject);
+        this.output.putScreen(hashMapStringObject);
 
         if (containsNestedMenus) {
             for (ModelMenuItem childMenuItem : menuItem.getMenuItemList()) {
@@ -255,17 +259,13 @@ public class FrontJsMenuRenderer implements MenuStringRenderer {
         parameters.put("containsNestedMenus", containsNestedMenus);
         hashMapStringObject = new HashMap<>();
         hashMapStringObject.put("MenuItemEnd", parameters);
-        this.output.add(hashMapStringObject);
+        this.output.putScreen(hashMapStringObject);
     }
 
     @Override
-    public void renderMenuOpen(Appendable writer, Map<String, Object> context, ModelMenu menu) {
-        Map<String, Object> parameters = new HashMap<>();
-        parameters.put("id", menu.getId());
-        parameters.put("style", menu.getMenuContainerStyle(context));
-        parameters.put("title", menu.getTitle(context));
+    public void renderMenuClose(Appendable writer, Map<String, Object> context, ModelMenu menu) {
         HashMap<String, Object> hashMapStringObject = new HashMap<>();
-        hashMapStringObject.put("renderMenuBegin", parameters);
-        this.output.add(hashMapStringObject);
+        hashMapStringObject.put("MenuEnd", new HashMap<>());
+        this.output.popScreen(hashMapStringObject);
     }
 }

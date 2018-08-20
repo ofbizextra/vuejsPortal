@@ -7,31 +7,30 @@ import java.util.Stack;
 
 public class FrontJsOutput {
     Map<String, Object> output = new HashMap<>();
-    String viewScreenName = "";
-    ArrayList<Map<String, Object>> viewScreen = new ArrayList<>();
-    Map<String, Object> viewEntities = new HashMap<>();
-    // Map<String, Object> currentScreen = new HashMap<>();
-    // Map<String, Object> currentEntity = new HashMap<>();
-    // Map<String, Object> currentRecord = new HashMap<>();
-    Stack<ArrayList<Map<String, Object>>> screensStack = new Stack();
-    Stack<Map<String, Object>> entitiesStack = new Stack();
-    Stack<Map<String, Object>> recordsStack = new Stack();
+    private ArrayList<Map<String, Object>> viewScreen = new ArrayList<>();
+    private Map<String, Object> viewEntities = new HashMap<>();
+    private Stack<ArrayList<Map<String, Object>>> screensStack;
+    private Stack<Map<String, Object>> entitiesStack;
+    private Stack<Map<String, Object>> recordsStack;
 
-    public FrontJsOutput() {
-        output.put("viewScreenName", viewScreenName);
+    FrontJsOutput(String name) {
+        output.put("viewScreenName", name);
         output.put("viewScreen", viewScreen);
         output.put("viewEntities", viewEntities);
+        screensStack = new Stack<>();
+        entitiesStack = new Stack<>();
+        recordsStack = new Stack<>();
         screensStack.push(viewScreen);
     }
 
-    public void putScreen(Map<String, Object> screen) {
+    void putScreen(Map<String, Object> screen) {
         screensStack.peek().add(screen);
         if (screen.containsKey("attributes") && ((Map<String, Object>) screen.get("attributes")).containsKey("data") && ((Map<String, Object>) ((Map<String, Object>) screen.get("attributes")).get("data")).containsKey("action") && ((Map<String, Object>) ((Map<String, Object>) screen.get("attributes")).get("data")).get("action").equals("PUT_RECORD")) {
             this.putRecord((Map<String, Object>) ((Map<String, Object>) ((Map<String, Object>) screen.get("attributes")).get("data")).get("records"));
         }
     }
 
-    public void pushScreen(Map<String, Object> screen) {
+    void pushScreen(Map<String, Object> screen) {
         screensStack.peek().add(screen);
         screensStack.push((ArrayList<Map<String, Object>>) screen.get("children"));
         if (screen.containsKey("attributes") && ((Map<String, Object>) screen.get("attributes")).containsKey("data") && ((Map<String, Object>) ((Map<String, Object>) screen.get("attributes")).get("data")).containsKey("action")) {
@@ -45,7 +44,7 @@ public class FrontJsOutput {
         }
     }
 
-    public void popScreen(Map<String, Object> screen) {
+    void popScreen(Map<String, Object> screen) {
         screensStack.pop();
         if (screen.containsKey("attributes") && ((Map<String, Object>) screen.get("attributes")).containsKey("data") && ((Map<String, Object>) ((Map<String, Object>) screen.get("attributes")).get("data")).containsKey("action")) {
             if (((Map<String, Object>) ((Map<String, Object>) screen.get("attributes")).get("data")).get("action").equals("STORE_RECORD")) {
@@ -57,7 +56,7 @@ public class FrontJsOutput {
         }
     }
 
-    public void putEntity(String entityName, String primaryKey) {
+    private void putEntity(String entityName, String primaryKey) {
         // ou modelReader et utiliser la fonction de olivier dans riot
         Map<String, Object> entity;
 
@@ -72,23 +71,27 @@ public class FrontJsOutput {
         entitiesStack.push(entity);
     }
 
-    public void popEntity() {
+    private void popEntity() {
         entitiesStack.pop();
     }
 
-    public void newRecord() {
+    private void newRecord() {
         // currentRecord
         recordsStack.push(new HashMap<>());
     }
 
-    public void storeRecord() {
+    private void storeRecord() {
         entitiesStack.peek().put((String) recordsStack.peek().get(entitiesStack.peek().get("primaryKey")), recordsStack.peek());
         recordsStack.pop();
     }
 
-    public void putRecord(Map<String, Object> records) {
+    private void putRecord(Map<String, Object> records) {
         for (String key : records.keySet()) {
             recordsStack.peek().put(key, records.get(key));
         }
+    }
+
+    public Map<String, Object> output() {
+        return this.output;
     }
 }

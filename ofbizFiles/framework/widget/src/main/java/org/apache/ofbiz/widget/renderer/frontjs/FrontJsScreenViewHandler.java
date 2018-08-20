@@ -39,7 +39,7 @@ public class FrontJsScreenViewHandler extends AbstractViewHandler {
         this.servletContext = context;
     }
 
-    private ScreenStringRenderer loadRenderers(ArrayList<Map<String, Object>> output,
+    private ScreenStringRenderer loadRenderers(FrontJsOutput output,
                                                HttpServletRequest request, HttpServletResponse response,
                                                Map<String, Object> context) {
         ScreenStringRenderer screenStringRenderer = new FrontJsScreenRenderer(getName(), output);
@@ -136,13 +136,11 @@ public class FrontJsScreenViewHandler extends AbstractViewHandler {
         try {
             Writer writer = response.getWriter();
             VisualTheme visualTheme = UtilHttp.getVisualTheme(request);
-
-            LinkedHashMap<String, Object> output = new LinkedHashMap<>();
-            ArrayList<Map<String, Object>> screenOutput = new ArrayList<>();
+            FrontJsOutput frontJsOutput = new FrontJsOutput(name);
             MapStack<String> context = MapStack.create();
             //output.put("data", context);
             ScreenRenderer.populateContextForRequest(context, null, request, response, servletContext);
-            ScreenStringRenderer screenStringRenderer = loadRenderers(screenOutput, request, response, context);
+            ScreenStringRenderer screenStringRenderer = loadRenderers(frontJsOutput, request, response, context);
             ScreenRenderer screens = new ScreenRenderer(writer, context, screenStringRenderer);
             context.put("screens", screens);
             // prepate context data that sould be serialized to client
@@ -166,10 +164,6 @@ public class FrontJsScreenViewHandler extends AbstractViewHandler {
             screens.render(page);
             screenStringRenderer.renderScreenEnd(writer, context);
 
-            output.put("viewScreenName", page);
-            output.put("viewScreen", this.parseViewScreen(screenOutput));
-            output.put("data", this.parseData((ArrayList<Map<String, Object>>) output.get("viewScreen")));
-
             /*
             JSON json = JSON.from(output);
             String jsonStr = json.toString();
@@ -189,7 +183,7 @@ public class FrontJsScreenViewHandler extends AbstractViewHandler {
                     .serializeAllExcept("intValue");
             */
             mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-            mapper.writeValue(jsonWriter, output);
+            mapper.writeValue(jsonWriter, frontJsOutput.output);
             String jsonStr = jsonWriter.toString();
             response.setContentType("application/json");
             // jsonStr.length is not reliable for unicode characters
