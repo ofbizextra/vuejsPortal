@@ -6,7 +6,10 @@ import com.lowagie.text.html.simpleparser.IncTable;
 import org.apache.ofbiz.base.util.*;
 import org.apache.ofbiz.base.util.string.FlexibleStringExpander;
 import org.apache.ofbiz.entity.Delegator;
+import org.apache.ofbiz.entity.GenericEntityException;
 import org.apache.ofbiz.entity.GenericValue;
+import org.apache.ofbiz.entity.model.ModelEntity;
+import org.apache.ofbiz.entity.model.ModelReader;
 import org.apache.ofbiz.webapp.control.RequestHandler;
 import org.apache.ofbiz.webapp.taglib.ContentUrlTag;
 import org.apache.ofbiz.widget.WidgetWorker;
@@ -126,7 +129,13 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         }
         if (!modelFormField.getParameterName().isEmpty() && !modelFormField.getEntry(context, displayField.getDefaultValue(context)).isEmpty()) {
             Map<String, Object> data = new HashMap<>();
-            data.put(modelFormField.getParameterName(), modelFormField.getEntry(context, displayField.getDefaultValue(context)));
+            data.put("action", "PUT_RECORD");
+            ArrayList<Map<String, Object>> records = new ArrayList<>();
+            Map<String, Object> record = new HashMap<>();
+            record.put("key", modelFormField.getParameterName());
+            record.put("value", modelFormField.getEntry(context, displayField.getDefaultValue(context)));
+            records.add(record);
+            data.put("records", records);
             cb.put("data", data);
         }
         this.appendTooltip(cb, context, modelFormField);
@@ -240,7 +249,13 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
             cb.put("formName", formName);
         }
         Map<String, Object> data = new HashMap<>();
-        data.put(name, value);
+        data.put("action", "PUT_RECORD");
+        ArrayList<Map<String, Object>> records = new ArrayList<>();
+        Map<String, Object> record = new HashMap<>();
+        record.put("key", name);
+        record.put("value", value);
+        records.add(record);
+        data.put("records", records);
         cb.put("data", data);
         this.appendTooltip(cb, context, modelFormField);
         this.addAsterisks(cb, context, modelFormField);
@@ -318,7 +333,13 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
             cb.put("formName", formName);
         }
         Map<String, Object> data = new HashMap<>();
-        data.put(name, value);
+        data.put("action", "PUT_RECORD");
+        ArrayList<Map<String, Object>> records = new ArrayList<>();
+        Map<String, Object> record = new HashMap<>();
+        record.put("key", name);
+        record.put("value", value);
+        records.add(record);
+        data.put("records", records);
         cb.put("data", data);
         this.appendTooltip(cb, context, modelFormField);
         this.addAsterisks(cb, context, modelFormField);
@@ -535,7 +556,13 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         cb.put("mask", formattedMask);
         cb.put("tabindex", tabindex);
         Map<String, Object> data = new HashMap<>();
-        data.put(name, value);
+        data.put("action", "PUT_RECORD");
+        ArrayList<Map<String, Object>> records = new ArrayList<>();
+        Map<String, Object> record = new HashMap<>();
+        record.put("key", name);
+        record.put("value", value);
+        records.add(record);
+        data.put("records", records);
         cb.put("data", data);
         this.addAsterisks(cb, context, modelFormField);
         this.appendTooltip(cb, context, modelFormField);
@@ -736,7 +763,13 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         cb.put("conditionGroup", conditionGroup);
         cb.put("tabindex", tabindex);
         Map<String, Object> data = new HashMap<>();
-        data.put(name, currentValue);
+        data.put("action", "PUT_RECORD");
+        ArrayList<Map<String, Object>> records = new ArrayList<>();
+        Map<String, Object> record = new HashMap<>();
+        record.put("key", name);
+        record.put("value", currentValue);
+        records.add(record);
+        data.put("records", records);
         cb.put("data", data);
 
         this.appendTooltip(cb, context, modelFormField);
@@ -853,7 +886,13 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
             cb.put("formName", formName);
         }
         Map<String, Object> data = new HashMap<>();
-        data.put(name, currentValue);
+        data.put("action", "PUT_RECORD");
+        ArrayList<Map<String, Object>> records = new ArrayList<>();
+        Map<String, Object> record = new HashMap<>();
+        record.put("key", name);
+        record.put("value", currentValue);
+        records.add(record);
+        data.put("records", records);
         cb.put("data", data);
         this.appendTooltip(cb, context, modelFormField);
         HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
@@ -1183,10 +1222,29 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
             // this is a fix for forms with no fields
             cb.put("columnStyles", columnStyleListString);
         }
-        cb.put("entityName", modelForm.getDefaultEntityName());
-        if (!modelForm.getDefaultMapName().equals("") && ((GenericValue) context.get(modelForm.getDefaultMapName())) != null) {
-            cb.put("primaryKey", ((GenericValue) context.get(modelForm.getDefaultMapName())).getPrimaryKey());
+
+        // Begin data
+        String defaultEntityName = modelForm.getDefaultEntityName();
+        ModelReader entityModelReader = ((Delegator)context.get("delegator")).getModelReader();
+        ModelEntity modelEntity = null;
+        try {
+            modelEntity = entityModelReader.getModelEntity(defaultEntityName);
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
         }
+        if (modelEntity == null) {
+            throw new IllegalArgumentException("Error finding Entity with name " + defaultEntityName
+                    + " for defaut-entity-name in a form widget");
+        } else {
+            List<String> pkList = modelEntity.getPkFieldNames();
+            Map<String, Object> data = new HashMap<>();
+            data.put("action", "PUT_ENTITY");
+            data.put("entityName", modelEntity.getEntityName());
+            data.put("primaryKey", pkList);
+            cb.put("data", data);
+        }
+        // End data
+
         HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
         hashMapStringObject.put("FormatListWrapperOpen", cb);
         this.output.pushScreen(hashMapStringObject);
@@ -1201,6 +1259,9 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
     public void renderFormatListWrapperClose(Appendable writer, Map<String, Object> context, ModelForm modelForm) {
         Map<String, Object> cb = new HashMap<>();
         cb.put("formName", modelForm.getName());
+        Map<String, Object> data = new HashMap<>();
+        data.put("action", "POP_ENTITY");
+        cb.put("data", data);
         HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
         hashMapStringObject.put("FormatListWrapperClose", cb);
         this.output.popScreen(hashMapStringObject);
@@ -1296,6 +1357,9 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         cb.put("altRowStyles", altRowStyles);
         cb.put("evenRowStyle", evenRowStyle);
         cb.put("oddRowStyle", oddRowStyle);
+        Map<String, Object> data = new HashMap<>();
+        data.put("action", "NEW_RECORD");
+        cb.put("data", data);
         HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
         hashMapStringObject.put("FormatItemRowOpen", cb);
         this.output.pushScreen(hashMapStringObject);
@@ -1304,6 +1368,9 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
     public void renderFormatItemRowClose(Appendable writer, Map<String, Object> context, ModelForm modelForm) {
         Map<String, Object> cb = new HashMap<>();
         cb.put("formName", modelForm.getName());
+        Map<String, Object> data = new HashMap<>();
+        data.put("action", "STORE_RECORD");
+        cb.put("data", data);
         HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
         hashMapStringObject.put("FormatItemRowClose", cb);
         this.output.popScreen(hashMapStringObject);
@@ -1485,7 +1552,13 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
             cb.put("formName", formName);
         }
         Map<String, Object> data = new HashMap<>();
-        data.put(name, value);
+        data.put("action", "PUT_RECORD");
+        ArrayList<Map<String, Object>> records = new ArrayList<>();
+        Map<String, Object> record = new HashMap<>();
+        record.put("key", name);
+        record.put("value", value);
+        records.add(record);
+        data.put("records", records);
         cb.put("data", data);
         this.appendTooltip(cb, context, modelFormField);
         HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
