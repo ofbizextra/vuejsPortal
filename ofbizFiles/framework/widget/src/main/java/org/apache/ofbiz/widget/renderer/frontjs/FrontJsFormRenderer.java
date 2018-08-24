@@ -992,7 +992,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         if (UtilValidate.isNotEmpty(titleText)) {
             if (" ".equals(titleText)) {
                 HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
-                hashMapStringObject.put("FormatEmptySpace", null);
+                hashMapStringObject.put("FormatEmptySpace", new HashMap<String, Object>());
                 this.output.putScreen(hashMapStringObject);
             } else {
                 titleText = UtilHttp.encodeAmpersands(titleText);

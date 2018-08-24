@@ -7,13 +7,14 @@ import java.util.Stack;
 
 public class FrontJsOutput {
     Map<String, Object> output = new HashMap<>();
-    private ArrayList<Map<String, Object>> viewScreen = new ArrayList<>();
+    private ArrayList<Map<String, Object>> viewScreen;
     private Map<String, Object> viewEntities = new HashMap<>();
     private Stack<ArrayList<Map<String, Object>>> screensStack;
     private Stack<Map<String, Object>> entitiesStack;
     private Stack<Map<String, Object>> recordsStack;
 
     FrontJsOutput(String name) {
+        viewScreen = new ArrayList<>();
         output.put("viewScreenName", name);
         output.put("viewScreen", viewScreen);
         output.put("viewEntities", viewEntities);
@@ -24,6 +25,11 @@ public class FrontJsOutput {
     }
 
     void putScreen(Map<String, Object> screen) {
+        Map<String, Object> temp = new HashMap<>();
+        String name = screen.keySet().toArray()[0].toString();
+        temp.put("attributes", screen.get(name));
+        temp.put("name", name);
+        screen = temp;
         screensStack.peek().add(screen);
         if (screen.containsKey("attributes") && ((Map<String, Object>) screen.get("attributes")).containsKey("data") && ((Map<String, Object>) ((Map<String, Object>) screen.get("attributes")).get("data")).containsKey("action") && ((Map<String, Object>) ((Map<String, Object>) screen.get("attributes")).get("data")).get("action").equals("PUT_RECORD")) {
             this.putRecord((Map<String, Object>) ((Map<String, Object>) ((Map<String, Object>) screen.get("attributes")).get("data")).get("records"));
@@ -31,6 +37,12 @@ public class FrontJsOutput {
     }
 
     void pushScreen(Map<String, Object> screen) {
+        Map<String, Object> temp = new HashMap<>();
+        String name = screen.keySet().toArray()[0].toString();
+        temp.put("attributes", screen.get(name));
+        temp.put("children", new ArrayList<Map<String, Object>>());
+        temp.put("name", name);
+        screen = temp;
         screensStack.peek().add(screen);
         screensStack.push((ArrayList<Map<String, Object>>) screen.get("children"));
         if (screen.containsKey("attributes") && ((Map<String, Object>) screen.get("attributes")).containsKey("data") && ((Map<String, Object>) ((Map<String, Object>) screen.get("attributes")).get("data")).containsKey("action")) {
