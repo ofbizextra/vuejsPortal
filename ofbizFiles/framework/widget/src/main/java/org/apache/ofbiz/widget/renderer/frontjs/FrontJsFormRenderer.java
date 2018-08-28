@@ -3,6 +3,7 @@ package org.apache.ofbiz.widget.renderer.frontjs;
 
 import com.ibm.icu.util.Calendar;
 import com.lowagie.text.html.simpleparser.IncTable;
+import com.uwyn.jhighlight.fastutil.Hash;
 import org.apache.ofbiz.base.util.*;
 import org.apache.ofbiz.base.util.string.FlexibleStringExpander;
 import org.apache.ofbiz.entity.Delegator;
@@ -145,9 +146,25 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
     }
 
     public void renderHyperlinkField(Appendable writer, Map<String, Object> context, HyperlinkField hyperlinkField) {
-        HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
-        hashMapStringObject.put("HyperlinkField", new HashMap<>());
+        ModelFormField modelFormField = hyperlinkField.getModelFormField();
+        Map<String, String> parameterMap = hyperlinkField.getParameterMap(context, modelFormField.getEntityName(), modelFormField.getServiceName());
+        HashMap<String, Object> hashMapStringObject = new HashMap<>();
+        HashMap<String, Object> cb = new HashMap<>();
+        if (!parameterMap.isEmpty()) {
+            HashMap<String, Object> data = new HashMap<>();
+            data.put("action", "PUT_RECORD");
+            HashMap<String, Object> record = new HashMap<>();
+            record.put("key", parameterMap.keySet().toArray()[0]);
+            record.put("value", parameterMap.get(parameterMap.keySet().toArray()[0]));
+            ArrayList<Map<String, Object>> records = new ArrayList<>();
+            records.add(record);
+            data.put("records", records);
+            cb.put("data", data);
+        }
+        hashMapStringObject.put("HyperlinkField", cb);
         this.output.putScreen(hashMapStringObject);
+        // hyperlinkField.getTarget(context)  //=> get target portlet
+        // hyperlinkField.getParameterMap(context, hyperlinkField.getModelFormField().getEntityName(), hyperlinkField.getModelFormField().getServiceName()) //=> get entityFieldName and value
         /*this.request.setAttribute("image", hyperlinkField.getImageLocation(context));
         ModelFormField modelFormField = hyperlinkField.getModelFormField();
         String encodedAlternate = encode(hyperlinkField.getAlternate(context), modelFormField, context);
