@@ -154,12 +154,16 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
             HashMap<String, Object> data = new HashMap<>();
             data.put("action", "PUT_RECORD");
             HashMap<String, Object> record = new HashMap<>();
-            record.put("key", parameterMap.keySet().toArray()[0]);
-            record.put("value", parameterMap.get(parameterMap.keySet().toArray()[0]));
+            String key = parameterMap.keySet().toArray()[0].toString();
+            String value = parameterMap.get(key);
+            record.put("key", key);
+            record.put("value", value);
             ArrayList<Map<String, Object>> records = new ArrayList<>();
             records.add(record);
             data.put("records", records);
             cb.put("data", data);
+            cb.put("title", key);
+            cb.put("value", value);
         }
         hashMapStringObject.put("HyperlinkField", cb);
         this.output.putScreen(hashMapStringObject);

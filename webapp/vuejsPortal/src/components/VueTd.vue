@@ -2,7 +2,7 @@
   <td id="vue-td" v-bind="data">
     <div
       v-for="component in props.children"
-      v-bind:is="constantes.components[component.fieldType]"
+      v-bind:is="constantes.components[component.name]"
       :props="component"
       :updateStore="updateStore">
     </div>

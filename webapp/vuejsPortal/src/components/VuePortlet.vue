@@ -3,7 +3,7 @@
     <div v-if="portlet">
       <div
         v-for="component in portlet.viewScreen"
-        v-bind:is="constantes.components[component.fieldType]"
+        v-bind:is="constantes.components[component.name]"
         :props="component">
       </div>
     </div>
@@ -41,7 +41,7 @@
       }
     },
     created() {
-      this.$store.dispatch('ui/setPortlet', {...this.props, params: {exampleId: 'EX11', exampleId_op: 'contains'}}).then(success => {
+      this.$store.dispatch('ui/setPortlet', {...this.props, params: {exampleId: 'EX', exampleId_op: 'contains'}}).then(success => {
         console.log(success)
         this.portletName = this.props.portalPortletId
         this.portletSeqId = this.props.portletSeqId
