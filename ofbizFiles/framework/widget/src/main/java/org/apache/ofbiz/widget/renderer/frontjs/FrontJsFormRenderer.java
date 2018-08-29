@@ -1175,6 +1175,29 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         if (!modelForm.getDefaultMapName().equals("") && ((GenericValue) context.get(modelForm.getDefaultMapName())) != null) {
             cb.put("primaryKey", ((GenericValue) context.get(modelForm.getDefaultMapName())).getPrimaryKey());
         }
+
+        // Begin data
+        String defaultEntityName = modelForm.getDefaultEntityName();
+        ModelReader entityModelReader = ((Delegator)context.get("delegator")).getModelReader();
+        ModelEntity modelEntity = null;
+        try {
+            modelEntity = entityModelReader.getModelEntity(defaultEntityName);
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+        }
+        if (modelEntity == null) {
+            throw new IllegalArgumentException("Error finding Entity with name " + defaultEntityName
+                    + " for defaut-entity-name in a form widget");
+        } else {
+            List<String> pkList = modelEntity.getPkFieldNames();
+            Map<String, Object> data = new HashMap<>();
+            data.put("action", "PUT_ENTITY");
+            data.put("entityName", modelEntity.getEntityName());
+            data.put("primaryKey", pkList);
+            cb.put("data", data);
+        }
+        // End data
+
         HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
         hashMapStringObject.put("FormOpen", cb);
         this.output.pushScreen(hashMapStringObject);
@@ -1182,7 +1205,29 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
 
     public void renderFormClose(Appendable writer, Map<String, Object> context, ModelForm modelForm) {
         HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
-        hashMapStringObject.put("FormClose", new HashMap<>());
+        HashMap<String, Object> formClose = new HashMap<>();
+
+        // Begin data
+        String defaultEntityName = modelForm.getDefaultEntityName();
+        ModelReader entityModelReader = ((Delegator)context.get("delegator")).getModelReader();
+        ModelEntity modelEntity = null;
+        try {
+            modelEntity = entityModelReader.getModelEntity(defaultEntityName);
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+        }
+        if (modelEntity == null) {
+            throw new IllegalArgumentException("Error finding Entity with name " + defaultEntityName
+                    + " for defaut-entity-name in a form widget");
+        } else {
+            List<String> pkList = modelEntity.getPkFieldNames();
+            Map<String, Object> data = new HashMap<>();
+            data.put("action", "POP_ENTITY");
+            formClose.put("data", data);
+        }
+        // End data
+
+        hashMapStringObject.put("FormClose", formClose);
         this.output.popScreen(hashMapStringObject);
     }
 
@@ -1436,6 +1481,9 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         Map<String, Object> cb = new HashMap<>();
         cb.put("formName", modelForm.getName());
         cb.put("style", style);
+        Map<String, Object> data = new HashMap<>();
+        data.put("action", "NEW_RECORD");
+        cb.put("data", data);
         HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
         hashMapStringObject.put("SingleWrapperOpen", cb);
         this.output.pushScreen(hashMapStringObject);
@@ -1444,6 +1492,9 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
     public void renderFormatSingleWrapperClose(Appendable writer, Map<String, Object> context, ModelForm modelForm) {
         Map<String, Object> cb = new HashMap<>();
         cb.put("formName", modelForm.getName());
+        Map<String, Object> data = new HashMap<>();
+        data.put("action", "STORE_RECORD");
+        cb.put("data", data);
         HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
         hashMapStringObject.put("SingleWrapperClose", cb);
         this.output.popScreen(hashMapStringObject);
