@@ -1,5 +1,7 @@
 package org.apache.ofbiz.widget.renderer.frontjs;
 
+import org.omg.CORBA.OBJ_ADAPTER;
+
 import java.util.*;
 
 public class FrontJsOutput {
@@ -73,6 +75,7 @@ public class FrontJsOutput {
             entity = new HashMap<>();
             entity.put("primaryKey", String.join("--", primaryKey));
             entity.put("list", new HashMap<>());
+            entity.put("entityName", entityName);
             viewEntities.put(entityName, entity);
         } else {
             entity = (Map<String, Object>) viewEntities.get(entityName);
@@ -106,5 +109,18 @@ public class FrontJsOutput {
 
     public Map<String, Object> output() {
         return this.output;
+    }
+
+    public Map<String, Object> getRecordPointer(Map<String, Object> context) {
+        if (!this.entitiesStack.empty()) {
+            Map<String, Object> data = new HashMap<>();
+            String entityName = (String) this.entitiesStack.peek().get("entityName");
+            data.put("entityNoName", entityName);
+            String primaryKey = ((Map<String, Object>) this.viewEntities.get(entityName)).get("primaryKey").toString();
+            data.put("id", context.get(primaryKey));
+            return data;
+        } else {
+            return null;
+        }
     }
 }

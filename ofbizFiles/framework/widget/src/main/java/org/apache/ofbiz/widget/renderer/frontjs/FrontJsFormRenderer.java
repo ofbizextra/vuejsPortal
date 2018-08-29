@@ -2,8 +2,6 @@
 package org.apache.ofbiz.widget.renderer.frontjs;
 
 import com.ibm.icu.util.Calendar;
-import com.lowagie.text.html.simpleparser.IncTable;
-import com.uwyn.jhighlight.fastutil.Hash;
 import org.apache.ofbiz.base.util.*;
 import org.apache.ofbiz.base.util.string.FlexibleStringExpander;
 import org.apache.ofbiz.entity.Delegator;
@@ -161,6 +159,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
             ArrayList<Map<String, Object>> records = new ArrayList<>();
             records.add(record);
             data.put("records", records);
+            data.put("storePointer", output.getRecordPointer(context));
             cb.put("data", data);
             cb.put("title", key);
             cb.put("value", value);
