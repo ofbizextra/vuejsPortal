@@ -35,6 +35,19 @@ import VueSortField from './components/VueSortField'
 import VueColumnPortlet from './components/VueColumnPortlet'
 import VuePortlet from './components/VuePortlet'
 import VueThead from './components/VueThead'
+import VueListWrapper from './components/VueListWrapper'
+import VueHeader from './components/VueHeader'
+import VueHeaderRow from './components/VueHeaderRow'
+import VueHeaderRowCell from './components/VueHeaderRowCell'
+import VueHeaderRowFormCell from './components/VueHeaderRowFormCell'
+import VueItemRow from './components/VueItemRow'
+import VueItemRowCell from './components/VueItemRowCell'
+import VueItemRowFormCell from './components/VueItemRowFormCell'
+import VueSingleWrapper from './components/VueSingleWrapper'
+import VueFieldRow from './components/VueFieldRow'
+import VueFieldRowTitleCell from './components/VueFieldRowTitleCell'
+import VueFieldRowWidgetCell from './components/VueFieldRowWidgetCell'
+import VueFieldGroup from './components/VueFieldGroup'
 
 import store from './store'
 
@@ -73,6 +86,19 @@ Vue.component('vue-sort-field', VueSortField)
 Vue.component('vue-column-portlet', VueColumnPortlet)
 Vue.component('vue-portlet', VuePortlet)
 Vue.component('vue-thead', VueThead)
+vue.component('vue-list-wrapper', VueListWrapper)
+vue.component('vue-header', VueHeader)
+vue.component('vue-header-row', VueHeaderRow)
+vue.component('vue-header-row-cell', VueHeaderRowCell)
+vue.component('vue-header-row-form-cell', VueHeaderRowFormCell)
+vue.component('vue-item-row', VueItemRow)
+vue.component('vue-item-row-cell', VueItemRowCell)
+vue.component('vue-item-row-form-cell', VueItemRowFormCell)
+vue.component('vue-single-wrapper', VueSingleWrapper)
+vue.component('vue-field-row', VueFieldRow)
+vue.component('vue-field-row-title-cell', VueFieldRowTitleCell)
+vue.component('vue-field-row-widget-cell', VueFieldRowWidgetCell)
+vue.component('vue-field-group', VueFieldGroup)
 
 Vue.mixin({
   methods: {

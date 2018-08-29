@@ -21,8 +21,9 @@ module.exports = {
         loader: 'vue-loader',
         options: {
           loaders: {
-          }
+          },
           // other vue-loader options go here
+          debug: true
         }
       },
       {
@@ -73,7 +74,8 @@ if (process.env.NODE_ENV === 'production') {
       sourceMap: true,
       compress: {
         warnings: false
-      }
+      },
+      parallel: true
     }),
     new webpack.LoaderOptionsPlugin({
       minimize: true

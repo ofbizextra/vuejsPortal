@@ -23,12 +23,12 @@ const mutations = {
   },
   SET_ENTITY: (state, data) => {
     state.entities[data.entityName] = {
-      list: data.list,
+      list: {},
       primaryKey: data.primaryKey
     }
   },
   SET_ENTITY_ROW: (state, data) => {
-    state.entities[data.entityName].list[data.content[state.entities[data.entityName].primaryKey]] = data.content
+    state.entities[data.entityName].list[data.primaryKey] = data.data
   }
 }
 
@@ -60,7 +60,9 @@ const actions = {
   },
   setEntity({commit}, data) {
     console.log('setEntity : ' + data)
-    commit('SET_ENTITY', data)
+    if (!state.entities[data.entityName]) {
+      commit('SET_ENTITY', data)
+    }
   },
   setEntityRow({commit}, data) {
     console.log('setEntityRow : ' + data)
