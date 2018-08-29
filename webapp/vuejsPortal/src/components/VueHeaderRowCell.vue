@@ -1,11 +1,34 @@
 <template>
-  <div id="vue-header-row-cell"></div>
+  <td id="vue-header-row-cell" v-bind="data">
+    <div
+      v-for="component in props.children"
+      v-bind:is="constantes.components[component.name]"
+      :props="component"
+      :updateStore="updateStore">
+    </div>
+  </td>
 </template>
 
 <script>
-    export default {
-        name: "VueHeaderRowCell"
+  import {mapGetters} from 'vuex'
+  import cst from '../js/constantes'
+
+  export default {
+    name: "VueHeaderRowCell",
+    props: ['props', 'updateStore'],
+    data() {
+      return {
+        constantes: cst
+      }
+    },
+    computed: {
+      data() {
+        let data = this.props.attributes
+        delete data['value']
+        return data
+      }
     }
+  }
 </script>
 
 <style scoped>
