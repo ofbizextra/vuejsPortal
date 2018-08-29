@@ -41,13 +41,39 @@
       }
     },
     created() {
-      this.$store.dispatch('ui/setPortlet', {...this.props, params: {exampleId: 'EX', exampleId_op: 'contains'}}).then(success => {
+      this.$store.dispatch('ui/setPortlet', {
+        ...this.props,
+        params: {exampleId: 'EX11', exampleId_op: 'contains'}
+      }).then(success => {
         console.log(success)
         this.portletName = this.props.portalPortletId
         this.portletSeqId = this.props.portletSeqId
+        if (this.portlet) {
+          console.log('data store initialisation: ' + this.portletName, Object.keys(this.portlet.viewEntities))
+          Object.keys(this.portlet.viewEntities).forEach(key => {
+            console.log('data store initialisation Entity: ' + key)
+            this.$store.dispatch('data/setEntity', {entityName: key, primaryKey: this.portlet.viewEntities[key].primaryKey}).then(() => {
+              Object.keys(this.portlet.viewEntities[key].list).forEach(recordPk => {
+                console.log('data store initialisation EntityRow: ', recordPk)
+                this.$store.dispatch('data/setEntityRow', {
+                  entityName: key,
+                  primaryKey: recordPk,
+                  data: this.portlet.viewEntities[key].list[recordPk]
+                }).then(succes => console.log(succes), error => console.log(error))
+              })
+            }, error => {
+              console.log(error)
+            })
+          })
+        } else {
+          console.log('this.portlet doesn\'t exist yet: ' + this.portletName)
+        }
       }, error => {
         console.log(error)
       })
+    },
+    mounted() {
+
     }
   }
 </script>
