@@ -1,12 +1,12 @@
 <template>
-  <div id="vue-title">
+  <div id="vue-field-title">
     <label v-bind="data">{{data.title ? data.title : data.description}}</label>
   </div>
 </template>
 
 <script>
   export default {
-    name: "VueTitle",
+    name: "VueFieldTitle",
     data() {
       return {
       }

@@ -30,17 +30,17 @@ export default {
     FieldRowTitleCell: 'vue-field-row-title-cell',
     FieldRowWidgetCell: 'vue-field-row-widget-cell',
     FieldGroup: '?', // todo
-    FieldTitle: 'vue-title',
-    TextField: 'vue-text',
-    TextareaField: 'vue-text-area',
-    DisplayField: 'vue-title',
-    DateTimeField: 'vue-date-time',
-    TextFindField: 'vue-text-find',
-    DropDownField: 'vue-drop-down',
-    RadioField: 'vue-radio',
-    HiddenField: 'vue-hidden',
-    HyperlinkTitle: 'vue-hyperlink',
-    HyperlinkField: 'vue-hyperlink',
-    SubmitField: 'vue-submit'
+    FieldTitle: 'vue-field-title',
+    TextField: 'vue-text-field',
+    TextAreaField: 'vue-text-area-field',
+    DisplayField: 'vue-display-field',
+    DateTimeField: 'vue-date-time-field',
+    TextFindField: 'vue-text-find-field',
+    DropDownField: 'vue-drop-down-field',
+    RadioField: 'vue-radio-field',
+    HiddenField: 'vue-hidden-field',
+    HyperlinkTitle: 'vue-hyperlink-title',
+    HyperlinkField: 'vue-hyperlink-field',
+    SubmitField: 'vue-submit-field'
   }
 }

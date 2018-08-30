@@ -1,5 +1,5 @@
 <template>
-  <div id="vue-text">
+  <div id="vue-text-field">
     <input v-model="value" v-bind="data"/>
   </div>
 </template>
@@ -8,7 +8,7 @@
   import {mapGetters} from 'vuex'
 
   export default {
-    name: "VueText",
+    name: "VueTextField",
     props: ['props', 'updateStore'],
     data() {
       return {}

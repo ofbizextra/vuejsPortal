@@ -28,7 +28,9 @@ const mutations = {
     }
   },
   SET_ENTITY_ROW: (state, data) => {
-    state.entities[data.entityName].list[data.primaryKey] = data.data
+    Object.keys(data.data).forEach(key => {
+      state.entities[data.entityName].list[data.primaryKey][key] = data.data.get(key)
+    })
   }
 }
 
@@ -42,6 +44,9 @@ const getters = {
   },
   entityRow: state => ({entityName, id}) => {
     return state.entities[entityName].list.find(row => row[state.entities[entityName]].primaryKey === id)
+  },
+  entityRowAttribute: state => ({entityName, id, attribute}) => {
+    return state.entities[entityName].list[id][attribute]
   }
 }
 

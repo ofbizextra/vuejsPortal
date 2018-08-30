@@ -1,5 +1,5 @@
 <template>
-  <div id="vue-text-find">
+  <div id="vue-text-find-field">
     <select class="selectBox" v-if="data.opEquals" v-model="valueOp">
       <option value="equals">egal</option>
       <option value="beginWith">debute</option>
@@ -27,7 +27,7 @@
   import {mapGetters} from 'vuex'
 
   export default {
-    name: "VueTextFind",
+    name: "VueTextFindField",
     props: ['props', 'updateStore'],
     data() {
       return {}

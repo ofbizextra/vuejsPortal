@@ -1,5 +1,5 @@
 <template>
-  <div id="vue-radio">
+  <div id="vue-radio-field">
     <input v-if="data.conditionGroup" type="hidden" :name="data.name + '_grp'" v-bind:value="data.conditionGroup"/>
     <span v-for="item in props.attributes.items">
       <input type="radio"
@@ -19,7 +19,7 @@
   import {mapGetters} from 'vuex'
 
   export default {
-    name: "VueRadio",
+    name: "VueRadioField",
     props: ['props', 'updateStore'],
     data() {
       return {}

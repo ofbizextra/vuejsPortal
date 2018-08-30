@@ -1,22 +1,24 @@
 <template>
-  <div id="vue-text-area">
-    <textarea v-model="value" v-bind="data"></textarea>
+  <div id="vue-hidden-field">
+    <input v-if="data.conditionGroup" type="hidden" :name="data.name + '_grp'" v-bind:value="data.conditionGroup" />
+    <input type="hidden" v-bind="data" v-model="value"/>
   </div>
 </template>
 
 <script>
-  import {mapGetters} from 'vuex'
+  import { mapGetters } from 'vuex'
 
   export default {
-    name: "VueTextArea",
+    name: "VueHiddenField",
     props: ['props', 'updateStore'],
     data() {
-      return {}
+      return {
+      }
     },
     computed: {
       data() {
         let data = this.props.attributes
-        //delete data['value']
+        delete data['value']
         return data
       },
       storeData() {
@@ -54,13 +56,13 @@
     },
     watch: {
       data: function (from, to) {
-        console.log('vue-text-area (watch) : ', this.storeForm)
+        console.log('vue-hidden : ', this.storeForm)
         this.$store.dispatch('data/addDataToExample', this.storeData)
         this.$store.dispatch('form/setFieldToForm', this.storeForm)
       }
     },
     created() {
-      console.log('vue-text-area (created) : ', this.storeForm)
+      console.log('vue-hidden : ', this.storeForm)
       this.$store.dispatch('data/addDataToExample', this.storeData)
       this.$store.dispatch('form/setFieldToForm', this.storeForm)
     }

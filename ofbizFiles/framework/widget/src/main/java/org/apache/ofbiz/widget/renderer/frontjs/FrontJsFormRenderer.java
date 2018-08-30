@@ -127,6 +127,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
             cb.put("formName", formName);
         }
         if (!modelFormField.getParameterName().isEmpty() && !modelFormField.getEntry(context, displayField.getDefaultValue(context)).isEmpty()) {
+        // if (UtilValidate.isEmpty(description)) {
             Map<String, Object> data = new HashMap<>();
             data.put("action", "PUT_RECORD");
             ArrayList<Map<String, Object>> records = new ArrayList<>();
@@ -135,6 +136,9 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
             record.put("value", modelFormField.getEntry(context, displayField.getDefaultValue(context)));
             records.add(record);
             data.put("records", records);
+            Map<String, Object> pointer = output.getRecordPointer(context);
+            pointer.put("field", modelFormField.getParameterName());
+            data.put("recordPointer", pointer);
             cb.put("data", data);
         }
         this.appendTooltip(cb, context, modelFormField);
@@ -159,7 +163,9 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
             ArrayList<Map<String, Object>> records = new ArrayList<>();
             records.add(record);
             data.put("records", records);
-            data.put("storePointer", output.getRecordPointer(context));
+            Map<String, Object> pointer = output.getRecordPointer(context);
+            pointer.put("field", key);
+            data.put("recordPointer", pointer);
             cb.put("data", data);
             cb.put("title", key);
             cb.put("value", value);
@@ -276,6 +282,9 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         record.put("value", value);
         records.add(record);
         data.put("records", records);
+        Map<String, Object> pointer = output.getRecordPointer(context);
+        pointer.put("field", name);
+        data.put("recordPointer", pointer);
         cb.put("data", data);
         this.appendTooltip(cb, context, modelFormField);
         this.addAsterisks(cb, context, modelFormField);
@@ -360,11 +369,14 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         record.put("value", value);
         records.add(record);
         data.put("records", records);
+        Map<String, Object> pointer = output.getRecordPointer(context);
+        pointer.put("field", name);
+        data.put("recordPointer", pointer);
         cb.put("data", data);
         this.appendTooltip(cb, context, modelFormField);
         this.addAsterisks(cb, context, modelFormField);
         HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
-        hashMapStringObject.put("TextareaField", cb);
+        hashMapStringObject.put("TextAreaField", cb);
         this.output.putScreen(hashMapStringObject);
     }
 
@@ -583,6 +595,9 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         record.put("value", value);
         records.add(record);
         data.put("records", records);
+        Map<String, Object> pointer = output.getRecordPointer(context);
+        pointer.put("field", name);
+        data.put("recordPointer", pointer);
         cb.put("data", data);
         this.addAsterisks(cb, context, modelFormField);
         this.appendTooltip(cb, context, modelFormField);
@@ -790,6 +805,11 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         record.put("value", currentValue);
         records.add(record);
         data.put("records", records);
+        Map<String, Object> pointer = output.getRecordPointer(context);
+        if (pointer != null) {
+            pointer.put("field", name);
+            data.put("recordPointer", pointer);
+        }
         cb.put("data", data);
 
         this.appendTooltip(cb, context, modelFormField);
@@ -913,6 +933,11 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         record.put("value", currentValue);
         records.add(record);
         data.put("records", records);
+        Map<String, Object> pointer = output.getRecordPointer(context);
+        if (pointer != null) {
+            pointer.put("field", name);
+            data.put("recordPointer", pointer);
+        }
         cb.put("data", data);
         this.appendTooltip(cb, context, modelFormField);
         HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
@@ -1179,21 +1204,23 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         String defaultEntityName = modelForm.getDefaultEntityName();
         ModelReader entityModelReader = ((Delegator)context.get("delegator")).getModelReader();
         ModelEntity modelEntity = null;
-        try {
-            modelEntity = entityModelReader.getModelEntity(defaultEntityName);
-        } catch (GenericEntityException e) {
-            Debug.logError(e, module);
-        }
-        if (modelEntity == null) {
-            throw new IllegalArgumentException("Error finding Entity with name " + defaultEntityName
-                    + " for defaut-entity-name in a form widget");
-        } else {
-            List<String> pkList = modelEntity.getPkFieldNames();
-            Map<String, Object> data = new HashMap<>();
-            data.put("action", "PUT_ENTITY");
-            data.put("entityName", modelEntity.getEntityName());
-            data.put("primaryKey", pkList);
-            cb.put("data", data);
+        if (UtilValidate.isNotEmpty(defaultEntityName)) {
+            try {
+                modelEntity = entityModelReader.getModelEntity(defaultEntityName);
+            } catch (GenericEntityException e) {
+                Debug.logError(e, module);
+            }
+            if (modelEntity == null) {
+                throw new IllegalArgumentException("Error finding Entity with name " + defaultEntityName
+                        + " for defaut-entity-name in a form widget");
+            } else {
+                List<String> pkList = modelEntity.getPkFieldNames();
+                Map<String, Object> data = new HashMap<>();
+                data.put("action", "PUT_ENTITY");
+                data.put("entityName", modelEntity.getEntityName());
+                data.put("primaryKey", pkList);
+                cb.put("data", data);
+            }
         }
         // End data
 
@@ -1210,19 +1237,21 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         String defaultEntityName = modelForm.getDefaultEntityName();
         ModelReader entityModelReader = ((Delegator)context.get("delegator")).getModelReader();
         ModelEntity modelEntity = null;
-        try {
-            modelEntity = entityModelReader.getModelEntity(defaultEntityName);
-        } catch (GenericEntityException e) {
-            Debug.logError(e, module);
-        }
-        if (modelEntity == null) {
-            throw new IllegalArgumentException("Error finding Entity with name " + defaultEntityName
-                    + " for defaut-entity-name in a form widget");
-        } else {
-            List<String> pkList = modelEntity.getPkFieldNames();
-            Map<String, Object> data = new HashMap<>();
-            data.put("action", "POP_ENTITY");
-            formClose.put("data", data);
+        if (UtilValidate.isNotEmpty(defaultEntityName)) {
+            try {
+                modelEntity = entityModelReader.getModelEntity(defaultEntityName);
+            } catch (GenericEntityException e) {
+                Debug.logError(e, module);
+            }
+            if (modelEntity == null) {
+                throw new IllegalArgumentException("Error finding Entity with name " + defaultEntityName
+                        + " for defaut-entity-name in a form widget");
+            } else {
+                List<String> pkList = modelEntity.getPkFieldNames();
+                Map<String, Object> data = new HashMap<>();
+                data.put("action", "POP_ENTITY");
+                formClose.put("data", data);
+            }
         }
         // End data
 
@@ -1630,6 +1659,11 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         record.put("value", value);
         records.add(record);
         data.put("records", records);
+        Map<String, Object> pointer = output.getRecordPointer(context);
+        if (pointer != null) {
+            pointer.put("field", name);
+            data.put("recordPointer", pointer);
+        }
         cb.put("data", data);
         this.appendTooltip(cb, context, modelFormField);
         HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();

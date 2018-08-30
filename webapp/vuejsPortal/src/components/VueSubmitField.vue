@@ -1,5 +1,5 @@
 <template>
-  <div id="vue-submit">
+  <div id="vue-submit-field">
     <button :value="data.title" v-bind="data" v-on:click.prevent="post">{{data.title}}</button>
   </div>
 </template>
@@ -10,7 +10,7 @@
   import queryString from 'query-string'
 
   export default {
-    name: "VueSubmit",
+    name: "VueSubmitField",
     props: ['props'],
     data() {
       return {}

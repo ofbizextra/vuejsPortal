@@ -1,12 +1,12 @@
 <template>
-  <div id="vue-hyperlink">
+  <div id="vue-hyperlink-title">
     <a href="data.linkUrl" :title="data.title ? data.title : ''">{{data.value ? data.value : ''}}</a>
   </div>
 </template>
 
 <script>
   export default {
-    name: "VueHyperlink",
+    name: "VueHyperlinkTitle",
     props: ['props'],
     computed: {
       data() {

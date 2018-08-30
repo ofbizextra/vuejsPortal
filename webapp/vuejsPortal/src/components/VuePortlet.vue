@@ -43,7 +43,7 @@
     created() {
       this.$store.dispatch('ui/setPortlet', {
         ...this.props,
-        params: {exampleId: 'EX11', exampleId_op: 'contains'}
+        params: {exampleId: 'EX', exampleId_op: 'contains'}
       }).then(success => {
         console.log(success)
         this.portletName = this.props.portalPortletId

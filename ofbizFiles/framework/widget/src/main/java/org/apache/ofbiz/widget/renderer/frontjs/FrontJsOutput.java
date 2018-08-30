@@ -89,14 +89,16 @@ public class FrontJsOutput {
 
     private void newRecord() {
         // currentRecord
-        recordsStack.push(new HashMap<>());
+        if (!entitiesStack.empty()) {
+            recordsStack.push(new HashMap<>());
+        }
     }
 
     private void storeRecord() {
-        if (recordsStack.peek().get(entitiesStack.peek().get("primaryKey")) != null) {
+        if (!recordsStack.empty() && recordsStack.peek().get(entitiesStack.peek().get("primaryKey")) != null) {
             ((Map<String, Object>) entitiesStack.peek().get("list")).put((String) recordsStack.peek().get(entitiesStack.peek().get("primaryKey")), recordsStack.peek());
+            recordsStack.pop();
         }
-        recordsStack.pop();
     }
 
     private void putRecord(ArrayList<Map<String, Object>> records) {
@@ -115,7 +117,7 @@ public class FrontJsOutput {
         if (!this.entitiesStack.empty()) {
             Map<String, Object> data = new HashMap<>();
             String entityName = (String) this.entitiesStack.peek().get("entityName");
-            data.put("entityNoName", entityName);
+            data.put("entity", entityName);
             String primaryKey = ((Map<String, Object>) this.viewEntities.get(entityName)).get("primaryKey").toString();
             data.put("id", context.get(primaryKey));
             return data;
