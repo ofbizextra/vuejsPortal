@@ -80,6 +80,24 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
     private static String encodeDoubleQuotes(String htmlString) {
         return htmlString.replaceAll("\"", "\\\\\"");
     }
+    
+    private List<String> getPkList(String entityName, ModelReader entityModelReader ) {
+        ModelEntity modelEntity = null;
+        if (UtilValidate.isNotEmpty(entityName)) {
+            try {
+                modelEntity = entityModelReader.getModelEntity(entityName);
+            } catch (GenericEntityException e) {
+                Debug.logError(e, module);
+            }
+            if (modelEntity == null) {
+                throw new IllegalArgumentException("Error finding Entity with name " + entityName
+                        + " for defaut-entity-name in a form widget");
+            } else {
+                return modelEntity.getPkFieldNames();
+            }
+        }
+		return null;
+    }
 
     public void renderLabel(Map<String, Object> context, ModelScreenWidget.Label label) {
         String labelText = label.getText(context);
@@ -87,12 +105,11 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
             // nothing to render
             return;
         }
-        Map<String, Object> cb = new HashMap<>();
+        Map<String, Object> attributes = new HashMap<>();
 
-        cb.put("text", labelText);
-        HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
-        hashMapStringObject.put("Label", cb);
-        this.output.putScreen(hashMapStringObject);
+        attributes.put("text", labelText);
+
+        this.output.putScreen("Label",attributes);
     }
 
     public void renderDisplayField(Appendable writer, Map<String, Object> context, DisplayField displayField) {
@@ -101,50 +118,44 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         String description = displayField.getDescription(context);
         String type = displayField.getType();
         String imageLocation = displayField.getImageLocation(context);
-        Integer size = Integer.valueOf("0");
         String title = "";
-        String formName = displayField.getModelFormField().getModelForm().getName();
+        // manage by frontJs, so now size attribute is sent
+        /*
+        Integer size = Integer.valueOf("0");
         if (UtilValidate.isNotEmpty(displayField.getSize())) {
-            try {
-                size = Integer.parseInt(displayField.getSize());
-            } catch (NumberFormatException nfe) {
-                Debug.logError(nfe, "Error reading size of a field fieldName=" + displayField.getModelFormField().getFieldName() + " FormName= " + displayField.getModelFormField().getModelForm().getName(), module);
-            }
+        	try {
+        		size = Integer.parseInt(displayField.getSize());
+        	} catch (NumberFormatException nfe) {
+        		Debug.logError(nfe, "Error reading size of a field fieldName=" + displayField.getModelFormField().getFieldName() + " FormName= " + displayField.getModelFormField().getModelForm().getName(), module);
+        	}
         }
         if (UtilValidate.isNotEmpty(description) && size > 0 && description.length() > size) {
             title = description;
             description = description.substring(0, size - 8) + "..." + description.substring(description.length() - 5);
         }
-        Map<String, Object> cb = new HashMap<>();
-        cb.put("type", type);
-        cb.put("imageLocation", imageLocation);
-        cb.put("idName", idName);
-        cb.put("description", encodeDoubleQuotes(description));
-        cb.put("title", title);
-        cb.put("class", modelFormField.getWidgetStyle());
-        cb.put("alert", modelFormField.shouldBeRed(context) ? "true" : "false");
-        if (this.frontJs) {
-            cb.put("formName", formName);
+        */
+        String size = displayField.getSize();
+
+        Map<String, Object> attributes = new HashMap<>();
+        attributes.put("formName", displayField.getModelFormField().getModelForm().getName());
+        attributes.put("description", encodeDoubleQuotes(description));
+
+        if (UtilValidate.isNotEmpty(type)) attributes.put("type", type);
+        if (UtilValidate.isNotEmpty(size)) attributes.put("size", size);
+        if (UtilValidate.isNotEmpty(imageLocation)) attributes.put("imageLocation", imageLocation);
+        if (UtilValidate.isNotEmpty(idName)) attributes.put("idName", idName);
+        if (UtilValidate.isNotEmpty(title)) attributes.put("title", title);
+        if (UtilValidate.isNotEmpty(modelFormField.getWidgetStyle())) attributes.put("class", modelFormField.getWidgetStyle());
+        if (UtilValidate.isNotEmpty(modelFormField.shouldBeRed(context))) attributes.put("alert", "true");
+        this.appendTooltip(attributes, context, modelFormField);
+
+        // putRecord only if attribute "description" not exist for the <display tag
+        if (UtilValidate.isEmpty(displayField.getDescription())) {
+        	//                                                fieldName                 value
+        	this.output.putScreen("DisplayField", attributes, modelFormField.getName(), encodeDoubleQuotes(description));
+        } else {
+        	this.output.putScreen("DisplayField", attributes);
         }
-        if (!modelFormField.getParameterName().isEmpty() && !modelFormField.getEntry(context, displayField.getDefaultValue(context)).isEmpty()) {
-        // if (UtilValidate.isEmpty(description)) {
-            Map<String, Object> data = new HashMap<>();
-            data.put("action", "PUT_RECORD");
-            ArrayList<Map<String, Object>> records = new ArrayList<>();
-            Map<String, Object> record = new HashMap<>();
-            record.put("key", modelFormField.getParameterName());
-            record.put("value", modelFormField.getEntry(context, displayField.getDefaultValue(context)));
-            records.add(record);
-            data.put("records", records);
-            Map<String, Object> pointer = output.getRecordPointer(context);
-            pointer.put("field", modelFormField.getParameterName());
-            data.put("recordPointer", pointer);
-            cb.put("data", data);
-        }
-        this.appendTooltip(cb, context, modelFormField);
-        HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
-        hashMapStringObject.put("DisplayField", cb);
-        this.output.putScreen(hashMapStringObject);
     }
 
     public void renderHyperlinkField(Appendable writer, Map<String, Object> context, HyperlinkField hyperlinkField) {
@@ -1202,25 +1213,12 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
 
         // Begin data
         String defaultEntityName = modelForm.getDefaultEntityName();
-        ModelReader entityModelReader = ((Delegator)context.get("delegator")).getModelReader();
-        ModelEntity modelEntity = null;
         if (UtilValidate.isNotEmpty(defaultEntityName)) {
-            try {
-                modelEntity = entityModelReader.getModelEntity(defaultEntityName);
-            } catch (GenericEntityException e) {
-                Debug.logError(e, module);
-            }
-            if (modelEntity == null) {
-                throw new IllegalArgumentException("Error finding Entity with name " + defaultEntityName
-                        + " for defaut-entity-name in a form widget");
-            } else {
-                List<String> pkList = modelEntity.getPkFieldNames();
-                Map<String, Object> data = new HashMap<>();
-                data.put("action", "PUT_ENTITY");
-                data.put("entityName", modelEntity.getEntityName());
-                data.put("primaryKey", pkList);
-                cb.put("data", data);
-            }
+            Map<String, Object> data = new HashMap<>();
+            data.put("action", "PUT_ENTITY");
+            data.put("entityName", defaultEntityName);
+            data.put("primaryKeys", getPkList(defaultEntityName, ((Delegator)context.get("delegator")).getModelReader()));
+            cb.put("data", data);
         }
         // End data
 
@@ -1319,24 +1317,14 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
 
         // Begin data
         String defaultEntityName = modelForm.getDefaultEntityName();
-        ModelReader entityModelReader = ((Delegator)context.get("delegator")).getModelReader();
-        ModelEntity modelEntity = null;
-        try {
-            modelEntity = entityModelReader.getModelEntity(defaultEntityName);
-        } catch (GenericEntityException e) {
-            Debug.logError(e, module);
+        if (UtilValidate.isNotEmpty(defaultEntityName)) {
+        	Map<String, Object> data = new HashMap<>();
+        	data.put("action", "PUT_ENTITY");
+        	data.put("entityName", defaultEntityName);
+        	data.put("primaryKeys", getPkList(defaultEntityName, ((Delegator)context.get("delegator")).getModelReader()));
+        	cb.put("data", data);
         }
-        if (modelEntity == null) {
-            throw new IllegalArgumentException("Error finding Entity with name " + defaultEntityName
-                    + " for defaut-entity-name in a form widget");
-        } else {
-            List<String> pkList = modelEntity.getPkFieldNames();
-            Map<String, Object> data = new HashMap<>();
-            data.put("action", "PUT_ENTITY");
-            data.put("entityName", modelEntity.getEntityName());
-            data.put("primaryKey", pkList);
-            cb.put("data", data);
-        }
+        //TODO ajouter soit un Alert concernant le fait que la list n'est pas lié au store
         // End data
 
         HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
@@ -1445,18 +1433,14 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
                 oddRowStyle = FlexibleStringExpander.expandString(modelForm.getOddRowStyle(), context);
             }
         }
-        Map<String, Object> cb = new HashMap<>();
-        cb.put("formName", modelForm.getName());
-        cb.put("itemIndex", String.valueOf(itemIndex));
-        cb.put("altRowStyles", altRowStyles);
-        cb.put("evenRowStyle", evenRowStyle);
-        cb.put("oddRowStyle", oddRowStyle);
-        Map<String, Object> data = new HashMap<>();
-        data.put("action", "NEW_RECORD");
-        cb.put("data", data);
-        HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
-        hashMapStringObject.put("ItemRowOpen", cb);
-        this.output.pushScreen(hashMapStringObject);
+        Map<String, Object> attributes = new HashMap<>();
+        attributes.put("formName", modelForm.getName());
+        attributes.put("itemIndex", String.valueOf(itemIndex));
+        if (UtilValidate.isNotEmpty(altRowStyles)) attributes.put("altRowStyles", altRowStyles);
+        if (UtilValidate.isNotEmpty(evenRowStyle)) attributes.put("evenRowStyle", evenRowStyle);
+        if (UtilValidate.isNotEmpty(oddRowStyle))  attributes.put("oddRowStyle", oddRowStyle);
+        //                                             //newRecord
+        this.output.pushScreen("ItemRowOpen", attributes, true, context);
     }
 
     public void renderFormatItemRowClose(Appendable writer, Map<String, Object> context, ModelForm modelForm) {
@@ -2634,13 +2618,21 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         return targetParams;
     }
 
-    public void appendTooltip(Map<String, Object> element, Map<String, Object> context, ModelFormField modelFormField) {
+    /**
+     * If tooltip attribute exist add it with it's own attributes
+     * @param attributes
+     * @param context
+     * @param modelFormField
+     */
+    public void appendTooltip(Map<String, Object> attributes, Map<String, Object> context, ModelFormField modelFormField) {
         // render the tooltip, in other methods too
         String tooltip = modelFormField.getTooltip(context);
-        Map<String, Object> cb = new HashMap<>();
-        cb.put("tooltip", encodeDoubleQuotes(tooltip));
-        cb.put("tooltipStyle", modelFormField.getTooltipStyle());
-        element.put("tooltip", cb);
+        if (UtilValidate.isNotEmpty(tooltip)) {
+        	Map<String, Object> tooltipAttr = new HashMap<>();
+        	tooltipAttr.put("tooltip", encodeDoubleQuotes(tooltip));
+        	tooltipAttr.put("tooltipStyle", modelFormField.getTooltipStyle());
+        	attributes.put("tooltip", tooltipAttr);
+        }
     }
 
     public void makeHyperlinkString(Map<String, Object> element, SubHyperlink subHyperlink, Map<String, Object> context) {

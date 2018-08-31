@@ -1,16 +1,42 @@
 package org.apache.ofbiz.widget.renderer.frontjs;
 
-import org.omg.CORBA.OBJ_ADAPTER;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Stack;
 
-import java.util.*;
+import org.apache.ofbiz.base.util.UtilGenerics;
+import org.apache.ofbiz.base.util.UtilMisc;
 
 public class FrontJsOutput {
-    Map<String, Object> output = new HashMap<>();
-    private ArrayList<Map<String, Object>> viewScreen;
+    public static final String module = FrontJsOutput.class.getName();
+
+	
+	Map<String, Object> output = new HashMap<>();
+    private List<Map<String, Object>> viewScreen;
     private Map<String, Object> viewEntities = new HashMap<>();
-    private Stack<ArrayList<Map<String, Object>>> screensStack;
+    
+    // stack of screen, a screen is a list of element (see list of renderer method, each one is a element)
+    private Stack<List<Map<String, Object>>> screensStack;
+
+    // stack of entity which is currently used for store records
+    // contain 3 field
+    // - "primaryKeys"  list of fieldName which are pk in entityName. Used to build pkValue for storePointer
+    // - "list" list of records
+    // - "entityName"
     private Stack<Map<String, Object>> entitiesStack;
+
+    // use to build record, a map with content of fields (fieldName : value) for a row or a single form
+    //   similar as a GenericValue but with fields define in the form
+    // it's a stack because in a field I can have a sub-list about an other entities
     private Stack<Map<String, Object>> recordsStack;
+
+    // current unique identifier for the current record 
+    // contain 2 fields
+    // - "entityName"
+    // - "id"
+    private Map<String, String> storePointer;
 
     FrontJsOutput(String name) {
         viewScreen = new ArrayList<>();
@@ -30,8 +56,28 @@ public class FrontJsOutput {
         temp.put("name", name);
         screen = temp;
         screensStack.peek().add(screen);
-        if (screen.containsKey("attributes") && ((Map<String, Object>) screen.get("attributes")).containsKey("data") && ((Map<String, Object>) ((Map<String, Object>) screen.get("attributes")).get("data")).containsKey("action") && ((Map<String, Object>) ((Map<String, Object>) screen.get("attributes")).get("data")).get("action").equals("PUT_RECORD")) {
+        if (screen.containsKey("attributes") && 
+           ((Map<String, Object>) screen.get("attributes")).containsKey("data") && 
+           ((Map<String, Object>) ((Map<String, Object>) screen.get("attributes")).get("data")).containsKey("action") && 
+           ((Map<String, Object>) ((Map<String, Object>) screen.get("attributes")).get("data")).get("action").equals("PUT_RECORD")) {
             this.putRecord((ArrayList<Map<String, Object>>) ((Map<String, Object>) ((Map<String, Object>) screen.get("attributes")).get("data")).get("records"));
+        }
+    }
+    void putScreen(String name, Map<String, Object> attributes) {
+    	putScreen(name, attributes, null, null);
+    }
+    void putScreen(String name, Map<String, Object> attributes, String fieldName, String value) {
+        Map<String, Object> screen = new HashMap<>();
+        screen.put("attributes", attributes);
+        screen.put("name", name);
+        screensStack.peek().add(screen);
+        if (fieldName != null) {
+        	Map<String, String> stPointer = new HashMap<>(); 
+            stPointer.putAll(this.storePointer);
+            stPointer.put("field", fieldName);
+            screen.put("stPointer", stPointer);
+            screen.put("dataDebug", UtilMisc.toMap("action","PUT_RECORD", "key",fieldName, "value",value));
+        	this.putRecord(fieldName, value);
         }
     }
 
@@ -54,6 +100,20 @@ public class FrontJsOutput {
             }
         }
     }
+    void pushScreen(String name, Map<String, Object> attributes, boolean newRecord, Map<String, Object> context) {
+        Map<String, Object> screen = new HashMap<>();
+        screen.put("name", name.replace("Open", ""));
+        screen.put("attributes", attributes);
+
+        List<Map<String, Object>> children = new ArrayList<Map<String, Object>>(); 
+        screen.put("children", children);
+        screensStack.peek().add(screen);
+        screensStack.push( children);
+        if (newRecord) {
+        	this.newRecord(context);
+        	screen.put("dataDebug", UtilMisc.toMap("action","NEW_RECORD"));
+        }
+    }
 
     void popScreen(Map<String, Object> screen) {
         screensStack.pop();
@@ -68,17 +128,17 @@ public class FrontJsOutput {
         }
     }
 
-    private void putEntity(String entityName, List<String> primaryKey) {
-        // ou modelReader et utiliser la fonction de olivier dans riot
+
+	private void putEntity(String entityName, List<String> primaryKeys) {
         Map<String, Object> entity;
         if (!viewEntities.containsKey(entityName)) {
             entity = new HashMap<>();
-            entity.put("primaryKey", String.join("--", primaryKey));
+            entity.put("primaryKeys", primaryKeys);
             entity.put("list", new HashMap<>());
             entity.put("entityName", entityName);
             viewEntities.put(entityName, entity);
         } else {
-            entity = (Map<String, Object>) viewEntities.get(entityName);
+            entity = UtilGenerics.checkMap(viewEntities.get(entityName));
         }
         entitiesStack.push(entity);
     }
@@ -93,17 +153,43 @@ public class FrontJsOutput {
             recordsStack.push(new HashMap<>());
         }
     }
+    private void newRecord(Map<String, Object> context) {
+        // currentRecord
+        if (!entitiesStack.empty()) {
+            recordsStack.push(new HashMap<>());
+            // build storePointer
+            this.storePointer = new HashMap<>();
+            String entityName = (String) this.entitiesStack.peek().get("entityName");
+            this.storePointer.put("entity", entityName);
+
+            List<String> pkList = UtilGenerics.checkList(this.entitiesStack.peek().get("primaryKeys"));
+            int i = 0;
+            String pkey = "";
+            do {
+            	pkey += context.get(pkList.get(i));
+				i++;
+			} while (i < pkList.size());
+            this.storePointer.put("id", pkey);
+        }
+    }
 
     private void storeRecord() {
-        if (!recordsStack.empty() && recordsStack.peek().get(entitiesStack.peek().get("primaryKey")) != null) {
+        if (!recordsStack.empty() && 
+             recordsStack.peek().get(entitiesStack.peek().get("primaryKey")) != null) {
             ((Map<String, Object>) entitiesStack.peek().get("list")).put((String) recordsStack.peek().get(entitiesStack.peek().get("primaryKey")), recordsStack.peek());
             recordsStack.pop();
         }
     }
 
-    private void putRecord(ArrayList<Map<String, Object>> records) {
-        for (Map<String, Object> record : records) {
-            if (!recordsStack.empty()) {
+    private void putRecord(String fieldName, String value) {
+        if (!recordsStack.empty()) {
+            recordsStack.peek().put(fieldName, value);
+            //recordsStack.peek().put(record.get("key"), record.get("value"));
+        }
+    }
+    private void putRecord(List<Map<String, Object>> records) {
+    	if (!recordsStack.empty()) {
+    		for (Map<String, Object> record : records) {
                 recordsStack.peek().put((String) record.get("key"), record.get("value"));
             }
         }
@@ -112,6 +198,10 @@ public class FrontJsOutput {
     public Map<String, Object> output() {
         return this.output;
     }
+
+//    public Map<String, String> getRecordPointer() {
+//    	return this.storePointer;
+//    }
 
     public Map<String, Object> getRecordPointer(Map<String, Object> context) {
         if (!this.entitiesStack.empty()) {
