@@ -9,7 +9,8 @@ Vue.use(Vuex)
 const state = {
   currentPortalPage: '',
   portalPages: {},
-  portlets: {}
+  portlets: {},
+  portletCpt: 0
 }
 
 const mutations = {
@@ -17,7 +18,6 @@ const mutations = {
     state.currentPortalPage = portalPageId
   },
   SET_PORTAL_PAGE: (state, {portalPageId, portalPage}) => {
-    console.log(portalPageId + ' : ' + portalPage)
     state.portalPages[portalPageId] = portalPage
   },
   REMOVE_PORTAL_PAGE: (state, id) => {
@@ -31,6 +31,7 @@ const mutations = {
   },
   SET_PORTLET: (state, {portletId, data}) => {
     state.portlets[portletId] = data
+    state.portletCpt++
   }
 }
 
@@ -40,13 +41,15 @@ const getters = {
   portalPage: state => (id) => { return state.portalPages[id] },
   portalPages: state => state.portalPages,
   column: state => ({portalPageId, columnSeqId}) => { return state.portalPages[portalPageId].listColumnPortlet.find(col => col.columnSeqId === columnSeqId)},
-  portlet: state => (id) => { return state.portlets[id] },
+  portlet(state) {
+    let temp = state.portletCpt
+    return (id) => { return state.portlets[id] }
+  },
   portlets: state => state.portlets
 }
 
 const actions = {
   setPortalPage({commit}, {portalPageId, portalPage}) {
-    console.log(portalPageId + ' : ' + portalPage)
     commit('SET_PORTAL_PAGE', {portalPageId, portalPage})
     commit('SET_CURRENT_PORTAL_PAGE', portalPageId)
   },
@@ -60,7 +63,6 @@ const actions = {
           }),
           {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}
         ).then(response => {
-          console.log(response)
           commit('SET_PORTLET', {portletId: portalPortletId + '-' + portletSeqId, data: response.body})
           resolve()
         }, error => {

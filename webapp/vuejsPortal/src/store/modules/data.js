@@ -1,5 +1,6 @@
 import Vuex from 'vuex'
 import Vue from 'vue'
+import {enhancedGetters} from 'vuex-strong-cache'
 import queryString from 'query-string'
 import constantes from './../../js/constantes'
 
@@ -8,7 +9,12 @@ Vue.use(Vuex)
 const state = {
   example: {},
   currentId: '',
-  entities: {}
+  cpt: 0,
+  entities: {},
+  isUpdating: false,
+  watchers: {},
+  watchersCpt: 0
+
 }
 
 const mutations = {
@@ -28,9 +34,29 @@ const mutations = {
     }
   },
   SET_ENTITY_ROW: (state, data) => {
+    if (state.entities[data.entityName] === undefined) {
+      return 'Entities doesn\'t exist'
+    }
+    if (!state.entities[data.entityName].list[data.primaryKey]) {
+      state.entities[data.entityName].list[data.primaryKey] = {};
+    }
     Object.keys(data.data).forEach(key => {
-      state.entities[data.entityName].list[data.primaryKey][key] = data.data.get(key)
+      state.entities[data.entityName].list[data.primaryKey][key] = data.data[key]
     })
+    if (!state.isUpdating) {
+      state.cpt++;
+    }
+  },
+  START_UPDATE: (state) => {
+    state.isUpdating = true
+  },
+  STOP_UPDATE: (state) => {
+    state.isUpdating = false
+    state.cpt++
+  },
+  SET_WATCHER: (state, {watcherName, params}) => {
+    state.watchers[watcherName] = params
+    state.watchersCpt++
   }
 }
 
@@ -45,8 +71,21 @@ const getters = {
   entityRow: state => ({entityName, id}) => {
     return state.entities[entityName].list.find(row => row[state.entities[entityName]].primaryKey === id)
   },
-  entityRowAttribute: state => ({entityName, id, attribute}) => {
-    return state.entities[entityName].list[id][attribute]
+  entityRowAttribute(state) {
+    let temp = state.cpt
+    return function ({entityName, id, attribute}) {
+      if (state.entities[entityName] && state.entities[entityName].list[id] && state.entities[entityName].list[id][attribute]) {
+        return state.entities[entityName].list[id][attribute];
+      } else {
+        return ""
+      }
+    }
+  },
+  watcher(state) {
+    let temp = state.watchersCpt
+    return function (watcherName) {
+      return state.watchers[watcherName]
+    }
   }
 }
 
@@ -64,14 +103,21 @@ const actions = {
     commit('SET_CURRENT_ID', id)
   },
   setEntity({commit}, data) {
-    console.log('setEntity : ' + data)
     if (!state.entities[data.entityName]) {
-      commit('SET_ENTITY', data)
+      commit('SET_ENTITY', data);
     }
   },
   setEntityRow({commit}, data) {
-    console.log('setEntityRow : ' + data)
     commit('SET_ENTITY_ROW', data)
+  },
+  startUpdate({commit}) {
+    commit('START_UPDATE')
+  },
+  stopUpdate({commit}) {
+    commit('STOP_UPDATE')
+  },
+  setWatcher({commit}, data) {
+    commit('SET_WATCHER', data)
   }
 }
 

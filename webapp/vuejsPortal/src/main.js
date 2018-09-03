@@ -123,6 +123,15 @@ Vue.mixin({
           return data
         }
       }
+    },
+    getNestedObject(nestedObject, pathArray) {
+      return pathArray.reduce((obj, key) =>
+        (obj && obj[key] !== 'undefined') ? obj[key] : undefined, nestedObject)
+    },
+    async asyncForEach(array, callback) {
+      for (let index = 0; index < array.length; index++) {
+        await callback(array[index], index, array)
+      }
     }
   }
 })

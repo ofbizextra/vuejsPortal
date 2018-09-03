@@ -1,6 +1,7 @@
+// todo compare size and description.size and tronque
 <template>
   <div id="vue-display-field">
-    <label v-if="pointer" v-bind="data">{{getPointer}}</label>
+    <label v-if="pointer.entityName !== ''" v-bind="data">{{getPointer}}</label>
     <label v-else v-bind="data">{{data.title ? data.title : data.description}}</label>
   </div>
 </template>
@@ -11,21 +12,22 @@
   export default {
     name: "VueDisplayField",
     data() {
-      return {}
+      return {
+        pointer: {
+          entityName: this.getNestedObject(this.props, ['attributes', 'data', 'recordPointer', 'entity']),
+          id: this.getNestedObject(this.props, ['attributes', 'data', 'recordPointer', 'id']),
+          attribute: this.getNestedObject(this.props, ['attributes', 'data', 'recordPointer', 'field'])
+        }
+      }
     },
     computed: {
       data() {
         return {
           ...this.props.attributes,
-          pointer: {
-            entityName: null,
-            id: null,
-            attribute: null
-          }
         }
       },
       getPointer() {
-        return this.getData(this.data.pointer)
+        return this.getData(this.pointer);
       },
       ...mapGetters({
         getData: 'data/entityRowAttribute'
@@ -35,11 +37,11 @@
       'props'
     ],
     created() {
-      if (this.data.data && this.data.data.recordPointer) {
-        this.data.pointer.entityName = this.data.data.recordPointer.entity
-        this.data.pointer.id = this.data.data.recordPointer.id
-        this.data.pointer.attribute = this.data.data.recordPointer.field
-      }
+      // this.pointer = {
+      //   entityName: this.getNestedObject(this.props, ['attributes', 'data', 'recordPointer', 'entity']),
+      //   id: this.getNestedObject(this.props, ['attributes', 'data', 'recordPointer', 'id']),
+      //   attribute: this.getNestedObject(this.props, ['attributes', 'data', 'recordPointer', 'field']),
+      // }
     }
   }
 </script>

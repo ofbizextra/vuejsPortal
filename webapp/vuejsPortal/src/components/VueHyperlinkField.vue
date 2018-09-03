@@ -1,6 +1,6 @@
 <template>
   <div id="vue-hyperlink-field">
-    <a href="data.linkUrl" :title="data.title ? data.title : ''">{{data.value ? data.value : ''}}</a>
+    <a href="data.linkUrl" :title="data.title ? data.title : ''" v-on:click.prevent.stop="submit">{{data.value ? data.value : ''}}</a>
   </div>
 </template>
 
@@ -24,8 +24,12 @@
         }
       }
     },
+    methods: {
+      submit() {
+        this.$store.dispatch('data/setWatcher', {watcherName: 'watchEditExample', params: {exampleId: this.data.value}})
+      }
+    },
     mounted() {
-      console.log(this.data)
     }
   }
 </script>
