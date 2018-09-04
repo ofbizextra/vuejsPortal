@@ -24,3 +24,6 @@ dans la première 2 portlets, le findExample puis le editExample et le listExamp
 Actuellement, suite au login, les 3 uri findExampleLayer, ListExampleLayer et EditExampleLayer sont appelé puis
 affiché.
 
+image::PortalPageDetail-Example.svg[Imbrication des container]
+
+

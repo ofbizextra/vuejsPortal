@@ -39,6 +39,7 @@ que par une société.
   L'ensemble des fichiers ou modification de fichier se trouve dans le répertoire ofbizfile du plugin vuejsPortal.
 .. copie du répertoire docs/asciidoc/images/example_fr dans ofbiz-framework
 .. copie du fichier docs/asciidoc/images/PortalUml.png dans ofbiz-framework
+.. copie du fichier docs/asciidoc/images/PortalPageDetail-Example.svg dans ofbiz-framework
 .. copie du fichier docs/asciidoc/developer-manual_fr.adoc dans ofbiz-framework
 .. ajout du champ watcherName dans la définition de la table PortalPagePortlet: +
   Dans le fichier framework/common/entitydef/entitymodel.xml à la ligne 824 vous avez la définition de la table
