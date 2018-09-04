@@ -40,6 +40,11 @@ que par une société.
 .. copie du répertoire docs/asciidoc/images/example_fr dans ofbiz-framework
 .. copie du fichier docs/asciidoc/images/PortalUml.png dans ofbiz-framework
 .. copie du fichier docs/asciidoc/developer-manual_fr.adoc dans ofbiz-framework
+.. ajout du champ watcherName dans la définition de la table PortalPagePortlet: +
+  Dans le fichier framework/common/entitydef/entitymodel.xml à la ligne 824 vous avez la définition de la table
+  "PortalPagePortlet" et il faut ajouter le champ watcherName en dernier champ. +
+  Pour vous aider vous pouvez lire ou appliquer le patch entitymodel.xml.patch qui se trouve dans le répertoire ofbizfile du plugin vuejsPortal 
+  dans framework/common/entitydef/
 .. copie du répertoire framework/widget/src/main/java/org/apache/ofbiz/widget/renderer/frontjs dans ofbiz-framework
 .. copie du fichier framework/widget/src/main/java/org/apache/ofbiz/widget/renderer/macro/MacroFormRenderer.java en remplacement de celui de OFBiz
 . Pour le build de l'applicatif vuejs il faut avoir nodejs installé sur son environement

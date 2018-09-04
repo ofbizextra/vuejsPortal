@@ -1,0 +1,14 @@
+@@ -824,12 +824,13 @@
+     <entity entity-name="PortalPagePortlet" package-name="org.apache.ofbiz.common.portal" title="Defines Portlets included into Portal Pages">
+         <field name="portalPageId" type="id"></field>
+         <field name="portalPortletId" type="id"></field>
+         <field name="portletSeqId" type="id"><description>Identify the portalPortlet instance in case more copy of the same portalPortlet are present in the same portalPage</description></field>
+         <field name="columnSeqId" type="id"></field>
+         <field name="sequenceNum" type="numeric"></field>
++        <field name="watcherName" type="value"></field>
+         <prim-key field="portalPageId"/>
+         <prim-key field="portalPortletId"/>
+         <prim-key field="portletSeqId"/>
+         <relation type="one" fk-name="PRTL_PGPTLT_PAGE" rel-entity-name="PortalPage">
+             <key-map field-name="portalPageId"/>
+         </relation>
