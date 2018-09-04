@@ -90,11 +90,11 @@
               entityName: key,
               primaryKey: this.portlet.viewEntities[key].primaryKey
             })
-            Object.keys(this.portlet.viewEntities[key].list).forEach((recordPk) => {
+            this.portlet.viewEntities[key].list.forEach((record) => {
               let data = {
                 entityName: key,
-                primaryKey: recordPk,
-                data: this.portlet.viewEntities[key].list[recordPk]
+                primaryKey: record.stId,
+                data: record
               }
               this.$store.dispatch('data/setEntityRow', data).then(response => {
                 return response
@@ -128,11 +128,11 @@
                 entityName: key,
                 primaryKey: this.portlet.viewEntities[key].primaryKey
               })
-              Object.keys(this.portlet.viewEntities[key].list).forEach((recordPk) => {
+              this.portlet.viewEntities[key].list.forEach((record) => {
                 let data = {
                   entityName: key,
-                  primaryKey: recordPk,
-                  data: this.portlet.viewEntities[key].list[recordPk]
+                  primaryKey: record.stId,
+                  data: record
                 }
                 this.$store.dispatch('data/setEntityRow', data).then(response => {
                   return response

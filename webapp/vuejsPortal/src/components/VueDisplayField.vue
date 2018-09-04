@@ -14,9 +14,9 @@
     data() {
       return {
         pointer: {
-          entityName: this.getNestedObject(this.props, ['attributes', 'data', 'recordPointer', 'entity']),
-          id: this.getNestedObject(this.props, ['attributes', 'data', 'recordPointer', 'id']),
-          attribute: this.getNestedObject(this.props, ['attributes', 'data', 'recordPointer', 'field'])
+          entityName: this.getNestedObject(this.props, ['stPointer', 'stEntityName']),
+          id: this.getNestedObject(this.props, ['stPointer', 'id']),
+          attribute: this.getNestedObject(this.props, ['stPointer', 'field'])
         }
       }
     },
@@ -42,6 +42,15 @@
       //   id: this.getNestedObject(this.props, ['attributes', 'data', 'recordPointer', 'id']),
       //   attribute: this.getNestedObject(this.props, ['attributes', 'data', 'recordPointer', 'field']),
       // }
+    },
+    watch: {
+      props: function () {
+        this.pointer = {
+          entityName: this.getNestedObject(this.props, ['stPointer', 'stEntityName']),
+          id: this.getNestedObject(this.props, ['stPointer', 'id']),
+          attribute: this.getNestedObject(this.props, ['stPointer', 'field'])
+        }
+      }
     }
   }
 </script>

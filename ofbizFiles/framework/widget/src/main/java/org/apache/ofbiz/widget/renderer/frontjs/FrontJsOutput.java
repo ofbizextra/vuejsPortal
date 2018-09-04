@@ -36,7 +36,7 @@ public class FrontJsOutput {
     // contain 2 fields
     // - "entityName"
     // - "id"
-    private Map<String, String> storePointer;
+    //    private Map<String, String> storePointer;
 
     FrontJsOutput(String name) {
         viewScreen = new ArrayList<>();
@@ -71,13 +71,14 @@ public class FrontJsOutput {
         screen.put("attributes", attributes);
         screen.put("name", name);
         screensStack.peek().add(screen);
-        if (fieldName != null) {
-        	Map<String, String> stPointer = new HashMap<>(); 
-            stPointer.putAll(this.storePointer);
+        if (fieldName != null && !recordsStack.empty()) {
+            Map<String, String> stPointer = new HashMap<>();
+            stPointer.put("stEntityName", (String) this.entitiesStack.peek().get("entityName").toString());
+            stPointer.put("id", recordsStack.peek().get("stId").toString());
             stPointer.put("field", fieldName);
             screen.put("stPointer", stPointer);
             screen.put("dataDebug", UtilMisc.toMap("action","PUT_RECORD", "key",fieldName, "value",value));
-        	this.putRecord(fieldName, value);
+            this.putRecord(fieldName, value);
         }
     }
 
@@ -96,7 +97,7 @@ public class FrontJsOutput {
             }
             if (((Map<String, Object>) ((Map<String, Object>) screen.get("attributes")).get("data")).get("action").equals("PUT_ENTITY")) {
                 Map<String, Object> data = (Map<String, Object>) ((Map<String, Object>) screen.get("attributes")).get("data");
-                this.putEntity((String) data.get("entityName"), (List<String>) data.get("primaryKey"));
+                this.putEntity((String) data.get("entityName"), (List<String>) data.get("primaryKeys"));
             }
         }
     }
@@ -134,7 +135,7 @@ public class FrontJsOutput {
         if (!viewEntities.containsKey(entityName)) {
             entity = new HashMap<>();
             entity.put("primaryKeys", primaryKeys);
-            entity.put("list", new HashMap<>());
+            entity.put("list", new ArrayList<Map<String, Object>>());
             entity.put("entityName", entityName);
             viewEntities.put(entityName, entity);
         } else {
@@ -156,27 +157,23 @@ public class FrontJsOutput {
     private void newRecord(Map<String, Object> context) {
         // currentRecord
         if (!entitiesStack.empty()) {
-            recordsStack.push(new HashMap<>());
-            // build storePointer
-            this.storePointer = new HashMap<>();
-            String entityName = (String) this.entitiesStack.peek().get("entityName");
-            this.storePointer.put("entity", entityName);
-
+            Map<String, Object> record = new HashMap<>();
+            // build stPointerId
             List<String> pkList = UtilGenerics.checkList(this.entitiesStack.peek().get("primaryKeys"));
             int i = 0;
             String pkey = "";
             do {
-            	pkey += context.get(pkList.get(i));
-				i++;
-			} while (i < pkList.size());
-            this.storePointer.put("id", pkey);
+                pkey += context.get(pkList.get(i));
+                i++;
+            } while (i < pkList.size());
+            record.put("stId", pkey);
+            recordsStack.push(record);
+            ((List<Map<String, Object>>) entitiesStack.peek().get("list")).add(record);
         }
     }
 
     private void storeRecord() {
-        if (!recordsStack.empty() && 
-             recordsStack.peek().get(entitiesStack.peek().get("primaryKey")) != null) {
-            ((Map<String, Object>) entitiesStack.peek().get("list")).put((String) recordsStack.peek().get(entitiesStack.peek().get("primaryKey")), recordsStack.peek());
+        if (!recordsStack.empty()) {
             recordsStack.pop();
         }
     }
@@ -208,7 +205,7 @@ public class FrontJsOutput {
             Map<String, Object> data = new HashMap<>();
             String entityName = (String) this.entitiesStack.peek().get("entityName");
             data.put("entity", entityName);
-            String primaryKey = ((Map<String, Object>) this.viewEntities.get(entityName)).get("primaryKey").toString();
+            String primaryKey = ((Map<String, Object>) this.viewEntities.get(entityName)).get("primaryKeys").toString();
             data.put("id", context.get(primaryKey));
             return data;
         } else {

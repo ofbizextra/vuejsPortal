@@ -150,7 +150,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         this.appendTooltip(attributes, context, modelFormField);
 
         // putRecord only if attribute "description" not exist for the <display tag
-        if (UtilValidate.isEmpty(displayField.getDescription())) {
+        if (UtilValidate.isEmpty(displayField.getDescription()) || "${description}".equals(displayField.getDescription().toString())) {
         	//                                                fieldName                 value
         	this.output.putScreen("DisplayField", attributes, modelFormField.getName(), encodeDoubleQuotes(description));
         } else {
@@ -161,28 +161,28 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
     public void renderHyperlinkField(Appendable writer, Map<String, Object> context, HyperlinkField hyperlinkField) {
         ModelFormField modelFormField = hyperlinkField.getModelFormField();
         Map<String, String> parameterMap = hyperlinkField.getParameterMap(context, modelFormField.getEntityName(), modelFormField.getServiceName());
-        HashMap<String, Object> hashMapStringObject = new HashMap<>();
         HashMap<String, Object> cb = new HashMap<>();
         if (!parameterMap.isEmpty()) {
-            HashMap<String, Object> data = new HashMap<>();
-            data.put("action", "PUT_RECORD");
-            HashMap<String, Object> record = new HashMap<>();
+//            HashMap<String, Object> data = new HashMap<>();
+//            data.put("action", "PUT_RECORD");
+//            HashMap<String, Object> record = new HashMap<>();
             String key = parameterMap.keySet().toArray()[0].toString();
             String value = parameterMap.get(key);
-            record.put("key", key);
-            record.put("value", value);
-            ArrayList<Map<String, Object>> records = new ArrayList<>();
-            records.add(record);
-            data.put("records", records);
-            Map<String, Object> pointer = output.getRecordPointer(context);
-            pointer.put("field", key);
-            data.put("recordPointer", pointer);
-            cb.put("data", data);
-            cb.put("title", key);
-            cb.put("value", value);
+//            record.put("key", key);
+//            record.put("value", value);
+//            ArrayList<Map<String, Object>> records = new ArrayList<>();
+//            records.add(record);
+//            data.put("records", records);
+//            Map<String, Object> pointer = output.getRecordPointer(context);
+//            pointer.put("field", key);
+//            data.put("recordPointer", pointer);
+//            cb.put("data", data);
+//            cb.put("title", key);
+//            cb.put("value", value);
+            this.output.putScreen("HyperlinkField", cb, key, value);
+        } else {
+            this.output.putScreen("HyperlinkField", cb);
         }
-        hashMapStringObject.put("HyperlinkField", cb);
-        this.output.putScreen(hashMapStringObject);
         // hyperlinkField.getTarget(context)  //=> get target portlet
         // hyperlinkField.getParameterMap(context, hyperlinkField.getModelFormField().getEntityName(), hyperlinkField.getModelFormField().getServiceName()) //=> get entityFieldName and value
         /*this.request.setAttribute("image", hyperlinkField.getImageLocation(context));
@@ -1493,12 +1493,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         Map<String, Object> cb = new HashMap<>();
         cb.put("formName", modelForm.getName());
         cb.put("style", style);
-        Map<String, Object> data = new HashMap<>();
-        data.put("action", "NEW_RECORD");
-        cb.put("data", data);
-        HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
-        hashMapStringObject.put("SingleWrapperOpen", cb);
-        this.output.pushScreen(hashMapStringObject);
+        this.output.pushScreen("SingleWrapperOpen", cb, true, context);
     }
 
     public void renderFormatSingleWrapperClose(Appendable writer, Map<String, Object> context, ModelForm modelForm) {

@@ -14,7 +14,6 @@ const state = {
   isUpdating: false,
   watchers: {},
   watchersCpt: 0
-
 }
 
 const mutations = {
@@ -69,16 +68,12 @@ const getters = {
     return state.entities[entityName]
   },
   entityRow: state => ({entityName, id}) => {
-    return state.entities[entityName].list.find(row => row[state.entities[entityName]].primaryKey === id)
+    return state.entities[entityName].list.find(row => row.stId === id)
   },
   entityRowAttribute(state) {
     let temp = state.cpt
     return function ({entityName, id, attribute}) {
-      if (state.entities[entityName] && state.entities[entityName].list[id] && state.entities[entityName].list[id][attribute]) {
-        return state.entities[entityName].list[id][attribute];
-      } else {
-        return ""
-      }
+      return state.entities[entityName].list[id][attribute]
     }
   },
   watcher(state) {
