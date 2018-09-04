@@ -23,7 +23,7 @@ public class FrontJsOutput {
     // stack of entity which is currently used for store records
     // contain 3 field
     // - "primaryKeys"  list of fieldName which are pk in entityName. Used to build pkValue for storePointer
-    // - "list" list of records
+    // - "list" list of records (each record contain its stId)
     // - "entityName"
     private Stack<Map<String, Object>> entitiesStack;
 
@@ -31,12 +31,6 @@ public class FrontJsOutput {
     //   similar as a GenericValue but with fields define in the form
     // it's a stack because in a field I can have a sub-list about an other entities
     private Stack<Map<String, Object>> recordsStack;
-
-    // current unique identifier for the current record 
-    // contain 2 fields
-    // - "entityName"
-    // - "id"
-    //    private Map<String, String> storePointer;
 
     FrontJsOutput(String name) {
         viewScreen = new ArrayList<>();
@@ -73,8 +67,8 @@ public class FrontJsOutput {
         screensStack.peek().add(screen);
         if (fieldName != null && !recordsStack.empty()) {
             Map<String, String> stPointer = new HashMap<>();
-            stPointer.put("stEntityName", (String) this.entitiesStack.peek().get("entityName").toString());
-            stPointer.put("id", recordsStack.peek().get("stId").toString());
+            stPointer.put("stEntityName", (String) this.entitiesStack.peek().get("entityName"));
+            stPointer.put("id", (String) recordsStack.peek().get("stId"));
             stPointer.put("field", fieldName);
             screen.put("stPointer", stPointer);
             screen.put("dataDebug", UtilMisc.toMap("action","PUT_RECORD", "key",fieldName, "value",value));
@@ -155,8 +149,8 @@ public class FrontJsOutput {
         }
     }
     private void newRecord(Map<String, Object> context) {
-        // currentRecord
         if (!entitiesStack.empty()) {
+        	// currentRecord
             Map<String, Object> record = new HashMap<>();
             // build stPointerId
             List<String> pkList = UtilGenerics.checkList(this.entitiesStack.peek().get("primaryKeys"));
@@ -168,7 +162,9 @@ public class FrontJsOutput {
             } while (i < pkList.size());
             record.put("stId", pkey);
             recordsStack.push(record);
-            ((List<Map<String, Object>>) entitiesStack.peek().get("list")).add(record);
+
+            List<Map<String, Object>> entitiesStackPeekList = UtilGenerics.checkList(entitiesStack.peek().get("list"));
+            entitiesStackPeekList.add(record);
         }
     }
 
@@ -205,8 +201,8 @@ public class FrontJsOutput {
             Map<String, Object> data = new HashMap<>();
             String entityName = (String) this.entitiesStack.peek().get("entityName");
             data.put("entity", entityName);
-            String primaryKey = ((Map<String, Object>) this.viewEntities.get(entityName)).get("primaryKeys").toString();
-            data.put("id", context.get(primaryKey));
+            List<String> primaryKeys = UtilGenerics.checkList(this.entitiesStack.peek().get("primaryKeys"));
+            data.put("id", context.get(primaryKeys.get(0)));
             return data;
         } else {
             return null;

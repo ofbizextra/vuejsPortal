@@ -29,6 +29,7 @@ import java.util.*;
 //@SuppressWarnings("WeakerAccess")
 public final class FrontJsFormRenderer implements FormStringRenderer {
     private static final String NOT_YET_SUPPORTED = "Not yet supported";
+    private static final Map<String, Object> NOT_YET_SUPPORTED_M = UtilMisc.toMap("userMessage", "Not yet supported");
     public static final String module = MacroFormRenderer.class.getName();
     private FrontJsOutput output;
     private final UtilCodec.SimpleEncoder internalEncoder;
@@ -151,7 +152,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
 
         // putRecord only if attribute "description" not exist for the <display tag
         if (UtilValidate.isEmpty(displayField.getDescription()) || "${description}".equals(displayField.getDescription().toString())) {
-        	//                                                fieldName                 value
+        	//                                          putRecord( fieldName          ,       value )
         	this.output.putScreen("DisplayField", attributes, modelFormField.getName(), encodeDoubleQuotes(description));
         } else {
         	this.output.putScreen("DisplayField", attributes);
@@ -206,9 +207,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
     }
 
     public void renderMenuField(Appendable writer, Map<String, Object> context, MenuField menuField) {
-        HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
-        hashMapStringObject.put("MenuField", NOT_YET_SUPPORTED);
-        this.output.putScreen(hashMapStringObject);
+    	this.output.putScreen("MenuField", NOT_YET_SUPPORTED_M);
         /*
         menuField.renderFieldString(writer, context, null);
         */
@@ -262,46 +261,30 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         boolean readonly = textField.getReadonly();
         String tabindex = modelFormField.getTabindex();
         String formName = textField.getModelFormField().getModelForm().getName();
-        Map<String, Object> cb = new HashMap<>();
+        Map<String, Object> attributes = new HashMap<>();
 
-        cb.put("name", name);
-        cb.put("className", className);
-        cb.put("alert", alert);
-        cb.put("value", value);
-        cb.put("textSize", textSize);
-        cb.put("maxlength", maxlength > -1 ? maxlength : "");
-        cb.put("id", id);
-        cb.put("event", event);
-        cb.put("action", action);
-        cb.put("disabled", disabled);
-        cb.put("readonly", readonly);
-        cb.put("clientAutocomplete", clientAutocomplete);
-        cb.put("ajaxUrl", ajaxUrl);
-        cb.put("ajaxEnabled", ajaxEnabled);
-        cb.put("mask", mask);
-        cb.put("placeholder", placeholder);
-        cb.put("tabindex", tabindex);
-        cb.put("delegatorName", ((HttpSession)context.get("session")).getAttribute("delegatorName").toString());
-        if (this.frontJs) {
-            cb.put("formName", formName);
-        }
-        Map<String, Object> data = new HashMap<>();
-        data.put("action", "PUT_RECORD");
-        ArrayList<Map<String, Object>> records = new ArrayList<>();
-        Map<String, Object> record = new HashMap<>();
-        record.put("key", name);
-        record.put("value", value);
-        records.add(record);
-        data.put("records", records);
-        Map<String, Object> pointer = output.getRecordPointer(context);
-        pointer.put("field", name);
-        data.put("recordPointer", pointer);
-        cb.put("data", data);
-        this.appendTooltip(cb, context, modelFormField);
-        this.addAsterisks(cb, context, modelFormField);
-        HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
-        hashMapStringObject.put("TextField", cb);
-        this.output.putScreen(hashMapStringObject);
+        attributes.put("formName", formName);
+        attributes.put("name", name);
+        attributes.put("value", value);
+        if (UtilValidate.isNotEmpty(className))          attributes.put("className", className);
+        if (UtilValidate.isNotEmpty(alert))              attributes.put("alert", alert);
+        if (UtilValidate.isNotEmpty(textSize))           attributes.put("textSize", textSize);
+        if (maxlength > -1)                              attributes.put("maxlength", maxlength);
+        if (UtilValidate.isNotEmpty(id))                 attributes.put("id", id);
+        if (UtilValidate.isNotEmpty(event))              attributes.put("event", event);
+        if (UtilValidate.isNotEmpty(action))             attributes.put("action", action);
+        if (UtilValidate.isNotEmpty(disabled))           attributes.put("disabled", disabled);
+        if (UtilValidate.isNotEmpty(readonly))           attributes.put("readonly", readonly);
+        if (UtilValidate.isNotEmpty(clientAutocomplete)) attributes.put("clientAutocomplete", clientAutocomplete);
+        if (UtilValidate.isNotEmpty(ajaxUrl))            attributes.put("ajaxUrl", ajaxUrl);
+        if (UtilValidate.isNotEmpty(ajaxEnabled))        attributes.put("ajaxEnabled", ajaxEnabled);
+        if (UtilValidate.isNotEmpty(mask))               attributes.put("mask", mask);
+        if (UtilValidate.isNotEmpty(placeholder))        attributes.put("placeholder", placeholder);
+        if (UtilValidate.isNotEmpty(tabindex))           attributes.put("tabindex", tabindex);
+        attributes.put("delegatorName", ((HttpSession)context.get("session")).getAttribute("delegatorName").toString());
+        this.appendTooltip(attributes, context, modelFormField);
+        this.addAsterisks(attributes, context, modelFormField);
+        this.output.putScreen("TextField", attributes, name, value);
     }
 
     public void renderTextareaField(Appendable writer, Map<String, Object> context, TextareaField textareaField) {
@@ -2593,7 +2576,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
             }
             ajaxParams = ajaxParamsBuffer.toString();
             ajaxUrl += updateArea.getAreaId() + ",";
-            ajaxUrl += this.rh.makeLink(this.request, this.response, UtilHttp.removeQueryStringFromTarget(targetUrl));
+            //ajaxUrl += this.rh.makeLink(this.request, this.response, UtilHttp.removeQueryStringFromTarget(targetUrl));
             ajaxUrl += "," + ajaxParams;
         }
         Locale locale = UtilMisc.ensureLocale(context.get("locale"));
