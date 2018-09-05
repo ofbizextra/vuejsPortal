@@ -20,8 +20,10 @@ const mutations = {
 
 const getters = {
   forms: state => state.forms,
-  form: state => (formId) => {
-    return state.forms[formId]
+  form: state => {
+    return function (formId) {
+      return state.forms[formId]
+    }
   },
   fieldInForm: state => (data) => {
     return state.forms[data.formId][data.key]

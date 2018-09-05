@@ -44,11 +44,11 @@
         if (this.pointer.entityName !== '') {
           console.log('setWatcher by pointer')
           console.log('getPointer: ' + this.getPointer)
-          this.$store.dispatch('data/setWatcher', {watcherName: 'watchEditExample', params: {exampleId: this.getPointer}})
+          this.$store.dispatch('data/setWatcher', {watcherName: this.getNestedObject(this.data, ['updateArea']), params: {[this.pointer.attribute]: this.getPointer}})
         } else {
           console.log('setWatcher by data.value')
           console.log('data.value: ' + this.data.value.toString())
-          this.$store.dispatch('data/setWatcher', {watcherName: 'watchEditExample', params: {exampleId: this.data.value}})
+          this.$store.dispatch('data/setWatcher', {watcherName: this.getNestedObject(this.data, ['updateArea']), params: {exampleId: this.data.value}})
         }
       }
     },

@@ -38,27 +38,6 @@
         delete data['value']
         return data
       },
-      storeData() {
-        return {
-          id: this.$store.getters['data/currentId'],
-          key: this.props.attributes.name,
-          value: this.props.attributes.value ? this.props.attributes.value : ''
-        }
-      },
-      storeDataOp() {
-        return {
-          id: this.$store.getters['data/currentId'],
-          key: this.props.attributes.name + '_op',
-          value: this.props.attributes.defaultOption ? this.props.attributes.defaultOption : ''
-        }
-      },
-      storeDataIc() {
-        return {
-          id: this.$store.getters['data/currentId'],
-          key: this.props.attributes.name + '_ic',
-          value: this.props.attributes.ignCase ? this.props.attributes.ignCase : ''
-        }
-      },
       storeForm() {
         return {
           formId: this.props.attributes.formName,
@@ -117,28 +96,18 @@
         }
       },
       ...mapGetters({
-        dataFromExample: 'data/dataFromExample',
-        currentId: 'data/currentId',
         getForm: 'form/form',
         getDataFromForm: 'form/fieldInForm'
       })
     },
     watch: {
       data: function (from, to) {
-        console.log('vue-text : ', this.storeData)
-        this.$store.dispatch('data/addDataToExample', this.storeData)
-        this.$store.dispatch('data/addDataToExample', this.storeDataOp)
-        this.$store.dispatch('data/addDataToExample', this.storeDataIc)
         this.$store.dispatch('form/setFieldToForm', this.storeForm)
         this.$store.dispatch('form/setFieldToForm', this.storeFormOp)
         this.$store.dispatch('form/setFieldToForm', this.storeFormIc)
       }
     },
     created() {
-      console.log('vue-text : ', this.storeData)
-      this.$store.dispatch('data/addDataToExample', this.storeData)
-      this.$store.dispatch('data/addDataToExample', this.storeDataOp)
-      this.$store.dispatch('data/addDataToExample', this.storeDataIc)
       this.$store.dispatch('form/setFieldToForm', this.storeForm)
       this.$store.dispatch('form/setFieldToForm', this.storeFormOp)
       this.$store.dispatch('form/setFieldToForm', this.storeFormIc)

@@ -120,6 +120,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         String type = displayField.getType();
         String imageLocation = displayField.getImageLocation(context);
         String title = "";
+        String name = modelFormField.getName();
         // manage by frontJs, so now size attribute is sent
         /*
         Integer size = Integer.valueOf("0");
@@ -140,6 +141,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         Map<String, Object> attributes = new HashMap<>();
         attributes.put("formName", displayField.getModelFormField().getModelForm().getName());
         attributes.put("description", encodeDoubleQuotes(description));
+        attributes.put("name", name);
 
         if (UtilValidate.isNotEmpty(type)) attributes.put("type", type);
         if (UtilValidate.isNotEmpty(size)) attributes.put("size", size);
@@ -163,6 +165,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         ModelFormField modelFormField = hyperlinkField.getModelFormField();
         Map<String, String> parameterMap = hyperlinkField.getParameterMap(context, modelFormField.getEntityName(), modelFormField.getServiceName());
         HashMap<String, Object> cb = new HashMap<>();
+        cb.put("updateArea", hyperlinkField.getTarget(context));
         if (!parameterMap.isEmpty()) {
 //            HashMap<String, Object> data = new HashMap<>();
 //            data.put("action", "PUT_RECORD");
@@ -997,6 +1000,9 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
             cb.put("ajaxUrl", ajaxUrl);
         }
         cb.put("tabindex", tabindex);
+        if (!updateAreas.isEmpty()) {
+            cb.put("updateArea", updateAreas);
+        }
         this.appendTooltip(cb, context, modelFormField);
         HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
         hashMapStringObject.put("SubmitField", cb);

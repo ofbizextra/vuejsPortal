@@ -27,7 +27,7 @@
         portletSeqId: '',
         constantes: cst,
         params: {},
-        isWatching: '',
+        isWatching: this.getNestedObject(this.props, ['watcherName']),
         updateWatcher: ''
       }
     },
@@ -48,28 +48,6 @@
       }
     },
     created() {
-      switch (this.props.portalPortletId) {
-        case 'listExample':
-          this.params = {
-            exampleId: 'EX',
-            exampleId_op: 'contains'
-          }
-          this.isWatching = 'watchListExample'
-          this.updateWatcher = 'watchEditExample'
-          break
-        case 'editExample':
-          this.params = {
-            exampleId: 'EX11'
-          }
-          this.isWatching = 'watchEditExample'
-          this.updateWatcher = ''
-          break
-        case 'findExample':
-          this.params = {}
-          this.isWatching = null
-          this.updateWatcher = 'watchListExample'
-          break
-      }
       if (this.isWatching) {
         this.$store.dispatch('data/setWatcher', {
           watcherName: this.isWatching,

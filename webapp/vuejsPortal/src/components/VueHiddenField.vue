@@ -31,7 +31,7 @@
       storeForm() {
         return {
           formId: this.props.attributes.formName,
-          key: this.props.attributes.id,
+          key: this.props.attributes.name,
           value: this.props.attributes.value ? this.props.attributes.value : ''
         }
       },

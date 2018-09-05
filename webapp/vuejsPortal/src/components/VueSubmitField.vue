@@ -1,6 +1,6 @@
 <template>
   <div id="vue-submit-field">
-    <button :value="data.title" v-bind="data" v-on:click.prevent="post">{{data.title}}</button>
+    <button :value="data.title" v-bind="data" v-on:click.prevent="resolveEvents">{{data.title}}</button>
   </div>
 </template>
 
@@ -21,7 +21,7 @@
       },
       ...mapGetters({
         getForm: 'form/form',
-        getDataFromForm: 'form/fieldInForm'
+        getDataFromForm: 'form/fieldInForm',
       })
     },
     methods: {
@@ -36,11 +36,26 @@
         ).then(
           response => {
             console.log(response)
-
           }, error => {
             console.log(error)
           }
         )
+      },
+      updateStore() {
+        let data = {watcherName: this.getNestedObject(this.data, ['updateArea', 0, 'areaId']), params: this.getForm(this.props.attributes.formName)}
+        console.log('data to setWatcher : ', data)
+        this.$store.dispatch('data/setWatcher', data)
+      },
+      resolveEvents() {
+        if (this.data['updateArea']) {
+          console.log('trigger updateStore from submit button ...')
+          this.updateStore()
+          console.log('updateStore ended.')
+        } else {
+          console.log('trigger post from submit button ...')
+          this.post()
+          console.log('post ended.')
+        }
       }
     }
   }

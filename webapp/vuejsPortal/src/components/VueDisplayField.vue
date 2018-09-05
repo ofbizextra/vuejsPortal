@@ -1,7 +1,7 @@
 // todo compare size and description.size and tronque
 <template>
   <div id="vue-display-field">
-    <label v-if="pointer.entityName !== ''" v-bind="data">{{getPointer}}</label>
+    <label v-if="pointer.entityName" v-bind="data">{{getPointer}}</label>
     <label v-else v-bind="data">{{data.title ? data.title : data.description}}</label>
   </div>
 </template>
@@ -29,19 +29,23 @@
       getPointer() {
         return this.getData(this.pointer);
       },
+      storeForm() {
+        return {
+          formId: this.props.attributes.formName,
+          key: this.props.attributes.name,
+          value: this.pointer.entityName ? this.getPointer : this.data.description
+        }
+      },
       ...mapGetters({
-        getData: 'data/entityRowAttribute'
+        getData: 'data/entityRowAttribute',
+        getDataFromForm: 'form/fieldInForm'
       })
     },
     props: [
       'props'
     ],
     created() {
-      // this.pointer = {
-      //   entityName: this.getNestedObject(this.props, ['attributes', 'data', 'recordPointer', 'entity']),
-      //   id: this.getNestedObject(this.props, ['attributes', 'data', 'recordPointer', 'id']),
-      //   attribute: this.getNestedObject(this.props, ['attributes', 'data', 'recordPointer', 'field']),
-      // }
+      this.$store.dispatch('form/setFieldToForm', this.storeForm)
     },
     watch: {
       props: function () {
@@ -50,6 +54,7 @@
           id: this.getNestedObject(this.props, ['stPointer', 'id']),
           attribute: this.getNestedObject(this.props, ['stPointer', 'field'])
         }
+        this.$store.dispatch('form/setFieldToForm', this.storeForm)
       }
     }
   }

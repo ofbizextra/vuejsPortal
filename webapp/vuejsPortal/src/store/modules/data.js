@@ -112,6 +112,7 @@ const actions = {
     commit('STOP_UPDATE')
   },
   setWatcher({commit}, data) {
+    console.log('data/setWatcher : ', data)
     commit('SET_WATCHER', data)
   }
 }

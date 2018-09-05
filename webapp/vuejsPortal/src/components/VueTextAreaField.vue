@@ -19,17 +19,10 @@
         //delete data['value']
         return data
       },
-      storeData() {
-        return {
-          id: this.$store.getters['data/currentId'],
-          key: this.props.attributes.id,
-          value: this.props.attributes.value ? this.props.attributes.value : ''
-        }
-      },
       storeForm() {
         return {
           formId: this.props.attributes.formName,
-          key: this.props.attributes.id,
+          key: this.props.attributes.name,
           value: this.props.attributes.value ? this.props.attributes.value : ''
         }
       },
@@ -46,22 +39,16 @@
         }
       },
       ...mapGetters({
-        dataFromExample: 'data/dataFromExample',
-        currentId: 'data/currentId',
         getForm: 'form/form',
         getDataFromForm: 'form/fieldInForm'
       })
     },
     watch: {
       data: function (from, to) {
-        console.log('vue-text-area (watch) : ', this.storeForm)
-        this.$store.dispatch('data/addDataToExample', this.storeData)
         this.$store.dispatch('form/setFieldToForm', this.storeForm)
       }
     },
     created() {
-      console.log('vue-text-area (created) : ', this.storeForm)
-      this.$store.dispatch('data/addDataToExample', this.storeData)
       this.$store.dispatch('form/setFieldToForm', this.storeForm)
     }
   }
