@@ -22,9 +22,11 @@
     },
     computed: {
       data() {
-        return {
-          ...this.props.attributes,
+        let data = this.props.attributes
+        if (data.className || (data.alert && data.alert === true)) {
+          data.class = data.className ? data.className : '' + ' ' + data.alert === true ? 'alert' : ''
         }
+        return data
       },
       getPointer() {
         return this.getData(this.pointer);
