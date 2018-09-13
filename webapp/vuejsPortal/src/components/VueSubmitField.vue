@@ -40,6 +40,21 @@
         ).then(
           response => {
             console.log(response)
+            if (this.getNestedObject(response, ['body', '_EVENT_MESSAGE_']) === 'Example Entity updated successfully') {
+              console.log('update successful => trigger store update')
+              this.$store.dispatch('data/setEntityRow', {
+                entityName: 'Example',
+                primaryKey: this.getForm(this.props.attributes.formName).exampleId,
+                data: this.getForm(this.props.attributes.formName)
+              }).then(response => {
+                console.log(response)
+                console.log('Store updated successfully')
+              }, error => {
+                console.log(error)
+              })
+            } else {
+              console.log('Store don\'t need to be updated')
+            }
           }, error => {
             console.log(error)
           }
