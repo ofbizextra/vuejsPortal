@@ -18,17 +18,34 @@
  */
 
 function zoomId(id, level) {
+    let browser = navigator.appVersion
     var element = $('#' + id)
     if(!element.length) {
         element = $("[name='" + id + "']");
     }
     element.focus()
-    element.focusout(
-        function() {
-            element.animate({ 'zoom': 1 }, 50);
-        }
-    );
-    element.animate({ 'zoom': level }, 800);
+    // Firefox doesn't support jquery.animate({'zoom': xxx})
+    if (navigator.userAgent.includes('Firefox')) {
+        // If Firefox we apply css transform
+        element.focusout(
+            function() {
+                element.css('transform-origin', '0 0');
+                element.css('-moz-transition', 'all 0.5s')
+                element.css('-moz-transform', 'scale(1)');
+            }
+        );
+        element.css('transform-origin', '0 0');
+        element.css('-moz-transition', 'all 0.5s')
+        element.css('-moz-transform', 'scale(' + level + ')');
+    } else {
+        // Other browser
+        element.focusout(
+            function() {
+                element.animate({ 'zoom': 1 }, 50);
+            }
+        );
+        element.animate({ 'zoom': level }, 800);
+    }
 }
 function zoomAndType(id, level, text) {
     var element = $('#' + id)
@@ -36,12 +53,28 @@ function zoomAndType(id, level, text) {
         element = $("[name='" + id + "']");
     }
     element.focus()
-    element.focusout(
-        function() {
-            element.animate({ 'zoom': 1 }, 50);
-        }
-    );
-    element.animate({ 'zoom': level }, 800);
+    // Firefox doesn't support jquery.animate({'zoom': xxx})
+    if (navigator.userAgent.includes('Firefox')) {
+        // If Firefox we apply css transform
+        element.focusout(
+            function() {
+                element.css('transform-origin', '0 0');
+                element.css('-moz-transition', 'all 0.5s')
+                element.css('-moz-transform', 'scale(1, 1)');
+            }
+        );
+        element.css('transform-origin', '0 0');
+        element.css('-moz-transition', 'all 0.5s')
+        element.css('-moz-transform', 'scale(' + level + ')');
+    } else {
+        // Other browser
+        element.focusout(
+            function() {
+                element.animate({ 'zoom': 1 }, 50);
+            }
+        );
+        element.animate({ 'zoom': level }, 800);
+    }
     element.val(text);
 }
 function showSeleniumInfoPanel(text, duration) {
