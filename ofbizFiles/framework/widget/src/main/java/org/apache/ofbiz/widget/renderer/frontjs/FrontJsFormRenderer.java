@@ -1322,7 +1322,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
     }
     public void renderEmptyFormDataMessage(Appendable writer, Map<String, Object> context, ModelForm modelForm) {
         Map<String, Object> cb = new HashMap<>();
-        cb.put("message", modelForm.getEmptyFormDataMessage());
+//        cb.put("message", modelForm.getEmptyFormDataMessage());
         HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
         hashMapStringObject.put("EmptyFormDataMessage", cb);
         this.output.putScreen(hashMapStringObject);
