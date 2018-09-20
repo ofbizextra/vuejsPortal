@@ -626,7 +626,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         boolean ajaxEnabled = autoComplete != null && this.javaScriptEnabled;
         String className = "";
         String alert = "false";
-        String name = modelFormField.getParameterName(context);
+        String name = modelFormField.getName();
         String id = modelFormField.getCurrentContainerId(context);
         String multiple = dropDownField.getAllowMultiple() ? "multiple" : "";
         String otherFieldName = "";
@@ -830,7 +830,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         String id = modelFormField.getCurrentContainerId(context);
         String className = "";
         String alert = "false";
-        String name = modelFormField.getParameterName(context);
+        String name = modelFormField.getName();
         String event = modelFormField.getEvent();
         String action = modelFormField.getAction(context);
         StringBuilder items = new StringBuilder();
@@ -883,7 +883,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         String conditionGroup = modelFormField.getConditionGroup();
         String className = "";
         String alert = "false";
-        String name = modelFormField.getParameterName(context);
+        String name = modelFormField.getName();
         String event = modelFormField.getEvent();
         String action = modelFormField.getAction(context);
         List<Map<String, String>> items = new ArrayList<>();
@@ -948,7 +948,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         String event = modelFormField.getEvent();
         String action = modelFormField.getAction(context);
         String title = modelFormField.getTitle(context);
-        String name = modelFormField.getParameterName(context);
+        String name = modelFormField.getName();
         String buttonType = submitField.getButtonType();
         String formName = FormRenderer.getCurrentFormName(modelForm, context);
         String imgSrc = submitField.getImageLocation(context);
@@ -1039,7 +1039,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
     }
 
     public void renderHiddenField(Appendable writer, Map<String, Object> context, ModelFormField modelFormField, String value) {
-        String name = modelFormField.getParameterName(context);
+        String name = modelFormField.getName();
         String action = modelFormField.getAction(context);
         String conditionGroup = modelFormField.getConditionGroup();
         String event = modelFormField.getEvent();
@@ -1559,7 +1559,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         String opContains = "";
         String opIsEmpty = "";
         String opNotEqual = "";
-        String name = modelFormField.getParameterName(context);
+        String name = modelFormField.getName();
         Integer size = textFindField.getSize();
         String maxlength = "";
         String autocomplete = "";
