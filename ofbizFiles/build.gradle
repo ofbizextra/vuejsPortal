@@ -1,3 +1,0 @@
-dependencies {
-	// nécessaire pour vuejs-portal commonAPIServices mais ça ne marche pas si c'est dans build.gradle du composant
-	compile 'com.auth0:java-jwt:2.1.0'
