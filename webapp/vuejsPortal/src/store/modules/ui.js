@@ -64,7 +64,7 @@ const actions = {
           {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}
         ).then(response => {
           commit('SET_PORTLET', {portletId: portalPortletId + '-' + portletSeqId, data: response.body})
-          resolve()
+          resolve(portalPortletId)
         }, error => {
           console.log(error)
           reject()

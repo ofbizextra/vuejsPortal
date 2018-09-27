@@ -1,12 +1,27 @@
 <template>
   <div id="app">
+    <!--<v-wait message="Loading data...">-->
+    <!--</v-wait>-->
+    <BlockUI v-if="$wait.any" message="Fetching datas...">
+      <spinner
+        :animation-duration="1200"
+        :size="55"
+        :color="'#28b3ff'"
+      />
+    </BlockUI>
     <router-view></router-view>
   </div>
 </template>
 
 <script>
+  import logo from '../assets/logo.png'
   export default {
     name: 'app',
+    data() {
+      return {
+        image: logo
+      }
+    },
     mounted() {
       console.log(this.$route.path)
       this.$store.dispatch('login/check').then(() => {
@@ -14,7 +29,8 @@
       }, () => {
         this.$router.push('/login')
       })
-    }
+    },
+
   }
 </script>
 

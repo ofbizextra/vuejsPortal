@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<!-- Begin Screen component://example/widget/example/ExampleScreens.xml#EditExampleLayer -->
+
+<!-- Begin Macro renderClass from file HtmlFormMacroLibrary.ftl -->
+<!-- Begin Macro formatBoundaryComment from file HtmlFormMacroLibrary.ftl -->
+<!-- Begin  Form Widget - Form Element  component://example/widget/example/ExampleForms.xml#EditExample -->  <!-- Begin Macro renderFormOpen from file HtmlFormMacroLibrary.ftl -->
+<form method="post" action="/example/control/createExample"  class="basic-form requireValidation" onsubmit="javascript:submitFormDisableSubmits(this)" name="EditExample">
+  <!-- Begin Macro renderFormatSingleWrapperOpen from file HtmlFormMacroLibrary.ftl -->
+  <table cellspacing="0" >
+    <!-- Begin Macro renderFormatFieldRowOpen from file HtmlFormMacroLibrary.ftl -->
+    <tr>
+      <!-- Begin Macro renderFormatFieldRowTitleCellOpen from file HtmlFormMacroLibrary.ftl -->
+      <td class="label">
+        <!-- Begin Macro renderFieldTitle from file HtmlFormMacroLibrary.ftl -->
+        <label for="exampleTypeId"  title="Le type de l'exemple." id="exampleTypeId_title">Type</label>  <!-- Begin Macro renderFormatFieldRowTitleCellClose from file HtmlFormMacroLibrary.ftl -->
+      </td>
+      <!-- Begin Macro renderFormatFieldRowWidgetCellOpen from file HtmlFormMacroLibrary.ftl -->
+      <td colspan="4">
+        <!-- Begin Macro renderDropDownField from file HtmlFormMacroLibrary.ftl -->
+        <!--
+        {name:"exampleTypeId",id:"exampleTypeId",size:"1",dpValue:{
+              CONTRIVED:Arrang&eacute;,
+                    MADE_UP:Compos&eacute;,
+                    INSPIRED:Inspir&eacute;,
+                    REAL_WORLD:Monde r&eacute;el,
+            }}
+        -->
+        <span class="ui-widget">
+    <select name="exampleTypeId"  class="required"
+            id="exampleTypeId" size="1">                <option value="CONTRIVED">Arrang&eacute;</option>           <option value="MADE_UP">Compos&eacute;</option>           <option value="INSPIRED">Inspir&eacute;</option>           <option value="REAL_WORLD">Monde r&eacute;el</option>     </select>
+  </span>
+
+        <!-- Begin Macro renderTooltip from file HtmlFormMacroLibrary.ftl -->
+
+        <!-- Begin Macro renderFormatFieldRowWidgetCellClose from file HtmlFormMacroLibrary.ftl -->
+      </td>
+      <!-- Begin Macro renderFormatFieldRowClose from file HtmlFormMacroLibrary.ftl -->
+    </tr>
+    <!-- Begin Macro renderFormatSingleWrapperClose from file HtmlFormMacroLibrary.ftl -->
+  </table>
+  <!-- Begin Macro renderFormClose from file HtmlFormMacroLibrary.ftl -->
+</form>
+<!-- Begin Macro formatBoundaryComment from file HtmlFormMacroLibrary.ftl -->
+<!-- End  Form Widget - Form Element  component://example/widget/example/ExampleForms.xml#EditExample --><!-- End Screen component://example/widget/example/ExampleScreens.xml#EditExampleLayer -->

@@ -14,5 +14,6 @@ export default new Vuex.Store({
     ui,
     data,
     form
-  }
+  },
+  strict: process.env.NODE_ENV !== 'production'
 })

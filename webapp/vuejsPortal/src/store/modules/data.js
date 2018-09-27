@@ -12,6 +12,7 @@ const state = {
   cpt: 0,
   entities: {},
   isUpdating: false,
+  updatingCpt: 0,
   watchers: {},
   watchersCpt: 0
 }
@@ -42,16 +43,15 @@ const mutations = {
     Object.keys(data.data).forEach(key => {
       state.entities[data.entityName].list[data.primaryKey][key] = data.data[key]
     })
-    if (!state.isUpdating) {
-      state.cpt++;
-    }
   },
   START_UPDATE: (state) => {
-    state.isUpdating = true
+    state.updatingCpt++
   },
   STOP_UPDATE: (state) => {
-    state.isUpdating = false
-    state.cpt++
+    state.updatingCpt--
+    if (state.updatingCpt === 0) {
+      state.cpt++
+    }
   },
   SET_WATCHER: (state, {watcherName, params}) => {
     state.watchers[watcherName] = params
@@ -81,39 +81,39 @@ const getters = {
     return function (watcherName) {
       return state.watchers[watcherName]
     }
-  }
+  },
+  isUpdating: state => state.updatingCpt > 0,
+  updatingCpt: state => state.updatingCpt
 }
 
 const actions = {
-  addExample({commit}, id) {
-    commit('ADD_EXAMPLE', id)
-  },
-  addDataToExample({commit, state}, data) {
-    if (!state.example[data.id]) {
-      commit('ADD_EXAMPLE', data.id)
-    }
-    commit('ADD_DATA_TO_EXAMPLE', data)
-  },
-  setCurrentId({commit}, id) {
-    commit('SET_CURRENT_ID', id)
-  },
   setEntity({commit}, data) {
-    if (!state.entities[data.entityName]) {
-      commit('SET_ENTITY', data);
-    }
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        if (!state.entities[data.entityName]) {
+          commit('SET_ENTITY', data);
+        }
+        resolve(data)
+      }, 0)
+    })
   },
   setEntityRow({commit}, data) {
-    commit('SET_ENTITY_ROW', data)
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        commit('SET_ENTITY_ROW', data)
+        resolve(data)
+      }, 0)
+    })
+  },
+  setWatcher({commit}, data) {
+    console.log('data/setWatcher : ', data)
+    commit('SET_WATCHER', data)
   },
   startUpdate({commit}) {
     commit('START_UPDATE')
   },
   stopUpdate({commit}) {
     commit('STOP_UPDATE')
-  },
-  setWatcher({commit}, data) {
-    console.log('data/setWatcher : ', data)
-    commit('SET_WATCHER', data)
   }
 }
 

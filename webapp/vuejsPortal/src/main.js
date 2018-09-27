@@ -2,6 +2,10 @@ import Vue from 'vue'
 import VueResource from 'vue-resource'
 import VueRouter from 'vue-router'
 
+import VueWait from 'vue-wait'
+import {OrbitSpinner, AtomSpinner, IntersectingCirclesSpinner, RadarSpinner, BreedingRhombusSpinner} from 'epic-spinners'
+import BlockUI from 'vue-blockui'
+
 import App from './components/App'
 import Search from './components/Search'
 import List from './components/List'
@@ -56,6 +60,9 @@ import store from './store'
 Vue.use(VueResource)
 Vue.use(VueRouter)
 
+Vue.use(VueWait)
+Vue.use(BlockUI)
+
 Vue.component('login', Login)
 Vue.component('portal', Portal)
 Vue.component('edit-example-layer', EditExampleLayer)
@@ -103,6 +110,7 @@ Vue.component('vue-field-row', VueFieldRow)
 Vue.component('vue-field-row-title-cell', VueFieldRowTitleCell)
 Vue.component('vue-field-row-widget-cell', VueFieldRowWidgetCell)
 Vue.component('vue-field-group', VueFieldGroup)
+Vue.component('spinner', BreedingRhombusSpinner)
 
 Vue.mixin({
   methods: {
@@ -138,7 +146,7 @@ Vue.mixin({
 
 const router = new VueRouter({
   mode: 'hash',
-routes: [
+  routes: [
     { path: '/', component: Portal, beforeEnter: requireAuth },
     { path: '/findExampleLayer', component: FindExampleLayer, beforeEnter: requireAuth },
     { path: '/editExampleLayer', component: EditExampleLayer, beforeEnter: requireAuth },
@@ -188,5 +196,8 @@ new Vue({
   props: ['content'],
   store: store,
   router: router,
+  wait: new VueWait({
+    useVuex: true
+  }),
   render: h => h(App)
 })

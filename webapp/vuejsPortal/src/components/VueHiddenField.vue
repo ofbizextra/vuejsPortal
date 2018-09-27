@@ -24,13 +24,6 @@
         }
         return data
       },
-      storeData() {
-        return {
-          id: this.$store.getters['data/currentId'],
-          key: this.props.attributes.id,
-          value: this.props.attributes.value ? this.props.attributes.value : ''
-        }
-      },
       storeForm() {
         return {
           formId: this.props.attributes.formName,
@@ -60,13 +53,11 @@
     watch: {
       data: function (from, to) {
         console.log('vue-hidden : ', this.storeForm)
-        this.$store.dispatch('data/addDataToExample', this.storeData)
         this.$store.dispatch('form/setFieldToForm', this.storeForm)
       }
     },
     created() {
       console.log('vue-hidden : ', this.storeForm)
-      this.$store.dispatch('data/addDataToExample', this.storeData)
       this.$store.dispatch('form/setFieldToForm', this.storeForm)
     }
   }
