@@ -98,7 +98,6 @@
               })
               Promise.all(records).then(
                 this.$nextTick(() => {
-                  this.$store.dispatch('data/stopUpdate')
                   this.$wait.end(this.props.portalPortletId + '-' + this.props.portletSeqId)
                 })
               )
@@ -161,7 +160,6 @@
               })
               Promise.all(records).then(
                 this.$nextTick(() => {
-                  this.$store.dispatch('data/stopUpdate')
                   this.$wait.end('update' + this.props.portalPortletId + '-' + this.props.portletSeqId)
                 })
               )

@@ -9,7 +9,6 @@ const state = {
   currentPortalPage: '',
   portalPages: {},
   portlets: {},
-  portletCpt: 0
 }
 
 const mutations = {
@@ -24,8 +23,6 @@ const mutations = {
   },
   SET_PORTLET: (state, {portletId, data}) => {
     Vue.set(state.portlets, portletId, data)
-    // state.portlets[portletId] = data
-    // state.portletCpt++
   }
 }
 
@@ -36,7 +33,6 @@ const getters = {
   portalPages: state => state.portalPages,
   column: state => ({portalPageId, columnSeqId}) => { return state.portalPages[portalPageId].listColumnPortlet.find(col => col.columnSeqId === columnSeqId)},
   portlet(state) {
-    // let temp = state.portletCpt
     return (id) => { return state.portlets[id] }
   },
   portlets: state => state.portlets
