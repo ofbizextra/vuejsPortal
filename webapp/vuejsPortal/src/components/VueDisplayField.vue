@@ -29,7 +29,7 @@
         return data
       },
       getPointer() {
-        return this.getData(this.pointer);
+        return this.$store.getters['data/entityRowAttribute'](this.pointer);
       },
       storeForm() {
         return {

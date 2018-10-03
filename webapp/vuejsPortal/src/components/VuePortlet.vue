@@ -44,7 +44,7 @@
         return this.portletName + '-' + this.portletSeqId
       },
       getParams() {
-        return this.getWatcher(this.isWatching)
+        return this.$store.getters['data/watcher'](this.isWatching)
       }
     },
     created() {
@@ -98,6 +98,7 @@
               })
               Promise.all(records).then(
                 this.$nextTick(() => {
+                  this.$store.dispatch('data/stopUpdate')
                   this.$wait.end(this.props.portalPortletId + '-' + this.props.portletSeqId)
                 })
               )
@@ -118,6 +119,7 @@
     },
     watch: {
       getParams: function (val) {
+        console.log('portlet params updated: ' + val)
         this.$wait.start('update' + this.props.portalPortletId + '-' + this.props.portletSeqId)
         this.$store.dispatch('ui/setPortlet', {
           ...this.props,
@@ -159,6 +161,7 @@
               })
               Promise.all(records).then(
                 this.$nextTick(() => {
+                  this.$store.dispatch('data/stopUpdate')
                   this.$wait.end('update' + this.props.portalPortletId + '-' + this.props.portletSeqId)
                 })
               )

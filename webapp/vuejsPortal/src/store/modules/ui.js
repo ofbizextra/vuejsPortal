@@ -2,7 +2,6 @@ import Vuex from 'vuex'
 import Vue from 'vue'
 import queryString from 'query-string'
 import constantes from './../../js/constantes'
-import {parse} from 'himalaya'
 
 Vue.use(Vuex)
 
@@ -18,20 +17,15 @@ const mutations = {
     state.currentPortalPage = portalPageId
   },
   SET_PORTAL_PAGE: (state, {portalPageId, portalPage}) => {
-    state.portalPages[portalPageId] = portalPage
+    Vue.set(state.portalPages, portalPageId, portalPage)
   },
   REMOVE_PORTAL_PAGE: (state, id) => {
     state.portalPages.slice(id)
   },
-  ADD_COLUM: (state, column) => {
-    state.portalPages[column.portalPageId] = column
-  },
-  ADD_PORTLET_TO_COLUMN: (state, {portalPage, column, portlet}) => {
-    state.portalPages[portalPage][column][portlet.name] = portlet
-  },
   SET_PORTLET: (state, {portletId, data}) => {
-    state.portlets[portletId] = data
-    state.portletCpt++
+    Vue.set(state.portlets, portletId, data)
+    // state.portlets[portletId] = data
+    // state.portletCpt++
   }
 }
 
@@ -42,7 +36,7 @@ const getters = {
   portalPages: state => state.portalPages,
   column: state => ({portalPageId, columnSeqId}) => { return state.portalPages[portalPageId].listColumnPortlet.find(col => col.columnSeqId === columnSeqId)},
   portlet(state) {
-    let temp = state.portletCpt
+    // let temp = state.portletCpt
     return (id) => { return state.portlets[id] }
   },
   portlets: state => state.portlets

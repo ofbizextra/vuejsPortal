@@ -2,8 +2,10 @@
   <div id="app">
     <!--<v-wait message="Loading data...">-->
     <!--</v-wait>-->
+
     <BlockUI v-if="$wait.any" message="Fetching datas...">
       <spinner
+        id="loader-wrapper"
         :animation-duration="1200"
         :size="55"
         :color="'#28b3ff'"
@@ -20,6 +22,18 @@
     data() {
       return {
         image: logo
+      }
+    },
+    methods: {
+      increment() {
+        this.$store.dispatch('data/incrementCpt1')
+      },
+      changeEX11() {
+        this.$store.dispatch('data/setEntityRow', {
+          entityName: 'Example',
+          primaryKey: 'EX11',
+          data: {description: 'blablabla'}
+        })
       }
     },
     mounted() {

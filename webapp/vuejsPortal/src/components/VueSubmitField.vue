@@ -31,6 +31,7 @@
     methods: {
       post() {
         console.log('post ...')
+        this.$wait.start('updating ' + this.props.attributes.formName)
         let linkUrl = this.getDataFromForm({formId: this.props.attributes.formName, key: 'linkUrl'})
         let url = constantes.hostUrl + linkUrl
         this.$http.post(
@@ -49,21 +50,39 @@
               }).then(response => {
                 console.log(response)
                 console.log('Store updated successfully')
+                this.$nextTick(() => {
+                  this.$wait.end('updating ' + this.props.attributes.formName)
+                })
               }, error => {
                 console.log(error)
+                this.$nextTick(() => {
+                  this.$wait.end('updating ' + this.props.attributes.formName)
+                })
               })
             } else {
               console.log('Store don\'t need to be updated')
+              this.$nextTick(() => {
+                this.$wait.end('updating ' + this.props.attributes.formName)
+              })
             }
           }, error => {
             console.log(error)
+            this.$nextTick(() => {
+              this.$wait.end('updating ' + this.props.attributes.formName)
+            })
           }
         )
       },
       updateStore() {
-        let data = {watcherName: this.getNestedObject(this.data, ['updateArea', 0, 'areaId']), params: this.getForm(this.props.attributes.formName)}
-        console.log('data to setWatcher : ', data)
-        this.$store.dispatch('data/setWatcher', data)
+        this.$wait.start('updating ' + this.props.attributes.formName)
+        this.$nextTick(() => {
+          let data = {watcherName: this.getNestedObject(this.data, ['updateArea', 0, 'areaId']), params: this.getForm(this.props.attributes.formName)}
+          console.log('data to setWatcher : ', data)
+          this.$store.dispatch('data/setWatcher', data)
+          this.$nextTick(() => {
+            this.$wait.end('updating ' + this.props.attributes.formName)
+          })
+        })
       },
       resolveEvents() {
         if (this.data['updateArea']) {

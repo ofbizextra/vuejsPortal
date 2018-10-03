@@ -10,6 +10,7 @@ const state = {
   example: {},
   currentId: '',
   cpt: 0,
+  cpt1: 0,
   entities: {},
   isUpdating: false,
   updatingCpt: 0,
@@ -28,34 +29,41 @@ const mutations = {
     state.currentId = id
   },
   SET_ENTITY: (state, data) => {
-    state.entities[data.entityName] = {
+    Vue.set(state.entities, data.entityName, {
       list: {},
       primaryKey: data.primaryKey
-    }
+    })
+    // state.entities[data.entityName] = {
+    //   list: {},
+    //   primaryKey: data.primaryKey
+    // }
   },
   SET_ENTITY_ROW: (state, data) => {
     if (state.entities[data.entityName] === undefined) {
       return 'Entities doesn\'t exist'
     }
     if (!state.entities[data.entityName].list[data.primaryKey]) {
-      state.entities[data.entityName].list[data.primaryKey] = {};
+      Vue.set(state.entities[data.entityName].list, data.primaryKey, {})
+      // state.entities[data.entityName].list[data.primaryKey] = {};
     }
     Object.keys(data.data).forEach(key => {
-      state.entities[data.entityName].list[data.primaryKey][key] = data.data[key]
+      Vue.set(state.entities[data.entityName].list[data.primaryKey], key, data.data[key])
+      // state.entities[data.entityName].list[data.primaryKey][key] = data.data[key]
     })
   },
   START_UPDATE: (state) => {
     state.updatingCpt++
   },
   STOP_UPDATE: (state) => {
-    state.updatingCpt--
-    if (state.updatingCpt === 0) {
       state.cpt++
-    }
+  },
+  INCREMENT_CPT1: (state) => {
+    state.cpt1++
   },
   SET_WATCHER: (state, {watcherName, params}) => {
-    state.watchers[watcherName] = params
-    state.watchersCpt++
+    Vue.set(state.watchers, watcherName, {...params})
+    // state.watchers[watcherName] = {...params}
+    // state.watchersCpt++
   }
 }
 
@@ -64,6 +72,7 @@ const getters = {
   dataFromExample: state => (data) => {
     return state.example[data.id][data.key]
   },
+  entities: state => state.entities,
   entity: state => entityName => {
     return state.entities[entityName]
   },
@@ -71,9 +80,16 @@ const getters = {
     return state.entities[entityName].list.find(row => row.stId === id)
   },
   entityRowAttribute(state) {
-    let temp = state.cpt
+    // let temp = state.cpt
     return function ({entityName, id, attribute}) {
-      return state.entities[entityName].list[id][attribute]
+      if (state.entities[entityName] === undefined ||
+        state.entities[entityName].list[id] === undefined ||
+        state.entities[entityName].list[id][attribute] === undefined
+      ) {
+        return ''
+      } else {
+        return state.entities[entityName].list[id][attribute]
+      }
     }
   },
   watcher(state) {
@@ -83,7 +99,18 @@ const getters = {
     }
   },
   isUpdating: state => state.updatingCpt > 0,
-  updatingCpt: state => state.updatingCpt
+  updatingCpt: state => state.updatingCpt,
+  cpt: state => state.cpt,
+  cpt1: state => state.cpt1,
+  cptWithParams(state) {
+    return function (params) {
+      if (state.entities[params.entityName] === undefined) {
+        return state.entities[params.entityName]
+      } else {
+        return state.entities[params.entityName].list[params.key][params.attribute]
+      }
+    }
+  }
 }
 
 const actions = {
@@ -114,6 +141,9 @@ const actions = {
   },
   stopUpdate({commit}) {
     commit('STOP_UPDATE')
+  },
+  incrementCpt1({commit}) {
+    commit('INCREMENT_CPT1')
   }
 }
 
