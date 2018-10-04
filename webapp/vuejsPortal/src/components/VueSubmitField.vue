@@ -33,7 +33,7 @@
         console.log('post ...')
         this.$wait.start('updating ' + this.props.attributes.formName)
         let linkUrl = this.getDataFromForm({formId: this.props.attributes.formName, key: 'linkUrl'})
-        let url = constantes.hostUrl + linkUrl
+        let url = linkUrl
         this.$http.post(
           url,
           queryString.stringify(this.getForm(this.props.attributes.formName)),
