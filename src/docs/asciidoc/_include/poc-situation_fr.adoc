@@ -21,8 +21,11 @@ under the License.
 L'objectif est de faire fonctionner la page portail ExampleFrontJs qui contient 2 colonnes avec
 dans la première 2 portlets, le findExample puis le editExample et le listExample dans la seconde colonne.
 
-Actuellement, suite au login, les 3 uri findExampleLayer, ListExampleLayer et EditExampleLayer sont appelé puis
-affiché.
+Pour chacune de ces portlet un composant portlet est créé dans le front avec le nom de la portlet et celui-ci s'initialise
+avec le showPortlet.
+
+Le showPortlet communique au composant la grappe de composants fils à créer ( ViewScreen ) et eventuellement le jeu de données nécessaire
+à son utilisation ( ViewEntities ).
 
 image::PortalPageDetail-Example.svg[Imbrication des container]
 

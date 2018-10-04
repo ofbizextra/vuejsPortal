@@ -31,44 +31,30 @@ que par une société.
 . créer le répertoire plugins dans ofbiz-framework
 . télécharger, avec git, dans le répertoire plugins :
 .. le plugin vuejsportal à partir du https://gitlab.ofbizextra.org/ofbizextra/ofbizplugins/vuejsPortal
-.. le plugin rbstvuejs à partir https://gitlab.ofbizextra.org/ofbizextra/ofbizplugins/rbstvuejs
 .. le plugin example (de Apache OFBiz) modifié pour les besoins du POC à partir de https://gitlab.ofbizextra.org/ofbizextra/ofbizplugins/example
     et en se mettant sur la branch vuejsPortal
-. il y a quelques fichiers à modifier dans ofbiz-framework, pour l'instant ce n'est pas intégré dans la procédure d'installe du
-  plugin mais ça viendra. +
-  L'ensemble des fichiers ou modification de fichier se trouve dans le répertoire ofbizfile du plugin vuejsPortal.
-.. copie du répertoire docs/asciidoc/images/example_fr dans ofbiz-framework
-.. copie du fichier docs/asciidoc/images/PortalUml.png dans ofbiz-framework
-.. copie du fichier docs/asciidoc/images/PortalPageDetail-Example.svg dans ofbiz-framework
-.. copie du fichier docs/asciidoc/developer-manual_fr.adoc dans ofbiz-framework
-.. ajout du champ watcherName dans la définition de la table PortalPagePortlet: +
-  Dans le fichier framework/common/entitydef/entitymodel.xml à la ligne 824 vous avez la définition de la table
-  "PortalPagePortlet" et il faut ajouter le champ watcherName en dernier champ. +
-  Pour vous aider vous pouvez lire ou appliquer le patch entitymodel.xml.patch qui se trouve dans le répertoire ofbizfile du plugin vuejsPortal 
-  dans framework/common/entitydef/
-.. copie du répertoire framework/widget/src/main/java/org/apache/ofbiz/widget/renderer/frontjs dans ofbiz-framework
-.. copie du fichier framework/widget/src/main/java/org/apache/ofbiz/widget/renderer/macro/MacroFormRenderer.java en remplacement de celui de OFBiz
+. Il faut ensuite modifier quelques fichiers dans ofbiz-framework. +
+  Pour se faire, executer la commande suivante en étant positionné dans le repertoire 'plugins/VuejsPortal' : +
+  `rsync -a --exclude-from=./ofbizFiles/rsyncExcludes ./ofbizFiles/ ../../` +
 . Pour le build de l'applicatif vuejs il faut avoir nodejs installé sur son environement
+.. Pour installer node.js dans un environnement debian, executer le commandes suivantes : +
+`curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -` +
+`sudo apt-get install -y nodejs` +
+Dans le cas d'un autre environnement veuiller consulter la page https://nodejs.org/en/download/package-manager/#debian-and-ubuntu-based-linux-distributions
 .. en attendant une commande intégré à gradle
-.. il faut se positionner à la racine de la webapp vuejs plugins/vuejsPortal/webapp/vuejsPortal
-* npm i  <= pour charger toutes les dépendances
-* npm run build <= pour builder
-. il est maintenant possible de lancer ofbiz classiquement (chargement des donnée puis run puis ...)
-. afin de pouvoir tester le plus confortablement, il est conseillé de se créer un user (autre que admin) et de lui affecter 
-  un groupe de sécurité adéquate (fullAdmin par exemple). Ce user doit rester sur un thème standard.
-. changer le thème du user admin pour choisir un thème avec vuejs.
-. aller se connecter à l'application portal https://localhost:8443/portal
+.. il faut se positionner à la racine de la webapp vuejs 'plugins/vuejsPortal/webapp/vuejsPortal'
+* `npm i`  <= pour charger toutes les dépendances
+* `npm run build` <= pour builder
+. il est maintenant possible de lancer ofbiz classiquement : +
+`./gradlew cleanAll loadAll ofbiz` +
+( à partir de la *racine de ofbiz-framework* )
+. aller se connecter à l'application portal https://localhost:8443/exampleapi/control/main
 
 == Choix pour le POC
 
 Usage de la *branche trunk* de Apache OFBiz.
 
-Usage des principes et architecture de *Portal Page et Portlet* de Apache OFBiz. 
-
-Le *théme Rainbow Stone* a été retenu comme base pour le POC, il a été dupliqué dans le plugin rbstvuejs. +
-Ce plugin introduits donc 4 nouveaux thèmes : Rainbow Stone Vuejs - xxxx. +
-Les nouveaux thèmes sont dédiés pour l'usage de la webapp Portal, une grande partie des macro ftl de rendu de champ ont
-été adapté en fonction des besoins.
+Usage des principes et architecture de *Portal Page et Portlet* de Apache OFBiz.
 
 L'ensemble des exemples d'usage sont *avec le composant example* et pendant la durée du POC même des fichiers qui devrait
 être dans common sont mis dans example afin de simplifier l'installation et mise à jours.
@@ -77,34 +63,11 @@ Une *webapp supplémentaire exampleapi* a été créé pour centraliser les uri 
 c'est paramétré dans le fichier constantes.js.
 
 En attendant le login par token dans ofbiz (cf https://issues.apache.org/jira/browse/OFBIZ-9833 ) le login actuel dans 
-le composant portal (  https://localhost:8443/portal ) utilise le méchanisme *ofbiz standard de login via cookies* .
+le composant portal (  https://localhost:8443/exampleapi/control/login ) utilise le méchanisme *ofbiz standard de login via cookies* .
 
 Les *screens, forms, menus* utilisés pour les portlets sont définis *en xml*.
 
-La transmission des éléments d'affichage sont transmis à l'application FrontJs via les templates macro ftl de manière
-à envoyer des *balises dédiées*, une par macro existante) ne comportant *que les paramètres*.
-[source,xml]
-----
-<#macro renderDisplayField imageLocation alert type="" idName="" description="" title="" class="" inPlaceEditorUrl="" inPlaceEditorParams=""  <1>
- ><vue-label  <2>
-          imageLocation="${imageLocation}" <3>
-          alert="${alert}"
-          type="${type}"
-          idName="${idName}"
-          description="${description}"
-          title="${title}"
-          class="${class}"
-          inPlaceEditorUrl="${inPlaceEditorUrl}"
-          inPlaceEditorParams="${inPlaceEditorParams}" /></#macro>
-----
-<1> La macro appelé par le rendrer
-<2> La balise pour l'application VueJsPortal
-<3> les paramètres qui ne sont transmit que si non null
-
-Il y a *un composant (vuejs) par macro*.
-
-Lors de la réception d'un flux en provenance d'un "screen" *un store est créé pour stocker* les données (exampleId, exampleName, ...),
-nous l'appelons *GenericDataView*, elle correspond à une GenericEntity mais du cotè utilisateur. 
+Il y a *un composant (vuejs) par élément ofbiz* ( SingleItemRow => vue-single-item-row ).
 
 Le *showPortlet est redéfini* dans le POC par simplification, pour faire ce que l'on souhaite et seulement ça.
 

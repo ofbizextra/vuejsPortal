@@ -42,12 +42,7 @@ correctement la <<GENERICDADAVIEW GenericDataView>> au niveau du client Js.
 
 ---
 *Une uri* permettant d'obtenir la liste des *noms de champ clés primaire pour une entityName* sera peut-être necessaire pour
-permettre au client Js de vérifier l'uniticité d'un GenericDataView. 
-
----
-*Une uri* pour obtenir *le header* et une pour *le footer*, ces deux uri seront appellé par le client Js 
-pour avoir le template ofbiz standard. Ou alors ce sera une uri produisant le header et footer avec juste un div
-ayant un id permettant d'injecter le code .
+permettre au client Js de vérifier l'uniticité d'un GenericDataView.
 
 ---
 Le *showPortlet* doit vérifier le respect de la *sécurité* par rapport au deux champs SecurityServiceName et SecurityMainAction.
