@@ -1,0 +1,90 @@
+////
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+////
+= Details sur Vue.js
+
+=== Vue.js general
+todo
+
+=== Composants
+Un composant est défini par 3 block distinct ( template, script, style ) qui sont rassemblés au sein d'un fichier '.vue'
+
+. Le template :
+* Le template doit être contenu dans un élément unique ( div, span, table, ect... ) +
+* Dans le template on peut faire reference à des éléments de la partie script ( variables, fonctions ) grâce à l'aide de doubles accolades: *{{}}* +
+* Les attributs html classiques ( id, type, class, style, ect...) peuvent être précédé de '*:*' pour être lié aux données/fonctions du script ( ex: :class="data.class.alert" )
+* Des directives sont mises à disposition par Vue.js afin de faciliter la logique dans le template ( v-for, v-if, v-on:click, ect... ). Ces directives propres à Vue.js sont liées par default au context du script et n'ont pas besoin d'être précédées par '*:*'
+
+. Le script :
+* La section script est principalement constituer d'un 'export default {}' qui va contenir l'ensemble des éléments du script. +
+TIP: Cet export peut être précédé par des import du paquets node.js ou de fichiers ( image, script )
+* Cet export est un table de hash pouvant contenir les clefs data/method/computed/props
+** data() est un fonction qui contient les variables du composant. +
+Toute variables declarées dans data() avant la création du composant ou rajouter grâce à la méthode Vue.set() sont réactives. +
+C'est à dire que Vue.js va suivre les évolution de ses valeur et les répercuter partout où elle sont utilisées.
+** computed et une table de hash contenant uniquement des fonctions dont le resultat est évaluer en fonction d'au moins une propriété réactive. +
+Chacune de ces fonctions va être réévaluer à des que une des propriété dont elle dépend va être mise à jour. +
+Ces fonction sont donc réactives et Vue.js va également répercuter ses changements à tout les endroits où elle est utilisée.
+** methods est une table de hash contenant des fonctions 'helper'. +
+Elles peuvent être utilsées aussi bien dans le template que dans le script. +
+WARNING: Ces fonctions ne seront jamais réévaluer automatiquement par Vue.js
+** props est un tableau de string qui defini quelles sont les paramètre que le composant peut recevoir de sont parent. +
+Elle sont utilisées dans le code sous la forme: 'this.props.nomDeLaProps'.
+* Cette section peut aussi contenir des *hook* existants dans le cycle de vie du composant ( created(), mounted(), beforeUpdate(), ect... ). +
+Voir ci-dessous : +
+image:https://fr.vuejs.org/images/lifecycle.png["Component lifecycle", width=256,link="https://fr.vuejs.org/images/lifecycle.png"] +
+WARNING: Lors du *hook* created() les valeurs computed et les methodes du composant ne sont pas encore créer.
+. Le style +
+Cette section permet de definir le style du composant en css. +
+Cette section sera prioritaire sur le style general du projet.
+
+=== Vuex
+Vuex est le systeme de centralisation de l'état de l'application.
+Il permet de créer des *stores* qui nous serviront à stocker des données accessible et modifiable à tout niveau de l'application.
+
+Un store contient 4 élément :
+
+. Le State +
+Le state est une table de hash contenant les informations. +
+Ce state ne peut être modifier que par des mutations. +
+Les données présentes dans le state à l'initialisation de celui-ci seront réactive. +
+Les données rajoutées après l'initialisation du store devront être crées à l'aide de la methode Vue.set() afin d'activer le suivi des modifications et de la rendre réactive.
+
+. Les Mutations +
+Les mutations sont une table de hash contenant les fonction capable de changer le *state*. +
+Par convention la clef de ces fonction ne doit contenir que des majuscules. +
+Les mutations ne peuvent pas être déclenchées directement à partir du code, elle doivent être appelées par une action. +
+Les mutations *doivent être synchrones*.
+
+. Les Actions +
+Les actions servent à déclencher les mutations. +
+A la manière d'un setter elles controlent que les nouvelles valeurs correspondent à ce que l'on attends. +
+Une action *peut être asynchrone*, dans ce cas elle retourne une promesse. +
+
+. Les Getters +
+Les getters permettent de consulter une/des valeur(s) du state. +
+Les getters sont réactif. +
+Les getters dans certain cas peuvent être paramétrés, dans ce cas ils retournent une fonction qui prendra des paramétres mais perdront leur faculté d'être réactifs.
+Ils ne seront réévaluer seulement lorsque l'on rééxecuteras celui-ci où qu'on en changera les paramétres.
+
+Le store peut être composant de modules. +
+Dans ce cas à la racine du repertoire store on créé un fichier index.js que se charge d'importer Vuex et les stores que l'on
+placera dans un sous-repertoire modules.
+
+=== Reactivity
+todo
