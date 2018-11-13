@@ -146,6 +146,7 @@ public class FrontJsScreenViewHandler extends AbstractViewHandler {
             // prepate context data that sould be serialized to client
             Map<String, Object> data = new HashMap<>();
             //output.put("data", context);
+            // TODO : essayer de supprimer quelques mots : eventMessageList, person, entityName
             List<String> toExclude = UtilMisc.toList("globalContext", "request", "session", "rootDir", "security",
                     "checkLoginUrl", "screens", "javaScriptEnabled", "https", "sessionAttributes",
                     "eventMessageList", "externalKeyParam", "webSiteId", "controlPath",
