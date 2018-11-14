@@ -61,10 +61,10 @@ les données (donc quasiment toujours un nom de champ et sa valeur) de ce champ.
  
  ---
  
- Pouvoir choisir facilement si une portlet s'étend en hauteur ou en largeur. Cas d'usage: portlet search, soit sur une colonne
- soit en ligne.
+Pouvoir choisir facilement si une portlet s'étend en hauteur ou en largeur. Cas d'usage: portlet search, soit sur une colonne
+soit en ligne.
  
- A discuter, si la form doit inclure / géré les positions.
+A discuter, si la form doit inclure / géré les positions.
 
 
 

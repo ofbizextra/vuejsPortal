@@ -18,10 +18,10 @@ under the License.
 ////
 = Details sur Vue.js
 
-=== Vue.js general
+== Vue.js general
 todo
 
-=== Composants
+== Composants
 Un composant est défini par 3 block distinct ( template, script, style ) qui sont rassemblés au sein d'un fichier '.vue'
 
 . Le template :
@@ -53,7 +53,7 @@ WARNING: Lors du *hook* created() les valeurs computed et les methodes du compos
 Cette section permet de definir le style du composant en css. +
 Cette section sera prioritaire sur le style general du projet.
 
-=== Vuex
+== Vuex
 Vuex est le systeme de centralisation de l'état de l'application.
 Il permet de créer des *stores* qui nous serviront à stocker des données accessible et modifiable à tout niveau de l'application.
 
@@ -88,5 +88,5 @@ Le store peut être composant de modules. +
 Dans ce cas à la racine du repertoire store on créé un fichier index.js que se charge d'importer Vuex et les stores que l'on
 placera dans un sous-repertoire modules.
 
-=== Reactivity
+== Reactivity
 todo
