@@ -42,7 +42,7 @@ que par une société.
 `sudo apt-get install -y nodejs` +
 Dans le cas d'un autre environnement veuiller consulter la page https://nodejs.org/en/download/package-manager/#debian-and-ubuntu-based-linux-distributions
 .. en attendant une commande intégré à gradle
-.. il faut se positionner à la racine de la webapp vuejs 'plugins/vuejsPortal/webapp/vuejsPortal'
+... il faut se positionner à la racine de la webapp vuejs 'plugins/vuejsPortal/webapp/vuejsPortal'
 * `npm i`  <= pour charger toutes les dépendances
 * `npm run build` <= pour builder
 . il est maintenant possible de lancer ofbiz classiquement : +
@@ -56,20 +56,33 @@ Usage de la *branche trunk* de Apache OFBiz.
 
 Usage des principes et architecture de *Portal Page et Portlet* de Apache OFBiz.
 
-L'ensemble des exemples d'usage sont *avec le composant example* et pendant la durée du POC même des fichiers qui devrait
-être dans common sont mis dans example afin de simplifier l'installation et mise à jours.
+L'ensemble des exemples d'usage sont *avec le composant example* et pendant la durée du POC même des nouveaux fichiers qui devrait
+être placé dans common sont mis dans example afin de simplifier l'installation et mise à jours.
 
 Une *webapp supplémentaire exampleapi* a été créé pour centraliser les uri autorisé pour le composant vuejsPortal, 
-c'est paramétré dans le fichier constantes.js.
+c'est paramétré dans le fichier constantes.js. +
+Le composant vuejsPortal n'est pas spécifique à un composant, il necessite juste une uri de base pour ses requêtes.
+Cette uri est paramètré dans le fichier constantes.js pour l'instant, mais dans le futur le paramétrage sera plus souple
+afin de pouvoir utiliser vuejsPortal avec plusieurs composants, y compris si cela doit apparaitre comme plusieur "webapp"
+dans le menu utilisateur.
 
 En attendant le login par token dans ofbiz (cf https://issues.apache.org/jira/browse/OFBIZ-9833 ) le login actuel dans 
 le composant portal (  https://localhost:8443/exampleapi/control/login ) utilise le méchanisme *ofbiz standard de login via cookies* .
 
-Les *screens, forms, menus* utilisés pour les portlets sont définis *en xml*.
+Les *screens, forms, menus* utilisés pour les portlets sont définis *en xml*, et dans des fichiers dédiés pour plus de lisibilité.
 
-Il y a *un composant (vuejs) par élément ofbiz* ( SingleItemRow => vue-single-item-row ).
+Il y a *un composant (vuejs) par élément ofbiz* ( SingleItemRow => vue-single-item-row ), existant dans les fichier macro.ftl standard.
 
-Le *showPortlet est redéfini* dans le POC par simplification, pour faire ce que l'on souhaite et seulement ça.
+Un nouvelle ensemble de *renderer* a été créé, et l'uri *showPortletFj* utilise le *nouveau viewHandler* pour retourner
+le resultat du rendu du screen, showPortlet. +
+cette uri est utilisé par l'applicatif vueJs pour toutes les requêtes de récupération des informations d'affichage. +
+Le viewHandler retourne plusieurs ensemble (map) d'élément, dont l'un pour les données et l'un pour le/s affichage/s.
+
+Le screen *showPortlet est redéfini* dans le POC (dans example/widget/example) par simplification, pour faire ce que 
+l'on souhaite et seulement ça.
+
+Ajout d'un champ dans l'entity PortalPagePortlet *watcherName* qui correspond au nom du watcher qui doit déclancher 
+la mise à jour de la portlet 
 
 include::poc-situation_fr.adoc[leveloffset=+1]
 

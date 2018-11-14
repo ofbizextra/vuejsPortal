@@ -25,16 +25,12 @@ Ces TODO sont plutot dans l'ordre de priorité. Les premièrs étant les plus pr
 sensés ne concerner que l'étapes majeur en cours (c'est à dire #pas# la suivante icon:smile-o[] )
 
 ---
-Le showPortlet doit vérifier que les paramètre suivant sont bien présent, c'est nécessaire pour la lecture des attribues :
+Le screen showPortlet doit vérifier que les paramètre suivant sont bien présent, c'est nécessaire pour la lecture des attribues :
 
 * portalPageId
 * portalPortletId
 * portletSeqId
 
-Il faut donc aussi modifier l'uri portalPageDetail pour qu'elle renvoi, pour chaque portlet :
-
-* portalPortletId
-* portletSeqId
 
 ---
 Lors de l'envoi d'un flux via showPortlet, il faut pouvoir *identifier l'entityName* des donnés afin de pouvoir créer
@@ -60,9 +56,15 @@ L'ensemble des flux entre le serveur et le client Js sont en Json.
 
 Grace à un nouveau Renderer (et donc un nouveau viewhandler) la construction de l'appel à une macro est remplacé
 par la création d'un map contenant les paramètres de la macro. +
-Dans cette map est ajouter le type de la macro (son nom dans le fichier template) et une map nommé context qui contient
+Dans cette map est ajouté le type de la macro (son nom dans le fichier template) et une map nommé context qui contient
 les données (donc quasiment toujours un nom de champ et sa valeur) de ce champ.
  
+ ---
+ 
+ Pouvoir choisir facilement si une portlet s'étend en hauteur ou en largeur. Cas d'usage: portlet search, soit sur une colonne
+ soit en ligne.
+ 
+ A discuter, si la form doit inclure / géré les positions.
 
 
 

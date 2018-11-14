@@ -30,7 +30,7 @@ une dette technique.
 
 La documentation qui suit a pour objectif, 
 
-* d'une part d'expliquer où nous en est le composant et comment il fonctionne et quels sonts les points choisis et ceux laissés de coté
+* d'une part d'expliquer où en est le composant et comment il fonctionne et quels sont les points choisis et ceux laissés de coté
 * d'autre part de préparer la futur documentation en détaillant les éléments à destination des futur utilisateurs
 
 L'objectif majeur d'utiliser un framework javascript pour l'interface utilisateur est d'augmenter le nombre d'élément interactif 

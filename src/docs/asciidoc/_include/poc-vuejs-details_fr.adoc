@@ -37,13 +37,13 @@ TIP: Cet export peut être précédé par des import du paquets node.js ou de fi
 ** data() est un fonction qui contient les variables du composant. +
 Toute variables declarées dans data() avant la création du composant ou rajouter grâce à la méthode Vue.set() sont réactives. +
 C'est à dire que Vue.js va suivre les évolution de ses valeur et les répercuter partout où elle sont utilisées.
-** computed et une table de hash contenant uniquement des fonctions dont le resultat est évaluer en fonction d'au moins une propriété réactive. +
-Chacune de ces fonctions va être réévaluer à des que une des propriété dont elle dépend va être mise à jour. +
+** computed et une table de hash contenant uniquement des fonctions dont le resultat est évalué en fonction d'au moins une propriété réactive. +
+Chacune de ces fonctions va être réévalué dès que une des propriété dont elle dépend est mise à jour. +
 Ces fonction sont donc réactives et Vue.js va également répercuter ses changements à tout les endroits où elle est utilisée.
 ** methods est une table de hash contenant des fonctions 'helper'. +
 Elles peuvent être utilsées aussi bien dans le template que dans le script. +
 WARNING: Ces fonctions ne seront jamais réévaluer automatiquement par Vue.js
-** props est un tableau de string qui defini quelles sont les paramètre que le composant peut recevoir de sont parent. +
+** props est un tableau de string qui defini quelles sont les paramètre que le composant peut recevoir de son parent. +
 Elle sont utilisées dans le code sous la forme: 'this.props.nomDeLaProps'.
 * Cette section peut aussi contenir des *hook* existants dans le cycle de vie du composant ( created(), mounted(), beforeUpdate(), ect... ). +
 Voir ci-dessous : +
@@ -63,7 +63,8 @@ Un store contient 4 élément :
 Le state est une table de hash contenant les informations. +
 Ce state ne peut être modifier que par des mutations. +
 Les données présentes dans le state à l'initialisation de celui-ci seront réactive. +
-Les données rajoutées après l'initialisation du store devront être crées à l'aide de la methode Vue.set() afin d'activer le suivi des modifications et de la rendre réactive.
+Les données rajoutées après l'initialisation du store devront être crées à l'aide de la methode Vue.set() afin d'activer 
+le suivi des modifications et de la rendre réactive.
 
 . Les Mutations +
 Les mutations sont une table de hash contenant les fonction capable de changer le *state*. +
@@ -79,8 +80,9 @@ Une action *peut être asynchrone*, dans ce cas elle retourne une promesse. +
 . Les Getters +
 Les getters permettent de consulter une/des valeur(s) du state. +
 Les getters sont réactif. +
-Les getters dans certain cas peuvent être paramétrés, dans ce cas ils retournent une fonction qui prendra des paramétres mais perdront leur faculté d'être réactifs.
-Ils ne seront réévaluer seulement lorsque l'on rééxecuteras celui-ci où qu'on en changera les paramétres.
+Les getters dans certain cas peuvent être paramétrés, dans ce cas ils retournent une fonction qui prendra des paramétres 
+mais perdront leur faculté d'être réactifs.
+Ils seront réévalué seulement lorsque l'on rééxecuteras celui-ci ou qu'on en changera les paramétres.
 
 Le store peut être composant de modules. +
 Dans ce cas à la racine du repertoire store on créé un fichier index.js que se charge d'importer Vuex et les stores que l'on

@@ -18,15 +18,21 @@ under the License.
 ////
 = Situation actuel du POC
 
-L'objectif est de faire fonctionner la page portail ExampleFrontJs qui contient 2 colonnes avec
-dans la première 2 portlets, le findExample puis le editExample et le listExample dans la seconde colonne.
+L'objectif est de faire fonctionner la page portail ExampleFrontJs, pour l'instant le nom de la page portail est en dur. +
+Cette page contient 2 colonnes avec dans la première 2 portlets, le findExample puis le editExample et le listExample dans la seconde colonne.
 
 Pour chacune de ces portlet un composant portlet est créé dans le front avec le nom de la portlet et celui-ci s'initialise
 avec le showPortlet.
 
-Le showPortlet communique au composant la grappe de composants fils à créer ( ViewScreen ) et eventuellement le jeu de données nécessaire
-à son utilisation ( ViewEntities ).
+Le showPortletFj communique au composant la grappe de composants fils à créer ( ViewScreen ) et eventuellement le jeu de données nécessaire
+à son utilisation ( ViewEntities ). +
+Actuellement le format utilisé est json.
 
 image::PortalPageDetail-Example.svg[Imbrication des container]
 
+== Nouveau renderer OFBiz
 
+Un nouveau package à été créé dans org.apache.ofbiz.widget.renderer frontJs qui contient l'ensemble des nouveaux renderer.
+
+Dans ce package, il y a une class FrontJsOutput qui permet de construire les éléments nécessaires au format de sortie souhaité.
+Un objet de cette class est instancié en début de traitement du viewHandler. 
