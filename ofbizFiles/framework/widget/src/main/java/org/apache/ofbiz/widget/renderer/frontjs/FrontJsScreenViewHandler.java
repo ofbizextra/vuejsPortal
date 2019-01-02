@@ -172,7 +172,7 @@ public class FrontJsScreenViewHandler extends AbstractViewHandler {
             //output.put("data", data);
             ObjectMapper mapper = new ObjectMapper();
             //mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-            mapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
+            //mapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
             StringWriter jsonWriter = new StringWriter();
             String[] propertiesToExclude = toExclude.toArray(new String[toExclude.size()]);
             mapper.addMixIn(Object.class, DynamicMixIn.class);

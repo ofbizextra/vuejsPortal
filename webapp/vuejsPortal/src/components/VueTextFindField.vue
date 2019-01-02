@@ -59,7 +59,7 @@
         return {
           formId: this.props.attributes.formName,
           key: this.props.attributes.name + '_ic',
-          value: this.props.attributes.ignCase ? this.props.attributes.ignCase : ''
+          value: this.props.attributes.ignCase ? 'Y' : 'N'
         }
       },
       value: {

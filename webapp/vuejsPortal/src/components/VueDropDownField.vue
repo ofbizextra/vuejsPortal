@@ -49,7 +49,7 @@
         set(value) {
           this.$store.dispatch('form/setFieldToForm', {
             formId: this.props.attributes.formName,
-            key: this.props.attributes.id,
+            key: this.props.attributes.name,
             value: value
           })
         }
