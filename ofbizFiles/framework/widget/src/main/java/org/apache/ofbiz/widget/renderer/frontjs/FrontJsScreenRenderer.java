@@ -112,13 +112,11 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
     }
 
     public void renderLabel(Appendable writer, Map<String, Object> context, ModelScreenWidget.Label label) throws IOException {
-        Map<String, Object> parameters = new HashMap<>();
-        parameters.put("text", label.getText(context));
-        parameters.put("id", label.getId(context));
-        parameters.put("style", label.getStyle(context));
-        HashMap<String, Object> hashMapStringObject = new HashMap<>();
-        hashMapStringObject.put("Label", parameters);
-        this.output.putScreen(hashMapStringObject);
+        Map<String, Object> attributes = new HashMap<>();
+        attributes.put("text", label.getText(context));
+        attributes.put("id", label.getId(context));
+        attributes.put("style", label.getStyle(context));
+        this.output.putScreen("Label", attributes);
     }
 
     public void renderHorizontalSeparator(Appendable writer, Map<String, Object> context, ModelScreenWidget.HorizontalSeparator separator) throws IOException {

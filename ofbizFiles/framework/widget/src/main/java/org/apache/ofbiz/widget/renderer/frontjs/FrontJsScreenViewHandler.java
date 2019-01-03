@@ -52,7 +52,7 @@ public class FrontJsScreenViewHandler extends AbstractViewHandler {
         context.put("menuStringRenderer", menuStringRenderer);
         return screenStringRenderer;
     }
-
+/*
     private ArrayList<Map<String, Object>> parseViewScreen(ArrayList<Map<String, Object>> arrayListMap) {
         ArrayList<Map<String, Object>> result = new ArrayList<>();
         HashMap<String, Object> temp;
@@ -131,7 +131,7 @@ public class FrontJsScreenViewHandler extends AbstractViewHandler {
         }
         return;
     }
-
+*/
     public void render(String name, String page, String info, String contentType, String encoding, HttpServletRequest request, HttpServletResponse response) throws ViewHandlerException {
         try {
             Writer writer = response.getWriter();
@@ -144,7 +144,7 @@ public class FrontJsScreenViewHandler extends AbstractViewHandler {
             ScreenRenderer screens = new ScreenRenderer(writer, context, screenStringRenderer);
             context.put("screens", screens);
             // prepate context data that sould be serialized to client
-            Map<String, Object> data = new HashMap<>();
+//            Map<String, Object> data = new HashMap<>();
             //output.put("data", context);
             // TODO : essayer de supprimer quelques mots : eventMessageList, person, entityName
             List<String> toExclude = UtilMisc.toList("globalContext", "request", "session", "rootDir", "security",
@@ -154,11 +154,13 @@ public class FrontJsScreenViewHandler extends AbstractViewHandler {
                     "serverRoot", "application", "person", "response", "modelTheme", "dispatcher",
                     "webappName", "nullField", "screens", "formStringRenderer", "treeStringRenderer",
                     "menuStringRenderer", "requestAttributes", "Application", "entityName", "modelReader");
+            /*
             for (String key : context.keySet()) {
                 if (!toExclude.contains(key)) {
                     data.put(key, context.get(key));
                 }
             }
+            */
             context.put("simpleEncoder", UtilCodec.getEncoder(visualTheme.getModelTheme().getEncoder(getName())));
 
             screenStringRenderer.renderScreenBegin(writer, context);
