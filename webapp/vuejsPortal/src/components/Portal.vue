@@ -25,7 +25,7 @@
         queryString.stringify({
           portalPageId: 'ExampleFrontJs'
         }),
-        {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}
+        {headers: {'Content-Type': 'application/x-www-form-urlencoded', 'locale': 'en_US'}}
       ).then(
         response => {
           let portalPage = response.body
