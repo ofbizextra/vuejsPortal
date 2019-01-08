@@ -22,7 +22,7 @@ il peut y avoir des chapitres en plus, donc non traduit en anglais, mais alors c
 ////
 = Apache OFBiz Developer Manual
 The Apache OFBiz Project
-Release 17.12, La traduction en français est en cours, donc de nombreuse partie sont encore en anglais, elle est basé sur la version 1827961 de la version anglaise.
+Release 17.12, La traduction en français est en cours, donc de nombreuse partie sont encore en anglais, elle est basé sur la version 1850155 de la version anglaise.
 :imagesdir: ./images
 ifdef::backend-pdf[]
 :title-logo-image: image::OFBiz-Logo.svg[Apache OFBiz Logo, pdfwidth=4.25in, align=center]
@@ -200,10 +200,14 @@ autres questions concernant la gestion de la document et son élaboration sont t
 
 cf link:documentation_guidelines.html[documentation_guidelines] 
 
+Il existe plusieurs documentations, chacune avec un objectif ou un lectorat cible, pour l'instant chacune est représenté par 
+un fichier dans link:.[le répertoire racine] . 
+
+
 
 == Web Framework
 
-=== Web Apps
+include::../../framework/webapp/src/docs/asciidoc/webapp.adoc[leveloffset=+1]
 
 === Control Servlet
 
@@ -299,6 +303,8 @@ Pour plus de détail se référer à la https://ofbswdadoc.ofbizextra.org/OFBiz_
 
 == Deployment
 
-== Security
+include::../../framework/security/src/docs/asciidoc/security.adoc[leveloffset=+1]
 
 == Appendices
+
+include::../../framework/minilang/docs/asciidoc/minilang-to-groovy-manual.adoc[leveloffset=+1]
