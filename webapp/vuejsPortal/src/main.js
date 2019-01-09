@@ -54,6 +54,7 @@ import VueFieldRowWidgetCell from './components/VueFieldRowWidgetCell'
 import VueFieldGroup from './components/VueFieldGroup'
 import VueFieldTitle from './components/VueFieldTitle'
 import VueHyperlinkField from './components/VueHyperlinkField'
+import VueNextPrev from './components/VueNextPrev'
 
 import store from './store'
 
@@ -110,6 +111,7 @@ Vue.component('vue-field-row', VueFieldRow)
 Vue.component('vue-field-row-title-cell', VueFieldRowTitleCell)
 Vue.component('vue-field-row-widget-cell', VueFieldRowWidgetCell)
 Vue.component('vue-field-group', VueFieldGroup)
+Vue.component('vue-next-prev', VueNextPrev)
 Vue.component('spinner', BreedingRhombusSpinner)
 
 Vue.mixin({

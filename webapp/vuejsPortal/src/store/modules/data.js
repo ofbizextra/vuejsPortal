@@ -40,6 +40,9 @@ const mutations = {
   },
   SET_WATCHER: (state, {watcherName, params}) => {
     Vue.set(state.watchers, watcherName, {...params})
+  },
+  SET_WATCHER_ATTRIBUTES: (state, {watcherName, params}) => {
+    Vue.set(state.watchers, watcherName, {...state.watchers[watcherName], ...params})
   }
 }
 
@@ -92,6 +95,10 @@ const actions = {
   setWatcher({commit}, data) {
     console.log('data/setWatcher : ', data)
     commit('SET_WATCHER', data)
+  },
+  setWatcherAttributes({commit}, data) {
+    console.log('data/setWatcherAttributes : ', data)
+    commit('SET_WATCHER_ATTRIBUTES', data)
   }
 }
 
