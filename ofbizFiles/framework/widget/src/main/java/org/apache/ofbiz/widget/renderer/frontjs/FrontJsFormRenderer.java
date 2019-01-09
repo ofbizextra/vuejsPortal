@@ -799,7 +799,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         ArrayList<Map<String, Object>> records = new ArrayList<>();
         Map<String, Object> record = new HashMap<>();
         record.put("key", name);
-        record.put("value", currentValue);
+        record.put("value", explicitDescription);
         records.add(record);
         data.put("records", records);
         Map<String, Object> pointer = output.getRecordPointer(context);
