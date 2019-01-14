@@ -1,12 +1,13 @@
 <template>
   <div id="vue-sort-field">
-    <a :class="data.style" href="linkUrl" v-bind:title="data.tooltip">{{data.title}}</a>
+    <a :class="data.style" href="linkUrl" v-on:click.prevent="sort" v-bind:title="data.tooltip">{{data.title}}</a>
   </div>
 </template>
 
 <script>
   export default {
     name: "VueSortField",
+    props: ['props', 'updateStore'],
     data() {
       return {
       }
@@ -15,13 +16,22 @@
       data() {
         let data = this.props.attributes
         delete data.value
-        if (data.className || (data.alert && data.alert === true)) {
-          data.class = data.className ? data.className : '' + ' ' + data.alert === true ? 'alert' : ''
-        }
         return data
-      },
-      linkUrl() {
-        return this.data.ajaxEnabled ? "javascript:ajaxUpdateAreas('" + this.data.link + "')" : this.data.linkUrl
+      }
+    },
+    methods: {
+      sort() {
+        if (this.data.hasOwnProperty('onPaginateUpdateAreas')) {
+          this.data.onPaginateUpdateAreas.forEach((area) => {
+            this.$store.dispatch('data/setWatcherAttributes', {
+              watcherName: area.areaId,
+              params: {
+                orderBy: this.data.entityField,
+                sortField: this.data.entityField
+              }
+            })
+          })
+        }
       }
     }
   }

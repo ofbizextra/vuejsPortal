@@ -28,6 +28,9 @@
         if (data.className || (data.alert && data.alert === true)) {
           data.class = data.className ? data.className : '' + ' ' + data.alert === true ? 'alert' : ''
         }
+        if (data.hasOwnProperty('style')) {
+          data.class = data.style
+        }
         return data
       }
     }

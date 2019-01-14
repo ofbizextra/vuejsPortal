@@ -42,6 +42,7 @@ export default {
     HyperlinkTitle: 'vue-hyperlink-title',
     HyperlinkField: 'vue-hyperlink-field',
     SubmitField: 'vue-submit-field',
-    NextPrev: 'vue-next-prev'
+    NextPrev: 'vue-next-prev',
+    SortField: 'vue-sort-field'
   }
 }

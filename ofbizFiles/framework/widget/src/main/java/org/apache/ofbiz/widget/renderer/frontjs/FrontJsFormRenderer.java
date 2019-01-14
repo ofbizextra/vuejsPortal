@@ -166,6 +166,8 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         Map<String, String> parameterMap = hyperlinkField.getParameterMap(context, modelFormField.getEntityName(), modelFormField.getServiceName());
         HashMap<String, Object> cb = new HashMap<>();
         cb.put("updateArea", hyperlinkField.getTarget(context));
+        String style = modelFormField.getWidgetStyle();
+        cb.put("style", style);
         if (!parameterMap.isEmpty()) {
 //            HashMap<String, Object> data = new HashMap<>();
 //            data.put("action", "PUT_RECORD");
@@ -2178,6 +2180,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         cb.put("lastUrl", lastUrl);
         cb.put("paginateLastLabel", paginateLastLabel);
         cb.put("paginateViewSizeLabel", paginateViewSizeLabel);
+        cb.put("paginateTarget", modelForm.getPaginateTarget());
         HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
         hashMapStringObject.put("NextPrev", cb);
         this.output.putScreen(hashMapStringObject);
@@ -2490,6 +2493,12 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         if (!tooltip.isEmpty()) {
             cb.put(" tooltip", tooltip);
         }
+//        String target = modelForm.getPaginateTarget();
+//        cb.put("paginateTarget", target);
+        List onPaginateUpdateAreas = modelForm.getOnPaginateUpdateAreas();
+        cb.put("onPaginateUpdateAreas", onPaginateUpdateAreas);
+        String entityField = modelFormField.getParameterName(context);
+        cb.put("entityField", entityField);
         HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
         hashMapStringObject.put("SortField", cb);
         this.output.putScreen(hashMapStringObject);

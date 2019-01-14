@@ -1,7 +1,7 @@
 <template>
   <div id="vue-hyperlink-field">
-    <a v-if="pointer.entityName !== ''" href="data.linkUrl" :title="pointer.attribute" v-on:click.prevent="submit">{{getPointer}}</a>
-    <a v-else href="data.linkUrl" :title="data.title ? data.title : ''" v-on:click.prevent="submit">{{data.value ? data.value : ''}}</a>
+    <a v-if="pointer.entityName !== ''" href="data.linkUrl" :title="pointer.attribute" v-on:click.prevent="submit" v-bind="data">{{getPointer}}</a>
+    <a v-else href="data.linkUrl" :title="data.title ? data.title : ''" v-on:click.prevent="submit" v-bind="data">{{data.value ? data.value : ''}}</a>
   </div>
 </template>
 
@@ -24,6 +24,9 @@
         let data = this.props.attributes
         if (data.className || (data.alert && data.alert === true)) {
           data.class = data.className ? data.className : '' + ' ' + data.alert === true ? 'alert' : ''
+        }
+        if (data.hasOwnProperty('style')) {
+          data.class = data.style
         }
         return data
       },
