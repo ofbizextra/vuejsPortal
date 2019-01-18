@@ -9,6 +9,7 @@
           <li :class="data.collapsed ? 'collapsed' : 'expanded'" v-if="data.collapsible">
             <a
               v-bind:title="toolTip"
+              v-on:click.prevent="toggle"
             >&nbsp;
             </a>
           </li>
@@ -22,7 +23,7 @@
         </ul>
         <br class="clear">
       </div>
-      <div id="searchOptions_col" class="screenlet-body">
+      <div :id="collapsibleAreaId" class="screenlet-body" v-bind:style="style">
         <div
           v-for="component in bodyChildren"
           v-bind:is="constantes.components[component.name]"
@@ -66,9 +67,27 @@
         } else {
           return this.data.hasOwnProperty('collapseToolTip') ? this.data.collapseToolTip : ''
         }
+      },
+      collapsibleAreaId() {
+        return this.data.hasOwnProperty('collapsibleAreaId') ? this.data.collapsibleAreaId : ''
+      },
+      style() {
+        if (this.data.collapsible) {
+          if (this.data.collapsed) {
+            return {display: 'none'}
+          } else {
+            return {}
+          }
+        } else {
+          return {}
+        }
       }
     },
-    methods: {}
+    methods: {
+      toggle() {
+        this.data.collapsed = !this.data.collapsed
+      }
+    }
   }
 </script>
 
