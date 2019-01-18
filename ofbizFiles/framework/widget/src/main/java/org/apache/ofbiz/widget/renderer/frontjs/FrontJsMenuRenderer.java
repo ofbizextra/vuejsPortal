@@ -199,7 +199,7 @@ public class FrontJsMenuRenderer implements MenuStringRenderer {
         parameters.put("style", menu.getMenuContainerStyle(context));
         parameters.put("title", menu.getTitle(context));
         HashMap<String, Object> hashMapStringObject = new HashMap<>();
-        hashMapStringObject.put("renderMenuBegin", parameters);
+        hashMapStringObject.put("MenuBegin", parameters);
         this.output.pushScreen(hashMapStringObject);
     }
 
@@ -232,6 +232,11 @@ public class FrontJsMenuRenderer implements MenuStringRenderer {
         }
         parameters.put("style", style);
         parameters.put("toolTip", menuItem.getTooltip(context));
+        boolean containsNestedMenus = !menuItem.getMenuItemList().isEmpty();
+        parameters.put("containsNestedMenus", containsNestedMenus);
+        HashMap<String, Object> hashMapStringObject = new HashMap<>();
+        hashMapStringObject.put("MenuItemBegin", parameters);
+        this.output.pushScreen(hashMapStringObject);
         String linkStr;
         MenuLink link = menuItem.getLink();
         if (link != null) {
@@ -244,11 +249,6 @@ public class FrontJsMenuRenderer implements MenuStringRenderer {
             }
             parameters.put("Link", linkStr);
         }
-        boolean containsNestedMenus = !menuItem.getMenuItemList().isEmpty();
-        parameters.put("containsNestedMenus", containsNestedMenus);
-        HashMap<String, Object> hashMapStringObject = new HashMap<>();
-        hashMapStringObject.put("MenuItemBegin", parameters);
-        this.output.putScreen(hashMapStringObject);
 
         if (containsNestedMenus) {
             for (ModelMenuItem childMenuItem : menuItem.getMenuItemList()) {
@@ -259,7 +259,7 @@ public class FrontJsMenuRenderer implements MenuStringRenderer {
         parameters.put("containsNestedMenus", containsNestedMenus);
         hashMapStringObject = new HashMap<>();
         hashMapStringObject.put("MenuItemEnd", parameters);
-        this.output.putScreen(hashMapStringObject);
+        this.output.popScreen(hashMapStringObject);
     }
 
     @Override

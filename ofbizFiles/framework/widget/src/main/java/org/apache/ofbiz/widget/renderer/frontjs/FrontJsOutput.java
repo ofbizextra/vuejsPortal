@@ -104,7 +104,7 @@ public class FrontJsOutput {
         String name = screen.keySet().toArray()[0].toString();
         temp.put("attributes", screen.get(name));
         temp.put("children", new ArrayList<Map<String, Object>>());
-        temp.put("name", name.replace("Open", ""));
+        temp.put("name", name.replace("Open", "").replace("Begin", ""));
         screen = temp;
         screensStack.peek().add(screen);
         screensStack.push((UtilGenerics.cast( screen.get("children"))));
@@ -121,7 +121,7 @@ public class FrontJsOutput {
     }
     void pushScreen(String name, Map<String, Object> attributes, boolean newRecord, Map<String, Object> context) {
         Map<String, Object> screen = new HashMap<>();
-        screen.put("name", name.replace("Open", ""));
+        screen.put("name", name.replace("Open", "").replace("Begin", ""));
         screen.put("attributes", attributes);
 
         List<Map<String, Object>> children = new ArrayList<Map<String, Object>>(); 

@@ -29,6 +29,7 @@ import org.apache.ofbiz.widget.renderer.MenuStringRenderer;
 import org.apache.ofbiz.widget.renderer.Paginator;
 import org.apache.ofbiz.widget.renderer.ScreenStringRenderer;
 import org.apache.ofbiz.widget.renderer.VisualTheme;
+import org.apache.xpath.operations.Bool;
 import org.xml.sax.SAXException;
 
 import javax.servlet.ServletContext;
@@ -506,6 +507,41 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
         //ModelTheme modelTheme = visualTheme.getModelTheme();
         boolean javaScriptEnabled = UtilHttp.isJavaScriptEnabled(request);
         ModelScreenWidget.Menu tabMenu = screenlet.getTabMenu();
+
+
+        String title = screenlet.getTitle(context);
+        boolean collapsible = screenlet.collapsible();
+        ModelScreenWidget.Menu navMenu = screenlet.getNavigationMenu();
+        ModelScreenWidget.Form navForm = screenlet.getNavigationForm();
+        String expandToolTip = "";
+        String collapseToolTip = "";
+        String fullUrlString = "";
+        boolean showMore = false;
+
+
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("title", title);
+        parameters.put("collapsible", collapsible);
+        parameters.put("saveCollapsed", screenlet.saveCollapsed());
+        if (UtilValidate.isNotEmpty (screenlet.getId(context))) {
+            parameters.put("id", screenlet.getId(context));
+            parameters.put("collapsibleAreaId", screenlet.getId(context) + "_col");
+        } else {
+            parameters.put("id", "screenlet_" + screenLetsIdCounter);
+            parameters.put("collapsibleAreaId","screenlet_" + screenLetsIdCounter + "_col");
+            screenLetsIdCounter++;
+        }
+        parameters.put("expandToolTip", expandToolTip);
+        parameters.put("collapseToolTip", collapseToolTip);
+        parameters.put("fullUrlString", fullUrlString);
+        parameters.put("padded", screenlet.padded());
+        parameters.put("collapsed", collapsed);
+        parameters.put("javaScriptEnabled", javaScriptEnabled);
+        parameters.put("showMore", (Boolean) (UtilValidate.isNotEmpty(title) || navMenu != null || navForm != null || collapsible));
+        HashMap<String, Object> hashMapStringObject = new HashMap<>();
+        hashMapStringObject.put("ScreenletBegin", parameters);
+        this.output.pushScreen(hashMapStringObject);
+
         if (tabMenu != null) {
             ModelMenu menu = tabMenu.getModelMenu(context);
             MenuStringRenderer menuStringRenderer = (MenuStringRenderer)context.get("menuStringRenderer");
@@ -523,15 +559,6 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
             menuStringRenderer.renderMenuClose(writer, context, menu);
 
         }
-
-        String title = screenlet.getTitle(context);
-        boolean collapsible = screenlet.collapsible();
-        ModelScreenWidget.Menu navMenu = screenlet.getNavigationMenu();
-        ModelScreenWidget.Form navForm = screenlet.getNavigationForm();
-        String expandToolTip = "";
-        String collapseToolTip = "";
-        String fullUrlString = "";
-        boolean showMore = false;
         if (UtilValidate.isNotEmpty(title) || navMenu != null || navForm != null || collapsible) {
             showMore = true;
             if (collapsible) {
@@ -574,35 +601,17 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
                 renderScreenletPaginateMenu(writer, context, navForm);
             }
         }
-
-        Map<String, Object> parameters = new HashMap<>();
-        parameters.put("title", title);
-        parameters.put("collapsible", collapsible);
-        parameters.put("saveCollapsed", screenlet.saveCollapsed());
-        if (UtilValidate.isNotEmpty (screenlet.getId(context))) {
-            parameters.put("id", screenlet.getId(context));
-            parameters.put("collapsibleAreaId", screenlet.getId(context) + "_col");
-        } else {
-            parameters.put("id", "screenlet_" + screenLetsIdCounter);
-            parameters.put("collapsibleAreaId","screenlet_" + screenLetsIdCounter + "_col");
-            screenLetsIdCounter++;
-        }
-        parameters.put("expandToolTip", expandToolTip);
-        parameters.put("collapseToolTip", collapseToolTip);
-        parameters.put("fullUrlString", fullUrlString);
-        parameters.put("padded", screenlet.padded());
-        parameters.put("showMore", showMore);
-        parameters.put("collapsed", collapsed);
-        parameters.put("javaScriptEnabled", javaScriptEnabled);
-        HashMap<String, Object> hashMapStringObject = new HashMap<>();
-        hashMapStringObject.put("ScreenletBegin", parameters);
-        this.output.pushScreen(hashMapStringObject);
     }
 
     public void renderScreenletSubWidget(Appendable writer, Map<String, Object> context, ModelScreenWidget subWidget, ModelScreenWidget.Screenlet screenlet) throws GeneralException, IOException  {
+        subWidget.renderWidgetString(writer, context, this);
+        HashMap<String, Object> cb = new HashMap<>();
         HashMap<String, Object> hashMapStringObject = new HashMap<>();
-        hashMapStringObject.put("ScreenletSubWidget", NOT_YET_SUPPORTED);
+        hashMapStringObject.put("ScreenletSubWidget", cb);
         this.output.putScreen(hashMapStringObject);
+
+        // Bypass the if/else in comment
+        // si getNavigationForm la barre de pagination doit être dans l'entête de la screenlet
         /*
         if (subWidget.equals(screenlet.getNavigationForm())) {
             HttpServletRequest request = (HttpServletRequest) context.get("request");
@@ -628,8 +637,9 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
         */
     }
     public void renderScreenletEnd(Appendable writer, Map<String, Object> context, ModelScreenWidget.Screenlet screenlet) throws IOException {
+        HashMap<String, Object> cb = new HashMap<>();
         HashMap<String, Object> hashMapStringObject = new HashMap<>();
-        hashMapStringObject.put("ScreenletEnd", null);
+        hashMapStringObject.put("ScreenletEnd", cb);
         this.output.popScreen(hashMapStringObject);
     }
 
