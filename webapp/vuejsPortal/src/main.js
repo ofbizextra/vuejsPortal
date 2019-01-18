@@ -55,6 +55,11 @@ import VueFieldGroup from './components/VueFieldGroup'
 import VueFieldTitle from './components/VueFieldTitle'
 import VueHyperlinkField from './components/VueHyperlinkField'
 import VueNextPrev from './components/VueNextPrev'
+import VueScreenlet from './components/VueScreenlet'
+import VueScreenletSubWidget from './components/VueScreenletSubWidget'
+import VueMenu from './components/VueMenu'
+import VueMenuItem from './components/VueMenuItem'
+import VueLink from './components/VueLink'
 
 import store from './store'
 
@@ -113,6 +118,11 @@ Vue.component('vue-field-row-widget-cell', VueFieldRowWidgetCell)
 Vue.component('vue-field-group', VueFieldGroup)
 Vue.component('vue-next-prev', VueNextPrev)
 Vue.component('spinner', BreedingRhombusSpinner)
+Vue.component('vue-screenlet', VueScreenlet)
+Vue.component('vue-screenlet-sub-widget', VueScreenletSubWidget)
+Vue.component('vue-menu', VueMenu)
+Vue.component('vue-menu-item', VueMenuItem)
+Vue.component('vue-link', VueLink)
 
 Vue.mixin({
   methods: {

@@ -43,6 +43,11 @@ export default {
     HyperlinkField: 'vue-hyperlink-field',
     SubmitField: 'vue-submit-field',
     NextPrev: 'vue-next-prev',
-    SortField: 'vue-sort-field'
+    SortField: 'vue-sort-field',
+    Screenlet: 'vue-screenlet',
+    ScreenletSubWidget: 'vue-screenlet-sub-widget',
+    Menu: 'vue-menu',
+    MenuItem: 'vue-menu-item',
+    Link: 'vue-link'
   }
 }
