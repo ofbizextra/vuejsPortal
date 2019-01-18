@@ -151,9 +151,6 @@
         this.$store.dispatch('data/setWatcherAttributes', {watcherName: this.paginateTarget, params: {VIEW_INDEX_1: this.numberOfPages - 1}})
       }
     },
-    created: {
-
-    },
     watch: {
 
     }
