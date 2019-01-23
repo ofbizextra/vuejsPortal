@@ -23,13 +23,13 @@
     mounted() {
       this.$http.post(constantes.apiUrl + constantes.portalPageDetail.path,
         queryString.stringify({
-          portalPageId: 'ExampleFrontJs'
+          portalPageId: PORTAL_PAGE_ID
         }),
         {headers: {'Content-Type': 'application/x-www-form-urlencoded', 'locale': 'en_US'}}
       ).then(
         response => {
           let portalPage = response.body
-          this.$store.dispatch('ui/setPortalPage', {portalPageId: 'ExampleFrontJs', portalPage})
+          this.$store.dispatch('ui/setPortalPage', {portalPageId: PORTAL_PAGE_ID, portalPage})
         },
         error => console.log(error.body)
       )
