@@ -11,9 +11,6 @@ import Search from './components/Search'
 import List from './components/List'
 import Login from './components/Login'
 import Portal from './components/Portal'
-import EditExampleLayer from './components/EditExampleLayer'
-import FindExampleLayer from './components/FindExampleLayer'
-import ListExampleLayer from './components/ListExampleLayer'
 import VueForm from './components/VueForm'
 import VueField from './components/VueField'
 import VueDropDownField from './components/VueDropDownField'
@@ -72,9 +69,6 @@ Vue.use(BlockUI)
 
 Vue.component('login', Login)
 Vue.component('portal', Portal)
-Vue.component('edit-example-layer', EditExampleLayer)
-Vue.component('find-example-layer', FindExampleLayer)
-Vue.component('list-example-layer', ListExampleLayer)
 Vue.component('search', Search)
 Vue.component('list', List)
 Vue.component('vue-form', VueForm)
@@ -162,10 +156,6 @@ const router = new VueRouter({
   mode: 'hash',
   routes: [
     { path: '/', component: Portal, beforeEnter: requireAuth },
-    { path: '/findExampleLayer', component: FindExampleLayer, beforeEnter: requireAuth },
-    { path: '/editExampleLayer', component: EditExampleLayer, beforeEnter: requireAuth },
-    { path: '/editExampleLayer/:id', component: EditExampleLayer, beforeEnter: requireAuth },
-    { path: '/listExampleLayer', component: ListExampleLayer, beforeEnter: requireAuth},
     { path: '/test', component: Test, beforeEnter: requireAuth},
     { path: '/login', component: Login, beforeEnter: requireAuth }
   ]
