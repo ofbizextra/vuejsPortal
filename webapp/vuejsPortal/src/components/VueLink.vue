@@ -3,6 +3,7 @@
 </template>
 
 <script>
+  import constantes from '../js/constantes'
   export default {
     name: "VueLink",
     props: ['props', 'updateStore'],

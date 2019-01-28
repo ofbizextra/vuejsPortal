@@ -1,7 +1,7 @@
 <template>
   <div id="vue-hidden-field">
-    <input v-if="data.conditionGroup" type="hidden" :name="data.name + '_grp'" v-bind:value="data.conditionGroup" />
-    <input type="hidden" v-bind="data" v-model="value"/>
+    <input v-if="data.conditionGroup" type="hidden" :name="data.name + '_grp'" v-bind:value="data.value" />
+    <input v-else type="hidden" v-bind="data" v-model="value"/>
   </div>
 </template>
 
@@ -18,7 +18,6 @@
     computed: {
       data() {
         let data = this.props.attributes
-        delete data['value']
         if (data.className || (data.alert && data.alert === true)) {
           data.class = data.className ? data.className : '' + ' ' + data.alert === true ? 'alert' : ''
         }

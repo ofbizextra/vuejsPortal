@@ -1,6 +1,6 @@
 Index: framework/common/entitydef/entitymodel.xml
 ===================================================================
---- framework/common/entitydef/entitymodel.xml	(révision 1850152)
+--- framework/common/entitydef/entitymodel.xml	(révision 1852339)
 +++ framework/common/entitydef/entitymodel.xml	(copie de travail)
 @@ -827,6 +827,7 @@
          <field name="portletSeqId" type="id"><description>Identify the portalPortlet instance in case more copy of the same portalPortlet are present in the same portalPage</description></field>
