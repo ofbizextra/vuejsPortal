@@ -25,6 +25,12 @@
     methods: {
       redirect() {
         console.log('click on link : ', this.data.text)
+        if (this.data.hasOwnProperty('targetWindow') && this.data.hasOwnProperty('targetPortlet')) {
+          this.$store.dispatch('ui/setPortletTarget', {
+            portletId: this.data.targetWindow,
+            target: this.data.targetPortlet
+          })
+        }
       }
     }
   }

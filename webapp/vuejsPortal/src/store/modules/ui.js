@@ -9,6 +9,7 @@ const state = {
   currentPortalPage: '',
   portalPages: {},
   portlets: {},
+  portletTarget: {}
 }
 
 const mutations = {
@@ -23,6 +24,9 @@ const mutations = {
   },
   SET_PORTLET: (state, {portletId, data}) => {
     Vue.set(state.portlets, portletId, data)
+  },
+  SET_PORTLET_TARGET: (state, {portletId, target}) => {
+    Vue.set(state.portletTarget, portletId, target)
   }
 }
 
@@ -35,7 +39,12 @@ const getters = {
   portlet(state) {
     return (id) => { return state.portlets[id] }
   },
-  portlets: state => state.portlets
+  portlets: state => state.portlets,
+  portletTarget(state) {
+    return function (id) {
+      return state.portletTarget.hasOwnProperty(id) ? state.portletTarget[id] : null
+    }
+  }
 }
 
 const actions = {
@@ -61,6 +70,9 @@ const actions = {
         })
       }, 1000)
     })
+  },
+  setPortletTarget({commit}, {portletId, target}) {
+    commit('SET_PORTLET_TARGET', {portletId , target})
   }
 }
 
