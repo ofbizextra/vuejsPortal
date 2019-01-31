@@ -145,7 +145,7 @@ const actions = {
   setArea({commit}, {areaId, targetUrl, params = {}}) {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
-        Vue.http.post(constantes.hostUrl + targetUrl,
+        Vue.http.post(constantes.hostUrl + targetUrl.replace('amp;',''),
           queryString.stringify({...params}),
           {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}
         ).then(response => {
