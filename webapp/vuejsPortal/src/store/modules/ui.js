@@ -150,7 +150,7 @@ const actions = {
           {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}
         ).then(response => {
           commit('SET_AREA', {areaId: areaId, areaContent: response.body})
-          if (response.body.hasOwnProperty(viewEntities) && response.body.viewEntities.length > 0) {
+          if (response.body.hasOwnProperty('viewEntities') && response.body.viewEntities.length > 0) {
             let entities = []
             let records = []
             Object.keys(response.body.viewEntities).forEach((key) => {
