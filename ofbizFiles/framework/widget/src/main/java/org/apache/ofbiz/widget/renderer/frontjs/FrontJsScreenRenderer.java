@@ -85,7 +85,6 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
     }
 
     public void renderContainerBegin(Appendable writer, Map<String, Object> context, ModelScreenWidget.Container container) throws IOException {
-        /*
         String containerId = container.getId(context);
         String autoUpdateTarget = container.getAutoUpdateTargetExdr(context);
         HttpServletRequest request = (HttpServletRequest) context.get("request");
@@ -100,16 +99,20 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
             autoUpdateLink = rh.makeLink(request, response, autoUpdateTarget);
         }
         Map<String, Object> parameters = new HashMap<>();
-        parameters.put("id", containerId);
+        parameters.put("id", containerId); // watcherName
         parameters.put("style", container.getStyle(context));
         parameters.put("autoUpdateLink", autoUpdateLink);
+        parameters.put("autoUpdateTarget", autoUpdateTarget); // watcherTarget
         parameters.put("autoUpdateInterval", container.getAutoUpdateInterval(context));
-        this.output.add("ContainerBegin", parameters);
-        */
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("ContainerOpen", parameters);
+        this.output.pushScreen(hashMap);
     }
 
     public void renderContainerEnd(Appendable writer, Map<String, Object> context, ModelScreenWidget.Container container) throws IOException {
-        // this.output.add("renderContainerEnd", new HashMap<>());
+        HashMap<String, Object> containerClose = new HashMap<>();
+        containerClose.put("ContainerClose", new HashMap<>());
+        this.output.popScreen(containerClose);
     }
 
     public void renderLabel(Appendable writer, Map<String, Object> context, ModelScreenWidget.Label label) throws IOException {

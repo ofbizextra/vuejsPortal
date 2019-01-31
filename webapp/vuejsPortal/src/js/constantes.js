@@ -48,6 +48,7 @@ export default {
     ScreenletSubWidget: 'vue-screenlet-sub-widget',
     Menu: 'vue-menu',
     MenuItem: 'vue-menu-item',
-    Link: 'vue-link'
+    Link: 'vue-link',
+    Container: 'vue-container'
   }
 }

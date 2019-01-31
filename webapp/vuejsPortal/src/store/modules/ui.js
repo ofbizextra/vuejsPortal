@@ -9,7 +9,11 @@ const state = {
   currentPortalPage: '',
   portalPages: {},
   portlets: {},
-  portletTarget: {}
+  portletTarget: {},
+  containers: {},
+  containerWatcher: {},
+  areas: {},
+  watchers: {},
 }
 
 const mutations = {
@@ -27,6 +31,28 @@ const mutations = {
   },
   SET_PORTLET_TARGET: (state, {portletId, target}) => {
     Vue.set(state.portletTarget, portletId, target)
+  },
+  SET_CONTAINER: (state, {containerName, content}) => {
+    Vue.set(state.containers, containerName, content)
+  },
+  SET_CONTAINER_WATCHER: (state, {watcheName, watcherTarget, params}) => {
+    Vue.set(state.containerWatcher, watcheName, watcherTarget.isEmpty() ? null : {portalPageId: watcherTarget, params})
+  },
+  SET_AREA: (state, {areaId, areaContent}) => {
+    Vue.set(state.areas, areaId, areaContent)
+  },
+  DELETE_AREA: (state, {areaId}) => {
+    Vue.delete(state.areas, areaId)
+  },
+  SET_WATCHER: (state, {watcherName, watcherContent}) => {
+    Vue.set(state.watchers, watcherName, watcherContent)
+  },
+  ADD_TO_WATCHER: (state, {watcherName, watcherContent}) => {
+    if (state.watchers.hasOwnProperty(watcherName)) {
+      Vue.set(state.watchers, watcherName, {...state.watchers[watcherName], ...watcherContent})
+    } else {
+      Vue.set(state.watchers, watcherName, watcherContent)
+    }
   }
 }
 
@@ -43,6 +69,26 @@ const getters = {
   portletTarget(state) {
     return function (id) {
       return state.portletTarget.hasOwnProperty(id) ? state.portletTarget[id] : null
+    }
+  },
+  container(state) {
+    return function (containerName) {
+      return state.containers.hasOwnProperty(containerName) ? state.containers[containerName] : null
+    }
+  },
+  containerTarget(state) {
+    return function (watcherName) {
+      return state.containerWatcher.hasOwnProperty(watcherName) ? state.containerWatcher[watcherName] : null
+    }
+  },
+  area(state) {
+    return function (areaId) {
+      return state.areas.hasOwnProperty(areaId) ? state.areas[areaId] : null
+    }
+  },
+  watcher(state) {
+    return function (watcherName) {
+      return state.watchers.hasOwnProperty(watcherName) ? state.watchers[watcherName] : null
     }
   }
 }
@@ -73,6 +119,85 @@ const actions = {
   },
   setPortletTarget({commit}, {portletId, target}) {
     commit('SET_PORTLET_TARGET', {portletId , target})
+  },
+  setContainer({commit}, {containerName, containerTarget, params = {}}) {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        Vue.http.post(constantes.apiUrl + constantes.showPortlet.path,
+          queryString.stringify({
+            portalPortletId: containerTarget,
+            ...params
+          }),
+          {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}
+        ).then(response => {
+          commit('SET_CONTAINER', {containerName, content: response.body})
+          resolve(containerName)
+        }, error => {
+          console.log(error)
+          reject()
+        })
+      }, 1000)
+    })
+  },
+  setContainerWatcher({commit}, {watcherName, watcherTarget, params}) {
+    commit('SET_CONTAINER_WATCHER', {watcherName, watcherTarget, params})
+  },
+  setArea({commit}, {areaId, targetUrl, params = {}}) {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        Vue.http.post(constantes.hostUrl + targetUrl,
+          queryString.stringify({...params}),
+          {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}
+        ).then(response => {
+          commit('SET_AREA', {areaId: areaId, areaContent: response.body})
+          if (response.body.hasOwnProperty(viewEntities) && response.body.viewEntities.length > 0) {
+            let entities = []
+            let records = []
+            Object.keys(response.body.viewEntities).forEach((key) => {
+              console.log('setEntity => ' + key)
+              entities.push(this.$store.dispatch('data/setEntity', {
+                entityName: key,
+                primaryKey: response.body.viewEntities[key].primaryKeys.join('-')
+              }))
+            })
+            Promise.all(entities).then(all => {
+              console.log('all entity have been created')
+              all.forEach((entity => {
+                console.log('creating record for entity: ' + entity.entityName)
+                response.body.viewEntities[entity.entityName].list.forEach((record, index) => {
+                  console.log(entity.entityName + ': creating record number ' + index + ': ', record)
+                  if (record.stId !== null) {
+                    let data = {
+                      entityName: entity.entityName,
+                      primaryKey: record.stId,
+                      data: record
+                    }
+                    records.push(this.$store.dispatch('data/setEntityRow', data))
+                  }
+                })
+              }))
+            })
+            Promise.all(records).then(() => {
+                resolve(areaId)
+            })
+          } else {
+            resolve(areaId)
+          }
+        }, error => {
+          console.log(error)
+          reject(error)
+        })
+      }, 1000)
+    })
+  },
+  deleteArea({commit}, {areaId}) {
+    commit('DELETE_AREA', {areaId})
+  },
+  setWatcher({commit}, {watcherName, watcherContent}) {
+    commit('SET_WATCHER', {watcherName, watcherContent})
+  },
+  addToWatcher({commit}, {watcherName, watcherContent}) {
+    commit('ADD_TO_WATCHER', {watcherName, watcherContent})
   }
 }
 
