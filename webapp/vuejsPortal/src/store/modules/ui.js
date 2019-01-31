@@ -142,22 +142,25 @@ const actions = {
   setContainerWatcher({commit}, {watcherName, watcherTarget, params}) {
     commit('SET_CONTAINER_WATCHER', {watcherName, watcherTarget, params})
   },
-  setArea({commit}, {areaId, targetUrl, params = {}}) {
+  setArea({commit, dispatch}, {areaId, targetUrl, params = {}}) {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         Vue.http.post(constantes.hostUrl + targetUrl.replace('amp;',''),
           queryString.stringify({...params}),
           {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}
         ).then(response => {
+          console.log({...response.body})
           commit('SET_AREA', {areaId: areaId, areaContent: response.body})
-          if (response.body.hasOwnProperty('viewEntities') && response.body.viewEntities.length > 0) {
+          if (response.body.hasOwnProperty('viewEntities')) {
             let entities = []
             let records = []
             Object.keys(response.body.viewEntities).forEach((key) => {
               console.log('setEntity => ' + key)
-              entities.push(this.$store.dispatch('data/setEntity', {
+              entities.push(dispatch('data/setEntity', {
                 entityName: key,
                 primaryKey: response.body.viewEntities[key].primaryKeys.join('-')
+              },{
+                root: true
               }))
             })
             Promise.all(entities).then(all => {
@@ -172,7 +175,7 @@ const actions = {
                       primaryKey: record.stId,
                       data: record
                     }
-                    records.push(this.$store.dispatch('data/setEntityRow', data))
+                    records.push(dispatch('data/setEntityRow', data, {root: true}))
                   }
                 })
               }))
