@@ -7,7 +7,7 @@ export default {
   ping: {path: '/ping', tokenRequired: false},
   ajaxCheckLogin: {path: '/ajaxCheckLogin', tokenRequired: false},
   portalPageDetail: {path: '/portalPageDetail', tokenRequired: false},
-  showPortlet: {path: '/showPortletFj', tokenRequired: false},
+  showPortlet: {path: '/exampleapi/control/showPortletFj', tokenRequired: false},
 
   components: {
     Form: 'vue-form',
