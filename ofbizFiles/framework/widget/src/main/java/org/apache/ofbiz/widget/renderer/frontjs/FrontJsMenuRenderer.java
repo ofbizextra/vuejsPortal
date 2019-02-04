@@ -108,9 +108,7 @@ public class FrontJsMenuRenderer implements MenuStringRenderer {
     @Override
     public void renderImage(Appendable writer, Map<String, Object> context, Image image) {
         Map<String, Object> parameters = createImageParameters(context, image);
-        HashMap<String, Object> hashMapStringObject = new HashMap<>();
-        hashMapStringObject.put("Image", parameters);
-        this.output.putScreen(hashMapStringObject);
+        this.output.putScreen("Image", parameters);
     }
 
     @Override
@@ -188,9 +186,7 @@ public class FrontJsMenuRenderer implements MenuStringRenderer {
             renderImage(writer, context, img);
         }
         parameters.put("imgStr", imgStr);
-        HashMap<String, Object> hashMapStringObject = new HashMap<>();
-        hashMapStringObject.put("Link", parameters);
-        this.output.putScreen(hashMapStringObject);
+        this.output.putScreen("Link", parameters);
     }
 
     @Override

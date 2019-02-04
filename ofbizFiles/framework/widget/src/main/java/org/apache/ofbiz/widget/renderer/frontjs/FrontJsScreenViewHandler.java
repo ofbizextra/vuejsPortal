@@ -1,13 +1,12 @@
 
 package org.apache.ofbiz.widget.renderer.frontjs;
 
-import com.fasterxml.jackson.annotation.JsonFilter;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.databind.ser.FilterProvider;
-import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
-import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
+import com.auth0.jwt.internal.com.fasterxml.jackson.annotation.JsonFilter;
+import com.auth0.jwt.internal.com.fasterxml.jackson.databind.ObjectMapper;
+import com.auth0.jwt.internal.com.fasterxml.jackson.databind.SerializationFeature;
+import com.auth0.jwt.internal.com.fasterxml.jackson.databind.ser.FilterProvider;
+import com.auth0.jwt.internal.com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
+import com.auth0.jwt.internal.com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import org.apache.ofbiz.base.util.*;
 import org.apache.ofbiz.base.util.collections.MapStack;
 //import org.apache.ofbiz.entity.GenericEntity;
@@ -177,10 +176,10 @@ public class FrontJsScreenViewHandler extends AbstractViewHandler {
             //mapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
             StringWriter jsonWriter = new StringWriter();
             String[] propertiesToExclude = toExclude.toArray(new String[toExclude.size()]);
-            mapper.addMixIn(Object.class, DynamicMixIn.class);
+            mapper.addMixInAnnotations(Object.class, DynamicMixIn.class);
             FilterProvider filterProvider = new SimpleFilterProvider()
                     .addFilter("dynamicFilter", SimpleBeanPropertyFilter.serializeAllExcept(propertiesToExclude));
-            mapper.setFilterProvider(filterProvider);
+            mapper.setFilters(filterProvider);
             /*
             SimpleBeanPropertyFilter theFilter = SimpleBeanPropertyFilter
                     .serializeAllExcept("intValue");

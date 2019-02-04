@@ -48,26 +48,10 @@ public class FrontJsOutput {
         screensStack.push(viewScreen);
     }
 
-    @SuppressWarnings("unchecked")
-    @Deprecated
-    void putScreen(Map<String, Object> screen) {
-        Map<String, Object> temp = new HashMap<>();
-        String name = screen.keySet().toArray()[0].toString();
-        temp.put("attributes", screen.get(name));
-        temp.put("name", name);
-        screen = temp;
-        screensStack.peek().add(screen);
-        if (screen.containsKey("attributes") &&
-                ((Map<String, Object>) screen.get("attributes")).containsKey("data") &&
-                ((Map<String, Object>) ((Map<String, Object>) screen.get("attributes")).get("data")).containsKey("action") &&
-                ((Map<String, Object>) ((Map<String, Object>) screen.get("attributes")).get("data")).get("action").equals("PUT_RECORD")) {
-            this.putRecord((ArrayList<Map<String, Object>>) ((Map<String, Object>) ((Map<String, Object>) screen.get("attributes")).get("data")).get("records"));
-        }
-    }
 
     /**
-     * Add a new screenElement in the current screen stack. <br/>
-     * Should be used only when element is not a field.
+     * Add a new screenElement into the children of the top screen of the stack. <br/>
+     * Should be used only when element is a field.
      *
      * @param name       : the element Name (see list of renderer method (screen, form, menu,..), each one is a element)
      * @param attributes : a map with all the attributes elements
@@ -77,14 +61,15 @@ public class FrontJsOutput {
     }
 
     /**
-     * Add a new screenElement in the current screen stack.
+     * Add a new screenElement into the children of the top screen of the stack. <br/>
+     * Should be used only when element is a field.
      *
      * @param name       : the element Name (see list of renderer method (screen, form, menu,..), each one is a element)
      * @param attributes : a map with all the attributes elements
      * @param fieldName  : if element is a field, its name
-     * @param value      : if element is a field, its value
+     * @param fieldValue      : if element is a field, its value
      */
-    void putScreen(String name, Map<String, Object> attributes, String fieldName, String value) {
+    void putScreen(String name, Map<String, Object> attributes, String fieldName, String fieldValue) {
         Map<String, Object> screen = new HashMap<>();
         screen.put("attributes", attributes);
         screen.put("name", name);
@@ -95,14 +80,14 @@ public class FrontJsOutput {
             stPointer.put("id", (String) recordsStack.peek().get("stId"));
             stPointer.put("field", fieldName);
             screen.put("stPointer", stPointer);
-            this.putRecord(fieldName, value);
+            this.putRecord(fieldName, fieldValue);
             // for debug purpose only, should be remove when the old code with PUT_RECORD will be removed
-            screen.put("dataDebug", UtilMisc.toMap("action", "PUT_RECORD", "key", fieldName, "value", value));
+            screen.put("dataDebug", UtilMisc.toMap("action", "PUT_RECORD", "key", fieldName, "value", fieldValue));
         }
     }
 
     /**
-     * Add a new screenElement into the children of the top screen of the stack. <br/>
+     * Push a new screenElement into the children of the top screen of the stack. <br/>
      * Should be used only when element is not a field.
      *
      * @param name       : the element Name (see list of renderer method (screen, form, menu,..), each one is a element)
@@ -113,7 +98,7 @@ public class FrontJsOutput {
     }
 
     /**
-     * Add a new screenElement into the children of the top screen of the stack. <br/>
+     * Push a new screenElement into the children of the top screen of the stack. <br/>
      * Should be used only when element is not a field.
      *
      * @param name       : the element Name (see list of renderer method (screen, form, menu,..), each one is a element)
@@ -133,7 +118,7 @@ public class FrontJsOutput {
         if (action != null) {
             if (action.equals("PUSH_ENTITY")) {
                 // todo
-                this.pushEntity((String) context.get("entityName"), (List<String>) context.get("primaryKeys"));
+                this.pushEntity((String) context.get("entityName"), UtilGenerics.checkList(context.get("primaryKeys")));
             }
             if (action.equals("NEW_RECORD")) {
                 this.newRecord(context);

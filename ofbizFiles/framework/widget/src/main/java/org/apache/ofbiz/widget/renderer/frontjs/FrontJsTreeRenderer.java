@@ -124,9 +124,7 @@ public class FrontJsTreeRenderer implements TreeStringRenderer {
         if (processChildren) {
             Map<String, Object> cb = new HashMap<>();
             cb.put("style", "basic-tree");
-            HashMap<String, Object> hashMapStringObject = new HashMap<>();
-            hashMapStringObject.put("LastElement", cb);
-            this.output.putScreen(hashMapStringObject);
+            this.output.putScreen("LastElement", cb);
         }
     }
 
@@ -139,9 +137,7 @@ public class FrontJsTreeRenderer implements TreeStringRenderer {
         cb.put("id", id);
         cb.put("style", style);
         cb.put("labelText", labelText);
-        HashMap<String, Object> hashMapStringObject = new HashMap<>();
-        hashMapStringObject.put("Label", cb);
-        this.output.putScreen(hashMapStringObject);
+        this.output.putScreen("Label", cb);
     }
 
     public void renderLink(Appendable writer, Map<String, Object> context, ModelTree.ModelNode.Link link) throws IOException {
@@ -179,9 +175,7 @@ public class FrontJsTreeRenderer implements TreeStringRenderer {
         cb.put("linkUrl", linkUrl);
         cb.put("linkText", linkText);
         cb.put("imgStr", imgStr.replaceAll("\"", "\\\\\""));
-        HashMap<String, Object> hashMapStringObject = new HashMap<>();
-        hashMapStringObject.put("Link", cb);
-        this.output.putScreen(hashMapStringObject);
+        this.output.putScreen("Link", cb);
     }
 
     public void renderImage(Appendable writer, Map<String, Object> context, ModelTree.ModelNode.Image image) {
@@ -229,9 +223,7 @@ public class FrontJsTreeRenderer implements TreeStringRenderer {
         cb.put("border", border);
         cb.put("alt", alt);
         cb.put("urlString", urlString);
-        HashMap<String, Object> hashMapStringObject = new HashMap<>();
-        hashMapStringObject.put("Image", cb);
-        this.output.putScreen(hashMapStringObject);
+        this.output.putScreen("Image", cb);
     }
 
     public ScreenStringRenderer getScreenStringRenderer(Map<String, Object> context) {
