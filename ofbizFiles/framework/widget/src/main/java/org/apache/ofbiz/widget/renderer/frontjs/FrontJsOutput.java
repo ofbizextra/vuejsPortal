@@ -12,11 +12,11 @@ import org.apache.ofbiz.base.util.UtilMisc;
 public class FrontJsOutput {
     public static final String module = FrontJsOutput.class.getName();
 
-	
-	Map<String, Object> output = new HashMap<>();
+
+    Map<String, Object> output = new HashMap<>();
     private List<Map<String, Object>> viewScreen;
     private Map<String, Object> viewEntities = new HashMap<>();
-    
+
     // stack of screen, a screen is a list of element (see list of renderer method (screen, form, menu,..), each one is a element)
     //  each element has 3 fields
     //  - "name" the element name (ex: Label, ScreenletBegin, DisplayField, HyperlinkField, ...)
@@ -57,28 +57,32 @@ public class FrontJsOutput {
         temp.put("name", name);
         screen = temp;
         screensStack.peek().add(screen);
-        if (screen.containsKey("attributes") && 
-           ((Map<String, Object>) screen.get("attributes")).containsKey("data") && 
-           ((Map<String, Object>) ((Map<String, Object>) screen.get("attributes")).get("data")).containsKey("action") && 
-           ((Map<String, Object>) ((Map<String, Object>) screen.get("attributes")).get("data")).get("action").equals("PUT_RECORD")) {
+        if (screen.containsKey("attributes") &&
+                ((Map<String, Object>) screen.get("attributes")).containsKey("data") &&
+                ((Map<String, Object>) ((Map<String, Object>) screen.get("attributes")).get("data")).containsKey("action") &&
+                ((Map<String, Object>) ((Map<String, Object>) screen.get("attributes")).get("data")).get("action").equals("PUT_RECORD")) {
             this.putRecord((ArrayList<Map<String, Object>>) ((Map<String, Object>) ((Map<String, Object>) screen.get("attributes")).get("data")).get("records"));
         }
     }
+
     /**
      * Add a new screenElement in the current screen stack. <br/>
      * Should be used only when element is not a field.
-     * @param name : the element Name (see list of renderer method (screen, form, menu,..), each one is a element)
+     *
+     * @param name       : the element Name (see list of renderer method (screen, form, menu,..), each one is a element)
      * @param attributes : a map with all the attributes elements
      */
     void putScreen(String name, Map<String, Object> attributes) {
-    	putScreen(name, attributes, null, null);
+        putScreen(name, attributes, null, null);
     }
+
     /**
      * Add a new screenElement in the current screen stack.
-     * @param name : the element Name (see list of renderer method (screen, form, menu,..), each one is a element)
+     *
+     * @param name       : the element Name (see list of renderer method (screen, form, menu,..), each one is a element)
      * @param attributes : a map with all the attributes elements
-     * @param fieldName : if element is a field, its name
-     * @param value : if element is a field, its value
+     * @param fieldName  : if element is a field, its name
+     * @param value      : if element is a field, its value
      */
     void putScreen(String name, Map<String, Object> attributes, String fieldName, String value) {
         Map<String, Object> screen = new HashMap<>();
@@ -93,7 +97,7 @@ public class FrontJsOutput {
             screen.put("stPointer", stPointer);
             this.putRecord(fieldName, value);
             // for debug purpose only, should be remove when the old code with PUT_RECORD will be removed
-            screen.put("dataDebug", UtilMisc.toMap("action","PUT_RECORD", "key",fieldName, "value",value));
+            screen.put("dataDebug", UtilMisc.toMap("action", "PUT_RECORD", "key", fieldName, "value", value));
         }
     }
 
@@ -107,7 +111,7 @@ public class FrontJsOutput {
         temp.put("name", name.replace("Open", "").replace("Begin", ""));
         screen = temp;
         screensStack.peek().add(screen);
-        screensStack.push((UtilGenerics.cast( screen.get("children"))));
+        screensStack.push((UtilGenerics.cast(screen.get("children"))));
 //        screensStack.push((ArrayList<Map<String, Object>>) screen.get("children"));
         if (screen.containsKey("attributes") && ((Map<String, Object>) screen.get("attributes")).containsKey("data") && ((Map<String, Object>) ((Map<String, Object>) screen.get("attributes")).get("data")).containsKey("action")) {
             if (((Map<String, Object>) ((Map<String, Object>) screen.get("attributes")).get("data")).get("action").equals("NEW_RECORD")) {
@@ -119,39 +123,70 @@ public class FrontJsOutput {
             }
         }
     }
+
+    /**
+     * Add a new screenElement into the children of the top screen of the current screen stack. <br/>
+     * Should be used only when element is a field.
+     *
+     * @param name       : the element Name (see list of renderer method (screen, form, menu,..), each one is a element)
+     * @param attributes : a map with all the attributes elements
+     */
+    void pushScreen(String name, Map<String, Object> attributes) {
+        pushScreen(name, attributes, false, null);
+    }
+
+    /**
+     * Add a new screenElement into the children of the top screen of the current screen stack. <br/>
+     * Should be used only when element is a field.
+     *
+     * @param name       : the element Name (see list of renderer method (screen, form, menu,..), each one is a element)
+     * @param attributes : a map with all the attributes elements
+     * @param newRecord  : a boolean determining if a new record must be add
+     * @param context    : a map with the records elements
+     */
     void pushScreen(String name, Map<String, Object> attributes, boolean newRecord, Map<String, Object> context) {
         Map<String, Object> screen = new HashMap<>();
         screen.put("name", name.replace("Open", "").replace("Begin", ""));
         screen.put("attributes", attributes);
 
-        List<Map<String, Object>> children = new ArrayList<Map<String, Object>>(); 
+        List<Map<String, Object>> children = new ArrayList<Map<String, Object>>();
         screen.put("children", children);
         screensStack.peek().add(screen);
-        screensStack.push( children);
+        screensStack.push(children);
         if (newRecord) {
             this.newRecord(context);
             // for debug purpose only, should be remove when the old code with PUT_RECORD will be removed
-            screen.put("dataDebug", UtilMisc.toMap("action","NEW_RECORD"));
+            screen.put("dataDebug", UtilMisc.toMap("action", "NEW_RECORD"));
         }
     }
 
-    @SuppressWarnings("unchecked")
-    @Deprecated
-    void popScreen(Map<String, Object> screen) {
+    /**
+     * Pop the top screenElement the current screen stack. <br/>
+     * Should be used only when element is not a field.
+     *
+     * @param name       : the element Name (see list of renderer method (screen, form, menu,..), each one is a element)
+     */
+    void popScreen(String name) {popScreen(name, null);}
+    /**
+     * Pop the top screenElement the current screen stack and perform some data actions. <br/>
+     * Should be used only when element is not a field.
+     *
+     * @param name       : the element Name (see list of renderer method (screen, form, menu,..), each one is a element)
+     * @param action : a string with the action to perform on data
+     */
+    void popScreen(String name, String action) {
         screensStack.pop();
-        String name = screen.keySet().toArray()[0].toString();
-        if (((Map<String, Object>) screen.get(name)).containsKey("data") && ((Map<String, Object>) ((Map<String, Object>) screen.get(name)).get("data")).containsKey("action")) {
-            if (((Map<String, Object>) ((Map<String, Object>) screen.get(name)).get("data")).get("action").equals("STORE_RECORD")) {
+        if (action != null) {
+            if (action.equals("STORE_RECORD")) {
                 this.storeRecord();
             }
-            if (((Map<String, Object>) ((Map<String, Object>) screen.get(name)).get("data")).get("action").equals("POP_ENTITY")) {
+            if (action.equals("POP_ENTITY")) {
                 this.popEntity();
             }
         }
     }
 
-
-	private void putEntity(String entityName, List<String> primaryKeys) {
+    private void putEntity(String entityName, List<String> primaryKeys) {
         Map<String, Object> entity;
         if (!viewEntities.containsKey(entityName)) {
             entity = new HashMap<>();
@@ -175,9 +210,10 @@ public class FrontJsOutput {
             recordsStack.push(new HashMap<>());
         }
     }
+
     private void newRecord(Map<String, Object> context) {
         if (!entitiesStack.empty()) {
-        	// currentRecord
+            // currentRecord
             Map<String, Object> record = new HashMap<>();
             // build stPointerId
             List<String> pkList = UtilGenerics.checkList(this.entitiesStack.peek().get("primaryKeys"));
@@ -207,9 +243,10 @@ public class FrontJsOutput {
             //recordsStack.peek().put(record.get("key"), record.get("value"));
         }
     }
+
     private void putRecord(List<Map<String, Object>> records) {
-    	if (!recordsStack.empty()) {
-    		for (Map<String, Object> record : records) {
+        if (!recordsStack.empty()) {
+            for (Map<String, Object> record : records) {
                 recordsStack.peek().put((String) record.get("key"), record.get("value"));
             }
         }

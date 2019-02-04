@@ -110,9 +110,7 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
     }
 
     public void renderContainerEnd(Appendable writer, Map<String, Object> context, ModelScreenWidget.Container container) throws IOException {
-        HashMap<String, Object> containerClose = new HashMap<>();
-        containerClose.put("ContainerClose", new HashMap<>());
-        this.output.popScreen(containerClose);
+        this.output.popScreen("ContainerClose");
     }
 
     public void renderLabel(Appendable writer, Map<String, Object> context, ModelScreenWidget.Label label) throws IOException {
@@ -640,10 +638,7 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
         */
     }
     public void renderScreenletEnd(Appendable writer, Map<String, Object> context, ModelScreenWidget.Screenlet screenlet) throws IOException {
-        HashMap<String, Object> cb = new HashMap<>();
-        HashMap<String, Object> hashMapStringObject = new HashMap<>();
-        hashMapStringObject.put("ScreenletEnd", cb);
-        this.output.popScreen(hashMapStringObject);
+        this.output.popScreen("ScreenletEnd");
     }
 
     protected void renderScreenletPaginateMenu(Appendable writer, Map<String, Object> context, ModelScreenWidget.Form form) throws IOException {
@@ -811,9 +806,7 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
     }
 
     public void renderPortalPageEnd(Appendable writer, Map<String, Object> context, ModelScreenWidget.PortalPage portalPage) throws GeneralException, IOException {
-        HashMap<String, Object> hashMapStringObject = new HashMap<>();
-        hashMapStringObject.put("PortalPageEnd", new HashMap<>());
-        this.output.popScreen(hashMapStringObject);
+        this.output.popScreen("PortalPageEnd");
     }
 
     public void renderPortalPageColumnBegin(Appendable writer, Map<String, Object> context, ModelScreenWidget.PortalPage portalPage, GenericValue portalPageColumn) throws GeneralException, IOException {
@@ -866,9 +859,7 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
     }
 
     public void renderPortalPageColumnEnd(Appendable writer, Map<String, Object> context, ModelScreenWidget.PortalPage portalPage, GenericValue portalPageColumn) throws GeneralException, IOException {
-        HashMap<String, Object> hashMapStringObject = new HashMap<>();
-        hashMapStringObject.put("PortalPageColumnEnd", new HashMap<>());
-        this.output.popScreen(hashMapStringObject);
+        this.output.popScreen("PortalPageColumnEnd");
     }
 
     public void renderPortalPagePortletBegin(Appendable writer, Map<String, Object> context, ModelScreenWidget.PortalPage portalPage, GenericValue portalPortlet) throws GeneralException, IOException {
@@ -919,13 +910,7 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
     }
 
     public void renderPortalPagePortletEnd(Appendable writer, Map<String, Object> context, ModelScreenWidget.PortalPage portalPage, GenericValue portalPortlet) throws GeneralException, IOException {
-        String confMode = portalPage.getConfMode(context);
-
-        Map<String, Object> cb = new HashMap<>();
-        cb.put("confMode", confMode);
-        HashMap<String, Object> hashMapStringObject = new HashMap<>();
-        hashMapStringObject.put("PortalPagePortletEnd", cb);
-        this.output.popScreen(hashMapStringObject);
+        this.output.popScreen("PortalPagePortletEnd");
     }
 
     public void renderPortalPagePortletBody(Appendable writer, Map<String, Object> context, ModelScreenWidget.PortalPage portalPage, GenericValue portalPortlet) throws GeneralException, IOException {

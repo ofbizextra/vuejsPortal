@@ -260,13 +260,12 @@ public class FrontJsMenuRenderer implements MenuStringRenderer {
         parameters.put("containsNestedMenus", containsNestedMenus);
         hashMapStringObject = new HashMap<>();
         hashMapStringObject.put("MenuItemEnd", parameters);
-        this.output.popScreen(hashMapStringObject);
+        // it was popScreen but it must be an error
+        this.output.popScreen("MenuItemEnd");
     }
 
     @Override
     public void renderMenuClose(Appendable writer, Map<String, Object> context, ModelMenu menu) {
-        HashMap<String, Object> hashMapStringObject = new HashMap<>();
-        hashMapStringObject.put("MenuEnd", new HashMap<>());
-        this.output.popScreen(hashMapStringObject);
+        this.output.popScreen("MenuEnd");
     }
 }

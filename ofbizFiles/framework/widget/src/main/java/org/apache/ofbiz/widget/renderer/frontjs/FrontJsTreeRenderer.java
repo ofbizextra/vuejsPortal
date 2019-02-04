@@ -118,7 +118,7 @@ public class FrontJsTreeRenderer implements TreeStringRenderer {
         cb.put("isRootNode", Boolean.toString(node.isRootNode()));
         HashMap<String, Object> hashMapStringObject = new HashMap<>();
         hashMapStringObject.put("NodeEnd", cb);
-        this.output.popScreen(hashMapStringObject);
+        this.output.popScreen("NodeEnd");
     }
 
     public void renderLastElement(Appendable writer, Map<String, Object> context, ModelTree.ModelNode node) {
