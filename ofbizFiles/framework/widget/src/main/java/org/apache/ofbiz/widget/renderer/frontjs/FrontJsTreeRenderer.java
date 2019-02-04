@@ -41,9 +41,7 @@ public class FrontJsTreeRenderer implements TreeStringRenderer {
         Map<String, Object> cb = new HashMap<>();
         cb.put("style", style);
 
-        HashMap<String, Object> hashMapStringObject = new HashMap<>();
-        hashMapStringObject.put("NodeBegin", cb);
-        this.output.pushScreen(hashMapStringObject);
+        this.output.pushScreen("NodeBegin", cb);
 
         String pkName = node.getPkName(context);
         String entityId;

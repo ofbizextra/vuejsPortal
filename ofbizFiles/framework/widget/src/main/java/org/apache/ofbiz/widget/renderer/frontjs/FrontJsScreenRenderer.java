@@ -104,9 +104,7 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
         parameters.put("autoUpdateLink", autoUpdateLink);
         parameters.put("autoUpdateTarget", autoUpdateTarget); // watcherTarget
         parameters.put("autoUpdateInterval", container.getAutoUpdateInterval(context));
-        HashMap<String, Object> hashMap = new HashMap<>();
-        hashMap.put("ContainerOpen", parameters);
-        this.output.pushScreen(hashMap);
+        this.output.pushScreen("ContainerOpen", parameters);
     }
 
     public void renderContainerEnd(Appendable writer, Map<String, Object> context, ModelScreenWidget.Container container) throws IOException {
@@ -539,9 +537,7 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
         parameters.put("collapsed", collapsed);
         parameters.put("javaScriptEnabled", javaScriptEnabled);
         parameters.put("showMore", (Boolean) (UtilValidate.isNotEmpty(title) || navMenu != null || navForm != null || collapsible));
-        HashMap<String, Object> hashMapStringObject = new HashMap<>();
-        hashMapStringObject.put("ScreenletBegin", parameters);
-        this.output.pushScreen(hashMapStringObject);
+        this.output.pushScreen("ScreenletBegin", parameters);
 
         if (tabMenu != null) {
             ModelMenu menu = tabMenu.getModelMenu(context);
@@ -800,9 +796,7 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
         cb.put("confMode", confMode);
         cb.put("addColumnLabel", addColumnLabel);
         cb.put("addColumnHint", addColumnHint);
-        HashMap<String, Object> hashMapStringObject = new HashMap<>();
-        hashMapStringObject.put("PortalPageBegin", cb);
-        this.output.pushScreen(hashMapStringObject);
+        this.output.pushScreen("PortalPageBegin", cb);
     }
 
     public void renderPortalPageEnd(Appendable writer, Map<String, Object> context, ModelScreenWidget.PortalPage portalPage) throws GeneralException, IOException {
@@ -853,9 +847,7 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
         cb.put("addPortletHint", addPortletHint);
         cb.put("colWidthLabel", colWidthLabel);
         cb.put("setColumnSizeHint", setColumnSizeHint);
-        HashMap<String, Object> hashMapStringObject = new HashMap<>();
-        hashMapStringObject.put("PortalPageColumnBegin", cb);
-        this.output.pushScreen(hashMapStringObject);
+        this.output.pushScreen("PortalPageColumnBegin", cb);
     }
 
     public void renderPortalPageColumnEnd(Appendable writer, Map<String, Object> context, ModelScreenWidget.PortalPage portalPage, GenericValue portalPageColumn) throws GeneralException, IOException {
@@ -904,9 +896,7 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
         cb.put("delPortletHint", delPortletHint);
         cb.put("editAttributeHint", editAttributeHint);
         cb.put("confMode", confMode);
-        HashMap<String, Object> hashMapStringObject = new HashMap<>();
-        hashMapStringObject.put("PortalPagePortletBegin", cb);
-        this.output.pushScreen(hashMapStringObject);
+        this.output.pushScreen("PortalPagePortletBegin", cb);
     }
 
     public void renderPortalPagePortletEnd(Appendable writer, Map<String, Object> context, ModelScreenWidget.PortalPage portalPage, GenericValue portalPortlet) throws GeneralException, IOException {

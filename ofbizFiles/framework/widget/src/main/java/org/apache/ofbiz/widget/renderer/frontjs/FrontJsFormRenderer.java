@@ -1151,6 +1151,8 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
     }
 
     public void renderFormOpen(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException {
+        String action = null;
+        Map<String, Object> data = null;
         if (context.get("frontJs") != null && (Boolean)context.get("frontJs")) {
             this.frontJs = true;
         }
@@ -1205,17 +1207,13 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         // Begin data
         String defaultEntityName = modelForm.getDefaultEntityName();
         if (UtilValidate.isNotEmpty(defaultEntityName)) {
-            Map<String, Object> data = new HashMap<>();
-            data.put("action", "PUT_ENTITY");
+            action = "PUSH_ENTITY";
+            data = new HashMap<>();
             data.put("entityName", defaultEntityName);
             data.put("primaryKeys", getPkList(defaultEntityName, ((Delegator)context.get("delegator")).getModelReader()));
-            cb.put("data", data);
         }
         // End data
-
-        HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
-        hashMapStringObject.put("FormOpen", cb);
-        this.output.pushScreen(hashMapStringObject);
+        this.output.pushScreen("FormOpen", cb, action, data);
     }
 
     public void renderFormClose(Appendable writer, Map<String, Object> context, ModelForm modelForm) {
@@ -1257,6 +1255,8 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
     }
 
     public void renderFormatListWrapperOpen(Appendable writer, Map<String, Object> context, ModelForm modelForm) {
+        String action = null;
+        Map<String, Object> data = null;
         Map<String, Object> inputFields = UtilGenerics.checkMap(context.get("requestParameters"));
         Map<String, Object> queryStringMap = UtilGenerics.toMap(context.get("queryStringMap"));
         if (UtilValidate.isNotEmpty(queryStringMap)) {
@@ -1304,18 +1304,14 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         // Begin data
         String defaultEntityName = modelForm.getDefaultEntityName();
         if (UtilValidate.isNotEmpty(defaultEntityName)) {
-        	Map<String, Object> data = new HashMap<>();
-        	data.put("action", "PUT_ENTITY");
+        	data = new HashMap<>();
+        	action = "PUSH_ENTITY";
         	data.put("entityName", defaultEntityName);
         	data.put("primaryKeys", getPkList(defaultEntityName, ((Delegator)context.get("delegator")).getModelReader()));
-        	cb.put("data", data);
         }
         //TODO ajouter soit un Alert concernant le fait que la list n'est pas lié au store
         // End data
-
-        HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
-        hashMapStringObject.put("ListWrapperOpen", cb);
-        this.output.pushScreen(hashMapStringObject);
+        this.output.pushScreen("ListWrapperOpen", cb, action, data);
     }
     public void renderEmptyFormDataMessage(Appendable writer, Map<String, Object> context, ModelForm modelForm) {
         Map<String, Object> cb = new HashMap<>();
@@ -1332,9 +1328,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
     }
 
     public void renderFormatHeaderOpen(Appendable writer, Map<String, Object> context, ModelForm modelForm) {
-        HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
-        hashMapStringObject.put("HeaderOpen", new HashMap<>());
-        this.output.pushScreen(hashMapStringObject);
+        this.output.pushScreen("HeaderOpen", new HashMap<String, Object>());
     }
 
     public void renderFormatHeaderClose(Appendable writer, Map<String, Object> context, ModelForm modelForm) {
@@ -1345,9 +1339,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         String headerStyle = FlexibleStringExpander.expandString(modelForm.getHeaderRowStyle(), context);
         Map<String, Object> cb = new HashMap<>();
         cb.put("style", headerStyle);
-        HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
-        hashMapStringObject.put("HeaderRowOpen", cb);
-        this.output.pushScreen(hashMapStringObject);
+        this.output.pushScreen("HeaderRowOpen", cb);
     }
 
     public void renderFormatHeaderRowClose(Appendable writer, Map<String, Object> context, ModelForm modelForm) {
@@ -1359,9 +1351,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         Map<String, Object> cb = new HashMap<>();
         cb.put("style", areaStyle);
         cb.put("positionSpan", positionSpan);
-        HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
-        hashMapStringObject.put("HeaderRowCellOpen", cb);
-        this.output.pushScreen(hashMapStringObject);
+        this.output.pushScreen("HeaderRowCellOpen", cb);
     }
 
     public void renderFormatHeaderRowCellClose(Appendable writer, Map<String, Object> context, ModelForm modelForm, ModelFormField modelFormField) {
@@ -1372,9 +1362,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         String areaStyle = modelForm.getFormTitleAreaStyle();
         Map<String, Object> cb = new HashMap<>();
         cb.put("style", areaStyle);
-        HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
-        hashMapStringObject.put("HeaderRowFormCellOpen", cb);
-        this.output.pushScreen(hashMapStringObject);
+        this.output.pushScreen("HeaderRowFormCellOpen", cb);
     }
 
     public void renderFormatHeaderRowFormCellClose(Appendable writer, Map<String, Object> context, ModelForm modelForm) {
@@ -1411,7 +1399,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         if (UtilValidate.isNotEmpty(evenRowStyle)) attributes.put("evenRowStyle", evenRowStyle);
         if (UtilValidate.isNotEmpty(oddRowStyle))  attributes.put("oddRowStyle", oddRowStyle);
         //                                             //newRecord
-        this.output.pushScreen("ItemRowOpen", attributes, true, context);
+        this.output.pushScreen("ItemRowOpen", attributes, "NEW_RECORD", context);
     }
 
     public void renderFormatItemRowClose(Appendable writer, Map<String, Object> context, ModelForm modelForm) {
@@ -1424,9 +1412,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         cb.put("fieldName", modelFormField.getName());
         cb.put("style", areaStyle);
         cb.put("positionSpan", positionSpan);
-        HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
-        hashMapStringObject.put("ItemRowCellOpen", cb);
-        this.output.pushScreen(hashMapStringObject);
+        this.output.pushScreen("ItemRowCellOpen", cb);
     }
 
     public void renderFormatItemRowCellClose(Appendable writer, Map<String, Object> context, ModelForm modelForm, ModelFormField modelFormField) {
@@ -1437,9 +1423,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         String areaStyle = modelForm.getFormTitleAreaStyle();
         Map<String, Object> cb = new HashMap<>();
         cb.put("style", areaStyle);
-        HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
-        hashMapStringObject.put("ItemRowFormCellOpen", cb);
-        this.output.pushScreen(hashMapStringObject);
+        this.output.pushScreen("ItemRowFormCellOpen", cb);
     }
 
     public void renderFormatItemRowFormCellClose(Appendable writer, Map<String, Object> context, ModelForm modelForm) {
@@ -1451,7 +1435,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         Map<String, Object> cb = new HashMap<>();
         cb.put("formName", modelForm.getName());
         cb.put("style", style);
-        this.output.pushScreen("SingleWrapperOpen", cb, true, context);
+        this.output.pushScreen("SingleWrapperOpen", cb, "NEW_RECORD", context);
     }
 
     public void renderFormatSingleWrapperClose(Appendable writer, Map<String, Object> context, ModelForm modelForm) {
@@ -1459,9 +1443,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
     }
 
     public void renderFormatFieldRowOpen(Appendable writer, Map<String, Object> context, ModelForm modelForm) {
-        HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
-        hashMapStringObject.put("FieldRowOpen", new HashMap<>());
-        this.output.pushScreen(hashMapStringObject);
+        this.output.pushScreen("FieldRowOpen", new HashMap<String, Object>());
     }
 
     public void renderFormatFieldRowClose(Appendable writer, Map<String, Object> context, ModelForm modelForm) {
@@ -1472,9 +1454,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         String style = modelFormField.getTitleAreaStyle();
         Map<String, Object> cb = new HashMap<>();
         if (!style.isEmpty()) cb.put("style", style);
-        HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
-        hashMapStringObject.put("FieldRowTitleCellOpen", cb);
-        this.output.pushScreen(hashMapStringObject);
+        this.output.pushScreen("FieldRowTitleCellOpen", cb);
     }
 
     public void renderFormatFieldRowTitleCellClose(Appendable writer, Map<String, Object> context, ModelFormField modelFormField) {
@@ -1489,9 +1469,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         Map<String, Object> cb = new HashMap<>();
         cb.put("positionSpan", positionSpan);
         cb.put("style", areaStyle);
-        HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
-        hashMapStringObject.put("FieldRowWidgetCellOpen", cb);
-        this.output.pushScreen(hashMapStringObject);
+        this.output.pushScreen("FieldRowWidgetCellOpen", cb);
     }
 
     public void renderFormatFieldRowWidgetCellClose(Appendable writer, Map<String, Object> context, ModelFormField modelFormField, int positions, int positionSpan, Integer nextPositionInRow) {
@@ -2313,9 +2291,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         cb.put("collapsible", collapsible);
         cb.put("expandToolTip", expandToolTip);
         cb.put("collapseToolTip", collapseToolTip);
-        HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
-        hashMapStringObject.put("FieldGroupOpen", cb);
-        this.output.pushScreen(hashMapStringObject);
+        this.output.pushScreen("FieldGroupOpen", cb);
     }
 
     public void renderFieldGroupClose(Appendable writer, Map<String, Object> context, ModelForm.FieldGroup fieldGroup) {

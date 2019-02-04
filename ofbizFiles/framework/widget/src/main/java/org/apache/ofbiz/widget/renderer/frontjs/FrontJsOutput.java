@@ -101,50 +101,27 @@ public class FrontJsOutput {
         }
     }
 
-    @SuppressWarnings("unchecked")
-    @Deprecated
-    void pushScreen(Map<String, Object> screen) {
-        Map<String, Object> temp = new HashMap<>();
-        String name = screen.keySet().toArray()[0].toString();
-        temp.put("attributes", screen.get(name));
-        temp.put("children", new ArrayList<Map<String, Object>>());
-        temp.put("name", name.replace("Open", "").replace("Begin", ""));
-        screen = temp;
-        screensStack.peek().add(screen);
-        screensStack.push((UtilGenerics.cast(screen.get("children"))));
-//        screensStack.push((ArrayList<Map<String, Object>>) screen.get("children"));
-        if (screen.containsKey("attributes") && ((Map<String, Object>) screen.get("attributes")).containsKey("data") && ((Map<String, Object>) ((Map<String, Object>) screen.get("attributes")).get("data")).containsKey("action")) {
-            if (((Map<String, Object>) ((Map<String, Object>) screen.get("attributes")).get("data")).get("action").equals("NEW_RECORD")) {
-                this.newRecord();
-            }
-            if (((Map<String, Object>) ((Map<String, Object>) screen.get("attributes")).get("data")).get("action").equals("PUT_ENTITY")) {
-                Map<String, Object> data = (Map<String, Object>) ((Map<String, Object>) screen.get("attributes")).get("data");
-                this.putEntity((String) data.get("entityName"), (List<String>) data.get("primaryKeys"));
-            }
-        }
-    }
-
     /**
-     * Add a new screenElement into the children of the top screen of the current screen stack. <br/>
-     * Should be used only when element is a field.
+     * Add a new screenElement into the children of the top screen of the stack. <br/>
+     * Should be used only when element is not a field.
      *
      * @param name       : the element Name (see list of renderer method (screen, form, menu,..), each one is a element)
      * @param attributes : a map with all the attributes elements
      */
     void pushScreen(String name, Map<String, Object> attributes) {
-        pushScreen(name, attributes, false, null);
+        pushScreen(name, attributes, null, null);
     }
 
     /**
-     * Add a new screenElement into the children of the top screen of the current screen stack. <br/>
-     * Should be used only when element is a field.
+     * Add a new screenElement into the children of the top screen of the stack. <br/>
+     * Should be used only when element is not a field.
      *
      * @param name       : the element Name (see list of renderer method (screen, form, menu,..), each one is a element)
      * @param attributes : a map with all the attributes elements
-     * @param newRecord  : a boolean determining if a new record must be add
-     * @param context    : a map with the records elements
+     * @param action  : a string determining action to perform on data (can be one of [null, "PUSH_ENTITY", "NEW_RECORD"])
+     * @param context    : a map with the data relative to the action to perform
      */
-    void pushScreen(String name, Map<String, Object> attributes, boolean newRecord, Map<String, Object> context) {
+    void pushScreen(String name, Map<String, Object> attributes, String action, Map<String, Object> context) {
         Map<String, Object> screen = new HashMap<>();
         screen.put("name", name.replace("Open", "").replace("Begin", ""));
         screen.put("attributes", attributes);
@@ -153,10 +130,14 @@ public class FrontJsOutput {
         screen.put("children", children);
         screensStack.peek().add(screen);
         screensStack.push(children);
-        if (newRecord) {
-            this.newRecord(context);
-            // for debug purpose only, should be remove when the old code with PUT_RECORD will be removed
-            screen.put("dataDebug", UtilMisc.toMap("action", "NEW_RECORD"));
+        if (action != null) {
+            if (action.equals("PUSH_ENTITY")) {
+                // todo
+                this.pushEntity((String) context.get("entityName"), (List<String>) context.get("primaryKeys"));
+            }
+            if (action.equals("NEW_RECORD")) {
+                this.newRecord(context);
+            }
         }
     }
 
@@ -186,7 +167,14 @@ public class FrontJsOutput {
         }
     }
 
-    private void putEntity(String entityName, List<String> primaryKeys) {
+    /**
+     * Push entity on the stack (all record will be relative to this entity until another one was push or this one was pop). <br/>
+     * Should be called by pushScreen only.
+     *
+     * @param entityName       : the name of the entity to push
+     * @param primaryKeys : the list of entity's primary key
+     */
+    private void pushEntity(String entityName, List<String> primaryKeys) {
         Map<String, Object> entity;
         if (!viewEntities.containsKey(entityName)) {
             entity = new HashMap<>();
@@ -204,6 +192,8 @@ public class FrontJsOutput {
         entitiesStack.pop();
     }
 
+    // todo: delete when not used anymore
+    @Deprecated
     private void newRecord() {
         // currentRecord
         if (!entitiesStack.empty()) {
@@ -211,6 +201,12 @@ public class FrontJsOutput {
         }
     }
 
+    /**
+     * Push a new record on the stack and generate the primary key to use in front. <br/>
+     * Should be called by pushScreen only.
+     *
+     * @param context       : the map of the current record (only used to get the primary key, it cant't be null)
+     */
     private void newRecord(Map<String, Object> context) {
         if (!entitiesStack.empty()) {
             // currentRecord

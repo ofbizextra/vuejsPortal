@@ -199,9 +199,7 @@ public class FrontJsMenuRenderer implements MenuStringRenderer {
         parameters.put("id", menu.getId());
         parameters.put("style", menu.getMenuContainerStyle(context));
         parameters.put("title", menu.getTitle(context));
-        HashMap<String, Object> hashMapStringObject = new HashMap<>();
-        hashMapStringObject.put("MenuBegin", parameters);
-        this.output.pushScreen(hashMapStringObject);
+        this.output.pushScreen("MenuBegin", parameters);
     }
 
     @Override
@@ -235,9 +233,7 @@ public class FrontJsMenuRenderer implements MenuStringRenderer {
         parameters.put("toolTip", menuItem.getTooltip(context));
         boolean containsNestedMenus = !menuItem.getMenuItemList().isEmpty();
         parameters.put("containsNestedMenus", containsNestedMenus);
-        HashMap<String, Object> hashMapStringObject = new HashMap<>();
-        hashMapStringObject.put("MenuItemBegin", parameters);
-        this.output.pushScreen(hashMapStringObject);
+        this.output.pushScreen("MenuItemBegin", parameters);
         String linkStr;
         MenuLink link = menuItem.getLink();
         if (link != null) {
@@ -258,9 +254,6 @@ public class FrontJsMenuRenderer implements MenuStringRenderer {
         }
         parameters.clear();
         parameters.put("containsNestedMenus", containsNestedMenus);
-        hashMapStringObject = new HashMap<>();
-        hashMapStringObject.put("MenuItemEnd", parameters);
-        // it was popScreen but it must be an error
         this.output.popScreen("MenuItemEnd");
     }
 
