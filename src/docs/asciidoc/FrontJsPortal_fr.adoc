@@ -45,13 +45,15 @@ include::_include/poc-vuejs_fr.adoc[leveloffset=+1]
 
 
 == Portlet
-[CAUTION]
-Hypothèse à confirmer quand il y en aura besoin : +
-Il faut pouvoir associer à la portlet le nom d'un (ou de plusieurs) identifiant/s correspondant à ce qui sera surveillé pour que 
-la portlet se mette à jour. Par exemple, pour la portlet editExample, l'identifiant est exampleId. +
-Quand cette portlet s'affiche pour la première fois via un showPortlet, si il y a un exampleId dans les data alors le champ
-exampleId est créer, sur le client Js, avec sa valeur. +
-...
+Une portlet est une portion d'écran "autonome" c'est à dire qu'il peut y avoir des actions qui ne concerne que cette portion
+d'écran et qui sont déclanché par des éléments interne à elle.
+
+Les portlets doivent permettre une grand modularité de l'interface utilisateur, aussi une action utilisateur (clic sur un lien,
+un bouton submit, ...) ne doit pas indiquer la portlet qui doit se mettre à jour mais un nom logique auquel pourront s'abonner
+une ou plusieurs portlet.
+
+Ce nom logique auquel la portlet s'abonne est la watcherName, c'est un champ qui est dans la table d'association entre
+PortalPage te PortalPortlet
 
 === Mise à jour Portlet
 C'est la mise à jours de donnée au niveau du store du client Js qui déclanche la mise à jours de la portlet
@@ -70,20 +72,19 @@ C'est la mise à jours de donnée au niveau du store du client Js qui déclanche
 
 == FrontJs Glossary
 
-[CAUTION]
-object2TrackId ou monitorName ou observerId ou trackerId ou ... +
-c'est le nom du champ qui sert de déclancheur pour mettre à jour la portlet
+[#WATCHERS]
+watchers:: c'est nom du store VueJs utilisé pour stocker les différentes variable sur lequel les container ou portletsont abonné
+et donc se mette à jours quand celui-ci change.
 
-[CAUTION]
-DataView versus DataForm ou data versus html +
-afin de pouvoir différentier dans les phrases parlant d'un flux entre serveur et client Js le type d'information reçu
-ou traiter.
+[#WATCHERNAME]
+watcherName:: c'est le nom du champ (dans l'association Portlet - PortalPage) qui contient le nom de la variable dans watchers permettant
+de mettre à jours cette portlet dans cette PortalPage (cf <<Portlet, _Portlet_ >>.
+
+[#STORE_ENTITIES]
+Store entities:: c'est le store qui stock l'ensemble des données utilisé sur la page portail, il est organisé par "record" 
+de manière à pourvoir être utilisé aussi bien en tant que ligne de list que en tant que Screen Single.
 
 
-[#GENERICDATAVIEW]
-GenericDataView:: C'est un objet stocker par le client Javascript (dans le store pour VueJs) correspondant à une GenericEntity au 
-  niveau du serveur. Il contient les données affichées (ou présente dans le formulaire mais hidden) donc potentiellement différente
-  de ce qu'il y a dans la GenericValue correspondante.
 
 
 

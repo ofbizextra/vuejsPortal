@@ -33,14 +33,6 @@ Le screen showPortlet doit vérifier que les paramètre suivant sont bien prése
 
 
 ---
-Lors de l'envoi d'un flux via showPortlet, il faut pouvoir *identifier l'entityName* des donnés afin de pouvoir créer
-correctement la <<GENERICDADAVIEW GenericDataView>> au niveau du client Js.
-
----
-*Une uri* permettant d'obtenir la liste des *noms de champ clés primaire pour une entityName* sera peut-être necessaire pour
-permettre au client Js de vérifier l'uniticité d'un GenericDataView.
-
----
 Le *showPortlet* doit vérifier le respect de la *sécurité* par rapport au deux champs SecurityServiceName et SecurityMainAction.
 
 == Majeurs
@@ -51,14 +43,7 @@ histoire d'avoir le temps de tester icon:smile-o[]. +
  +
 Dans la suite, les Notes correspondent à des évolutions qui sont encore en discussion.
 
----
-L'ensemble des flux entre le serveur et le client Js sont en Json.
 
-Grace à un nouveau Renderer (et donc un nouveau viewhandler) la construction de l'appel à une macro est remplacé
-par la création d'un map contenant les paramètres de la macro. +
-Dans cette map est ajouté le type de la macro (son nom dans le fichier template) et une map nommé context qui contient
-les données (donc quasiment toujours un nom de champ et sa valeur) de ce champ.
- 
  ---
  
 Pouvoir choisir facilement si une portlet s'étend en hauteur ou en largeur. Cas d'usage: portlet search, soit sur une colonne

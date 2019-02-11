@@ -66,21 +66,58 @@ Cette uri est paramètré dans le fichier constantes.js pour l'instant, mais dan
 afin de pouvoir utiliser vuejsPortal avec plusieurs composants, y compris si cela doit apparaitre comme plusieur "webapp"
 dans le menu utilisateur.
 
-En attendant le login par token dans ofbiz (cf https://issues.apache.org/jira/browse/OFBIZ-9833 ) le login actuel dans 
-le composant portal (  https://localhost:8443/exampleapi/control/login ) utilise le méchanisme *ofbiz standard de login via cookies* .
+Le composant portal (  https://localhost:8443/exampleapi/control/login ) utilise le méchanisme *ofbiz standard de login via cookies*, 
+il pourra par la suite utiliser le login par token de ofbiz (cf https://issues.apache.org/jira/browse/OFBIZ-9833 ).
 
 Les *screens, forms, menus* utilisés pour les portlets sont définis *en xml*, et dans des fichiers dédiés pour plus de lisibilité.
 
-Il y a *un composant (vuejs) par élément ofbiz* ( SingleItemRow => vue-single-item-row ), existant dans les fichier macro.ftl standard.
+Il y a *un composant (vuejs) par élément screen ofbiz* ( SingleItemRow => vue-single-item-row ), qui sont défini via les renderer au
+niveau screen, form, menu (et pour les renderer html qui correspondent globalement au macro.ftl). Pour l'instant, pour le POC,
+pour avoir la liste, il faut faire une recherche sur les appels `ouput.*Screen(` . 
 
-Un nouvelle ensemble de *renderer* a été créé, et l'uri *showPortletFj* utilise le *nouveau viewHandler* pour retourner
-le resultat du rendu du screen, showPortlet. +
+=== Balise XML utilisé
+Pendant le POC, aucune nouvelle property ou balise XML n'est ajouté mais à l'opposé certaine balise ou property
+sont détournés pour des usages VueJs exclusif.
+
+* screen
+  ** dans la balise `<container`, `auto-update-target` est utilisé pour le nom du watcher associé à ce container 
+* form
+  ** dans la balise `<on-event-update-area` 
+    *** `area-target` +
+         = 'a' implique que l'ensemble des champs du formulaire sont transmit au watcher, et donc pris en compte
+         lors du déclanchement du rafraichissement afférant. +
+         = 'p' indique que seul les paramètre du on-event-update-area sont pris en compte.
+    *** `area-id` correspond au nom du watcher qui doit être mis à jour
+  ** dans la balise `<hyperlink`
+    *** `link-type="anchor"` est utilisé pour signifier que c'est un appel interne FrontJs
+    *** `target-window` est utilisé pour désigner le nom du watcher qui doit être mis à jours
+* menu
+  ** dans la balise `<link` 
+    *** `link-type="anchor"` est utilisé pour signifier que c'est un appel interne FrontJs
+    *** `target-window` est utilisé pour désigner le nom du watcher qui doit être mis à jours
+
+=== Renderer FrontJs
+Un *nouveau viewHandler* ainsi qu'un nouvel ensemble de *renderer* a été créé. +
+Un nouveau package à été créé dans org.apache.ofbiz.widget.renderer frontJs qui contient l'ensemble des nouveaux renderer.
+
+Dans ce package, il y a une class FrontJsOutput qui permet de construire les éléments nécessaires au format de sortie souhaité.
+Un objet de cette class est instancié en début de traitement du viewHandler, puis est compléter par les appels a chacun des objet renderer.
+
+L'uri *showPortletFj* du composant exampleApi utilise le nouveau viewHandler pour retourner le resultat du rendu du screen, showPortlet.
+
 cette uri est utilisé par l'applicatif vueJs pour toutes les requêtes de récupération des informations d'affichage. +
-Le viewHandler retourne plusieurs ensemble (map) d'élément, dont l'un pour les données et l'un pour le/s affichage/s.
+Le viewHandler retourne, au format json deux ensemble (map) d'élément ( viewScreen et viewEntities), 
+la première le/s affichage/s et la seconde pour les données.
 
+Dans les futures versions, il sera surement faisable de ne souhaiter recevoir que la map de données.
+
+=== ShowPortlet, ShowPortal
 Le screen *showPortlet est redéfini* dans le POC (dans example/widget/example) par simplification, pour faire ce que 
 l'on souhaite et seulement ça.
 
+Il y a une uri showPortal dans l'exampleApi qui est dédié FrontJs.
+
+=== Champ complémentaires
 Ajout d'un champ dans l'entity PortalPagePortlet *watcherName* qui correspond au nom du watcher qui doit déclancher 
 la mise à jour de la portlet 
 

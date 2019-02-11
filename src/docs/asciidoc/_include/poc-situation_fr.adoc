@@ -18,8 +18,10 @@ under the License.
 ////
 = Situation actuel du POC
 
-L'objectif est de faire fonctionner la page portail ExampleFrontJs, pour l'instant le nom de la page portail est en dur. +
-Cette page contient 2 colonnes avec dans la première 2 portlets, le findExample puis le editExample et le listExample dans la seconde colonne.
+L'objectif est de faire fonctionner des pages portails correspondant à différent useCase. +
+Au niveau du menu, il y a les différentes page, pour l'instant le nom de la page portail est ExampleFrontJs et ExampleFrontJs2. +
+La première page contient 2 colonnes avec dans la première 2 portlets, le findExample puis le editExample et le listExample dans la seconde colonne. +
+La seconde page se rapproche de la page Mgmnt avec 2 portlets par colonne.
 
 Pour chacune de ces portlet un composant portlet est créé dans le front avec le nom de la portlet et celui-ci s'initialise
 avec le showPortlet.
@@ -30,9 +32,14 @@ Actuellement le format utilisé est json.
 
 image::PortalPageDetail-Example.svg[Imbrication des container]
 
-== Nouveau renderer OFBiz
+== ViewScreen et ViewEntities 
+Actuellement tous les refresh d'écran (ou de portlet) font appel au FrontJsViewHandler qui renvoi la map ViewScreen et la map ViewEntities. +
+Dans une logique client FrontJs, la map ViewScreen devrait être reçu uniquement la première fois, contrairement à la map ViewEntities qui 
+contient les données.
 
-Un nouveau package à été créé dans org.apache.ofbiz.widget.renderer frontJs qui contient l'ensemble des nouveaux renderer.
+Actuellement, la gestion des "use-when", quelque soit le niveau (screen, form, field, menu) est réalisé (dans OFBiz) au niveau de la gestion 
+du modèle donc cette information n'est pas accessible dans les rendrerer. +
+Dans le futur, il faudra transmettre au rendrer l'ensemble des éléments screens mais s'il y avait un use-when ajouter une données 
+complémentaire boolean pour signaler qu'il faut l'afficher ou non. Ainsi, il sera possible lors des prochains appels à l'envoi de donnée
+de transmettre le/s boolean en question avec la/es valeurs correspondantes, afin de pouvoir mettre à jours correctement l'écran final. 
 
-Dans ce package, il y a une class FrontJsOutput qui permet de construire les éléments nécessaires au format de sortie souhaité.
-Un objet de cette class est instancié en début de traitement du viewHandler. 

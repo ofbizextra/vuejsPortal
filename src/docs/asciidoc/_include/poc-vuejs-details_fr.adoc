@@ -47,7 +47,7 @@ WARNING: Ces fonctions ne seront jamais réévaluer automatiquement par Vue.js
 Elle sont utilisées dans le code sous la forme: 'this.props.nomDeLaProps'.
 * Cette section peut aussi contenir des *hook* existants dans le cycle de vie du composant ( created(), mounted(), beforeUpdate(), ect... ). +
 Voir ci-dessous : +
-image:https://fr.vuejs.org/images/lifecycle.png["Component lifecycle", width=256,link="https://fr.vuejs.org/images/lifecycle.png"] +
+image:https://fr.vuejs.org/images/lifecycle.png["Component lifecycle", link="https://fr.vuejs.org/images/lifecycle.png"] +
 WARNING: Lors du *hook* created() les valeurs computed et les methodes du composant ne sont pas encore créer.
 . Le style +
 Cette section permet de definir le style du composant en css. +
