@@ -1,13 +1,22 @@
 <template>
-  <li id="vue-menu-item">
+  <li id="vue-menu-item" v-bind:class="style" v-bind:title="toolTip">
+    <ul v-if="containsNestedMenus">
+      <div
+        v-for="(component, index) in props.children"
+        :key="index"
+        v-bind:is="constantes.components[component.name]"
+        :props="component"
+        :updateStore="updateStore"
+      />
+    </ul>
     <div
+      v-else
       v-for="(component, index) in props.children"
       :key="index"
       v-bind:is="constantes.components[component.name]"
       :props="component"
       :updateStore="updateStore"
-    >
-    </div>
+    />
   </li>
 </template>
 
@@ -25,10 +34,19 @@
       data() {
         let data = this.props.attributes
         delete data['value']
-        if (data.className || (data.alert && data.alert === true)) {
-          data.class = data.className ? data.className : '' + ' ' + data.alert === true ? 'alert' : ''
-        }
         return data
+      },
+      style() {
+        return this.data.hasOwnProperty('style') ? this.data.style : ''
+      },
+      toolTip() {
+        return this.data.hasOwnProperty('toolTip') ? this.data.toolTip : ''
+      },
+      linkStr() {
+        return this.data.hasOwnProperty('linkStr') ? this.data.linkStr : ''
+      },
+      containsNestedMenus() {
+        return this.data.hasOwnProperty('containsNestedMenus') ? this.data.containsNestedMenus : ''
       }
     },
     methods: {
