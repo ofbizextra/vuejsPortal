@@ -983,13 +983,13 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         }
         cb.put("tabindex", tabindex);
         if (!updateAreas.isEmpty()) {
-            List<Map> listUpdate = new ArrayList<>();
+            List<Map<String, Object>> listUpdate = new ArrayList<>();
             for (ModelForm.UpdateArea updateArea : updateAreas) {
                 Map<String, Object> map = new HashMap<>();
                 map.put("eventType", updateArea.getEventType());
                 map.put("areaId", updateArea.getAreaId());
                 map.put("areaTarget", updateArea.getAreaTarget());
-                map.put("parameterList", updateArea.getParameterList());
+                map.put("parameterList", updateArea.getParameterMap(context));
                 listUpdate.add(map);
             }
             cb.put("updateArea", listUpdate);
@@ -1161,7 +1161,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         String focusFieldName = modelForm.getFocusFieldName();
         Map<String, Object> cb = new HashMap<>();
         if (!targ.isEmpty() && !linkUrl.toString().isEmpty()) {
-            cb.put("linkUrl", linkUrl);
+            cb.put("linkUrl", linkUrl.toString());
         } else {
             cb.put("linkUrl", "");
         }
@@ -2378,7 +2378,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
 //        cb.put("paginateTarget", target);
         List<ModelForm.UpdateArea> onPaginateUpdateAreas = modelForm.getOnPaginateUpdateAreas();
         if (!onPaginateUpdateAreas.isEmpty()) {
-            List<Map> onPaginateUpdateAreasJson = new ArrayList<>();
+            List<Map<String, String>> onPaginateUpdateAreasJson = new ArrayList<>();
             for (ModelForm.UpdateArea updateArea : onPaginateUpdateAreas) {
                 onPaginateUpdateAreasJson.add(updateArea.getParameterMap(context));
             }
