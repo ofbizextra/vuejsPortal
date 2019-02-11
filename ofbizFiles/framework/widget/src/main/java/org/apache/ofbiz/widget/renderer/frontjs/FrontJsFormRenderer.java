@@ -981,7 +981,11 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         }
         cb.put("tabindex", tabindex);
         if (!updateAreas.isEmpty()) {
-            cb.put("updateArea", updateAreas);
+            List<Map> listUpdate = new ArrayList<>();
+            for (ModelForm.UpdateArea updateArea : updateAreas) {
+                listUpdate.add(updateArea.getParameterMap(context));
+            }
+            cb.put("updateArea", listUpdate);
         }
         this.appendTooltip(cb, context, modelFormField);
         this.output.putScreen("SubmitField", cb);
@@ -1149,7 +1153,11 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         }
         String focusFieldName = modelForm.getFocusFieldName();
         Map<String, Object> cb = new HashMap<>();
-        cb.put("linkUrl", linkUrl);
+        if (!targ.isEmpty() && !linkUrl.toString().isEmpty()) {
+            cb.put("linkUrl", linkUrl);
+        } else {
+            cb.put("linkUrl", "");
+        }
         cb.put("formType", formType);
         cb.put("targetWindow", targetWindow);
         cb.put("containerId", containerId);
@@ -2362,7 +2370,16 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
 //        String target = modelForm.getPaginateTarget();
 //        cb.put("paginateTarget", target);
         List<ModelForm.UpdateArea> onPaginateUpdateAreas = modelForm.getOnPaginateUpdateAreas();
-        cb.put("onPaginateUpdateAreas", onPaginateUpdateAreas);
+        if (!onPaginateUpdateAreas.isEmpty()) {
+            List<Map> onPaginateUpdateAreasJson = new ArrayList<>();
+            for (ModelForm.UpdateArea updateArea : onPaginateUpdateAreas) {
+                onPaginateUpdateAreasJson.add(updateArea.getParameterMap(context));
+            }
+            cb.put("onPaginateUpdateAreas", onPaginateUpdateAreasJson);
+        } else {
+            cb.put("onPaginateUpdateAreas", new ArrayList<>());
+        }
+
         String entityField = modelFormField.getParameterName(context);
         cb.put("entityField", entityField);
         this.output.putScreen("SortField", cb);

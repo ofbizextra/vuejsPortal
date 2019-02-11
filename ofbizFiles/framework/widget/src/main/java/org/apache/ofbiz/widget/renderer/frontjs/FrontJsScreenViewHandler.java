@@ -13,6 +13,7 @@ import org.apache.ofbiz.base.util.collections.MapStack;
 import org.apache.ofbiz.webapp.view.AbstractViewHandler;
 import org.apache.ofbiz.webapp.view.ViewHandlerException;
 import org.apache.ofbiz.widget.renderer.*;
+import org.json.simple.JSONObject;
 import org.xml.sax.SAXException;
 
 import javax.servlet.ServletContext;
@@ -142,54 +143,21 @@ public class FrontJsScreenViewHandler extends AbstractViewHandler {
             ScreenStringRenderer screenStringRenderer = loadRenderers(frontJsOutput, request, response, context);
             ScreenRenderer screens = new ScreenRenderer(writer, context, screenStringRenderer);
             context.put("screens", screens);
-            // prepate context data that sould be serialized to client
-//            Map<String, Object> data = new HashMap<>();
-            //output.put("data", context);
-            // TODO : essayer de supprimer quelques mots : eventMessageList, person, entityName
-            List<String> toExclude = UtilMisc.toList("globalContext", "request", "session", "rootDir", "security",
-                    "checkLoginUrl", "screens", "javaScriptEnabled", "https", "sessionAttributes",
-                    "eventMessageList", "externalKeyParam", "webSiteId", "controlPath",
-                    "delegator", "Request", "timeZone", "JspTaglibs", "contextRoot",
-                    "serverRoot", "application", "person", "response", "modelTheme", "dispatcher",
-                    "webappName", "nullField", "screens", "formStringRenderer", "treeStringRenderer",
-                    "menuStringRenderer", "requestAttributes", "Application", "entityName", "modelReader");
-            /*
-            for (String key : context.keySet()) {
-                if (!toExclude.contains(key)) {
-                    data.put(key, context.get(key));
-                }
-            }
-            */
+
             context.put("simpleEncoder", UtilCodec.getEncoder(visualTheme.getModelTheme().getEncoder(getName())));
 
             screenStringRenderer.renderScreenBegin(writer, context);
             screens.render(page);
             screenStringRenderer.renderScreenEnd(writer, context);
 
-            /*
-            JSON json = JSON.from(output);
+            JSONObject json = new JSONObject(frontJsOutput.output());
             String jsonStr = json.toString();
-            */
-            //output.put("data", data);
-            ObjectMapper mapper = new ObjectMapper();
-            //mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-            //mapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
-            StringWriter jsonWriter = new StringWriter();
-            String[] propertiesToExclude = toExclude.toArray(new String[toExclude.size()]);
-            mapper.addMixInAnnotations(Object.class, DynamicMixIn.class);
-            FilterProvider filterProvider = new SimpleFilterProvider()
-                    .addFilter("dynamicFilter", SimpleBeanPropertyFilter.serializeAllExcept(propertiesToExclude));
-            mapper.setFilters(filterProvider);
-            /*
-            SimpleBeanPropertyFilter theFilter = SimpleBeanPropertyFilter
-                    .serializeAllExcept("intValue");
-            */
-            mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-            mapper.writeValue(jsonWriter, frontJsOutput.output);
-            String jsonStr = jsonWriter.toString();
+
+            // set the JSON content type
             response.setContentType("application/json");
             // jsonStr.length is not reliable for unicode characters
             response.setContentLength(jsonStr.getBytes("UTF8").length);
+
             writer.write(jsonStr);
 
             writer.flush();
