@@ -2,6 +2,7 @@
 package org.apache.ofbiz.widget.renderer.frontjs;
 
 import com.ibm.icu.util.Calendar;
+import org.apache.ofbiz.base.lang.JSON;
 import org.apache.ofbiz.base.util.*;
 import org.apache.ofbiz.base.util.string.FlexibleStringExpander;
 import org.apache.ofbiz.entity.Delegator;
@@ -16,6 +17,7 @@ import org.apache.ofbiz.widget.model.*;
 import org.apache.ofbiz.widget.model.ModelFormField.*;
 import org.apache.ofbiz.widget.renderer.*;
 import org.apache.ofbiz.widget.renderer.macro.MacroFormRenderer;
+import org.json.simple.JSONObject;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -983,7 +985,12 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         if (!updateAreas.isEmpty()) {
             List<Map> listUpdate = new ArrayList<>();
             for (ModelForm.UpdateArea updateArea : updateAreas) {
-                listUpdate.add(updateArea.getParameterMap(context));
+                Map<String, Object> map = new HashMap<>();
+                map.put("eventType", updateArea.getEventType());
+                map.put("areaId", updateArea.getAreaId());
+                map.put("areaTarget", updateArea.getAreaTarget());
+                map.put("parameterList", updateArea.getParameterList());
+                listUpdate.add(map);
             }
             cb.put("updateArea", listUpdate);
         }
