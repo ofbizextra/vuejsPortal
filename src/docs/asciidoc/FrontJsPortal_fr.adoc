@@ -43,6 +43,21 @@ dans les écrans, même quand les écrans sont construit / paramétré à partir
 
 include::_include/poc-vuejs_fr.adoc[leveloffset=+1]
 
+== UI générique et modulaire
+Afin d'avoir un ERP modulaire et ouvert, il est important que la gestion de l'interface Utilisateur permette, à partir d'un
+ensemble de "module" écran, de gérer de multiple écran pour gérer le même type d'objet métier dans différent type de contexte
+de l'entreprise.
+
+Les chapitres suivants décrivent un POC pour un système de gestion de l'interface utilisateur afin de vérifier qu'il répond à 
+ce besoin de modularité. 
+
+To be able to have a ERP modular and open, it's imprtant that User Interface must allow, using a set of screen "block", to manage
+multiple screen to manage the *same business object* type in *differents business context*.
+
+Chapter following, describes a POC for checking if a User Interface Management system  meets this need for modularity.
+
+include::Ui-POC.adoc[leveloffset=+2]
+ 
 
 == Portlet
 Une portlet est une portion d'écran "autonome" c'est à dire qu'il peut y avoir des actions qui ne concerne que cette portion
