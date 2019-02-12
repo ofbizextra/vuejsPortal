@@ -19,7 +19,7 @@ public class FrontJsOutput {
 
     // stack of screen, a screen is a list of element (see list of renderer method (screen, form, menu,..), each one is a element)
     //  each element has 3 fields
-    //  - "name" the element name (ex: Label, ScreenletBegin, DisplayField, HyperlinkField, ...)
+    //  - "name" the element name (ex: Label, ScreenletBegin, DisplayField, HyperlinkField, ...). To have the complete list of screen element search all call to "output.*Screen("
     //  - "attributes" a map with the attributes
     //  - "stPointer" only there when it's a field with a link to the store in the FrontJs application, it's a map which data to be able to create the link
     //  - and a fourth for temporary Debug purpose "dataDebug"
