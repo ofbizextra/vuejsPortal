@@ -1,7 +1,6 @@
 <template>
   <div id="app">
-    <!--<v-wait message="Loading data...">-->
-    <!--</v-wait>-->
+    <input type="hidden" id="updateCpt" :value="updateCpt">
 
     <BlockUI v-if="$wait.any" message="Fetching datas...">
       <spinner
@@ -17,12 +16,18 @@
 
 <script>
   import logo from '../assets/logo.png'
+  import {mapGetters} from 'vuex'
   export default {
     name: 'app',
     data() {
       return {
         image: logo
       }
+    },
+    computed: {
+      ...mapGetters({
+        updateCpt: 'ui/updateCpt'
+      })
     },
     methods: {
       increment() {

@@ -15,6 +15,7 @@ const state = {
   containerWatcher: {},
   areas: {},
   watchers: {},
+  updateCpt: 0
 }
 
 const mutations = {
@@ -54,6 +55,9 @@ const mutations = {
     } else {
       Vue.set(state.watchers, watcherName, watcherContent)
     }
+  },
+  INCREMENT_UPDATE_CPT: (state) => {
+    Vue.set(state, 'updateCpt', state.updateCpt + 1)
   }
 }
 
@@ -97,7 +101,8 @@ const getters = {
     return function (watcherName) {
       return state.watchers.hasOwnProperty(watcherName) ? state.watchers[watcherName] : null
     }
-  }
+  },
+  updateCpt: state => state.updateCpt
 }
 
 const actions = {
@@ -159,6 +164,7 @@ const actions = {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         wait.start(areaId)
+        dispatch('incrementUpdateCpt')
         Vue.http.post(constantes.hostUrl + targetUrl.replace('amp;', ''),
           queryString.stringify({...params}),
           {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}
@@ -218,6 +224,9 @@ const actions = {
   },
   addToWatcher({commit}, {watcherName, watcherContent}) {
     commit('ADD_TO_WATCHER', {watcherName, watcherContent})
+  },
+  incrementUpdateCpt({commit}) {
+    commit('INCREMENT_UPDATE_CPT')
   }
 }
 
