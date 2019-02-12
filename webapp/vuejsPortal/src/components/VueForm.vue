@@ -1,5 +1,5 @@
 <template>
-  <form id="vue-form" v-bind="data">
+  <form v-bind:id="'vue-form_' + data.name" v-bind="data">
     <div
       v-for="component in props.children"
       v-bind:is="constantes.components[component.name]"

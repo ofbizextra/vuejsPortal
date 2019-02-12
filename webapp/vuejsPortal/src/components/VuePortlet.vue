@@ -1,5 +1,5 @@
 <template>
-  <div id="vue-portlet">
+  <div v-bind:id="'vue-portlet_' + portletId">
     <div v-if="portlet">
       <div
         v-for="component in portlet.viewScreen"
