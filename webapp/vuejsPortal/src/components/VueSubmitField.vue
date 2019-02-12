@@ -31,7 +31,7 @@
     methods: {
       post() {
         console.log('post ...')
-        this.$wait.start('updating ' + this.props.attributes.formName)
+        // this.$wait.start('updating ' + this.props.attributes.formName)
         let linkUrl = this.getDataFromForm({formId: this.props.attributes.formName, key: 'linkUrl'})
         let url = linkUrl
         this.$http.post(
@@ -60,24 +60,24 @@
               //   })
               // })
               this.$nextTick(() => {
-                this.$wait.end('updating ' + this.props.attributes.formName)
+                // this.$wait.end('updating ' + this.props.attributes.formName)
               })
             } else {
               console.log('Store don\'t need to be updated')
               this.$nextTick(() => {
-                this.$wait.end('updating ' + this.props.attributes.formName)
+                // this.$wait.end('updating ' + this.props.attributes.formName)
               })
             }
           }, error => {
             console.log(error)
             this.$nextTick(() => {
-              this.$wait.end('updating ' + this.props.attributes.formName)
+              // this.$wait.end('updating ' + this.props.attributes.formName)
             })
           }
         )
       },
       updateStore() {
-        this.$wait.start('updating ' + this.props.attributes.formName)
+        // this.$wait.start('updating ' + this.props.attributes.formName)
         this.$nextTick(() => {
           let areasToUpdate = [ ...this.data.updateArea]
           console.log('areasToUpdate', areasToUpdate)
@@ -98,7 +98,7 @@
             this.$store.dispatch('data/setWatcher', data)
           })
           this.$nextTick(() => {
-            this.$wait.end('updating ' + this.props.attributes.formName)
+            // this.$wait.end('updating ' + this.props.attributes.formName)
           })
         })
       },

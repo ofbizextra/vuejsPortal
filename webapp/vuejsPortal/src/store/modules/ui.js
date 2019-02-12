@@ -2,6 +2,7 @@ import Vuex from 'vuex'
 import Vue from 'vue'
 import queryString from 'query-string'
 import constantes from './../../js/constantes'
+import VueWait from 'vue-wait'
 
 Vue.use(Vuex)
 
@@ -59,11 +60,17 @@ const mutations = {
 const getters = {
   currentPortalPage: state => state.currentPortalPage,
   currentPortalPageDetail: state => state.portalPages[state.currentPortalPage],
-  portalPage: state => (id) => { return state.portalPages[id] },
+  portalPage: state => (id) => {
+    return state.portalPages[id]
+  },
   portalPages: state => state.portalPages,
-  column: state => ({portalPageId, columnSeqId}) => { return state.portalPages[portalPageId].listColumnPortlet.find(col => col.columnSeqId === columnSeqId)},
+  column: state => ({portalPageId, columnSeqId}) => {
+    return state.portalPages[portalPageId].listColumnPortlet.find(col => col.columnSeqId === columnSeqId)
+  },
   portlet(state) {
-    return (id) => { return state.portlets[id] }
+    return (id) => {
+      return state.portlets[id]
+    }
   },
   portlets: state => state.portlets,
   portletTarget(state) {
@@ -99,8 +106,10 @@ const actions = {
     commit('SET_CURRENT_PORTAL_PAGE', portalPageId)
   },
   setPortlet({commit}, {portalPortletId, portletSeqId, params = {}}) {
+    // this.$wait.start(portalPortletId + '-' + portletSeqId)
     return new Promise((resolve, reject) => {
       setTimeout(() => {
+        // this._vm.$wait.start(portalPortletId + '-' + portletSeqId)
         Vue.http.post(constantes.apiUrl + constantes.showPortlet.path,
           queryString.stringify({
             portalPortletId: portalPortletId,
@@ -109,16 +118,20 @@ const actions = {
           {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}
         ).then(response => {
           commit('SET_PORTLET', {portletId: portalPortletId + '-' + portletSeqId, data: response.body})
+          // this._vm.$wait.end(portalPortletId + '-' + portletSeqId)
+          // this.$wait.end(portalPortletId + '-' + portletSeqId)
           resolve(portalPortletId)
         }, error => {
           console.log(error)
+          // this._vm.$wait.end(portalPortletId + '-' + portletSeqId)
+          // this.$wait.end(portalPortletId + '-' + portletSeqId)
           reject()
         })
       }, 1000)
     })
   },
   setPortletTarget({commit}, {portletId, target}) {
-    commit('SET_PORTLET_TARGET', {portletId , target})
+    commit('SET_PORTLET_TARGET', {portletId, target})
   },
   setContainer({commit}, {containerName, containerTarget, params = {}}) {
     return new Promise((resolve, reject) => {
@@ -142,10 +155,11 @@ const actions = {
   setContainerWatcher({commit}, {watcherName, watcherTarget, params}) {
     commit('SET_CONTAINER_WATCHER', {watcherName, watcherTarget, params})
   },
-  setArea({commit, dispatch}, {areaId, targetUrl, params = {}}) {
+  setArea({commit, dispatch}, {areaId, targetUrl, wait, params = {}}) {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
-        Vue.http.post(constantes.hostUrl + targetUrl.replace('amp;',''),
+        wait.start(areaId)
+        Vue.http.post(constantes.hostUrl + targetUrl.replace('amp;', ''),
           queryString.stringify({...params}),
           {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}
         ).then(response => {
@@ -159,7 +173,7 @@ const actions = {
               entities.push(dispatch('data/setEntity', {
                 entityName: key,
                 primaryKey: response.body.viewEntities[key].primaryKeys.join('-')
-              },{
+              }, {
                 root: true
               }))
             })
@@ -181,13 +195,16 @@ const actions = {
               }))
             })
             Promise.all(records).then(() => {
-                resolve(areaId)
+              wait.end(areaId)
+              resolve(areaId)
             })
           } else {
+            wait.end(areaId)
             resolve(areaId)
           }
         }, error => {
           console.log(error)
+          wait.end(areaId)
           reject(error)
         })
       }, 1000)

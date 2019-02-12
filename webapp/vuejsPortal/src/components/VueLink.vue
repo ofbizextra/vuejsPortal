@@ -125,6 +125,7 @@
           this.$store.dispatch('ui/setArea', {
             areaId: this.data.targetWindow,
             targetUrl: this.data.linkUrl,
+            wait: this.$wait,
             params: {}
           })
         }

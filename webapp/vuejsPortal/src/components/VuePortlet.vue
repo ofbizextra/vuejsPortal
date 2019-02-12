@@ -55,13 +55,14 @@
           params: {}
         })
         this.$nextTick(() => {
-          this.$wait.end(this.props.portalPortletId + '-' + this.props.portletSeqId)
+          // this.$wait.end(this.props.portalPortletId + '-' + this.props.portletSeqId)
         })
       } else {
         console.log(cst.apiUrl + cst.showPortlet.path + ' : => ' + this.props.portalPortletId + '-' + this.props.portletSeqId)
         this.$store.dispatch('ui/setArea', {
           areaId: this.props.portalPortletId + '-' + this.props.portletSeqId,
           targetUrl: cst.showPortlet.path,
+          wait: this.$wait,
           params: {portalPortletId: this.props.portalPortletId}
         }).then(success => {
           // this.$nextTick(() => {
@@ -83,6 +84,7 @@
         this.$store.dispatch('ui/setArea', {
           areaId: this.portletId,
           targetUrl: cst.showPortlet.path,
+          wait: this.$wait,
           params: {...val, portalPortletId: this.props.portalPortletId}
         }).then(success => {
             // this.$nextTick(() => {
