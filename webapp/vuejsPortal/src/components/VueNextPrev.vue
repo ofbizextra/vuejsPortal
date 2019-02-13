@@ -1,5 +1,5 @@
 <template>
-  <div id="vue-next-prev" :class="paginateStyle">
+  <div id="vue-next-prev" :class="paginateStyle" v-if="show">
     <ul>
       <li :class="paginateFirstStyle">
         <a href="" v-on:click.prevent="first">{{paginateFirstLabel}}</a>
@@ -131,6 +131,9 @@
       },
       numberOfPages() {
         return Math.trunc(this.listSize % this.viewSize > 0 ? this.listSize / this.viewSize + 1 : this.listSize / this.viewSize)
+      },
+      show() {
+        return this.listSize > 0
       }
     },
     methods: {

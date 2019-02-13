@@ -1288,6 +1288,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         	data.put("entityName", defaultEntityName);
         	data.put("primaryKeys", getPkList(defaultEntityName, ((Delegator)context.get("delegator")).getModelReader()));
         }
+        cb.put("listSize", Paginator.getListSize(context));
         //TODO ajouter soit un Alert concernant le fait que la list n'est pas lié au store
         // End data
         this.output.pushScreen("ListWrapperOpen", cb, action, data);

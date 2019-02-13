@@ -1,5 +1,5 @@
 <template>
-  <table id="vue-list-wrapper" v-bind="data">
+  <table id="vue-list-wrapper" v-bind="data" v-if="show">
     <div
       v-for="component in props.children"
       v-bind:is="constantes.components[component.name]"
@@ -29,6 +29,12 @@
           data.class = data.style ? data.style : '' + ' ' + data.alert === true ? 'alert' : ''
         }
         return data
+      },
+      listSize() {
+        return this.data.hasOwnProperty("listSize") ? this.data.listSize : 0
+      },
+      show() {
+        return this.listSize > 0
       }
     }
   }
