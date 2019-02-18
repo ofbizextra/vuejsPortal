@@ -133,7 +133,7 @@
         return Math.trunc(this.listSize % this.viewSize > 0 ? this.listSize / this.viewSize + 1 : this.listSize / this.viewSize)
       },
       show() {
-        return this.listSize > 0
+        return this.listSize > this.viewSize
       }
     },
     methods: {
