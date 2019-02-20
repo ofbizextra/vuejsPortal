@@ -2379,9 +2379,13 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
 //        cb.put("paginateTarget", target);
         List<ModelForm.UpdateArea> onPaginateUpdateAreas = modelForm.getOnPaginateUpdateAreas();
         if (!onPaginateUpdateAreas.isEmpty()) {
-            List<Map<String, String>> onPaginateUpdateAreasJson = new ArrayList<>();
+            List<Map<String, Object>> onPaginateUpdateAreasJson = new ArrayList<>();
             for (ModelForm.UpdateArea updateArea : onPaginateUpdateAreas) {
-                onPaginateUpdateAreasJson.add(updateArea.getParameterMap(context));
+                HashMap<String, Object> updateAreaJson = new HashMap<>();
+                updateAreaJson.put("areaId", updateArea.getAreaId());
+                updateAreaJson.put("areaTarget", updateArea.getAreaTarget());
+                updateAreaJson.put("parameters", updateArea.getParameterMap(context));
+                onPaginateUpdateAreasJson.add(updateAreaJson);
             }
             cb.put("onPaginateUpdateAreas", onPaginateUpdateAreasJson);
         } else {
