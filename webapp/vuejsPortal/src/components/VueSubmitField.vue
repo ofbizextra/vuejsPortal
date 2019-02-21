@@ -41,6 +41,15 @@
         ).then(
           response => {
             console.log(response)
+            if (response.body.hasOwnProperty('_ERROR_MESSAGE_')) {
+              this.$store.dispatch('ui/addErrorMessage', {errorMessage: response.body['_ERROR_MESSAGE_']})
+            }
+            if (response.body.hasOwnProperty('_ERROR_MESSAGE_LIST_')) {
+              for (let errorMessage of response.body['_ERROR_MESSAGE_LIST_']) {
+                console.log('ERROR_MESSAGE: ' + errorMessage)
+                this.$store.dispatch('ui/addErrorMessage', {errorMessage})
+              }
+            }
             if (this.getNestedObject(response, ['body', '_EVENT_MESSAGE_']) === 'Example Entity updated successfully') {
               // console.log('update successful => trigger store update')
               // this.$store.dispatch('data/setEntityRow', {

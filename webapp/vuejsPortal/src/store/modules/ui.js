@@ -15,7 +15,8 @@ const state = {
   containerWatcher: {},
   areas: {},
   watchers: {},
-  updateCpt: 0
+  updateCpt: 0,
+  errorMessageList: []
 }
 
 const mutations = {
@@ -58,6 +59,12 @@ const mutations = {
   },
   INCREMENT_UPDATE_CPT: (state) => {
     Vue.set(state, 'updateCpt', state.updateCpt + 1)
+  },
+  ADD_ERROR_MESSAGE: (state, {errorMessage}) => {
+    Vue.set(state, 'errorMessageList', [...state.errorMessageList, errorMessage])
+  },
+  DELETE_ERROR_MESSAGE: (state, {errorMessage}) => {
+    state.errorMessageList.splice(state.errorMessageList.indexOf(errorMessage), 1)
   }
 }
 
@@ -102,7 +109,8 @@ const getters = {
       return state.watchers.hasOwnProperty(watcherName) ? state.watchers[watcherName] : null
     }
   },
-  updateCpt: state => state.updateCpt
+  updateCpt: state => state.updateCpt,
+  errorMessageList: state => state.errorMessageList
 }
 
 const actions = {
@@ -170,6 +178,16 @@ const actions = {
           {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}
         ).then(response => {
           console.log({...response.body})
+          if (response.body.hasOwnProperty('_ERROR_MESSAGE_')) {
+            dispatch('addErrorMessage', {errorMessage: response.body['_ERROR_MESSAGE_']})
+            reject()
+          }
+          if (response.body.hasOwnProperty('_ERROR_MESSAGE_LIST_')) {
+            for (let errorMessage of response.body['_ERROR_MESSAGE_LIST_']) {
+              dispatch('addErrorMessage', {errorMessage})
+            }
+            reject()
+          }
           commit('SET_AREA', {areaId: areaId, areaContent: response.body})
           if (response.body.hasOwnProperty('viewEntities')) {
             let entities = []
@@ -227,6 +245,12 @@ const actions = {
   },
   incrementUpdateCpt({commit}) {
     commit('INCREMENT_UPDATE_CPT')
+  },
+  addErrorMessage({commit}, {errorMessage}) {
+    commit('ADD_ERROR_MESSAGE', {errorMessage})
+  },
+  deleteErrorMessage({commit}, {errorMessage}) {
+    commit('DELETE_ERROR_MESSAGE', {errorMessage})
   }
 }
 

@@ -10,6 +10,7 @@
         :color="'#28b3ff'"
       />
     </BlockUI>
+    <vue-error-message-list></vue-error-message-list>
     <router-view></router-view>
   </div>
 </template>
