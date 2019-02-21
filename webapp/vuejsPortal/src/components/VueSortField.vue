@@ -5,6 +5,7 @@
 </template>
 
 <script>
+  import {mapGetters} from 'vuex'
   export default {
     name: "VueSortField",
     props: ['props', 'updateStore'],
@@ -13,6 +14,9 @@
       }
     },
     computed: {
+      ...mapGetters({
+        watcher: 'data/watcher'
+      }),
       data() {
         let data = this.props.attributes
         delete data.value
@@ -23,11 +27,12 @@
       sort() {
         if (this.data.hasOwnProperty('onPaginateUpdateAreas')) {
           this.data.onPaginateUpdateAreas.forEach((area) => {
+            let currentWatcher = this.watcher(area.areaId)
             this.$store.dispatch('data/setWatcherAttributes', {
               watcherName: area.areaId,
               params: {
                 orderBy: this.data.entityField,
-                sortField: this.data.entityField
+                sortField: currentWatcher.hasOwnProperty('sortField') && currentWatcher.sortField === this.data.entityField ? '-' + this.data.entityField : this.data.entityField
               }
             })
           })
