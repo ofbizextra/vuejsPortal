@@ -140,7 +140,7 @@ const actions = {
           // this.$wait.end(portalPortletId + '-' + portletSeqId)
           reject()
         })
-      }, 1000)
+      }, 0)
     })
   },
   setPortletTarget({commit}, {portletId, target}) {
@@ -173,9 +173,7 @@ const actions = {
       setTimeout(() => {
         wait.start(areaId)
         dispatch('incrementUpdateCpt')
-        Vue.http.post(constantes.hostUrl + targetUrl.replace('amp;', ''),
-          queryString.stringify({...params}),
-          {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}
+        dispatch('backOfficeApi/doPost', {uri: constantes.hostUrl + targetUrl.replace('amp;', ''), params: params}, {root: true}
         ).then(response => {
           console.log({...response.body})
           if (response.body.hasOwnProperty('_ERROR_MESSAGE_')) {
