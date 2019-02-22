@@ -3,8 +3,15 @@ import VueResource from 'vue-resource'
 import VueRouter from 'vue-router'
 
 import VueWait from 'vue-wait'
-import {OrbitSpinner, AtomSpinner, IntersectingCirclesSpinner, RadarSpinner, BreedingRhombusSpinner} from 'epic-spinners'
+import {
+  OrbitSpinner,
+  AtomSpinner,
+  IntersectingCirclesSpinner,
+  RadarSpinner,
+  BreedingRhombusSpinner
+} from 'epic-spinners'
 import BlockUI from 'vue-blockui'
+import VueFlashMessage from 'vue-flash-message'
 
 import App from './components/App'
 import Search from './components/Search'
@@ -67,6 +74,13 @@ Vue.use(VueRouter)
 
 Vue.use(VueWait)
 Vue.use(BlockUI)
+Vue.use(VueFlashMessage, {
+  messageOptions: {
+    timeout: 8000,
+    pauseOnInteract: true
+  }
+})
+require('vue-flash-message/dist/vue-flash-message.min.css')
 
 Vue.component('login', Login)
 Vue.component('portal', Portal)
@@ -126,15 +140,15 @@ Vue.mixin({
   methods: {
     parseProps() {
       if (this.$props && this.$props.props) {
-        let props = this.$props.props;
+        let props = this.$props.props
         let data = {}
         if (props) {
           this.props.attributes.map(attr => {
             if (attr.value === 'false') {
               data[attr.key] = false
-            }else if (attr.value === 'true') {
+            } else if (attr.value === 'true') {
               data[attr.key] = true
-            }else {
+            } else {
               data[attr.key] = attr.value
             }
           })
@@ -157,14 +171,14 @@ Vue.mixin({
 const router = new VueRouter({
   mode: 'hash',
   routes: [
-    { path: '/', component: Portal, beforeEnter: requireAuth },
-    { path: '/test', component: Test, beforeEnter: requireAuth},
-    { path: '/login', component: Login, beforeEnter: requireAuth }
+    {path: '/', component: Portal, beforeEnter: requireAuth},
+    {path: '/test', component: Test, beforeEnter: requireAuth},
+    {path: '/login', component: Login, beforeEnter: requireAuth}
   ]
 })
 
-function requireAuth (to, from, next) {
-  function proceed () {
+function requireAuth(to, from, next) {
+  function proceed() {
     if (store.getters['login/isLoggedIn']) {
       if (to.path === '/login') {
         console.log("Already logged in -> redirect to /home")
@@ -182,6 +196,7 @@ function requireAuth (to, from, next) {
       }
     }
   }
+
   console.log('Routing ...')
   if (store.getters['login/pending']()) {
     console.log('Pending ...')

@@ -14,7 +14,8 @@
             </a>
           </li>
           <li
-            v-for="(headerItem, headerItemIndex) in headerChildren" :key="headerItemIndex"
+            v-for="(headerItem, headerItemIndex) in headerChildren"
+            :key="headerItemIndex"
             v-bind:is="constantes.components[headerItem.name]"
             :props="headerItem"
             :updateStore="updateStore"
@@ -25,7 +26,8 @@
       </div>
       <div :id="collapsibleAreaId" class="screenlet-body" v-bind:style="style">
         <div
-          v-for="component in bodyChildren"
+          v-for="(component, key) in bodyChildren"
+          :key="key"
           v-bind:is="constantes.components[component.name]"
           :props="component"
           :updateStore="updateStore">

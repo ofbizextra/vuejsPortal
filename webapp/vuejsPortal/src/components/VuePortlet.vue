@@ -2,7 +2,8 @@
   <div v-bind:id="'vue-portlet_' + portletId">
     <div v-if="portlet">
       <div
-        v-for="component in portlet.viewScreen"
+        v-for="(component, key) in portlet.viewScreen"
+        :key="key"
         v-bind:is="constantes.components[component.name]"
         :props="component">
       </div>

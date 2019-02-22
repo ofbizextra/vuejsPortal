@@ -13,15 +13,16 @@
     "build-dev-debug": "cross-env NODE_ENV=development webpack --progress --hide-modules --watch --debug"
   },
   "dependencies": {
-    "epic-spinners": "^1.0.3",
+    "epic-spinners": "^1.0.4",
     "himalaya": "^1.1.0",
-    "query-string": "^6.1.0",
-    "vue": "^2.5.11",
+    "query-string": "^6.2.0",
+    "vue": "^2.6.7",
     "vue-blockui": "^1.1.7",
+    "vue-flash-message": "^0.7.2",
     "vue-resource": "^1.5.1",
-    "vue-router": "^3.0.1",
-    "vue-wait": "^1.3.2",
-    "vuex": "^3.0.1",
+    "vue-router": "^3.0.2",
+    "vue-wait": "^1.3.3",
+    "vuex": "^3.1.0",
     "vuex-strong-cache": "^0.1.1",
     "xml2js": "^0.4.19"
   },
@@ -32,17 +33,17 @@
   ],
   "devDependencies": {
     "babel-core": "^6.26.0",
-    "babel-loader": "^7.1.2",
+    "babel-loader": "^7.1.5",
     "babel-preset-env": "^1.6.0",
     "babel-preset-stage-3": "^6.24.1",
     "cross-env": "^5.0.5",
     "css-loader": "^0.28.7",
     "file-loader": "^1.1.4",
-    "style-loader": "^0.23.0",
-    "vue-loader": "^13.0.5",
-    "vue-template-compiler": "^2.4.4",
+    "style-loader": "^0.23.1",
+    "vue-loader": "^13.7.3",
+    "vue-template-compiler": "^2.6.7",
     "webpack": "^3.6.0",
-    "webpack-dev-server": "^2.9.1",
+    "webpack-dev-server": "^2.11.3",
     "xml-loader": "^1.2.1"
   }
 }
