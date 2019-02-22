@@ -1,6 +1,6 @@
 <template>
   <td id="vue-column-portlet" :style="'width: ' + width + ';vertical-align: top'">
-    <vue-portlet v-for="portlet in column.listPortlet" :key="portlet.portletSeqId" v-bind:props="portlet">
+    <vue-portlet v-for="portlet in column.listPortlet" :key="portlet.portalPortletId + '-' + portlet.portletSeqId" v-bind:props="portlet">
 
     </vue-portlet>
   </td>
