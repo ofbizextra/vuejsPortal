@@ -1043,7 +1043,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         if (action != null) {
             cb.put("action", action);
         }
-        if (this.frontJs) {
+        if (formName != null) {
             cb.put("formName", formName);
         }
         this.output.putScreen("HiddenField", cb);
