@@ -1,7 +1,6 @@
 <template>
   <div id="app">
     <input type="hidden" id="updateCpt" :value="updateCpt">
-
     <BlockUI v-if="$wait.any" message="Fetching datas...">
       <spinner
         id="loader-wrapper"
@@ -10,7 +9,7 @@
         :color="'#28b3ff'"
       />
     </BlockUI>
-    <vue-error-message-list></vue-error-message-list>
+    <vue-message-list></vue-message-list>
     <router-view></router-view>
   </div>
 </template>
@@ -18,6 +17,7 @@
 <script>
   import logo from '../assets/logo.png'
   import {mapGetters} from 'vuex'
+  import Vue from 'vue'
   export default {
     name: 'app',
     data() {
@@ -44,6 +44,7 @@
     },
     mounted() {
       console.log(this.$route.path)
+      // Vue.http.setRequestHeader('Content-Security-Policy', "default-src 'self'")
       this.$store.dispatch('login/check').then(() => {
         this.$router.push('/')
       }, () => {

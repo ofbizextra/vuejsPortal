@@ -65,7 +65,7 @@ import VueMenu from './components/VueMenu'
 import VueMenuItem from './components/VueMenuItem'
 import VueLink from './components/VueLink'
 import VueContainer from './components/VueContainer'
-import VueErrorMessageList from './components/VueErrorMessageList'
+import VueMessageList from './components/VueMessageList'
 
 import store from './store'
 
@@ -134,7 +134,7 @@ Vue.component('vue-menu', VueMenu)
 Vue.component('vue-menu-item', VueMenuItem)
 Vue.component('vue-link', VueLink)
 Vue.component('vue-container', VueContainer)
-Vue.component('vue-error-message-list', VueErrorMessageList)
+Vue.component('vue-message-list', VueMessageList)
 
 Vue.mixin({
   methods: {
