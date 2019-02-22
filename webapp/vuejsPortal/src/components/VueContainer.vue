@@ -44,6 +44,9 @@
     created() {
       this.$store.dispatch('ui/deleteArea', {areaId: this.props.attributes.id})
     },
+    beforeDestroy() {
+      this.$store.dispatch('ui/deleteArea', {areaId: this.props.attributes.id})
+    },
     watch: {
       props: function (val) {
         this.$store.dispatch('ui/deleteArea', {areaId: val.attributes.id})
