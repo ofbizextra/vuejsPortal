@@ -82,9 +82,9 @@ const actions = {
           {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}
         ).then(response => {
           console.log(response)
-          if (response.body.includes('login successful')
+          if ((typeof response.body === 'string' && response.body.includes('login successful')
             && !response.body._ERROR_MESSAGE_
-            && !response.body._ERROR_MESSAGES_LIST_) {
+            && !response.body._ERROR_MESSAGES_LIST_) || typeof response.body === 'object') {
             console.log('login success')
             commit('LOGIN_SUCCESS', credentials)
             resolve()
@@ -96,7 +96,7 @@ const actions = {
               console.log(response.body._ERROR_MESSAGES_LIST_)
             }
             commit('LOGIN_FAILURE')
-            reject()
+            reject(response)
           }
         }, error => {
           if (error.body._ERROR_MESSAGE_) {
@@ -106,7 +106,7 @@ const actions = {
             console.log(error.body._ERROR_MESSAGES_LIST_)
           }
           commit('LOGIN_FAILURE')
-          reject()
+          reject(error)
         })
       }, 1000)
     })

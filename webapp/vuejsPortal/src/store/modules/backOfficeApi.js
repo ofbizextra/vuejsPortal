@@ -36,6 +36,7 @@ const actions = {
           console.log('TypeOf response.body : ' + typeof response.body)
           if (typeof response.body === 'string' && response.body.includes('login failed')) {
             // todo: handle login popUp
+            this._vm.$modal.show('login')
             reject(response)
           }
           if (response.body.hasOwnProperty('_ERROR_MESSAGE_')) {
