@@ -18,31 +18,47 @@
  */
 package org.apache.ofbiz.widget.renderer.frontjs;
 
-import org.apache.ofbiz.base.util.*;
-import org.apache.ofbiz.entity.GenericValue;
-import org.apache.ofbiz.webapp.control.RequestHandler;
-import org.apache.ofbiz.webapp.taglib.ContentUrlTag;
-import org.apache.ofbiz.widget.WidgetWorker;
-import org.apache.ofbiz.widget.model.*;
-import org.apache.ofbiz.widget.model.ModelScreenWidget.ColumnContainer;
-import org.apache.ofbiz.widget.renderer.MenuStringRenderer;
-import org.apache.ofbiz.widget.renderer.Paginator;
-import org.apache.ofbiz.widget.renderer.ScreenStringRenderer;
-import org.apache.ofbiz.widget.renderer.VisualTheme;
-import org.apache.xpath.operations.Bool;
-import org.xml.sax.SAXException;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Locale;
+import java.util.Map;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.IOException;
-import java.io.StringWriter;
-import java.math.BigDecimal;
-import java.util.*;
+
+import org.apache.ofbiz.base.util.Debug;
+import org.apache.ofbiz.base.util.GeneralException;
+import org.apache.ofbiz.base.util.UtilGenerics;
+import org.apache.ofbiz.base.util.UtilHttp;
+import org.apache.ofbiz.base.util.UtilMisc;
+import org.apache.ofbiz.base.util.UtilProperties;
+import org.apache.ofbiz.base.util.UtilValidate;
+import org.apache.ofbiz.entity.GenericValue;
+import org.apache.ofbiz.webapp.control.RequestHandler;
+import org.apache.ofbiz.webapp.taglib.ContentUrlTag;
+import org.apache.ofbiz.widget.WidgetWorker;
+import org.apache.ofbiz.widget.model.AbstractModelAction;
+import org.apache.ofbiz.widget.model.ModelForm;
+import org.apache.ofbiz.widget.model.ModelMenu;
+import org.apache.ofbiz.widget.model.ModelMenuItem;
+import org.apache.ofbiz.widget.model.ModelScreen;
+import org.apache.ofbiz.widget.model.ModelScreenWidget;
+import org.apache.ofbiz.widget.model.ModelScreenWidget.ColumnContainer;
+import org.apache.ofbiz.widget.model.ModelTheme;
+import org.apache.ofbiz.widget.model.ScreenFactory;
+import org.apache.ofbiz.widget.renderer.MenuStringRenderer;
+import org.apache.ofbiz.widget.renderer.Paginator;
+import org.apache.ofbiz.widget.renderer.ScreenStringRenderer;
+import org.apache.ofbiz.widget.renderer.VisualTheme;
+import org.xml.sax.SAXException;
 
 public class FrontJsScreenRenderer implements ScreenStringRenderer {
-    private static final String NOT_YET_SUPPORTED = "Not yet supported";
+//    private static final String NOT_YET_SUPPORTED = "Not yet supported";
     public static final String module = FrontJsScreenRenderer.class.getName();
     private int elementId = 999;
     private FrontJsOutput output;
@@ -507,7 +523,7 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
         String expandToolTip = "";
         String collapseToolTip = "";
         String fullUrlString = "";
-        boolean showMore = false;
+//        boolean showMore = false;
 
 
         Map<String, Object> parameters = new HashMap<>();
@@ -549,7 +565,7 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
 
         }
         if (UtilValidate.isNotEmpty(title) || navMenu != null || navForm != null || collapsible) {
-            showMore = true;
+//            showMore = true;
             if (collapsible) {
                 this.getNextElementId();
                 Map<String, Object> uiLabelMap = UtilGenerics.checkMap(context.get("uiLabelMap"));
@@ -844,46 +860,49 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
 
     public void renderPortalPagePortletBegin(Appendable writer, Map<String, Object> context, ModelScreenWidget.PortalPage portalPage, GenericValue portalPortlet) throws GeneralException, IOException {
         String portalPageId = portalPage.getActualPortalPageId(context);
-        String originalPortalPageId = portalPage.getOriginalPortalPageId(context);
+        //String originalPortalPageId = portalPage.getOriginalPortalPageId(context);
         String portalPortletId = portalPortlet.getString("portalPortletId");
         String portletSeqId = portalPortlet.getString("portletSeqId");
-        String columnSeqId = portalPortlet.getString("columnSeqId");
-        String confMode = portalPage.getConfMode(context);
+        //String columnSeqId = portalPortlet.getString("columnSeqId");
+        //String confMode = portalPage.getConfMode(context);
         //String editFormName = portalPortlet.getString("editFormName");
         //String editFormLocation = portalPortlet.getString("editFormLocation");
 
-        String prevPortletId = (String) context.get("prevPortletId");
-        String prevPortletSeqId = (String) context.get("prevPortletSeqId");
-        String nextPortletId = (String) context.get("nextPortletId");
-        String nextPortletSeqId = (String) context.get("nextPortletSeqId");
-        String prevColumnSeqId = (String) context.get("prevColumnSeqId");
-        String nextColumnSeqId = (String) context.get("nextColumnSeqId");
+//        String prevPortletId = (String) context.get("prevPortletId");
+//        String prevPortletSeqId = (String) context.get("prevPortletSeqId");
+//        String nextPortletId = (String) context.get("nextPortletId");
+//        String nextPortletSeqId = (String) context.get("nextPortletSeqId");
+//        String prevColumnSeqId = (String) context.get("prevColumnSeqId");
+//        String nextColumnSeqId = (String) context.get("nextColumnSeqId");
 
-        Map<String, String> uiLabelMap = UtilGenerics.cast(context.get("uiLabelMap"));
-        String delPortletHint = "";
-        String editAttributeHint = "";
-        if (uiLabelMap == null) {
-            Debug.logWarning("Could not find uiLabelMap in context", module);
-        } else {
-            delPortletHint = uiLabelMap.get("CommonDeleteThisPortlet");
-            editAttributeHint = uiLabelMap.get("CommonEditPortletAttributes");
-        }
+//        Map<String, String> uiLabelMap = UtilGenerics.cast(context.get("uiLabelMap"));
+//        String delPortletHint = "";
+//        String editAttributeHint = "";
+//        if (uiLabelMap == null) {
+//            Debug.logWarning("Could not find uiLabelMap in context", module);
+//        } else {
+//            delPortletHint = uiLabelMap.get("CommonDeleteThisPortlet");
+//            editAttributeHint = uiLabelMap.get("CommonEditPortletAttributes");
+//        }
 
         Map<String, Object> cb = new HashMap<>();
-        cb.put("originalPortalPageId", originalPortalPageId);
+//        cb.put("originalPortalPageId", originalPortalPageId);
         cb.put("portalPageId", portalPageId);
         cb.put("portalPortletId", portalPortletId);
         cb.put("portletSeqId", portletSeqId);
-        cb.put("prevPortletId", prevPortletId);
-        cb.put("prevPortletSeqId", prevPortletSeqId);
-        cb.put("nextPortletId", nextPortletId);
-        cb.put("nextPortletSeqId", nextPortletSeqId);
-        cb.put("columnSeqId", columnSeqId);
-        cb.put("prevColumnSeqId", prevColumnSeqId);
-        cb.put("nextColumnSeqId", nextColumnSeqId);
-        cb.put("delPortletHint", delPortletHint);
-        cb.put("editAttributeHint", editAttributeHint);
-        cb.put("confMode", confMode);
+        if (portalPortlet.containsKey("watcherName")){
+            cb.put("watcherName", portalPortlet.get("watcherName"));
+        }
+//        cb.put("prevPortletId", prevPortletId);
+//        cb.put("prevPortletSeqId", prevPortletSeqId);
+//        cb.put("nextPortletId", nextPortletId);
+//        cb.put("nextPortletSeqId", nextPortletSeqId);
+//        cb.put("columnSeqId", columnSeqId);
+//        cb.put("prevColumnSeqId", prevColumnSeqId);
+//        cb.put("nextColumnSeqId", nextColumnSeqId);
+//        cb.put("delPortletHint", delPortletHint);
+//        cb.put("editAttributeHint", editAttributeHint);
+//        cb.put("confMode", confMode);
         this.output.pushScreen("PortalPagePortletBegin", cb);
     }
 

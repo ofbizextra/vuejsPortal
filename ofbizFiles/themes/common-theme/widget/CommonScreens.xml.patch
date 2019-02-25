@@ -1,6 +1,6 @@
 Index: themes/common-theme/widget/CommonScreens.xml
 ===================================================================
---- themes/common-theme/widget/CommonScreens.xml	(révision 1852339)
+--- themes/common-theme/widget/CommonScreens.xml	(révision 1853222)
 +++ themes/common-theme/widget/CommonScreens.xml	(copie de travail)
 @@ -135,6 +135,7 @@
                  <set field="layoutSettings.javaScripts[+0]" value="/common/js/util/setUserTimeZone.js"/>
