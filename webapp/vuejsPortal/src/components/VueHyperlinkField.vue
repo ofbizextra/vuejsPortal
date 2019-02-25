@@ -35,7 +35,16 @@
       },
       ...mapGetters({
         getData: 'data/entityRowAttribute'
-      })
+      }),
+      target() {
+        return this.props.attributes.hasOwnProperty('target') ? this.props.attributes.target : null
+      },
+      targetWindow() {
+        return this.props.attributes.hasOwnProperty('targetWindow') ? this.props.attributes.targetWindow : null
+      },
+      parameterMap() {
+        return this.props.attributes.hasOwnProperty('parameterMap') ? this.props.attributes.parameterMap : {}
+      }
     },
     params() {
       let param = {};
@@ -48,14 +57,18 @@
     },
     methods: {
       submit() {
-        if (this.pointer.entityName !== '') {
-          console.log('setWatcher by pointer')
-          console.log('getPointer: ' + this.getPointer)
-          this.$store.dispatch('data/setWatcher', {watcherName: this.getNestedObject(this.data, ['updateArea']), params: {[this.pointer.attribute]: this.getPointer}})
+        if (this.targetWindow) {
+          this.$store.dispatch('ui/setArea', {areaId: this.targetWindow, targetUrl: '/exampleapi/control/' + this.target, wait: this.$wait, params: this.parameterMap})
         } else {
-          console.log('setWatcher by data.value')
-          console.log('data.value: ' + this.data.value.toString())
-          this.$store.dispatch('data/setWatcher', {watcherName: this.getNestedObject(this.data, ['updateArea']), params: {exampleId: this.data.value}})
+          if (this.pointer.entityName !== '') {
+            console.log('setWatcher by pointer')
+            console.log('getPointer: ' + this.getPointer)
+            this.$store.dispatch('data/setWatcher', {watcherName: this.getNestedObject(this.data, ['updateArea']), params: {[this.pointer.attribute]: this.getPointer}})
+          } else {
+            console.log('setWatcher by data.value')
+            console.log('data.value: ' + this.data.value.toString())
+            this.$store.dispatch('data/setWatcher', {watcherName: this.getNestedObject(this.data, ['updateArea']), params: {exampleId: this.data.value}})
+          }
         }
       }
     },

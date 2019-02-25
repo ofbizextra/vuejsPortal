@@ -168,13 +168,22 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         Map<String, String> parameterMap = hyperlinkField.getParameterMap(context, modelFormField.getEntityName(), modelFormField.getServiceName());
         HashMap<String, Object> cb = new HashMap<>();
         cb.put("updateArea", hyperlinkField.getTarget(context));
+        if (!hyperlinkField.getTarget(context).isEmpty()) {
+            cb.put("target", hyperlinkField.getTarget(context));
+        }
+        if (!hyperlinkField.getTargetWindow(context).isEmpty()) {
+            cb.put("targetWindow", hyperlinkField.getTargetWindow(context));
+        }
+        if (!hyperlinkField.getParameterMap(context).isEmpty()) {
+            cb.put("parameterMap", hyperlinkField.getParameterMap(context));
+        }
         String style = modelFormField.getWidgetStyle();
         cb.put("style", style);
-        if (!parameterMap.isEmpty()) {
+        if (hyperlinkField.getDescription().toString().contains("${")) {
 //            HashMap<String, Object> data = new HashMap<>();
 //            data.put("action", "PUT_RECORD");
 //            HashMap<String, Object> record = new HashMap<>();
-            String key = parameterMap.keySet().toArray()[0].toString();
+            String key = modelFormField.getName();
             String value = parameterMap.get(key);
 //            record.put("key", key);
 //            record.put("value", value);
@@ -189,6 +198,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
 //            cb.put("value", value);
             this.output.putScreen("HyperlinkField", cb, key, value);
         } else {
+            cb.put("description", hyperlinkField.getDescription(context));
             this.output.putScreen("HyperlinkField", cb);
         }
         // hyperlinkField.getTarget(context)  //=> get target portlet
