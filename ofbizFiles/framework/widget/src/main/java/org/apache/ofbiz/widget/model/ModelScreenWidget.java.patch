@@ -37,30 +37,55 @@ Index: framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelScreenW
                  portalPageColumns = EntityQuery.use(delegator)
                                                 .from("PortalPageColumn")
                                                 .where("portalPageId", actualPortalPageId)
-@@ -2007,6 +2021,40 @@
+@@ -2007,6 +2021,67 @@
                  }
                  // Renders the portalPage footer
                  screenStringRenderer.renderPortalPageEnd(writer, context, this);
 +// Begin modification FrontJs POC, add portletId and portletSeqId to be able to do a include-portal which will do a include-portlet
 +} else {
++    String portalPageId = portalPage.getString("portalPageId");
++    String portalPortletId = this.portletId.expandString(context);
++    String portletSeqId = this.portletSeqId.expandString(context);
 +    GenericValue portalPagePortletValue = EntityQuery.use(delegator)
 +            .from("PortalPagePortlet")
-+            .where("portalPageId"   , portalPage.getString("portalPageId"), 
-+                   "portalPortletId", this.portletId.expandString(context), 
-+                   "portletSeqId", this.portletSeqId.expandString(context))
++            .where("portalPageId"   , portalPageId, 
++                   "portalPortletId", portalPortletId, 
++                   "portletSeqId",    portletSeqId)
 +            .cache().queryOne();
-+    // Get portlet's attributes
-+    portletAttributes = EntityQuery.use(delegator)
-+                                   .from("PortletAttribute")
-+                                   .where("portalPageId", portalPagePortletValue.get("portalPageId"), 
-+                                          "portalPortletId", portalPagePortletValue.get("portalPortletId"), 
-+                                          "portletSeqId", portalPagePortletValue.get("portletSeqId"))
-+                                   .queryList();
-+
-+    ListIterator <GenericValue>attributesIterator = portletAttributes.listIterator();
-+    while (attributesIterator.hasNext()) {
-+        GenericValue attribute = attributesIterator.next();
-+        context.put(attribute.getString("attrName"), attribute.getString("attrValue"));
++    ListIterator <GenericValue>attributesIterator = null;
++    boolean putAttributes = false;
++    if (portalPagePortletValue != null) {
++        putAttributes = true;
++        // Get portlet's attributes
++        portletAttributes = EntityQuery.use(delegator)
++                .from("PortletAttribute")
++                .where("portalPageId", portalPagePortletValue.get("portalPageId"), 
++                        "portalPortletId", portalPagePortletValue.get("portalPortletId"), 
++                        "portletSeqId", portalPagePortletValue.get("portletSeqId"))
++                .queryList();
++        
++        attributesIterator = portletAttributes.listIterator();
++        while (attributesIterator.hasNext()) {
++            GenericValue attribute = attributesIterator.next();
++            context.put(attribute.getString("attrName"), attribute.getString("attrValue"));
++        }
++    } else {
++        GenericValue portalPortletValue = EntityQuery.use(delegator)
++                .from("PortalPortlet")
++                .where("portalPortletId", portalPortletId) 
++                .cache().queryOne();
++        portalPagePortletValue = delegator.makeValue("PortalPagePortletView", 
++                "portalPageId"   , portalPageId, 
++                "portalPortletId", portalPortletId, 
++                "portletSeqId",    portletSeqId,
++                "portletName",         portalPortletValue.get("portletName"),
++                "screenName",          portalPortletValue.get("screenName"),
++                "screenLocation",      portalPortletValue.get("screenLocation"),
++                "editFormName",        portalPortletValue.get("editFormName"),
++                "editFormLocation",    portalPortletValue.get("editFormLocation"),
++                "securityServiceName", portalPortletValue.get("securityServiceName"),
++                "securityMainAction",  portalPortletValue.get("securityMainAction")
++                );
 +    }
 +
 +    // Renders the portalPagePortlet
@@ -68,10 +93,12 @@ Index: framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelScreenW
 +    screenStringRenderer.renderPortalPagePortletBody(writer, context, this, portalPagePortletValue);
 +    screenStringRenderer.renderPortalPagePortletEnd(writer, context, this, portalPagePortletValue);
 +
-+    // Remove the portlet's attributes so that these are not available for other portlets
-+    while (attributesIterator.hasPrevious()) {
-+        GenericValue attribute = attributesIterator.previous();
-+        context.remove(attribute.getString("attrName"));
++    if (putAttributes) {
++        // Remove the portlet's attributes so that these are not available for other portlets
++        while (attributesIterator.hasPrevious()) {
++            GenericValue attribute = attributesIterator.previous();
++            context.remove(attribute.getString("attrName"));
++        }
 +    }
 +}
 +//End modification FrontJs POC, add portletId and portletSeqId to be able to do a include-portal which will do a include-portlet

@@ -611,7 +611,7 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
     public void renderScreenletSubWidget(Appendable writer, Map<String, Object> context, ModelScreenWidget subWidget, ModelScreenWidget.Screenlet screenlet) throws GeneralException, IOException  {
         subWidget.renderWidgetString(writer, context, this);
         HashMap<String, Object> cb = new HashMap<>();
-        this.output.putScreen("ScreenletSubWidget", cb);
+//        this.output.putScreen("ScreenletSubWidget", cb);
 
         // Bypass the if/else in comment
         // si getNavigationForm la barre de pagination doit être dans l'entête de la screenlet
