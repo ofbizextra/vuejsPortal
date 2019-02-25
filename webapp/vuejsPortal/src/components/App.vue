@@ -10,6 +10,7 @@
       />
     </BlockUI>
     <vue-message-list></vue-message-list>
+    <vue-login></vue-login>
     <router-view></router-view>
   </div>
 </template>

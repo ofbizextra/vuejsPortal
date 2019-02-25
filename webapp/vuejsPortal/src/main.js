@@ -12,6 +12,7 @@ import {
 } from 'epic-spinners'
 import BlockUI from 'vue-blockui'
 import VueFlashMessage from 'vue-flash-message'
+import VModal from 'vue-js-modal'
 
 import App from './components/App'
 import Search from './components/Search'
@@ -66,6 +67,7 @@ import VueMenuItem from './components/VueMenuItem'
 import VueLink from './components/VueLink'
 import VueContainer from './components/VueContainer'
 import VueMessageList from './components/VueMessageList'
+import VueLogin from './components/VueLogin'
 
 import store from './store'
 
@@ -81,6 +83,7 @@ Vue.use(VueFlashMessage, {
   }
 })
 require('vue-flash-message/dist/vue-flash-message.min.css')
+Vue.use(VModal)
 
 Vue.component('login', Login)
 Vue.component('portal', Portal)
@@ -135,6 +138,7 @@ Vue.component('vue-menu-item', VueMenuItem)
 Vue.component('vue-link', VueLink)
 Vue.component('vue-container', VueContainer)
 Vue.component('vue-message-list', VueMessageList)
+Vue.component( 'vue-login', VueLogin)
 
 Vue.mixin({
   methods: {
