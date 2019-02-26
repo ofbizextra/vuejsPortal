@@ -1,0 +1,22 @@
+Index: framework/widget/dtd/widget-form.xsd
+===================================================================
+--- framework/widget/dtd/widget-form.xsd	(révision 1853222)
++++ framework/widget/dtd/widget-form.xsd	(copie de travail)
+@@ -584,11 +584,17 @@
+                 <xs:element minOccurs="0" maxOccurs="unbounded" ref="parameter" />
+             </xs:sequence>
+             <xs:attribute name="event-type" use="required">
++                <xs:annotation>
++                    <xs:documentation>post-updateStore, post-setArea and updateStore are specifics for VueJs.</xs:documentation>
++                </xs:annotation>
+                 <xs:simpleType>
+                     <xs:restriction base="xs:token">
+                         <xs:enumeration value="paginate" />
+                         <xs:enumeration value="sort-column" />
+                         <xs:enumeration value="submit" />
++                        <xs:enumeration value="post-updateStore" />
++                        <xs:enumeration value="post-setArea" />
++                        <xs:enumeration value="updateStore" />
+                     </xs:restriction>
+                 </xs:simpleType>
+             </xs:attribute>
