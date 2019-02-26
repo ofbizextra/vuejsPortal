@@ -17,7 +17,7 @@
     },
     computed: {
       data() {
-        let data =  this.props.attributes
+        let data = this.props.attributes
         if (data.className || (data.alert && data.alert === true)) {
           data.class = data.className ? data.className : '' + ' ' + data.alert === true ? 'alert' : ''
         }
@@ -30,91 +30,61 @@
     },
     methods: {
       post() {
-        console.log('post ...')
-        // this.$wait.start('updating ' + this.props.attributes.formName)
         let linkUrl = this.getDataFromForm({formId: this.props.attributes.formName, key: 'linkUrl'})
         let url = linkUrl
-        this.$store.dispatch('backOfficeApi/doPost', {
+        return this.$store.dispatch('backOfficeApi/doPost', {
           uri: url,
           params: this.getForm(this.props.attributes.formName)
-        }).then(
-          response => {
-            console.log(response)
-            if (this.getNestedObject(response, ['body', '_EVENT_MESSAGE_']) === 'Example Entity updated successfully') {
-              // console.log('update successful => trigger store update')
-              // this.$store.dispatch('data/setEntityRow', {
-              //   entityName: 'Example',
-              //   primaryKey: this.getForm(this.props.attributes.formName).exampleId,
-              //   data: this.getForm(this.props.attributes.formName)
-              // }).then(response => {
-              //   console.log(response)
-              //   console.log('Store updated successfully')
-              //   this.$nextTick(() => {
-              //     this.$wait.end('updating ' + this.props.attributes.formName)
-              //   })
-              // }, error => {
-              //   console.log(error)
-              //   this.$nextTick(() => {
-              //     this.$wait.end('updating ' + this.props.attributes.formName)
-              //   })
-              // })
-              this.$nextTick(() => {
-                // this.$wait.end('updating ' + this.props.attributes.formName)
-              })
-            } else {
-              console.log('Store don\'t need to be updated')
-              this.$nextTick(() => {
-                // this.$wait.end('updating ' + this.props.attributes.formName)
-              })
-            }
-          }, error => {
-            console.log(error)
-            this.$nextTick(() => {
-              // this.$wait.end('updating ' + this.props.attributes.formName)
-            })
-          }
-        )
-      },
-      updateStore() {
-        // this.$wait.start('updating ' + this.props.attributes.formName)
-        this.$nextTick(() => {
-          let areasToUpdate = [ ...this.data.updateArea]
-          console.log('areasToUpdate', areasToUpdate)
-          areasToUpdate.forEach((areaToUpdate) => {
-            console.log('areaToUpdate : ', areaToUpdate)
-            let params = {}
-            if (areaToUpdate.parameterList.length > 0) {
-              let form = this.getForm(this.props.attributes.formName)
-              areaToUpdate.parameterList.forEach((parameter) => {
-                params[parameter.name] = form[parameter.name]
-              })
-            } else {
-              params = this.getForm(this.props.attributes.formName)
-            }
-            console.log('params : ' + params)
-            let data = {watcherName: this.getNestedObject(areaToUpdate, ['areaId']), params: params}
-            console.log('data to setWatcher : ', data)
-            this.$store.dispatch('data/setWatcher', data)
-          })
-          this.$nextTick(() => {
-            // this.$wait.end('updating ' + this.props.attributes.formName)
-          })
         })
       },
-      resolveEvents() {
-        if (this.data['updateArea']) {
-          if (this.getNestedObject(this.data, ['updateArea', 0, 'areaTarget']) === 'p') {
-            console.log('trigger post from submit button ...')
-            this.post()
-            console.log('post ended.')
-          }
-          console.log('trigger updateStore from submit button ...')
-          this.updateStore()
-          console.log('updateStore ended.')
+      updateStore(updateArea) {
+        let params = {}
+        if (updateArea.parameterMap.length > 0) {
+          params = updateArea.parameterMap
         } else {
-          console.log('trigger post from submit button ...')
+          params = this.getForm(this.props.attributes.formName)
+        }
+        let data = {watcherName: this.getNestedObject(updateArea, ['areaId']), params: params}
+        this.$store.dispatch('data/setWatcher', data)
+      },
+      setArea(updateArea) {
+        this.$store.dispatch('ui/setArea', {areaId: updateArea.areaId, targetUrl: `/exampleapi/control/${updateArea.target}`, wait: this.$wait, params: updateArea.parameterMap})
+      },
+      resolveEvents() {
+        if (this.data.hasOwnProperty('updateArea')) {
+          for (let updateArea of this.data.updateArea) {
+            switch (updateArea.eventType) {
+              case 'submit':
+                // do post
+                this.post()
+                break
+              case 'updateStore':
+                // do update store
+                this.updateStore(updateArea)
+                break
+              case 'post-updateStore':
+                // do post then update store
+                this.post().then(() => {
+                  this.updateStore(updateArea)
+                }, (error) => {
+                  console.log('Error during VueSubmitField.post() : ', error)
+                })
+                break
+              case 'post-setArea':
+                // do post then set area
+                this.post().then(() => {
+                  this.setArea(updateArea)
+                }, (error) => {
+                  console.log('Error during VueSubmitField.post() : ', error)
+                })
+                break
+              default:
+                // do nothing
+                break
+            }
+          }
+        } else {
           this.post()
-          console.log('post ended.')
         }
       }
     }
