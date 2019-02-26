@@ -99,7 +99,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
                 return modelEntity.getPkFieldNames();
             }
         }
-		return null;
+        return null;
     }
 
     public void renderLabel(Map<String, Object> context, ModelScreenWidget.Label label) {
@@ -127,11 +127,11 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         /*
         Integer size = Integer.valueOf("0");
         if (UtilValidate.isNotEmpty(displayField.getSize())) {
-        	try {
-        		size = Integer.parseInt(displayField.getSize());
-        	} catch (NumberFormatException nfe) {
-        		Debug.logError(nfe, "Error reading size of a field fieldName=" + displayField.getModelFormField().getFieldName() + " FormName= " + displayField.getModelFormField().getModelForm().getName(), module);
-        	}
+            try {
+                size = Integer.parseInt(displayField.getSize());
+            } catch (NumberFormatException nfe) {
+                Debug.logError(nfe, "Error reading size of a field fieldName=" + displayField.getModelFormField().getFieldName() + " FormName= " + displayField.getModelFormField().getModelForm().getName(), module);
+            }
         }
         if (UtilValidate.isNotEmpty(description) && size > 0 && description.length() > size) {
             title = description;
@@ -156,16 +156,15 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
 
         // putRecord only if attribute "description" not exist for the <display tag
         if (UtilValidate.isEmpty(displayField.getDescription()) || "${description}".equals(displayField.getDescription().toString())) {
-        	//                                          putRecord( fieldName          ,       value )
-        	this.output.putScreen("DisplayField", attributes, modelFormField.getName(), encodeDoubleQuotes(description));
+            //                                          putRecord( fieldName          ,       value )
+            this.output.putScreen("DisplayField", attributes, modelFormField.getName(), encodeDoubleQuotes(description));
         } else {
-        	this.output.putScreen("DisplayField", attributes);
+            this.output.putScreen("DisplayField", attributes);
         }
     }
 
     public void renderHyperlinkField(Appendable writer, Map<String, Object> context, HyperlinkField hyperlinkField) {
         ModelFormField modelFormField = hyperlinkField.getModelFormField();
-        Map<String, String> parameterMap = hyperlinkField.getParameterMap(context, modelFormField.getEntityName(), modelFormField.getServiceName());
         HashMap<String, Object> cb = new HashMap<>();
         cb.put("updateArea", hyperlinkField.getTarget(context));
         if (!hyperlinkField.getTarget(context).isEmpty()) {
@@ -174,8 +173,9 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         if (!hyperlinkField.getTargetWindow(context).isEmpty()) {
             cb.put("targetWindow", hyperlinkField.getTargetWindow(context));
         }
-        if (!hyperlinkField.getParameterMap(context).isEmpty()) {
-            cb.put("parameterMap", hyperlinkField.getParameterMap(context));
+        Map<String, String> parameterMap = hyperlinkField.getParameterMap(context, modelFormField.getEntityName(), modelFormField.getServiceName());
+        if (!parameterMap.isEmpty()) {
+            cb.put("parameterMap", parameterMap);
         }
         String style = modelFormField.getWidgetStyle();
         cb.put("style", style);
@@ -184,7 +184,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
 //            data.put("action", "PUT_RECORD");
 //            HashMap<String, Object> record = new HashMap<>();
             String key = modelFormField.getName();
-            String value = parameterMap.get(key);
+            String value = hyperlinkField.getDescription(context);
 //            record.put("key", key);
 //            record.put("value", value);
 //            ArrayList<Map<String, Object>> records = new ArrayList<>();
@@ -224,7 +224,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
     }
 
     public void renderMenuField(Appendable writer, Map<String, Object> context, MenuField menuField) {
-    	this.output.putScreen("MenuField", new HashMap<String, Object>());
+        this.output.putScreen("MenuField", new HashMap<String, Object>());
         /*
         menuField.renderFieldString(writer, context, null);
         */
@@ -1293,10 +1293,10 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         // Begin data
         String defaultEntityName = modelForm.getDefaultEntityName();
         if (UtilValidate.isNotEmpty(defaultEntityName)) {
-        	data = new HashMap<>();
-        	action = "PUSH_ENTITY";
-        	data.put("entityName", defaultEntityName);
-        	data.put("primaryKeys", getPkList(defaultEntityName, ((Delegator)context.get("delegator")).getModelReader()));
+            data = new HashMap<>();
+            action = "PUSH_ENTITY";
+            data.put("entityName", defaultEntityName);
+            data.put("primaryKeys", getPkList(defaultEntityName, ((Delegator)context.get("delegator")).getModelReader()));
         }
         cb.put("listSize", Paginator.getListSize(context));
         //TODO ajouter soit un Alert concernant le fait que la list n'est pas lié au store
@@ -2524,10 +2524,10 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         // render the tooltip, in other methods too
         String tooltip = modelFormField.getTooltip(context);
         if (UtilValidate.isNotEmpty(tooltip)) {
-        	Map<String, Object> tooltipAttr = new HashMap<>();
-        	tooltipAttr.put("tooltip", encodeDoubleQuotes(tooltip));
-        	tooltipAttr.put("tooltipStyle", modelFormField.getTooltipStyle());
-        	attributes.put("tooltip", tooltipAttr);
+            Map<String, Object> tooltipAttr = new HashMap<>();
+            tooltipAttr.put("tooltip", encodeDoubleQuotes(tooltip));
+            tooltipAttr.put("tooltipStyle", modelFormField.getTooltipStyle());
+            attributes.put("tooltip", tooltipAttr);
         }
     }
 
