@@ -48,7 +48,7 @@
         this.$store.dispatch('data/setWatcher', data)
       },
       setArea(updateArea) {
-        this.$store.dispatch('ui/setArea', {areaId: updateArea.areaId, targetUrl: `/exampleapi/control/${updateArea.target}`, wait: this.$wait, params: updateArea.parameterMap})
+        this.$store.dispatch('ui/setArea', {areaId: updateArea.areaId, targetUrl: `/exampleapi/control/${updateArea.areaTarget}`, wait: this.$wait, params: updateArea.parameterMap})
       },
       resolveEvents() {
         if (this.data.hasOwnProperty('updateArea')) {
