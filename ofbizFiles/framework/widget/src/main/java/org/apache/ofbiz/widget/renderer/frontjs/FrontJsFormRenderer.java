@@ -1,9 +1,32 @@
 
 package org.apache.ofbiz.widget.renderer.frontjs;
 
-import com.ibm.icu.util.Calendar;
-import org.apache.ofbiz.base.lang.JSON;
-import org.apache.ofbiz.base.util.*;
+import java.io.IOException;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.apache.ofbiz.base.util.Debug;
+import org.apache.ofbiz.base.util.StringUtil;
+import org.apache.ofbiz.base.util.UtilCodec;
+import org.apache.ofbiz.base.util.UtilFormatOut;
+import org.apache.ofbiz.base.util.UtilGenerics;
+import org.apache.ofbiz.base.util.UtilHttp;
+import org.apache.ofbiz.base.util.UtilMisc;
+import org.apache.ofbiz.base.util.UtilProperties;
+import org.apache.ofbiz.base.util.UtilValidate;
 import org.apache.ofbiz.base.util.string.FlexibleStringExpander;
 import org.apache.ofbiz.entity.Delegator;
 import org.apache.ofbiz.entity.GenericEntityException;
@@ -13,25 +36,52 @@ import org.apache.ofbiz.entity.model.ModelReader;
 import org.apache.ofbiz.webapp.control.RequestHandler;
 import org.apache.ofbiz.webapp.taglib.ContentUrlTag;
 import org.apache.ofbiz.widget.WidgetWorker;
-import org.apache.ofbiz.widget.model.*;
-import org.apache.ofbiz.widget.model.ModelFormField.*;
-import org.apache.ofbiz.widget.renderer.*;
+import org.apache.ofbiz.widget.model.CommonWidgetModels;
+import org.apache.ofbiz.widget.model.FieldInfo;
+import org.apache.ofbiz.widget.model.ModelForm;
+import org.apache.ofbiz.widget.model.ModelFormField;
+import org.apache.ofbiz.widget.model.ModelFormField.AutoComplete;
+import org.apache.ofbiz.widget.model.ModelFormField.CheckField;
+import org.apache.ofbiz.widget.model.ModelFormField.ContainerField;
+import org.apache.ofbiz.widget.model.ModelFormField.DateFindField;
+import org.apache.ofbiz.widget.model.ModelFormField.DateTimeField;
+import org.apache.ofbiz.widget.model.ModelFormField.DisplayField;
+import org.apache.ofbiz.widget.model.ModelFormField.DropDownField;
+import org.apache.ofbiz.widget.model.ModelFormField.FieldInfoWithOptions;
+import org.apache.ofbiz.widget.model.ModelFormField.FileField;
+import org.apache.ofbiz.widget.model.ModelFormField.HiddenField;
+import org.apache.ofbiz.widget.model.ModelFormField.HyperlinkField;
+import org.apache.ofbiz.widget.model.ModelFormField.IgnoredField;
+import org.apache.ofbiz.widget.model.ModelFormField.ImageField;
+import org.apache.ofbiz.widget.model.ModelFormField.LookupField;
+import org.apache.ofbiz.widget.model.ModelFormField.MenuField;
+import org.apache.ofbiz.widget.model.ModelFormField.OptionValue;
+import org.apache.ofbiz.widget.model.ModelFormField.PasswordField;
+import org.apache.ofbiz.widget.model.ModelFormField.RadioField;
+import org.apache.ofbiz.widget.model.ModelFormField.RangeFindField;
+import org.apache.ofbiz.widget.model.ModelFormField.ResetField;
+import org.apache.ofbiz.widget.model.ModelFormField.SubHyperlink;
+import org.apache.ofbiz.widget.model.ModelFormField.SubmitField;
+import org.apache.ofbiz.widget.model.ModelFormField.TextField;
+import org.apache.ofbiz.widget.model.ModelFormField.TextFindField;
+import org.apache.ofbiz.widget.model.ModelFormField.TextareaField;
+import org.apache.ofbiz.widget.model.ModelFormFieldBuilder;
+import org.apache.ofbiz.widget.model.ModelScreenWidget;
+import org.apache.ofbiz.widget.model.ThemeFactory;
+import org.apache.ofbiz.widget.renderer.FormRenderer;
+import org.apache.ofbiz.widget.renderer.FormStringRenderer;
+import org.apache.ofbiz.widget.renderer.Paginator;
+import org.apache.ofbiz.widget.renderer.UtilHelpText;
+import org.apache.ofbiz.widget.renderer.VisualTheme;
 import org.apache.ofbiz.widget.renderer.macro.MacroFormRenderer;
-import org.json.simple.JSONObject;
 
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import java.io.IOException;
-import java.sql.Timestamp;
-import java.util.*;
+import com.ibm.icu.util.Calendar;
 
 
 //@SuppressWarnings("WeakerAccess")
 public final class FrontJsFormRenderer implements FormStringRenderer {
     private static final String NOT_YET_SUPPORTED = "Not yet supported";
-    private static final Map<String, Object> NOT_YET_SUPPORTED_M = UtilMisc.toMap("userMessage", "Not yet supported");
+    //private static final Map<String, Object> NOT_YET_SUPPORTED_M = UtilMisc.toMap("userMessage", "Not yet supported");
     public static final String module = MacroFormRenderer.class.getName();
     private FrontJsOutput output;
     private final UtilCodec.SimpleEncoder internalEncoder;
@@ -1206,7 +1256,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
     }
 
     public void renderFormClose(Appendable writer, Map<String, Object> context, ModelForm modelForm) {
-        HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
+//        HashMap<String, Object> hashMapStringObject = new HashMap<String, Object>();
         String action = null;
 
         // Begin data
@@ -1223,7 +1273,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
                 throw new IllegalArgumentException("Error finding Entity with name " + defaultEntityName
                         + " for defaut-entity-name in a form widget");
             } else {
-                List<String> pkList = modelEntity.getPkFieldNames();
+//                List<String> pkList = modelEntity.getPkFieldNames();
                 action = "POP_ENTITY";
             }
         }
@@ -1234,7 +1284,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
 
     public void renderMultiFormClose(Appendable writer, Map<String, Object> context, ModelForm modelForm) {
         // see if there is anything that needs to be added outside of the multi-form
-        Map<String, Object> wholeFormContext = UtilGenerics.checkMap(context.get("wholeFormContext"));
+//        Map<String, Object> wholeFormContext = UtilGenerics.checkMap(context.get("wholeFormContext"));
 //        todo: Have to understand this below
 //        if (UtilValidate.isNotEmpty(wholeFormContext)) {
 //            cb.put("wholeFormContext", wholeFormContext);
