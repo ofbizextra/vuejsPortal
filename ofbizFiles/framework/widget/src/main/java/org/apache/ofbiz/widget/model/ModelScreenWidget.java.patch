@@ -19,10 +19,10 @@ Index: framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelScreenW
              this.usePrivate = !("false".equals(portalPageElement.getAttribute("use-private")));
 +
 +            // Begin modification FrontJs POC, add portletId and portletSeqId to be able to do a include-portal which will do a include-portlet
-+            if (portalPageElement.getAttribute("portletId") != null) {
++            if (! portalPageElement.getAttribute("portletId").isEmpty()) {
 +                this.portletId = FlexibleStringExpander.getInstance(portalPageElement.getAttribute("portletId"));
 +            } else this.portletId = null;
-+            if (portalPageElement.getAttribute("portletSeqId") != null) {
++            if (! portalPageElement.getAttribute("portletSeqId").isEmpty()) {
 +                this.portletSeqId = FlexibleStringExpander.getInstance(portalPageElement.getAttribute("portletSeqId"));
 +            } else this.portletSeqId = null;
 +            // End modification FrontJs POC, add portletId and portletSeqId to be able to do a include-portal which will do a include-portlet
@@ -37,7 +37,7 @@ Index: framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelScreenW
                  portalPageColumns = EntityQuery.use(delegator)
                                                 .from("PortalPageColumn")
                                                 .where("portalPageId", actualPortalPageId)
-@@ -2007,6 +2021,67 @@
+@@ -2007,6 +2021,71 @@
                  }
                  // Renders the portalPage footer
                  screenStringRenderer.renderPortalPageEnd(writer, context, this);
@@ -74,6 +74,10 @@ Index: framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelScreenW
 +                .from("PortalPortlet")
 +                .where("portalPortletId", portalPortletId) 
 +                .cache().queryOne();
++        if (portalPortletValue == null) {
++            String errMsg = "Error rendering PortalPortlet with portletId [" + portalPortletId + "]: inexisting portlet ";
++            throw new RuntimeException(errMsg);
++        }
 +        portalPagePortletValue = delegator.makeValue("PortalPagePortletView", 
 +                "portalPageId"   , portalPageId, 
 +                "portalPortletId", portalPortletId, 
