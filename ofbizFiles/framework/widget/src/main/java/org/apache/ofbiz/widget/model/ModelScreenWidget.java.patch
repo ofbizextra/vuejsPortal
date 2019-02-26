@@ -47,7 +47,7 @@ Index: framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelScreenW
 +    String portalPortletId = this.portletId.expandString(context);
 +    String portletSeqId = this.portletSeqId.expandString(context);
 +    GenericValue portalPagePortletValue = EntityQuery.use(delegator)
-+            .from("PortalPagePortlet")
++            .from("PortalPagePortletView")
 +            .where("portalPageId"   , portalPageId, 
 +                   "portalPortletId", portalPortletId, 
 +                   "portletSeqId",    portletSeqId)

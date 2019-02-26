@@ -7,7 +7,7 @@ Index: framework/widget/dtd/widget-form.xsd
              </xs:sequence>
              <xs:attribute name="event-type" use="required">
 +                <xs:annotation>
-+                    <xs:documentation>post-updateStore, post-setArea and updateStore are specifics for VueJs.</xs:documentation>
++                    <xs:documentation>post-updateStore, post-setArea and updateStore are specifics for VueJs and are put onSubmitUpdateAreas list.</xs:documentation>
 +                </xs:annotation>
                  <xs:simpleType>
                      <xs:restriction base="xs:token">
