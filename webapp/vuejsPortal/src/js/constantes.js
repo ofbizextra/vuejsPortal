@@ -43,6 +43,7 @@ export default {
     Menu: 'vue-menu',
     MenuItem: 'vue-menu-item',
     Link: 'vue-link',
-    Container: 'vue-container'
+    Container: 'vue-container',
+    PortalPagePortlet: 'vue-portlet'
   }
 }

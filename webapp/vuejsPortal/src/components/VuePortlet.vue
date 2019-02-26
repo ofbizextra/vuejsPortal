@@ -1,19 +1,21 @@
 <template>
-  <div v-bind:id="'vue-portlet_' + portletId">
-    <div v-if="portlet">
-      <div
-        v-for="(component, key) in portlet.viewScreen"
-        :key="key"
-        v-bind:is="constantes.components[component.name]"
-        :props="component">
+  <div id="vue-portlet">
+    <div v-bind:id="'vue-portlet_' + portletId">
+      <div v-if="portlet">
+        <div
+          v-for="(component, key) in portlet.viewScreen"
+          :key="key"
+          v-bind:is="constantes.components[component.name]"
+          :props="component">
+        </div>
       </div>
-    </div>
-    <div v-else-if="isPosted">
-      <div
-        v-for="(component, key) in children"
-        :key="key"
-        v-bind:is="constantes.components[component.name]"
-        :props="component">
+      <div v-else-if="isPosted">
+        <div
+          v-for="(component, key) in children"
+          :key="key"
+          v-bind:is="constantes.components[component.name]"
+          :props="component">
+        </div>
       </div>
     </div>
   </div>
@@ -53,7 +55,7 @@
         return this.portalPortletId + '-' + this.portletSeqId
       },
       isWatching() {
-        return this.props.hasOwnProperty('watcherName') ? this.watcherName : null
+        return this.watcherName ? this.watcherName : null
       },
       getParams() {
         return this.$store.getters['data/watcher'](this.isWatching)
@@ -66,6 +68,7 @@
       }
     },
     created() {
+      this.$store.dispatch('ui/deleteArea', {areaId: this.portletId})
       if (this.isWatching) {
         this.$store.dispatch('data/setWatcherAttributes', {
           watcherName: this.isWatching,
@@ -84,6 +87,9 @@
         })
       }
     },
+    beforeDestroy() {
+      this.$store.dispatch('ui/deleteArea', {areaId: this.portletId})
+    },
     watch: {
       getParams: function (val) {
         console.log('portlet params updated: ', val)
@@ -94,6 +100,9 @@
           wait: this.$wait,
           params: {...val, portalPortletId: this.portalPortletId, portalPageId: this.portalPageId, portletSeqId: this.portletSeqId}
         })
+      },
+      props: function () {
+        this.$store.dispatch('ui/deleteArea', {areaId: this.portletId})
       }
     }
   }

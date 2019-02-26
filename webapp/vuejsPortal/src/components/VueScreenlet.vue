@@ -41,7 +41,7 @@
   import constantes from '../js/constantes'
 
   export default {
-    name: "ViewScreenlet",
+    name: "VueScreenlet",
     props: ['props', 'updateStore'],
     data() {
       return {
