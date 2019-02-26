@@ -1049,7 +1049,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
                 map.put("eventType", updateArea.getEventType());
                 map.put("areaId", updateArea.getAreaId());
                 map.put("areaTarget", updateArea.getAreaTarget());
-                map.put("parameterList", updateArea.getParameterMap(context));
+                map.put("parameterMap", updateArea.getParameterMap(context));
                 listUpdate.add(map);
             }
             cb.put("updateArea", listUpdate);
