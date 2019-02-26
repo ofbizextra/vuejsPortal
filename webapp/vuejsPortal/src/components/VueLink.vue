@@ -66,6 +66,9 @@
       parameterList() {
         return this.data.hasOwnProperty('parameterList') ? this.data.parameterList : ''
       },
+      parameterMap() {
+        return this.data.hasOwnProperty('parameterMap') ? this.data.parameterMap : {}
+      },
       targetWindow() {
         return this.data.hasOwnProperty('targetWindow') ? this.data.targetWindow : ''
       },
@@ -121,12 +124,12 @@
     methods: {
       redirect() {
         console.log('click on link : ', this.data.text)
-        if (this.data.hasOwnProperty('targetWindow') && this.data.hasOwnProperty('linkUrl')) {
+        if (this.data.hasOwnProperty('targetWindow') && this.data.hasOwnProperty('target')) {
           this.$store.dispatch('ui/setArea', {
             areaId: this.data.targetWindow,
-            targetUrl: this.data.linkUrl,
+            targetUrl: `/exampleapi/control/${this.data.target}`,
             wait: this.$wait,
-            params: {}
+            params: this.parameterMap
           })
         }
       }
