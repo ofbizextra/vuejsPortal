@@ -1,6 +1,6 @@
 <template>
   <div id="vue-login">
-    <modal name="login">
+    <modal name="login" :reset="true" height="auto">
       <div class="screenlet login-screenlet">
         <div class="screenlet-title-bar">
           <h3>Registered User</h3>

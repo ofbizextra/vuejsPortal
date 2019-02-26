@@ -177,9 +177,11 @@ public class FrontJsMenuRenderer implements MenuStringRenderer {
                 linkUrl = sb.toString();
             }
         }
+        parameters.put("target", target);
         parameters.put("linkUrl", linkUrl);
         parameters.put("actionUrl", actionUrl);
         parameters.put("parameterList", targetParameters);
+        parameters.put("parameterMap", link.getParameterMap(context));
         String imgStr = "";
         Image img = link.getImage();
         if (img != null) {
