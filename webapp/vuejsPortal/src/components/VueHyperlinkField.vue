@@ -1,11 +1,21 @@
 <template>
   <div id="vue-hyperlink-field">
-    <a href="data.linkUrl" :title="title" v-on:click.prevent="submit" v-bind="data">{{description}}</a>
+    <a
+      v-if="haveUpdateAreas"
+      :title="title"
+      v-on:click.prevent="submit"
+      v-bind="data">{{description}}</a>
+    <a
+      v-else
+      href="data.linkUrl"
+      :title="title"
+      v-bind="data">{{description}}</a>
   </div>
 </template>
 
 <script>
   import {mapGetters} from 'vuex'
+  import constantes from './../js/constantes'
   export default {
     name: "VueHyperlinkField",
     props: ['props'],
@@ -52,32 +62,66 @@
       },
       havePointer() {
         return this.props.hasOwnProperty('stPointer')
-      }
-    },
-    params() {
-      let param = {};
-      if (this.data.uniqueItemName) {
-        param.presentation = 'layer'
-        if (this.data.targetParameters) {
-
-        }
+      },
+      haveUpdateAreas() {
+        return this.props.attributes.hasOwnProperty('updateAreas')
+      },
+      updateAreas() {
+        return this.haveUpdateAreas ? this.props.attributes.updateAreas : []
       }
     },
     methods: {
       submit() {
-        if (this.targetWindow) {
-          this.$store.dispatch('ui/setArea', {areaId: this.targetWindow, targetUrl: '/exampleapi/control/' + this.target, wait: this.$wait, params: this.parameterMap})
-        } else {
-          if (this.pointer.entityName !== '') {
-            console.log('setWatcher by pointer')
-            console.log('getPointer: ' + this.getPointer)
-            this.$store.dispatch('data/setWatcher', {watcherName: this.target, params: {[this.pointer.attribute]: this.getPointer}})
-          } else {
-            console.log('setWatcher by data.value')
-            console.log('data.value: ' + this.data.value.toString())
-            this.$store.dispatch('data/setWatcher', {watcherName: this.getNestedObject(this.data, ['updateArea']), params: {exampleId: this.data.value}})
-          }
+        let promiseList = []
+        for (let updateArea of this.updateAreas) {
+          Promise.all(promiseList).then(() => {
+            switch (updateArea.eventType) {
+              case 'post':
+                // do post
+                promiseList.push(this.$store.dispatch('backOfficeApi/doPost', {
+                  uri: `${constantes.apiUrl}/${updateArea.areaTarget}`,
+                  params: updateArea.hasOwnProperty('parameterMap') ? updateArea.parameterMap : {}
+                }))
+                break
+              case 'setArea':
+                // do setArea
+                promiseList.push(this.$store.dispatch('ui/setArea', {
+                  areaId: updateArea.areaId,
+                  targetUrl: `/exampleapi/control/${updateArea.areaTarget}`,
+                  wait: this.$wait,
+                  params: updateArea.parameterMap
+                }))
+                break
+              case 'setWatcher':
+                // do setWatcher
+                this.$store.dispatch('data/setWatcher', {
+                  watcherName: updateArea.areaId,
+                  params: updateArea.hasOwnProperty('parameterMap') && Object.keys(updateArea.parameterMap).length > 0 ? updateArea.parameterMap : {}
+                })
+                break
+              case 'redirect':
+                // todo: redirect
+                break
+              default:
+                // do nothing
+                break
+            }
+          })
         }
+
+        // if (this.targetWindow) {
+        //   this.$store.dispatch('ui/setArea', {areaId: this.targetWindow, targetUrl: '/exampleapi/control/' + this.target, wait: this.$wait, params: this.parameterMap})
+        // } else {
+        //   if (this.pointer.entityName !== '') {
+        //     console.log('setWatcher by pointer')
+        //     console.log('getPointer: ' + this.getPointer)
+        //     this.$store.dispatch('data/setWatcher', {watcherName: this.target, params: {[this.pointer.attribute]: this.getPointer}})
+        //   } else {
+        //     console.log('setWatcher by data.value')
+        //     console.log('data.value: ' + this.data.value.toString())
+        //     this.$store.dispatch('data/setWatcher', {watcherName: this.getNestedObject(this.data, ['updateArea']), params: {exampleId: this.data.value}})
+        //   }
+        // }
       }
     },
     mounted() {

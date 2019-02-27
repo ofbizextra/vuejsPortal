@@ -16,6 +16,10 @@
       return {}
     },
     computed: {
+      ...mapGetters({
+        getForm: 'form/form',
+        getDataFromForm: 'form/fieldInForm',
+      }),
       data() {
         let data = this.props.attributes
         if (data.className || (data.alert && data.alert === true)) {
@@ -23,68 +27,68 @@
         }
         return data
       },
-      ...mapGetters({
-        getForm: 'form/form',
-        getDataFromForm: 'form/fieldInForm',
-      })
+      haveUpdateAreas() {
+        return this.data.hasOwnProperty('updateAreas') && !this.data.updateAreas.empty
+      },
+      updateAreas() {
+        return this.haveUpdateAreas ? this.data.updateAreas : []
+      },
+      form() {
+        return this.getForm(this.formName)
+      },
+      formName() {
+        return this.data.formName
+      }
     },
     methods: {
-      post() {
+      submit() {
         let linkUrl = this.getDataFromForm({formId: this.props.attributes.formName, key: 'linkUrl'})
         let url = linkUrl
         return this.$store.dispatch('backOfficeApi/doPost', {
           uri: url,
-          params: this.getForm(this.props.attributes.formName)
+          params: this.form
         })
       },
-      updateStore(updateArea) {
-        let params = {}
-        if (updateArea.parameterMap.length > 0) {
-          params = updateArea.parameterMap
-        } else {
-          params = this.getForm(this.props.attributes.formName)
-        }
-        let data = {watcherName: this.getNestedObject(updateArea, ['areaId']), params: params}
-        this.$store.dispatch('data/setWatcher', data)
+      setWatcher(updateArea) {
+        this.$store.dispatch('data/setWatcher', {
+          watcherName: updateArea.areaId,
+          params: (updateArea.hasOwnProperty('parameterMap') && updateArea.parameterMap.size > 0) ? updateArea.parameterMap : this.form
+        })
       },
       setArea(updateArea) {
-        this.$store.dispatch('ui/setArea', {areaId: updateArea.areaId, targetUrl: `/exampleapi/control/${updateArea.areaTarget}`, wait: this.$wait, params: updateArea.parameterMap})
+        return this.$store.dispatch('ui/setArea', {
+          areaId: updateArea.areaId,
+          targetUrl: `/exampleapi/control/${updateArea.areaTarget}`,
+          wait: this.$wait,
+          params: updateArea.hasOwnProperty('parameterMap') ? updateArea.parameterMap : {}
+        })
       },
       resolveEvents() {
-        if (this.data.hasOwnProperty('updateArea')) {
-          for (let updateArea of this.data.updateArea) {
-            switch (updateArea.eventType) {
-              case 'submit':
-                // do post
-                this.post()
-                break
-              case 'updateStore':
-                // do update store
-                this.updateStore(updateArea)
-                break
-              case 'post-updateStore':
-                // do post then update store
-                this.post().then(() => {
-                  this.updateStore(updateArea)
-                }, (error) => {
-                  console.log('Error during VueSubmitField.post() : ', error)
-                })
-                break
-              case 'post-setArea':
-                // do post then set area
-                this.post().then(() => {
-                  this.setArea(updateArea)
-                }, (error) => {
-                  console.log('Error during VueSubmitField.post() : ', error)
-                })
-                break
-              default:
-                // do nothing
-                break
-            }
+        if (this.haveUpdateAreas) {
+          let promiseList = []
+          for (let updateArea of this.updateAreas) {
+            Promise.all(promiseList).then(() => {
+              switch (updateArea.eventType) {
+                case 'submit':
+                  // do post
+                  promiseList.push(this.submit())
+                  break
+                case 'setWatcher':
+                  // do update store
+                  this.setWatcher(updateArea)
+                  break
+                case 'setArea':
+                  // do post then set area
+                  promiseList.push(this.setArea(updateArea))
+                  break
+                default:
+                  // do nothing
+                  break
+              }
+            })
           }
         } else {
-          this.post()
+          this.submit()
         }
       }
     }
