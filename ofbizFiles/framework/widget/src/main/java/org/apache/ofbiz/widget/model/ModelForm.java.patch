@@ -8,10 +8,25 @@ Index: framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelForm.ja
                  }
 -            } else if ("submit".equals(updateArea.getEventType())) {
 +            } else if ("submit".equals(updateArea.getEventType())
-+                     ||"updateStore".equals(updateArea.getEventType())
-+                     ||"post-updateStore".equals(updateArea.getEventType())
-+                     ||"post-setArea".equals(updateArea.getEventType())
++                     ||"post".equals(updateArea.getEventType())
++                     ||"setArea".equals(updateArea.getEventType())
++                     ||"setWatcher".equals(updateArea.getEventType())
 +                      ) {
                  int index = onSubmitUpdateAreas.indexOf(updateArea);
                  if (index != -1) {
                      onSubmitUpdateAreas.set(index, updateArea);
+@@ -1808,5 +1812,14 @@
+         public List<CommonWidgetModels.Parameter> getParameterList() {
+             return parameterList;
+         }
++
++        public Map<String, Object> toMap(Map<String, Object> context) {
++            Map<String, Object> map = new HashMap<>();
++            map.put("eventType", this.getEventType());
++            map.put("areaId", this.getAreaId());
++            map.put("areaTarget", this.getAreaTarget());
++            map.put("parameterMap", this.getParameterMap(context));
++            return map;
++        }
+     }
+ }

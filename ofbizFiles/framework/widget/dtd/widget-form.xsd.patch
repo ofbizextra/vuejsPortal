@@ -7,16 +7,33 @@ Index: framework/widget/dtd/widget-form.xsd
              </xs:sequence>
              <xs:attribute name="event-type" use="required">
 +                <xs:annotation>
-+                    <xs:documentation>post-updateStore, post-setArea and updateStore are specifics for VueJs and are put onSubmitUpdateAreas list.</xs:documentation>
++                    <xs:documentation>post, setArea and setWatcher are specifics for VueJs and are put onSubmitUpdateAreas list.</xs:documentation>
 +                </xs:annotation>
                  <xs:simpleType>
                      <xs:restriction base="xs:token">
                          <xs:enumeration value="paginate" />
                          <xs:enumeration value="sort-column" />
                          <xs:enumeration value="submit" />
-+                        <xs:enumeration value="post-updateStore" />
-+                        <xs:enumeration value="post-setArea" />
-+                        <xs:enumeration value="updateStore" />
++                        <xs:enumeration value="post" />
++                        <xs:enumeration value="setArea" />
++                        <xs:enumeration value="setWatcher" />
+                     </xs:restriction>
+                 </xs:simpleType>
+             </xs:attribute>
+@@ -1489,10 +1495,16 @@
+         </xs:annotation>
+         <xs:complexType>
+             <xs:attribute name="event-type" use="required">
++                <xs:annotation>
++                    <xs:documentation>post, setArea and setWatcher are specifics for VueJs on hyperlink (or link) and are put onClickUpdateAreas list.</xs:documentation>
++                </xs:annotation>
+                 <xs:simpleType>
+                     <xs:restriction base="xs:token">
+                         <xs:enumeration value="change" />
+                         <xs:enumeration value="click" />
++                        <xs:enumeration value="post" />
++                        <xs:enumeration value="setArea" />
++                        <xs:enumeration value="setWatcher" />
                      </xs:restriction>
                  </xs:simpleType>
              </xs:attribute>
