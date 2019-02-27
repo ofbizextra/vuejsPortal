@@ -6,12 +6,12 @@
 
 <script>
   import {mapGetters} from 'vuex'
+
   export default {
     name: "VueSortField",
     props: ['props', 'updateStore'],
     data() {
-      return {
-      }
+      return {}
     },
     computed: {
       ...mapGetters({
@@ -21,20 +21,24 @@
         let data = this.props.attributes
         delete data.value
         return data
+      },
+      paginateTarget() {
+        return this.data.hasOwnProperty('paginateTarget') ? this.data.paginateTarget : null
+      },
+      entityField() {
+        return this.data.hasOwnProperty('entityField') ? this.data.entityField : null
       }
     },
     methods: {
       sort() {
-        if (this.data.hasOwnProperty('onPaginateUpdateAreas')) {
-          this.data.onPaginateUpdateAreas.forEach((area) => {
-            let currentWatcher = this.watcher(area.areaId)
-            this.$store.dispatch('data/setWatcherAttributes', {
-              watcherName: area.areaId,
-              params: {
-                orderBy: this.data.entityField,
-                sortField: currentWatcher.hasOwnProperty('sortField') && currentWatcher.sortField === this.data.entityField ? '-' + this.data.entityField : this.data.entityField
-              }
-            })
+        if (this.paginateTarget && this.entityField) {
+          let currentWatcher = this.watcher(this.paginateTarget)
+          this.$store.dispatch('data/setWatcherAttributes', {
+            watcherName: this.paginateTarget,
+            params: {
+              orderBy: this.entityField,
+              sortField: currentWatcher.hasOwnProperty('sortField') && currentWatcher.sortField === this.entityField ? '-' + this.entityField : this.entityField
+            }
           })
         }
       }

@@ -2451,7 +2451,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         } else {
             cb.put("onPaginateUpdateAreas", new ArrayList<>());
         }
-
+        cb.put("paginateTarget", modelForm.getPaginateTarget());
         String entityField = modelFormField.getParameterName(context);
         cb.put("entityField", entityField);
         this.output.putScreen("SortField", cb);
