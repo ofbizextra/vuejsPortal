@@ -1,6 +1,6 @@
 Index: framework/widget/dtd/widget-form.xsd
 ===================================================================
---- framework/widget/dtd/widget-form.xsd	(révision 1853222)
+--- framework/widget/dtd/widget-form.xsd	(révision 1853219)
 +++ framework/widget/dtd/widget-form.xsd	(copie de travail)
 @@ -584,11 +584,17 @@
                  <xs:element minOccurs="0" maxOccurs="unbounded" ref="parameter" />
@@ -20,9 +20,15 @@ Index: framework/widget/dtd/widget-form.xsd
                      </xs:restriction>
                  </xs:simpleType>
              </xs:attribute>
-@@ -1489,10 +1495,16 @@
+@@ -1488,11 +1494,22 @@
+             <xs:documentation>Area to be updated when a field event occurs.</xs:documentation>
          </xs:annotation>
          <xs:complexType>
++            <xs:sequence>
++                <xs:element minOccurs="0" ref="auto-parameters-service"/>
++                <xs:element minOccurs="0" ref="auto-parameters-entity"/>
++                <xs:element minOccurs="0" maxOccurs="unbounded" ref="parameter" />
++            </xs:sequence>
              <xs:attribute name="event-type" use="required">
 +                <xs:annotation>
 +                    <xs:documentation>post, setArea and setWatcher are specifics for VueJs on hyperlink (or link) and are put onClickUpdateAreas list.</xs:documentation>
