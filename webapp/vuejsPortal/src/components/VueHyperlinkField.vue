@@ -1,7 +1,6 @@
 <template>
   <div id="vue-hyperlink-field">
-    <a v-if="pointer.entityName !== ''" href="data.linkUrl" :title="pointer.attribute" v-on:click.prevent="submit" v-bind="data">{{getPointer}}</a>
-    <a v-else href="data.linkUrl" :title="data.title ? data.title : ''" v-on:click.prevent="submit" v-bind="data">{{data.value ? data.value : ''}}</a>
+    <a href="data.linkUrl" :title="title" v-on:click.prevent="submit" v-bind="data">{{description}}</a>
   </div>
 </template>
 
@@ -44,6 +43,15 @@
       },
       parameterMap() {
         return this.props.attributes.hasOwnProperty('parameterMap') ? this.props.attributes.parameterMap : {}
+      },
+      description() {
+        return this.havePointer ? this.getPointer : this.props.attributes.hasOwnProperty('description') ? this.props.attributes.description : ''
+      },
+      title() {
+        return this.havePointer ? this.pointer.attribute : this.props.attributes.hasOwnProperty('title') ? this.props.attributes.title : ''
+      },
+      havePointer() {
+        return this.props.hasOwnProperty('stPointer')
       }
     },
     params() {
@@ -63,7 +71,7 @@
           if (this.pointer.entityName !== '') {
             console.log('setWatcher by pointer')
             console.log('getPointer: ' + this.getPointer)
-            this.$store.dispatch('data/setWatcher', {watcherName: this.getNestedObject(this.data, ['updateArea']), params: {[this.pointer.attribute]: this.getPointer}})
+            this.$store.dispatch('data/setWatcher', {watcherName: this.target, params: {[this.pointer.attribute]: this.getPointer}})
           } else {
             console.log('setWatcher by data.value')
             console.log('data.value: ' + this.data.value.toString())

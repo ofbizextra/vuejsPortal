@@ -68,6 +68,7 @@ import VueLink from './components/VueLink'
 import VueContainer from './components/VueContainer'
 import VueMessageList from './components/VueMessageList'
 import VueLogin from './components/VueLogin'
+import VueFormatEmptySpace from './components/VueFormatEmptySpace'
 
 import store from './store'
 
@@ -139,6 +140,7 @@ Vue.component('vue-link', VueLink)
 Vue.component('vue-container', VueContainer)
 Vue.component('vue-message-list', VueMessageList)
 Vue.component( 'vue-login', VueLogin)
+Vue.component('vue-format-empty-space', VueFormatEmptySpace)
 
 Vue.mixin({
   methods: {
