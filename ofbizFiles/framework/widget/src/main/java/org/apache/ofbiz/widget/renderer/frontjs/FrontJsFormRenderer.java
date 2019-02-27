@@ -229,6 +229,14 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         }
         String style = modelFormField.getWidgetStyle();
         cb.put("style", style);
+        List<ModelForm.UpdateArea> updateAreas = modelFormField.getOnClickUpdateAreas();
+        if (!updateAreas.isEmpty()) {
+            List<Map<String, Object>> updateAreasList = new ArrayList<>();
+            for (ModelForm.UpdateArea updateArea : updateAreas) {
+                updateAreasList.add(updateArea.toMap(context));
+            }
+            cb.put("updateAreas", updateAreasList);
+        }
         if (hyperlinkField.getDescription().toString().contains("${")) {
 //            HashMap<String, Object> data = new HashMap<>();
 //            data.put("action", "PUT_RECORD");
@@ -1043,16 +1051,11 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         }
         cb.put("tabindex", tabindex);
         if (!updateAreas.isEmpty()) {
-            List<Map<String, Object>> listUpdate = new ArrayList<>();
+            List<Map<String, Object>> updateAreasList = new ArrayList<>();
             for (ModelForm.UpdateArea updateArea : updateAreas) {
-                Map<String, Object> map = new HashMap<>();
-                map.put("eventType", updateArea.getEventType());
-                map.put("areaId", updateArea.getAreaId());
-                map.put("areaTarget", updateArea.getAreaTarget());
-                map.put("parameterMap", updateArea.getParameterMap(context));
-                listUpdate.add(map);
+                updateAreasList.add(updateArea.toMap(context));
             }
-            cb.put("updateArea", listUpdate);
+            cb.put("updateAreas", updateAreasList);
         }
         this.appendTooltip(cb, context, modelFormField);
         this.output.putScreen("SubmitField", cb);
