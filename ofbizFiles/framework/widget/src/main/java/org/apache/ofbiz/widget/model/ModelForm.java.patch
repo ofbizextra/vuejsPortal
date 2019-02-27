@@ -15,7 +15,30 @@ Index: framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelForm.ja
                  int index = onSubmitUpdateAreas.indexOf(updateArea);
                  if (index != -1) {
                      onSubmitUpdateAreas.set(index, updateArea);
-@@ -1808,5 +1812,14 @@
+@@ -1710,13 +1714,20 @@
+             this.defaultServiceName = defaultServiceName;
+             this.defaultEntityName = defaultEntityName;
+             List<? extends Element> parameterElementList = UtilXml.childElementList(updateAreaElement, "parameter");
+-            if (parameterElementList.isEmpty()) {
++            boolean autoPortletParamsElement = UtilXml.firstChildElement(updateAreaElement, "auto-parameters-portlet") == null ? false : true;
++            if (parameterElementList.isEmpty() && ! autoPortletParamsElement) {
+                 this.parameterList = Collections.emptyList();
+             } else {
+-                List<CommonWidgetModels.Parameter> parameterList = new ArrayList<>(parameterElementList.size());
++                int paramListSize = parameterElementList.size() + (autoPortletParamsElement ? 3 : 0);
++                List<CommonWidgetModels.Parameter> parameterList = new ArrayList<>(paramListSize);
+                 for (Element parameterElement : parameterElementList) {
+                     parameterList.add(new CommonWidgetModels.Parameter(parameterElement));
+                 }
++                if (autoPortletParamsElement) {
++                    parameterList.add(new CommonWidgetModels.Parameter("portalPageId",    "parameters.portalPageId",    true));
++                    parameterList.add(new CommonWidgetModels.Parameter("portalPortletId", "parameters.portalPortletId", true));
++                    parameterList.add(new CommonWidgetModels.Parameter("portletSeqId",    "parameters.portletSeqId",    true));
++                }
+                 this.parameterList = Collections.unmodifiableList(parameterList);
+             }
+             Element autoServiceParamsElement = UtilXml.firstChildElement(updateAreaElement, "auto-parameters-service");
+@@ -1808,5 +1819,14 @@
          public List<CommonWidgetModels.Parameter> getParameterList() {
              return parameterList;
          }

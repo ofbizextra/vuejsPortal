@@ -1,0 +1,26 @@
+Index: framework/widget/dtd/widget-common.xsd
+===================================================================
+--- framework/widget/dtd/widget-common.xsd	(révision 1853222)
++++ framework/widget/dtd/widget-common.xsd	(copie de travail)
+@@ -515,6 +515,13 @@
+             <xs:attribute name="send-if-empty" type="xs:boolean" default="true"/>
+         </xs:complexType>
+     </xs:element>
++    <xs:element name="auto-parameters-portlet">
++        <xs:annotation>
++            <xs:documentation>Generate 3 parameters : portalPageId, portalPortletId and portletSeqId update from-field parameters.xxx</xs:documentation>
++        </xs:annotation>
++        <xs:complexType>
++        </xs:complexType>
++    </xs:element>
+     <xs:element name="exclude">
+         <xs:complexType>
+             <xs:attribute name="field-name" type="xs:string" use="required" />
+@@ -525,6 +532,7 @@
+             <xs:element minOccurs="0" ref="auto-parameters-service"/>
+             <xs:element minOccurs="0" ref="auto-parameters-entity"/>
+             <xs:element minOccurs="0" maxOccurs="unbounded" ref="parameter" />
++            <xs:element minOccurs="0" ref="auto-parameters-portlet"/>
+             <xs:element minOccurs="0" name="image" type="image" />
+         </xs:sequence>
+         <xs:attribute type="xs:string" name="text" />

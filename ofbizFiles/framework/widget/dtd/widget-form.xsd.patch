@@ -2,25 +2,29 @@ Index: framework/widget/dtd/widget-form.xsd
 ===================================================================
 --- framework/widget/dtd/widget-form.xsd	(révision 1853219)
 +++ framework/widget/dtd/widget-form.xsd	(copie de travail)
-@@ -584,11 +584,17 @@
+@@ -582,13 +582,21 @@
+                 <xs:element minOccurs="0" ref="auto-parameters-service"/>
+                 <xs:element minOccurs="0" ref="auto-parameters-entity"/>
                  <xs:element minOccurs="0" maxOccurs="unbounded" ref="parameter" />
++                <xs:element minOccurs="0" ref="auto-parameters-portlet"/>
              </xs:sequence>
              <xs:attribute name="event-type" use="required">
 +                <xs:annotation>
-+                    <xs:documentation>post, setArea and setWatcher are specifics for VueJs and are put onSubmitUpdateAreas list.</xs:documentation>
++                    <xs:documentation>setArea and setWatcher are specifics for VueJs and are put onSubmitUpdateAreas list.
++                                      submit, setArea and setWatcher are activate when submit button is clicked.
++                    </xs:documentation>
 +                </xs:annotation>
                  <xs:simpleType>
                      <xs:restriction base="xs:token">
                          <xs:enumeration value="paginate" />
                          <xs:enumeration value="sort-column" />
                          <xs:enumeration value="submit" />
-+                        <xs:enumeration value="post" />
 +                        <xs:enumeration value="setArea" />
 +                        <xs:enumeration value="setWatcher" />
                      </xs:restriction>
                  </xs:simpleType>
              </xs:attribute>
-@@ -1488,11 +1494,22 @@
+@@ -1488,11 +1496,23 @@
              <xs:documentation>Area to be updated when a field event occurs.</xs:documentation>
          </xs:annotation>
          <xs:complexType>
@@ -28,6 +32,7 @@ Index: framework/widget/dtd/widget-form.xsd
 +                <xs:element minOccurs="0" ref="auto-parameters-service"/>
 +                <xs:element minOccurs="0" ref="auto-parameters-entity"/>
 +                <xs:element minOccurs="0" maxOccurs="unbounded" ref="parameter" />
++                <xs:element minOccurs="0" ref="auto-parameters-portlet"/>
 +            </xs:sequence>
              <xs:attribute name="event-type" use="required">
 +                <xs:annotation>
