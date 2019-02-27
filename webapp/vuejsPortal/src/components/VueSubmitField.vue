@@ -52,7 +52,7 @@
       setWatcher(updateArea) {
         this.$store.dispatch('data/setWatcher', {
           watcherName: updateArea.areaId,
-          params: (updateArea.hasOwnProperty('parameterMap') && updateArea.parameterMap.size > 0) ? updateArea.parameterMap : this.form
+          params: (updateArea.hasOwnProperty('parameterMap') && Object.keys(updateArea.parameterMap).length > 0) ? updateArea.parameterMap : this.form
         })
       },
       setArea(updateArea) {
