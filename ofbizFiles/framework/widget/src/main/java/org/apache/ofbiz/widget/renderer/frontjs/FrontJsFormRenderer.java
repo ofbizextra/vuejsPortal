@@ -237,7 +237,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
             }
             cb.put("updateAreas", updateAreasList);
         }
-        if (hyperlinkField.getDescription().toString().contains("${")) {
+        if (hyperlinkField.getDescription().toString().contains("${") && !hyperlinkField.getDescription().toString().contains("uiLabel")) {
 //            HashMap<String, Object> data = new HashMap<>();
 //            data.put("action", "PUT_RECORD");
 //            HashMap<String, Object> record = new HashMap<>();
