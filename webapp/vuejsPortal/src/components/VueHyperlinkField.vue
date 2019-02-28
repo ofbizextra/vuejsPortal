@@ -4,12 +4,18 @@
       v-if="haveUpdateAreas"
       :title="title"
       v-on:click.prevent="submit"
-      v-bind="data">{{description}}</a>
+      v-bind="data">
+      <img :src="imgSrc" alt="" v-if="hasImg">
+      {{description}}
+    </a>
     <a
       v-else
       href="data.linkUrl"
       :title="title"
-      v-bind="data">{{description}}</a>
+      v-bind="data">
+      <img :src="imgSrc" alt="" v-if="hasImg">
+      {{description}}
+    </a>
   </div>
 </template>
 
@@ -77,6 +83,12 @@
       },
       confirmationMessage() {
         return this.attributes.hasOwnProperty('confirmationMessage') ? this.attributes.confirmationMessage : ''
+      },
+      hasImg() {
+        return this.attributes.hasOwnProperty('imgSrc') && this.attributes.imgSrc !== ''
+      },
+      imgSrc() {
+        return this.hasImg ? this.attributes.imgSrc : ''
       }
     },
     methods: {
