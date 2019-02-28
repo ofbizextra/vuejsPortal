@@ -39,6 +39,9 @@
         }
         return data
       },
+      attributes() {
+        return this.props.hasOwnProperty('attributes') ? this.props.attributes : {}
+      },
       getPointer() {
         return this.getData(this.pointer);
       },
@@ -46,73 +49,81 @@
         getData: 'data/entityRowAttribute'
       }),
       target() {
-        return this.props.attributes.hasOwnProperty('target') ? this.props.attributes.target : null
+        return this.attributes.hasOwnProperty('target') ? this.attributes.target : null
       },
       targetWindow() {
-        return this.props.attributes.hasOwnProperty('targetWindow') ? this.props.attributes.targetWindow : null
+        return this.attributes.hasOwnProperty('targetWindow') ? this.attributes.targetWindow : null
       },
       parameterMap() {
-        return this.props.attributes.hasOwnProperty('parameterMap') ? this.props.attributes.parameterMap : {}
+        return this.attributes.hasOwnProperty('parameterMap') ? this.attributes.parameterMap : {}
       },
       description() {
-        return this.havePointer ? this.getPointer : this.props.attributes.hasOwnProperty('description') ? this.props.attributes.description : ''
+        return this.havePointer ? this.getPointer : this.attributes.hasOwnProperty('description') ? this.attributes.description : ''
       },
       title() {
-        return this.havePointer ? this.pointer.attribute : this.props.attributes.hasOwnProperty('title') ? this.props.attributes.title : ''
+        return this.havePointer ? this.pointer.attribute : this.attributes.hasOwnProperty('title') ? this.attributes.title : ''
       },
       havePointer() {
         return this.props.hasOwnProperty('stPointer')
       },
       haveUpdateAreas() {
-        return this.props.attributes.hasOwnProperty('updateAreas')
+        return this.attributes.hasOwnProperty('updateAreas')
       },
       updateAreas() {
-        return this.haveUpdateAreas ? this.props.attributes.updateAreas : []
+        return this.haveUpdateAreas ? this.attributes.updateAreas : []
+      },
+      requestConfirmation() {
+        return this.attributes.hasOwnProperty('requestConfirmation') ? this.attributes.requestConfirmation : false
+      },
+      confirmationMessage() {
+        return this.attributes.hasOwnProperty('confirmationMessage') ? this.attributes.confirmationMessage : ''
       }
     },
     methods: {
       submit() {
-        let promiseList = []
-        for (let updateArea of this.updateAreas) {
-          Promise.all(promiseList).then(() => {
-            switch (updateArea.eventType) {
-              case 'post':
-                // do post
-                promiseList.push(this.$store.dispatch('backOfficeApi/doPost', {
-                  uri: `${constantes.apiUrl}/${updateArea.areaTarget}`,
-                  params: updateArea.hasOwnProperty('parameterMap') ? updateArea.parameterMap : {}
-                }))
-                break
-              case 'setArea':
-                // do setArea
-                promiseList.push(this.$store.dispatch('ui/setArea', {
-                  areaId: updateArea.areaId,
-                  targetUrl: `/exampleapi/control/${updateArea.areaTarget}`,
-                  wait: this.$wait,
-                  params: updateArea.parameterMap
-                }))
-                break
-              case 'setWatcher':
-                // do setWatcher
-                this.$store.dispatch('data/setWatcher', {
-                  watcherName: updateArea.areaId,
-                  params: updateArea.hasOwnProperty('parameterMap') && Object.keys(updateArea.parameterMap).length > 0 ? updateArea.parameterMap : {}
-                })
-                break
-              case 'redirect':
-                // todo: redirect
-                break
-              case 'submit':
-                // submit
-                let form = this.$el.closest('form')
-                form.action = updateArea.areaTarget
-                form.submit()
-                break
-              default:
-                // do nothing
-                break
-            }
-          })
+        if (!this.requestConfirmation || confirm(this.confirmationMessage)) {
+          let promiseList = []
+          for (let updateArea of this.updateAreas) {
+            Promise.all(promiseList).then(() => {
+              switch (updateArea.eventType) {
+                case 'post':
+                  // do post
+                  promiseList.push(this.$store.dispatch('backOfficeApi/doPost', {
+                    uri: `${constantes.apiUrl}/${updateArea.areaTarget}`,
+                    params: updateArea.hasOwnProperty('parameterMap') ? updateArea.parameterMap : {}
+                  }))
+                  break
+                case 'setArea':
+                  // do setArea
+                  promiseList.push(this.$store.dispatch('ui/setArea', {
+                    areaId: updateArea.areaId,
+                    targetUrl: `/exampleapi/control/${updateArea.areaTarget}`,
+                    wait: this.$wait,
+                    params: updateArea.parameterMap
+                  }))
+                  break
+                case 'setWatcher':
+                  // do setWatcher
+                  this.$store.dispatch('data/setWatcher', {
+                    watcherName: updateArea.areaId,
+                    params: updateArea.hasOwnProperty('parameterMap') && Object.keys(updateArea.parameterMap).length > 0 ? updateArea.parameterMap : {}
+                  })
+                  break
+                case 'redirect':
+                  // todo: redirect
+                  break
+                case 'submit':
+                  // submit
+                  let form = this.$el.closest('form')
+                  form.action = updateArea.areaTarget
+                  form.submit()
+                  break
+                default:
+                  // do nothing
+                  break
+              }
+            })
+          }
         }
 
         // if (this.targetWindow) {

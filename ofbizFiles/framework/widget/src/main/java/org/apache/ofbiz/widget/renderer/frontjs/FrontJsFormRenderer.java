@@ -229,6 +229,8 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         }
         String style = modelFormField.getWidgetStyle();
         cb.put("style", style);
+        cb.put("requestConfirmation", hyperlinkField.getRequestConfirmation());
+        cb.put("confirmationMessage", hyperlinkField.getConfirmationMsg(context));
         List<ModelForm.UpdateArea> updateAreas = modelFormField.getOnClickUpdateAreas();
         if (!updateAreas.isEmpty()) {
             List<Map<String, Object>> updateAreasList = new ArrayList<>();
