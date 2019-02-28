@@ -45,6 +45,7 @@ export default {
     Link: 'vue-link',
     Container: 'vue-container',
     PortalPagePortlet: 'vue-portlet',
-    FormatEmptySpace: 'vue-format-empty-space'
+    FormatEmptySpace: 'vue-format-empty-space',
+    Label: 'vue-label'
   }
 }
