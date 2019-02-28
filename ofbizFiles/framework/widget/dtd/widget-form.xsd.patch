@@ -24,7 +24,7 @@ Index: framework/widget/dtd/widget-form.xsd
                      </xs:restriction>
                  </xs:simpleType>
              </xs:attribute>
-@@ -1488,11 +1496,23 @@
+@@ -1488,11 +1496,24 @@
              <xs:documentation>Area to be updated when a field event occurs.</xs:documentation>
          </xs:annotation>
          <xs:complexType>
@@ -45,6 +45,7 @@ Index: framework/widget/dtd/widget-form.xsd
 +                        <xs:enumeration value="post" />
 +                        <xs:enumeration value="setArea" />
 +                        <xs:enumeration value="setWatcher" />
++                        <xs:enumeration value="submit" />
                      </xs:restriction>
                  </xs:simpleType>
              </xs:attribute>

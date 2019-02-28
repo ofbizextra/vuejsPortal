@@ -102,6 +102,12 @@
               case 'redirect':
                 // todo: redirect
                 break
+              case 'submit':
+                // submit
+                let form = this.$el.closest('form')
+                form.action = updateArea.areaTarget
+                form.submit()
+                break
               default:
                 // do nothing
                 break
