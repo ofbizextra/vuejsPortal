@@ -25,8 +25,10 @@
       :data-dialog-height="height"
       :data-dialog-title="text"
       :class="style"
-      v-on:click.prevent="redirect"
+      v-bind:href="`${href}#${href}`"
+      v-on:click="redirect"
     >
+      <img :src="imgSrc" alt="" v-if="hasImage">
       {{text}}
     </a>
     <a
@@ -35,10 +37,11 @@
       v-bind:class="style"
       v-bind:name="name"
       v-bind:target="targetWindow"
-      v-bind:href="href"
+      v-bind:href="`${href}#${href}`"
       v-on:click.prevent="redirect"
     >
-    {{imgStr + ' ' + text}}
+      <img :src="imgSrc" alt="" v-if="hasImage">
+    {{' ' + text}}
     </a>
   </div>
 </template>
@@ -99,8 +102,11 @@
       text() {
         return this.data.hasOwnProperty('text') ? this.data.text : ''
       },
-      imgStr() {
-        return this.data.hasOwnProperty('imgStr') ? this.data.imgStr : ''
+      hasImage() {
+        return this.data.hasOwnProperty('imgSrc') && this.data.imgSrc !== ''
+      },
+      imgSrc() {
+        return this.data.hasOwnProperty('imgSrc') ? this.data.imgSrc : ''
       },
       params() {
         if (this.uniqueItemName.length > 0) {

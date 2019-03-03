@@ -179,7 +179,8 @@ const router = new VueRouter({
   routes: [
     {path: '/', component: Portal, beforeEnter: requireAuth},
     {path: '/test', component: Test, beforeEnter: requireAuth},
-    {path: '/login', component: Login, beforeEnter: requireAuth}
+    {path: '/login', component: Login, beforeEnter: requireAuth},
+    {path: '/exampleapi/control/:params', component: Portal, beforeEnter: requireAuth}
   ]
 })
 
