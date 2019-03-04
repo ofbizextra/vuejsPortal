@@ -145,6 +145,9 @@ public class FrontJsMenuRenderer implements MenuStringRenderer {
             linkType = WidgetWorker.determineAutoLinkType(link.getLinkType(), target, link.getUrlMode(), request);
         }
         parameters.put("linkType", linkType);
+        // Workaround OH 2019-03-04 currently in VueLink hidden-form is not correctly manage, so use "auto" as link-type not hidden-form
+        parameters.put("linkType", link.getLinkType());
+        // End of workaround
         String linkUrl = "";
         String actionUrl = "";
         StringBuilder targetParameters = new StringBuilder();
@@ -180,14 +183,14 @@ public class FrontJsMenuRenderer implements MenuStringRenderer {
         parameters.put("target", target);
         parameters.put("linkUrl", linkUrl);
         parameters.put("actionUrl", actionUrl);
-        parameters.put("parameterList", targetParameters);
+        //parameters.put("parameterList", targetParameters); TODO  OH remove all build targetParameters lines
         parameters.put("parameterMap", link.getParameterMap(context));
-        String imgStr = "";
+        //String imgStr = "";
         Image img = link.getImage();
         if (img != null) {
-            renderImage(writer, context, img);
+            //renderImage(writer, context, img);
+            parameters.put("img", createImageParameters(context, img));
         }
-        parameters.put("imgStr", imgStr);
         this.output.putScreen("Link", parameters);
     }
 

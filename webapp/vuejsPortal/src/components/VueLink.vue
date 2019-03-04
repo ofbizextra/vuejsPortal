@@ -9,7 +9,7 @@
       :name="uniqueItemName"
     >
       <input
-        v-for="(parameter, id) in parameterList"
+        v-for="(parameter, id) in parameterMap"
         :key="id"
         :name="parameter.name"
         :value="parameter.value"
@@ -18,7 +18,7 @@
     </form>
     <!--:data-dialog-url="linkUrl"-->
     <a
-      v-if="uniqueItemName"
+      v-if="linkType === 'auto'"
       v-bind:id="id + '_link'"
       :data-dialog-params="params"
       :data-dialog-width="width"
@@ -28,7 +28,20 @@
       v-bind:href="`${href}#${href}`"
       v-on:click="redirect"
     >
-      <img :src="imgSrc" alt="" v-if="hasImage">
+      <img :src="imgSrc" alt="" v-if="hasImage"/>
+      {{text}}
+    </a>
+    <a
+      v-else-if="linkType === 'anchor'"
+      v-bind:id="id + '_link'"
+      :data-dialog-params="params"
+      :data-dialog-width="width"
+      :data-dialog-height="height"
+      :data-dialog-title="text"
+      :class="style"
+      v-on:click.prevent="redirect"
+    >
+      <img :src="imgSrc" alt="" v-if="hasImage"/>
       {{text}}
     </a>
     <a
@@ -103,10 +116,10 @@
         return this.data.hasOwnProperty('text') ? this.data.text : ''
       },
       hasImage() {
-        return this.data.hasOwnProperty('imgSrc') && this.data.imgSrc !== ''
+        return this.data.hasOwnProperty('img')
       },
       imgSrc() {
-        return this.data.hasOwnProperty('imgSrc') ? this.data.imgSrc : ''
+        return this.data.img.hasOwnProperty('src') ? this.data.img.src : ''
       },
       params() {
         if (this.uniqueItemName.length > 0) {
