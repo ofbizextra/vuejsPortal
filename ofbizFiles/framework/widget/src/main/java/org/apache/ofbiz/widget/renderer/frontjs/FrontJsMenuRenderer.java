@@ -150,28 +150,10 @@ public class FrontJsMenuRenderer implements MenuStringRenderer {
         // End of workaround
         String linkUrl = "";
         String actionUrl = "";
-        StringBuilder targetParameters = new StringBuilder();
         if ("hidden-form".equals(linkType) || "layered-modal".equals(linkType)) {
             StringBuilder sb = new StringBuilder();
             WidgetWorker.buildHyperlinkUrl(sb, target, link.getUrlMode(), null, link.getPrefix(context), link.getFullPath(), link.getSecure(), link.getEncode(), request, response, context);
             actionUrl = sb.toString();
-            targetParameters.append("[");
-            for (Map.Entry<String, String> parameter : link.getParameterMap(context).entrySet()) {
-                if (targetParameters.length() > 1) {
-                    targetParameters.append(",");
-                }
-                targetParameters.append("{'name':'");
-                targetParameters.append(parameter.getKey());
-                targetParameters.append("'");
-                targetParameters.append(",'value':'");
-                targetParameters.append(parameter.getValue());
-                targetParameters.append("'}");
-            }
-            targetParameters.append("]");
-
-        }
-        if (targetParameters.length() == 0) {
-            targetParameters.append("\"\"");
         }
         if (UtilValidate.isNotEmpty(target)) {
             if (!"hidden-form".equals(linkType)) {
@@ -180,10 +162,16 @@ public class FrontJsMenuRenderer implements MenuStringRenderer {
                 linkUrl = sb.toString();
             }
         }
+        ArrayList<HashMap<String, String>> parameterList = new ArrayList<>();
+        for (Map.Entry<String, String> parameter : link.getParameterMap(context).entrySet()) {
+            HashMap<String, String> param = new HashMap<>();
+            param.put(parameter.getKey(), parameter.getValue());
+            parameterList.add(param);
+        }
         parameters.put("target", target);
         parameters.put("linkUrl", linkUrl);
         parameters.put("actionUrl", actionUrl);
-        //parameters.put("parameterList", targetParameters); TODO  OH remove all build targetParameters lines
+        parameters.put("parameterList", parameterList);
         parameters.put("parameterMap", link.getParameterMap(context));
         //String imgStr = "";
         Image img = link.getImage();
