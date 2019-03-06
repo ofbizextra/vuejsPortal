@@ -45,7 +45,7 @@
         }
         console.log('final params: ', this.params)
         console.log('setting up watcherName')
-        this.$store.dispatch('data/setWatcher', {watcherName: 'showExample', params: this.params})
+        // this.$store.dispatch('data/setWatcher', {watcherName: 'showExample', params: this.params})
         this.$http.post(constantes.apiUrl + constantes.portalPageDetail.path,
           queryString.stringify(this.params),
           {headers: {'Content-Type': 'application/x-www-form-urlencoded', 'locale': 'en_US'}}

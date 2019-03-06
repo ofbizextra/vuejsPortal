@@ -47,7 +47,12 @@
       console.log(this.$route.path)
       // Vue.http.setRequestHeader('Content-Security-Policy', "default-src 'self'")
       this.$store.dispatch('login/check').then(() => {
-        this.$router.push({path: this.$route.fullPath})
+        if (this.$route.fullPath.includes('/exampleapi/control')) {
+          let path = this.$route.fullPath.substring(this.$route.fullPath.indexOf('/exampleapi/control'))
+          this.$router.push({path: path})
+        } else {
+          this.$router.push({path: this.$route.fullPath})
+        }
       }, () => {
         this.$router.push('/login')
       })

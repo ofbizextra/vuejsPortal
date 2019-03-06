@@ -68,11 +68,22 @@
       }
     },
     created() {
+      let params = {}
+      if (this.$root.$route.fullPath.includes('?')) {
+        console.log('Root FullPath: ', this.$root.$route.fullPath)
+        let paramsString = unescape(this.$root.$route.fullPath.split("?")[1])
+        console.log('splited FullPath: ', paramsString)
+        let paramsArray = paramsString.split("&amp;")
+        console.log('string params: ', paramsArray)
+        for (let element of paramsArray) {
+          params[element.split('=')[0]] = element.split('=')[1]
+        }
+      }
       this.$store.dispatch('ui/deleteArea', {areaId: this.portletId})
       if (this.isWatching) {
         this.$store.dispatch('data/setWatcherAttributes', {
           watcherName: this.isWatching,
-          params: {}
+          params: params
         })
       } else {
         if (this.isPosted) {
@@ -83,7 +94,7 @@
           areaId: this.portalPortletId + '-' + this.portletSeqId,
           targetUrl: cst.showPortlet.path,
           wait: this.$wait,
-          params: {portalPortletId: this.portalPortletId, portalPageId: this.portalPageId, portletSeqId: this.portletSeqId}
+          params: {...params, portalPortletId: this.portalPortletId, portalPageId: this.portalPageId, portletSeqId: this.portletSeqId}
         })
       }
     },
