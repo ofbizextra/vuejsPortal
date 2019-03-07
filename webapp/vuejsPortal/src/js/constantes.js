@@ -27,6 +27,7 @@ export default {
     FieldTitle: 'vue-field-title',
     TextField: 'vue-text-field',
     TextAreaField: 'vue-text-area-field',
+    LookupField: 'vue-lookup-field',
     DisplayField: 'vue-display-field',
     DateTimeField: 'vue-date-time-field',
     TextFindField: 'vue-text-find-field',

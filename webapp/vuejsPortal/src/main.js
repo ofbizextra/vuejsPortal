@@ -31,6 +31,7 @@ import VueLabel from './components/VueLabel'
 import VueOption from './components/VueOption'
 import VueDisplayField from './components/VueDisplayField'
 import VueTextField from './components/VueTextField'
+import VueLookupField from './components/VueLookupField'
 import VueTextAreaField from './components/VueTextAreaField'
 import VueDateTimeField from './components/VueDateTimeField'
 import VueError from './components/VueError'
@@ -103,6 +104,7 @@ Vue.component('vue-label', VueLabel)
 Vue.component('vue-option', VueOption)
 Vue.component('vue-display-field', VueDisplayField)
 Vue.component('vue-text-field', VueTextField)
+Vue.component('vue-lookup-field', VueLookupField)
 Vue.component('vue-text-area-field', VueTextAreaField)
 Vue.component('vue-date-time-field', VueDateTimeField)
 Vue.component('vue-field-title', VueFieldTitle)
