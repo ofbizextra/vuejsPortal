@@ -45,6 +45,7 @@ public class FrontJsMenuRenderer implements MenuStringRenderer {
         parameters.put("width", image.getWidth(context));
         parameters.put("height", image.getHeight(context));
         parameters.put("border", image.getBorder(context));
+        parameters.put("title", image.getTitleExdr().expandString(context));
         String src = image.getSrc(context);
         if (UtilValidate.isNotEmpty(src) && request != null && response != null) {
             String urlMode = image.getUrlMode();
