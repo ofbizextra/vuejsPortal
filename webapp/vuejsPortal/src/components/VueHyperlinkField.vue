@@ -5,7 +5,7 @@
       :title="title"
       v-on:click.prevent="submit"
       v-bind="data">
-      <img :src="imgSrc" alt="" v-if="hasImg">
+      <img :src="imgSrc" :title="imgTitle" alt="" v-if="hasImg">
       {{description}}
     </a>
     <a
@@ -13,7 +13,7 @@
       href="data.linkUrl"
       :title="title"
       v-bind="data">
-      <img :src="imgSrc" alt="" v-if="hasImg">
+      <img :src="imgSrc" :title="imgTitle" alt="" v-if="hasImg">
       {{description}}
     </a>
   </div>
@@ -89,6 +89,9 @@
       },
       imgSrc() {
         return this.hasImg ? this.attributes.imgSrc : ''
+      },
+      imgTitle() {
+        return this.attributes.hasOwnProperty('imgTitle') ? this.attributes.imgTitle : ''
       }
     },
     methods: {

@@ -28,7 +28,7 @@
       v-bind:href="`${href}#${href}`"
       v-on:click="redirect"
     >
-      <img :src="imgSrc" alt="" v-if="hasImage"/>
+      <img :src="imgSrc" :title="imgTitle" alt="" v-if="hasImage"/>
       {{text}}
     </a>
     <a
@@ -41,7 +41,7 @@
       :class="style"
       v-on:click.prevent="redirect"
     >
-      <img :src="imgSrc" alt="" v-if="hasImage"/>
+      <img :src="imgSrc" :title="imgTitle" alt="" v-if="hasImage"/>
       {{text}}
     </a>
     <a
@@ -53,7 +53,7 @@
       v-bind:href="`${href}#${href}`"
       v-on:click.prevent="redirect"
     >
-      <img :src="imgSrc" alt="" v-if="hasImage">
+      <img :src="imgSrc" :title="imgTitle" alt="" v-if="hasImage">
     {{' ' + text}}
     </a>
   </div>
@@ -120,6 +120,9 @@
       },
       imgSrc() {
         return this.data.img.hasOwnProperty('src') ? this.data.img.src : ''
+      },
+      imgTitle() {
+        return this.data.img.hasOwnProperty('title') ? this.data.img.title : ''
       },
       params() {
         if (this.uniqueItemName.length > 0) {
