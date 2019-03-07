@@ -2,9 +2,9 @@
   <div id="vue-text-find-field">
     <select class="selectBox" v-if="data.opEquals" v-model="valueOp">
       <option value="equals">egal</option>
-      <option value="beginWith">debute</option>
+      <option value="like">debute</option>
       <option value="contains">contient</option>
-      <option value="isEmpty">est vide</option>
+      <option value="empty">est vide</option>
       <option value="notEqual">Diff.</option>
     </select>
     <input
