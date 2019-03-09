@@ -91,8 +91,6 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
     private final boolean javaScriptEnabled;
     private final VisualTheme visualTheme;
     private boolean renderPagination = true;
-    // private boolean widgetCommentsEnabled = false;
-    private boolean frontJs = false;
 
     public FrontJsFormRenderer(FrontJsOutput output, HttpServletRequest request, HttpServletResponse response) {
         this.request = request;
@@ -433,9 +431,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         cb.put("language", language);
         cb.put("buttons", buttons);
         cb.put("tabindex", tabindex);
-        if (this.frontJs) {
-            cb.put("formName", formName);
-        }
+        cb.put("formName", formName);
         fieldName = name;
         fieldValue = value;
         HashMap<String, Object> data = new HashMap<>();
@@ -980,9 +976,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         }
         cb.put("conditionGroup", conditionGroup);
         cb.put("tabindex", tabindex);
-        if (this.frontJs) {
-            cb.put("formName", formName);
-        }
+        cb.put("formName", formName);
         Map<String, Object> data = new HashMap<>();
         fieldName = name;
         fieldValue = currentValue;
@@ -1195,9 +1189,6 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
     public void renderFormOpen(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException {
         String action = null;
         Map<String, Object> data = null;
-        if (context.get("frontJs") != null && (Boolean)context.get("frontJs")) {
-            this.frontJs = true;
-        }
         String targetType = modelForm.getTargetType();
         String targ = modelForm.getTarget(context, targetType);
         StringBuilder linkUrl = new StringBuilder();
@@ -1593,9 +1584,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         cb.put("ignoreCase", ignoreCase);
         cb.put("tabindex", tabindex);
         cb.put("conditionGroup", conditionGroup);
-        if (this.frontJs) {
-            cb.put("formName", formName);
-        }
+        cb.put("formName", formName);
         Map<String, Object> data = new HashMap<>();
         fieldName = name;
         fieldValue = value;
