@@ -8,7 +8,7 @@ Index: framework/widget/dtd/widget-common.xsd
      </xs:element>
 +    <xs:element name="auto-parameters-portlet">
 +        <xs:annotation>
-+            <xs:documentation>Generate 3 parameters : portalPageId, portalPortletId and portletSeqId update from-field parameters.xxx</xs:documentation>
++            <xs:documentation>Generate 4 parameters : portalPageId, portalPortletId, portletSeqId and currentAreaId update from-field parameters.xxx</xs:documentation>
 +        </xs:annotation>
 +        <xs:complexType>
 +        </xs:complexType>
