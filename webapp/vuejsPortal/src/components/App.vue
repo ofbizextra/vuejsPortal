@@ -34,13 +34,6 @@
     methods: {
       increment() {
         this.$store.dispatch('data/incrementCpt1')
-      },
-      changeEX11() {
-        this.$store.dispatch('data/setEntityRow', {
-          entityName: 'Example',
-          primaryKey: 'EX11',
-          data: {description: 'blablabla'}
-        })
       }
     },
     mounted() {
