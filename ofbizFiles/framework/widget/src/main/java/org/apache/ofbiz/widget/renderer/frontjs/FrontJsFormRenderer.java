@@ -30,7 +30,7 @@ import org.apache.ofbiz.base.util.UtilValidate;
 import org.apache.ofbiz.base.util.string.FlexibleStringExpander;
 import org.apache.ofbiz.entity.Delegator;
 import org.apache.ofbiz.entity.GenericEntityException;
-import org.apache.ofbiz.entity.GenericValue;
+//import org.apache.ofbiz.entity.GenericValue;
 import org.apache.ofbiz.entity.model.ModelEntity;
 import org.apache.ofbiz.entity.model.ModelReader;
 import org.apache.ofbiz.webapp.control.RequestHandler;
@@ -653,13 +653,13 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         cb.put("formName", formName);
         cb.put("mask", formattedMask);
         cb.put("tabindex", tabindex);
-        Map<String, Object> data = new HashMap<>();
         fieldName = name;
         fieldValue = value;
-        Map<String, Object> pointer = output.getRecordPointer(context);
-        pointer.put("field", name);
-        data.put("recordPointer", pointer);
-        cb.put("data", data);
+//        Map<String, Object> data = new HashMap<>();
+//        Map<String, Object> pointer = output.getRecordPointer(context);
+//        pointer.put("field", name);
+//        data.put("recordPointer", pointer);
+//        cb.put("data", data);
         this.addAsterisks(cb, context, modelFormField);
         this.appendTooltip(cb, context, modelFormField);
         this.output.putScreen("DateTimeField", cb, fieldName, fieldValue);
@@ -1237,9 +1237,10 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         cb.put("viewSize", viewSize);
         cb.put("useRowSubmit", useRowSubmit);
         cb.put("entityName", modelForm.getDefaultEntityName());
-        if (!modelForm.getDefaultMapName().equals("") && ((GenericValue) context.get(modelForm.getDefaultMapName())) != null) {
-            cb.put("primaryKey", ((GenericValue) context.get(modelForm.getDefaultMapName())).getPrimaryKey());
-        }
+//        OH 2019.03.12 à prori non utilisé, s'il faut le réactiver, l faut gérer le format des champs date, cf ExampleFeatureppl 
+//        if (!modelForm.getDefaultMapName().equals("") && ((GenericValue) context.get(modelForm.getDefaultMapName())) != null) {
+//            cb.put("primaryKey", ((GenericValue) context.get(modelForm.getDefaultMapName())).getPrimaryKey());
+//        }
 
         // Begin data
         String defaultEntityName = modelForm.getDefaultEntityName();
