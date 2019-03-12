@@ -117,7 +117,7 @@ public class FrontJsOutput {
         screensStack.push(children);
         if (action != null) {
             if (action.equals("PUSH_ENTITY")) {
-                // todo
+                // TODO
                 this.pushEntity((String) context.get("entityName"), UtilGenerics.checkList(context.get("primaryKeys")));
             }
             if (action.equals("NEW_RECORD")) {
@@ -177,15 +177,6 @@ public class FrontJsOutput {
         entitiesStack.pop();
     }
 
-    // todo: delete when not used anymore
-    @Deprecated
-    private void newRecord() {
-        // currentRecord
-        if (!entitiesStack.empty()) {
-            recordsStack.push(new HashMap<>());
-        }
-    }
-
     /**
      * Push a new record on the stack and generate the primary key to use in front. <br/>
      * Should be called by pushScreen only.
@@ -222,14 +213,6 @@ public class FrontJsOutput {
         if (!recordsStack.empty()) {
             recordsStack.peek().put(fieldName, value);
             //recordsStack.peek().put(record.get("key"), record.get("value"));
-        }
-    }
-
-    private void putRecord(List<Map<String, Object>> records) {
-        if (!recordsStack.empty()) {
-            for (Map<String, Object> record : records) {
-                recordsStack.peek().put((String) record.get("key"), record.get("value"));
-            }
         }
     }
 
