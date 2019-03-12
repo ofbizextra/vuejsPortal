@@ -1,0 +1,65 @@
+BUG :
+pour le boutton export, les champs de selection ne semble pas fonctionner
+ex: export avec ex1 dans exampleId renvoi une liste vide
+dans le debugger j'ai vu que exampleId_ic renvoyait "on" et pas "Y"
+
+TASK :
+au niveau du component hyperlink
+il y a toutes les properties dans la balise <a
+updatearea="" updateareas="[object Object],[object Object]" description="Delete" requestconfirmation="true" imgsrc="/images/icons/famfamfam/bin.png" confirmationmessage="Do you confirm the suppression? EX16" class="buttontext"><img data-v-06116e5a="" src="/images/icons/famfamfam/bin.png"
+
+src est nécessaire mais pas imgsrc, par exemple.
+peux-tu supprimer tous les éléments inutiles pour ce composant.
+
+BUG/TASK :
+le link dans ExampleFeatureExternalMenu pointe sur une url du composant example, pas exampleapi. J'ai donc mis url-mode à inter-app. Il faut donc prendre en compte cette info pour générer correction l'url.
+
+TASK :
+Le wait-spinner n'est activé que par le setArea alors que les post peuvent être long.
+Pour l'instant, il faut attendre le résultat des post donc le wait-spinner devrait se déclancher dès le post.
+
+TASK :
+faire fonctionner l'autocomplétion
+l'idée est de faire sans regarder le javascript ofbiz de manière à être le plus VueJs "classique".
+Pour l'autocomplétion, il faut utiliser lookupFieldFormName en tant que target (comme target d'un on-update) avec comme parametres :
+* ajaxLookup=Y
+* searchValueFieldName=le nom du champ
+* term=le contenu tapé
+
+Actuellement ce qui est renvoyé est mis en form par AjaxAutocompleteOptions.ftl, il est dans example donc modifiable
+OH-remarque : Il est possible de le remplacer par une form xml classique. Est ce nécessaire ?
+
+Info :
+searchValueFieldName est utilisé si term est vide, il cherche alors si la valeur est présente dans parameters
+    def searchValueFieldName = parameters.term
+    def fieldValue = null
+    if (searchValueFieldName) {
+        fieldValue = searchValueFieldName
+    } else if (parameters.searchValueFieldName) { // This is to find the description of a lookup value on initialization.
+       fieldValue = parameters.get(parameters.searchValueFieldName)
+       context.description = "true"
+    }
+
+Pour faire des tests du fonctionnement actuel
+https://localhost:8443/example/control/EditExampleFeatureAppls?exampleId=EX02
+
+TASK :
+gérer les champs date renderDateTimeField, il y en a deux dans le edit de la portlet ExampleFeatureAppl
+
+TASK :
+ouverture et affichag du screen du lookup dans 1 pop-up
+Est utile aussi pour des boutons actions (de type link) pour pouvoir faire une (ou plusieurs) action/s dans une fenêtre modal (cf ExampleFeature creation/management à partir de la page ExampleMgmt).
+
+TASK :
+syntaxe et fonctionnement du hyperlink de retour d'un lookup.
+La difficulté c'est que, au niveau du formulaire, le lookup list, ne connait pas le formulaire appelant.
+Donc je pensais passer par un store dédié lookup mais ça voudrait dire que le champ du formulaire se mets à jours selon le store entity ou le store lookup !
+
+TASK :
+pouvoir définir 2 watcher pour une portlet dans une portalPage, le nom des multiple watcher sont séparé par une virgule (ou espace ou ...)
+Le cas d'usage est la page recap avec la portlet ExampleStatus, elle doit se mettre à jour quand l'id change via la portlet selectExample et aussi quand editExample à lieu (car le status  peut être modifié).
+le commit est fait comme si cela fonctionnait
+
+TASK :
+post versus delete pour l'uri deleteExampleFeatureAppl
+faut'il le différentier ? dans le xml et dans le vueJs 
