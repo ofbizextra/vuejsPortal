@@ -1,6 +1,6 @@
 Index: framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelScreenWidget.java
 ===================================================================
---- framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelScreenWidget.java	(révision 1853219)
+--- framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelScreenWidget.java	(révision 1855606)
 +++ framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelScreenWidget.java	(copie de travail)
 @@ -1868,6 +1868,10 @@
      public static final class PortalPage extends ModelScreenWidget {

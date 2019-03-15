@@ -1,6 +1,6 @@
 Index: framework/widget/dtd/widget-screen.xsd
 ===================================================================
---- framework/widget/dtd/widget-screen.xsd	(révision 1853219)
+--- framework/widget/dtd/widget-screen.xsd	(révision 1855606)
 +++ framework/widget/dtd/widget-screen.xsd	(copie de travail)
 @@ -411,6 +411,8 @@
      <xs:element name="include-portal-page" substitutionGroup="AllWidgets">
