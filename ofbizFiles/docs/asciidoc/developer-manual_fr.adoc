@@ -28,6 +28,12 @@ ifdef::backend-pdf[]
 :title-logo-image: image::OFBiz-Logo.svg[Apache OFBiz Logo, pdfwidth=4.25in, align=center]
 :source-highlighter: rouge
 endif::[]
+:toc:
+:sectnums:
+:toclevels: 3
+:jbake-type: page
+:jbake-tags: ofbiz, documentation, fr
+:jbake-status: published
 
 == Introduction
 
