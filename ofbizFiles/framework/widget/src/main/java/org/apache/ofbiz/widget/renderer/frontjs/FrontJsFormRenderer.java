@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -1329,8 +1330,8 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
                 fieldNameList.add(childField.getName());
             }
         }
-        columnStyleList = StringUtil.quoteStrList(columnStyleList);
-        String columnStyleListString = StringUtil.join(columnStyleList, ", ");
+        String columnStyleListString =
+                columnStyleList.stream().map(str -> "'" + str + "'").collect(Collectors.joining(", "));
         Map<String, Object> cb = new HashMap<>();
         cb.put("formName", modelForm.getName());
         cb.put("style", FlexibleStringExpander.expandString(modelForm.getDefaultTableStyle(), context));
