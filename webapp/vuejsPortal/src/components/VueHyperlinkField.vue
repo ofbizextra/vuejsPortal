@@ -3,8 +3,10 @@
     <a
       v-if="haveUpdateAreas"
       :title="title"
+      :description="description"
+      :class="className"
       v-on:click.prevent="submit"
-      v-bind="data">
+    >
       <img :src="imgSrc" :title="imgTitle" alt="" v-if="hasImg">
       {{description}}
     </a>
@@ -12,7 +14,8 @@
       v-else
       href="data.linkUrl"
       :title="title"
-      v-bind="data">
+      :class="className"
+    >
       <img :src="imgSrc" :title="imgTitle" alt="" v-if="hasImg">
       {{description}}
     </a>
@@ -52,7 +55,8 @@
         return this.getData(this.pointer);
       },
       ...mapGetters({
-        getData: 'data/entityRowAttribute'
+        getData: 'data/entityRowAttribute',
+        getForm: 'form/form'
       }),
       target() {
         return this.attributes.hasOwnProperty('target') ? this.attributes.target : null
@@ -92,6 +96,16 @@
       },
       imgTitle() {
         return this.attributes.hasOwnProperty('imgTitle') ? this.attributes.imgTitle : ''
+      },
+      className() {
+        let data = this.attributes
+        if (data.className || (data.alert && data.alert === true)) {
+          return data.className ? data.className : '' + ' ' + data.alert === true ? 'alert' : ''
+        } else if (data.hasOwnProperty('style')) {
+          return data.style
+        } else {
+          return ''
+        }
       }
     },
     methods: {

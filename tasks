@@ -1,16 +1,3 @@
-BUG :
-pour le boutton export, les champs de selection ne semble pas fonctionner
-ex: export avec ex1 dans exampleId renvoi une liste vide
-dans le debugger j'ai vu que exampleId_ic renvoyait "on" et pas "Y"
-
-TASK :
-au niveau du component hyperlink
-il y a toutes les properties dans la balise <a
-updatearea="" updateareas="[object Object],[object Object]" description="Delete" requestconfirmation="true" imgsrc="/images/icons/famfamfam/bin.png" confirmationmessage="Do you confirm the suppression? EX16" class="buttontext"><img data-v-06116e5a="" src="/images/icons/famfamfam/bin.png"
-
-src est nécessaire mais pas imgsrc, par exemple.
-peux-tu supprimer tous les éléments inutiles pour ce composant.
-
 BUG/TASK :
 le link dans ExampleFeatureExternalMenu pointe sur une url du composant example, pas exampleapi. J'ai donc mis url-mode à inter-app. Il faut donc prendre en compte cette info pour générer correction l'url.
 
@@ -62,4 +49,17 @@ le commit est fait comme si cela fonctionnait
 
 TASK :
 post versus delete pour l'uri deleteExampleFeatureAppl
-faut'il le différentier ? dans le xml et dans le vueJs 
+faut'il le différentier ? dans le xml et dans le vueJs
+
+DONE :
+  au niveau du component hyperlink
+  il y a toutes les properties dans la balise <a
+  updatearea="" updateareas="[object Object],[object Object]" description="Delete" requestconfirmation="true" imgsrc="/images/icons/famfamfam/bin.png" confirmationmessage="Do you confirm the suppression? EX16" class="buttontext"><img data-v-06116e5a="" src="/images/icons/famfamfam/bin.png"
+
+  src est nécessaire mais pas imgsrc, par exemple.
+  peux-tu supprimer tous les éléments inutiles pour ce composant.
+
+DONE :
+  pour le boutton export, les champs de selection ne semble pas fonctionner
+  ex: export avec ex1 dans exampleId renvoi une liste vide
+  dans le debugger j'ai vu que exampleId_ic renvoyait "on" et pas "Y"
