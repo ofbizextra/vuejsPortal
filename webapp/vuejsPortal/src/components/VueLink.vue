@@ -26,8 +26,9 @@
       :data-dialog-title="text"
       :class="style"
       v-bind:href="`${href}#${href}`"
-      v-on:click="redirect"
     >
+      <!--v-on:click="redirect"-->
+
       <img :src="imgSrc" :title="imgTitle" alt="" v-if="hasImage"/>
       {{text}}
     </a>
@@ -140,7 +141,29 @@
           // return `javascript:document.${this.uniqueItemName}.submit()` // todo: no yet supported
           return ''
         }
-        return this.linkUrl
+        let href
+        switch (this.urlMode) {
+          case 'intra-app':
+            href = this.constantes.hostUrl + this.linkUrl
+            break
+          case 'inter-app':
+            href = this.constantes.hostUrl + this.linkUrl
+            break
+          case 'plain':
+            href = this.linkUrl()
+            break
+          default:
+            href = ''
+            break
+        }
+        return href
+      },
+      urlMode() {
+        if (this.data.hasOwnProperty('urlMode')) {
+          return this.data.urlMode
+        } else {
+          return 'intra-app'
+        }
       }
     },
     methods: {
