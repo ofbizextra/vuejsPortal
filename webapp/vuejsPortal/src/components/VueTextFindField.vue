@@ -18,7 +18,7 @@
     />
     <span v-bind:class="data.titleStyle ? data.titleStyle : ''">
       <input v-if="data.hideIgnoreCase" type="hidden" :name="data.name + '_ic'" :value="data.ignCase ? 'Y' : ''"/>
-      <input v-else type="checkbox" :name="data.name + '_ic'" v-model="valueIc" checked="data.ignCase"/>
+      <input v-else type="checkbox" :name="data.name + '_ic'" value="Y" v-model="valueIc" checked="data.ignCase"/>
     </span>
   </div>
 </template>
@@ -94,7 +94,7 @@
           this.$store.dispatch('form/setFieldToForm', {
             formId: this.props.attributes.formName,
             key: this.props.attributes.name + '_ic',
-            value: value
+            value: value ? 'Y' : 'N'
           })
         }
       },
