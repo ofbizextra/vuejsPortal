@@ -138,9 +138,6 @@
                     params: updateArea.hasOwnProperty('parameterMap') && Object.keys(updateArea.parameterMap).length > 0 ? updateArea.parameterMap : {}
                   })
                   break
-                case 'redirect':
-                  // todo: redirect
-                  break
                 case 'submit':
                   // submit
                   let form = this.$el.closest('form')
