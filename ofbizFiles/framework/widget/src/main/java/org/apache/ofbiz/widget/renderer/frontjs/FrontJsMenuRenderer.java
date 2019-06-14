@@ -128,6 +128,7 @@ public class FrontJsMenuRenderer implements MenuStringRenderer {
         parameters.put("width", link.getWidth());
         parameters.put("targetWindow", link.getTargetWindow(context));
         parameters.put("targetPortlet", link.getParameterMap(context).get("target-portlet"));
+        parameters.put("urlMode", link.getUrlMode());
         StringBuilder uniqueItemName = new StringBuilder(menuItem.getModelMenu().getName());
         uniqueItemName.append("_").append(menuItem.getName()).append("_LF_").append(UtilMisc.addToBigDecimalInMap(context, "menuUniqueItemIndex", BigDecimal.ONE));
         if (menuItem.getModelMenu().getExtraIndex(context) != null) {
