@@ -1,6 +1,9 @@
 BUG/TASK :
 le link dans ExampleFeatureExternalMenu pointe sur une url du composant example, pas exampleapi. J'ai donc mis url-mode à inter-app. Il faut donc prendre en compte cette info pour générer correction l'url.
 
+TASK (Doc):
+Supprimer tous les ajouts liés à event-type="redirect" car il n'y a pas use-case pertinemt pour l'instant
+
 TASK :
 Le wait-spinner n'est activé que par le setArea alors que les post peuvent être long.
 Pour l'instant, il faut attendre le résultat des post donc le wait-spinner devrait se déclancher dès le post.
