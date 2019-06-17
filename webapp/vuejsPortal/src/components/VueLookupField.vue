@@ -7,6 +7,7 @@
       </vue-autosuggest>
     </div>
     <a href="#" :style="{display: 'inline-block'}"></a>
+    <span v-if="tooltip" :id="'0_lookupId_' + id" class="tooltip">{{tooltip}}</span>
   </span>
 </template>
 
@@ -20,7 +21,9 @@
     data() {
       return {
         term: '',
-        wordList: []
+        wordList: [],
+        displayFields: [],
+        returnField: ''
       }
     },
     computed: {
@@ -87,6 +90,22 @@
           autocompleterViewSize: "50",
           displayFieldsSet: []
         }
+      },
+      tooltip() {
+        let selectedItem = this.wordList.find(item => item[this.name] === this.term)
+        if (selectedItem === undefined) {
+          return false
+        }
+        let str = ''
+        for (let i = 0; i < this.displayFields.length; i++) {
+          if (this.displayFields[i] !== this.returnField) {
+            str += selectedItem[this.displayFields[i]]
+            if (i < this.displayFields.length - 2) {
+              str += ' - '
+            }
+          }
+        }
+        return str
       }
     },
     methods: {
@@ -100,6 +119,7 @@
           uri: constantes.apiUrl + '/' + this.fieldFormName,
           params: this.params
         }).then(result => {
+          this.returnField = result.body.viewScreen[0].attributes.returnField
           this.displayFields = result.body.viewScreen[0].attributes.displayFieldsSet
           this.wordList = result.body.viewScreen[0].attributes.autocompleteOptions
           return result.body
