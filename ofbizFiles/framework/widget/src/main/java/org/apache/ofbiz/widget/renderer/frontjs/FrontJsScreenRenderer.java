@@ -31,13 +31,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.apache.ofbiz.base.util.Debug;
-import org.apache.ofbiz.base.util.GeneralException;
-import org.apache.ofbiz.base.util.UtilGenerics;
-import org.apache.ofbiz.base.util.UtilHttp;
-import org.apache.ofbiz.base.util.UtilMisc;
-import org.apache.ofbiz.base.util.UtilProperties;
-import org.apache.ofbiz.base.util.UtilValidate;
+import org.apache.ofbiz.base.util.*;
 import org.apache.ofbiz.entity.GenericValue;
 import org.apache.ofbiz.webapp.control.RequestHandler;
 import org.apache.ofbiz.webapp.taglib.ContentUrlTag;
@@ -133,7 +127,8 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
         if ("lookup".equals(label.getId(context))) {
             attributes.put("description", context.get("description"));
             attributes.put("returnField", context.get("returnField"));
-//            attributes.put("displayFieldsSet", context.get("displayFieldsSet"));
+            String displayFieldsStr = context.get("displayFieldsSet").toString();
+            attributes.put("displayFieldsSet", StringUtil.toList(displayFieldsStr));
             attributes.put("autocompleteOptions", context.get("autocompleteOptions"));
             this.output.putScreen("LookupResult", attributes);
             return;

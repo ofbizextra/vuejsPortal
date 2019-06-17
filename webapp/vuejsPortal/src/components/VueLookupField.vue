@@ -2,8 +2,8 @@
   <span class="field-lookup">
     <div class="autosuggest-container" :style="{display: 'inline-block'}">
       <vue-autosuggest v-model="term" :name="data.name" :id="data.id" :size="data.size" @input="updateWordList"
-                     :suggestions="[{data: wordList}]" :input-props="{id: data.id, name: data.name, size: data.size}"
-                     @selected="onSelected">
+                       :suggestions="[{data: [...wordList]}]" :input-props="{id: data.id, name: data.name, size: data.size}"
+                       @selected="onSelected" :get-suggestion-value="getSuggestionValue" :render-suggestion="renderSuggestion">
       </vue-autosuggest>
     </div>
     <a href="#" :style="{display: 'inline-block'}"></a>
@@ -34,12 +34,12 @@
       },
       storeForm() {
         return {
-          formId: this.props.attributes.formName,
-          key: this.props.attributes.name,
-          value: this.props.attributes.value ? this.props.attributes.value : ''
+          formId: this.formName,
+          key: this.name,
+          value: this.value
         }
       },
-      value: {
+      valueStored: {
         get() {
           return this.getDataFromForm(this.storeForm)
         },
@@ -61,6 +61,9 @@
       name() {
         return this.data.hasOwnProperty('name') ? this.data.name : ''
       },
+      value() {
+        return this.data.hasOwnProperty('value') ? this.data.value : ''
+      },
       formName() {
         return this.data.hasOwnProperty('formName') ? this.data.formName : ''
       },
@@ -81,7 +84,8 @@
           ajaxLookup: 'Y',//this.ajaxLookup,
           searchValueFieldName: this.name, //this.name
           term: this.term,
-          autocompleterViewSize: "50"
+          autocompleterViewSize: "50",
+          displayFieldsSet: []
         }
       }
     },
@@ -96,19 +100,33 @@
           uri: constantes.apiUrl + '/' + this.fieldFormName,
           params: this.params
         }).then(result => {
-          this.wordList = result.body.viewScreen[0].attributes.autocompleteOptions.map(item => item.exampleId)
+          this.displayFields = result.body.viewScreen[0].attributes.displayFieldsSet
+          this.wordList = result.body.viewScreen[0].attributes.autocompleteOptions
           return result.body
         }, error => {
           return error.body
         })
       },
       onSelected(item) {
-        this.term = item.item
+        this.term = item.item[this.name]
         this.$store.dispatch('form/setFieldToForm', {
           formId: this.props.attributes.formName,
           key: this.props.attributes.name,
           value: this.term
         })
+      },
+      getSuggestionValue(suggestion) {
+        return suggestion.item[this.name]
+      },
+      renderSuggestion(suggestion) {
+        let str = ''
+        for (let i = 0; i < this.displayFields.length; i++) {
+          str += suggestion.item[this.displayFields[i]]
+          if (i < this.displayFields.length - 1) {
+            str += ' - '
+          }
+        }
+        return str
       }
     },
     watch: {
