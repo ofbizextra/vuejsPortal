@@ -54,15 +54,45 @@ TASK :
 post versus delete pour l'uri deleteExampleFeatureAppl
 faut'il le différentier ? dans le xml et dans le vueJs
 
-DONE :
-  au niveau du component hyperlink
-  il y a toutes les properties dans la balise <a
-  updatearea="" updateareas="[object Object],[object Object]" description="Delete" requestconfirmation="true" imgsrc="/images/icons/famfamfam/bin.png" confirmationmessage="Do you confirm the suppression? EX16" class="buttontext"><img data-v-06116e5a="" src="/images/icons/famfamfam/bin.png"
+TASK :
+Au niveau du lookup autocomplétion, il faudrait le faire via une URI renvoyant du JSON.
+Pour le faire:
+  1) transformer le groovy FindAutocompleteOptions.groovy en event et en java (prendre pour exemple HumanResEvents.java#getChildHRCategoryTree)
+    <request-map uri="getHRChild">
+        <security auth="false" https="true"/>
+        <event type="java" path="org.apache.ofbiz.humanres.HumanResEvents" invoke="getChildHRCategoryTree"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+   2) faire un groovy appelable en event qui mettrais les paramétres du lookup(entityName, searchFields, returnField, displayFields) dans la request
+      en se basant sur PrepareCreateShipMeth.groovy en tant qu'exemple
+          <!-- entries needed for lookup ajax auto completer -->
+          <!-- required: entity to search in -->
+          <set field="entityName" value="Example"/>
 
-  src est nécessaire mais pas imgsrc, par exemple.
-  peux-tu supprimer tous les éléments inutiles pour ce composant.
+          <!-- required: fields to search a match -->
+          <set field="searchFields" value="[exampleId, exampleName, description]"/>
 
-DONE :
-  pour le boutton export, les champs de selection ne semble pas fonctionner
-  ex: export avec ex1 dans exampleId renvoi une liste vide
-  dans le debugger j'ai vu que exampleId_ic renvoyait "on" et pas "Y"
+          <!-- optional: field to return after user selection, default is first element of searchFields -->
+          <!-- return field might be hidden based on widget.autocompleter.displayReturnField property in widget.properties -->
+          <!--set field="returnField" value="exampleFeatureId"/-->
+
+          <!-- optional: fields to display, default are searchFields -->
+          <set field="displayFields" value="[exampleName]"/>
+   3) créer la request autocompleteExampleId, quelquechose du genre:
+    <request-map uri="autocompleteExample">
+        <security auth="true" https="true"/>
+        <event type="groovy" path="component://exemple/groovyScripts/example/autocompleteExampleId.groovy"/>
+        <response name="success" type="request" value="returnAutocompletJson"/>
+    </request-map>
+    <request-map uri="returnAutocompletJson">
+        <security auth="true" https="true"/>
+        <event type="java" path="org.apache.ofbiz.common.CommonEventss" invoke="findAutocompleteOptions"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    4) OPTION Tant qu'à être complet inclure dans le java la préparation complete des données donc faire ce qui était fait dans le ftl
+       AjaxAutocompleteOptions.ftl
+   
+
+
