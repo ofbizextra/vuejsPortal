@@ -35,6 +35,8 @@ que par une société.
     et en se mettant sur la branch vuejsPortal
 . Il faut ensuite modifier quelques fichiers dans ofbiz-framework. +
   Pour se faire, executer la commande suivante en étant positionné dans le repertoire 'plugins/VuejsPortal' : +
+  `tools/applyOfbizFilesPatchs.sh` +
+  puis ajouter quelques fichiers +
   `rsync -a --exclude-from=./ofbizFiles/rsyncExcludes ./ofbizFiles/ ../../` +
 . Pour le build de l'applicatif vuejs il faut avoir nodejs installé sur son environement
 .. Pour installer node.js dans un environnement debian, executer le commandes suivantes : +
@@ -63,7 +65,7 @@ Une *webapp supplémentaire exampleapi* a été créé pour centraliser les uri 
 c'est paramétré dans le fichier constantes.js. +
 Le composant vuejsPortal n'est pas spécifique à un composant, il necessite juste une uri de base pour ses requêtes.
 Cette uri est paramètré dans le fichier constantes.js pour l'instant, mais dans le futur le paramétrage sera plus souple
-afin de pouvoir utiliser vuejsPortal avec plusieurs composants, y compris si cela doit apparaitre comme plusieur "webapp"
+afin de pouvoir utiliser vuejsPortal avec plusieurs composants, y compris si cela doit apparaitre comme plusieurs "webapp"
 dans le menu utilisateur.
 
 Le composant portal (  https://localhost:8443/exampleapi/control/login ) utilise le méchanisme *ofbiz standard de login via cookies*, 
@@ -76,18 +78,43 @@ niveau screen, form, menu (et pour les renderer html qui correspondent globaleme
 pour avoir la liste, il faut faire une recherche sur les appels `ouput.*Screen(` . 
 
 === Balise XML utilisé
-Pendant le POC, aucune nouvelle property ou balise XML n'est ajouté mais à l'opposé certaine balise ou property
+Pendant le POC, trés peu de nouvelle property ou balise XML n'est ajouté mais certaine balise ou property
 sont détournés pour des usages VueJs exclusif.
 
 * screen
   ** dans la balise `<container`, `auto-update-target` est utilisé pour le nom du watcher associé à ce container 
+  ** dans la balise `<container`, `id` est utilisé comme identifiant de ce container permettant de lui injecter (par la suite) 
+      du contenu via un "setArea"  
 * form
-  ** dans la balise `<on-event-update-area` 
-    *** `area-target` +
-         = 'a' implique que l'ensemble des champs du formulaire sont transmit au watcher, et donc pris en compte
-         lors du déclanchement du rafraichissement afférant. +
-         = 'p' indique que seul les paramètre du on-event-update-area sont pris en compte.
-    *** `area-id` correspond au nom du watcher qui doit être mis à jour
+  ** dans la balise `<on-event-update-area` (il peux y en avoir plusieurs, toutes seront executer dans l'ordre de présence dans le xml
+    *** `event-type` +
+      pour les 3 valeurs suivante, event-type permet de déterminer l'action a exécuter, lors du submit de la form 
+      (clic sur le button "submit")
+      **** `setArea` Mettre à jour l'area ayant l'identifiant `areaId` avec le retour (un get) de l'uri `area-target` et avec les
+                  éléments `parameter` inclus en tant que paramètre.
+      **** `setWatcher` Mettre à jour le watcher `areaId` avec le/s `parameter` inclus en tant que paramètre/s.
+      **** `submit` il utilise la property `area-target` en tant que uri pour le post avec l'ensemble des champs de la form
+                  en tant que paramètre. <A-VERIFIER>Si area-target est vide alors il utilise la `target` de la form.
+                  Le retour de la requête est attendu avant d'enchainer sur le `<on-event-update-area` suivant si le retour est
+                  success, sinon le/s message/s d'erreur/s sont affiché/s.</A-VERIFIER>
+  ** dans la balise `<on-field-event-update-area` (il peux y en avoir plusieurs, toutes seront executer dans l'ordre de présence dans le xml
+    *** `event-type` permet de déterminer l'action a exécuter, lors du submit de la form (clic sur le button "submit")
+      **** `post` il utilisera la property `area-target` en tant que uri pour faire un post avec les éléments `parameter` inclus
+                  en tant que paramètre. <A-VERIFIER>Si area-target est vide alors il utilise la `target` de la form.
+                  Le retour de la requête est attendu avant d'enchainer sur le `<on-event-update-area` suivant si le retour est
+                  success, sinon le/s message/s d'erreur/s sont affiché/s.</A-VERIFIER>
+      **** `setArea` Mettre à jour l'area ayant l'identifiant `areaId` avec le retour (un get) de l'uri `area-target` et avec les
+                  éléments `parameter` inclus en tant que paramètre.
+      **** `setWatcher` Mettre à jour le watcher `areaId` avec le/s `parameter` inclus en tant que paramètre/s.
+      **** `submit` il utilise la property `area-target` en tant que uri pour faire un submit avec l'ensemble des champs de la form
+                  en tant que paramètre. <A-VERIFIER>Si area-target est vide alors il utilise la `target` de la form.
+                  </A-VERIFIER>
+  ** dans la balise `...-event-update-area`
+    *** `auto-parameters-portlet` permet de générer l'ensemble des paramètres nécessaire aux portlet, c'est à dire
+       **** portalPageId
+       **** portalPortletId
+       **** portletSeqId
+       **** currentAreaId
   ** dans la balise `<hyperlink`
     *** `link-type="anchor"` est utilisé pour signifier que c'est un appel interne FrontJs
     *** `target-window` est utilisé pour désigner le nom du watcher qui doit être mis à jours
