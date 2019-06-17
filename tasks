@@ -8,17 +8,6 @@ TASK :
 Le wait-spinner n'est activé que par le setArea alors que les post peuvent être long.
 Pour l'instant, il faut attendre le résultat des post donc le wait-spinner devrait se déclancher dès le post.
 
-TASK :
-faire fonctionner l'autocomplétion
-l'idée est de faire sans regarder le javascript ofbiz de manière à être le plus VueJs "classique".
-Pour l'autocomplétion, il faut utiliser lookupFieldFormName en tant que target (comme target d'un on-update) avec comme parametres :
-* ajaxLookup=Y
-* searchValueFieldName=le nom du champ
-* term=le contenu tapé
-
-Actuellement ce qui est renvoyé est mis en form par AjaxAutocompleteOptions.ftl, il est dans example donc modifiable
-OH-remarque : Il est possible de le remplacer par une form xml classique. Est ce nécessaire ?
-
 Info :
 searchValueFieldName est utilisé si term est vide, il cherche alors si la valeur est présente dans parameters
     def searchValueFieldName = parameters.term
@@ -95,4 +84,13 @@ Pour le faire:
        AjaxAutocompleteOptions.ftl
    
 
-
+DONE :
+faire fonctionner l'autocomplétion
+l'idée est de faire sans regarder le javascript ofbiz de manière à être le plus VueJs "classique".
+Pour l'autocomplétion, il faut utiliser lookupFieldFormName en tant que target (comme target d'un on-update) avec comme parametres :
+* ajaxLookup=Y
+* searchValueFieldName=le nom du champ
+* term=le contenu tapé
+* autocompleterViewSize=la taille de la liste en string
+Actuellement ce qui est renvoyé est mis en form par AjaxAutocompleteOptions.ftl, il est dans example donc modifiable
+OH-remarque : Il est possible de le remplacer par une form xml classique. Est ce nécessaire ?

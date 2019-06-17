@@ -20,8 +20,7 @@
     data() {
       return {
         term: '',
-        wordList: [],
-        selected: {}
+        wordList: []
       }
     },
     computed: {
@@ -80,7 +79,7 @@
       params() {
         return {
           ajaxLookup: 'Y',//this.ajaxLookup,
-          searchValueFieldName: 'exampleId', //this.name
+          searchValueFieldName: this.name, //this.name
           term: this.term,
           autocompleterViewSize: "50"
         }
@@ -88,6 +87,11 @@
     },
     methods: {
       updateWordList() {
+        this.$store.dispatch('form/setFieldToForm', {
+          formId: this.props.attributes.formName,
+          key: this.props.attributes.name,
+          value: this.term
+        })
         this.$store.dispatch('backOfficeApi/doPost', {
           uri: constantes.apiUrl + '/' + this.fieldFormName,
           params: this.params
@@ -99,7 +103,12 @@
         })
       },
       onSelected(item) {
-        this.selected = item.item
+        this.term = item.item
+        this.$store.dispatch('form/setFieldToForm', {
+          formId: this.props.attributes.formName,
+          key: this.props.attributes.name,
+          value: this.term
+        })
       }
     },
     watch: {
