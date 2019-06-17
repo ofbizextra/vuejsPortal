@@ -88,7 +88,7 @@
           searchValueFieldName: this.name, //this.name
           term: this.term,
           autocompleterViewSize: "50",
-          displayFieldsSet: []
+          displayFields: []
         }
       },
       tooltip() {
@@ -98,12 +98,10 @@
         }
         let str = ''
         for (let i = 0; i < this.displayFields.length; i++) {
-          if (this.displayFields[i] !== this.returnField) {
             str += selectedItem[this.displayFields[i]]
-            if (i < this.displayFields.length - 2) {
+            if (i < this.displayFields.length - 1) {
               str += ' - '
             }
-          }
         }
         return str
       }
@@ -120,7 +118,7 @@
           params: this.params
         }).then(result => {
           this.returnField = result.body.viewScreen[0].attributes.returnField
-          this.displayFields = result.body.viewScreen[0].attributes.displayFieldsSet
+          this.displayFields = result.body.viewScreen[0].attributes.displayFields
           this.wordList = result.body.viewScreen[0].attributes.autocompleteOptions
           return result.body
         }, error => {
@@ -136,16 +134,15 @@
         })
       },
       getSuggestionValue(suggestion) {
-        return suggestion.item[this.name]
+        return suggestion.item[this.returnField]
       },
       renderSuggestion(suggestion) {
         let str = ''
         for (let i = 0; i < this.displayFields.length; i++) {
           str += suggestion.item[this.displayFields[i]]
-          if (i < this.displayFields.length - 1) {
             str += ' - '
           }
-        }
+        str += `[${suggestion.item[this.returnField]}]`
         return str
       }
     },
