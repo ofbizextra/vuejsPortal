@@ -133,9 +133,10 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
         if ("lookup".equals(label.getId(context))) {
             attributes.put("description", context.get("description"));
             attributes.put("returnField", context.get("returnField"));
-            attributes.put("displayFieldsSet", context.get("displayFieldsSet"));
+//            attributes.put("displayFieldsSet", context.get("displayFieldsSet"));
             attributes.put("autocompleteOptions", context.get("autocompleteOptions"));
             this.output.putScreen("LookupResult", attributes);
+            return;
         }
         attributes.put("text", label.getText(context));
         attributes.put("id", label.getId(context));
