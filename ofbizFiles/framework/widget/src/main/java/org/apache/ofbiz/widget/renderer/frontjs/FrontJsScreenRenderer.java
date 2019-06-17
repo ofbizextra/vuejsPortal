@@ -129,6 +129,14 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
 
     public void renderLabel(Appendable writer, Map<String, Object> context, ModelScreenWidget.Label label) throws IOException {
         Map<String, Object> attributes = new HashMap<>();
+        // Temporary Hack to manage lookup return value
+        if ("lookup".equals(label.getId(context))) {
+            attributes.put("description", context.get("description"));
+            attributes.put("returnField", context.get("returnField"));
+            attributes.put("displayFieldsSet", context.get("displayFieldsSet"));
+            attributes.put("autocompleteOptions", context.get("autocompleteOptions"));
+            this.output.putScreen("LookupResult", attributes);
+        }
         attributes.put("text", label.getText(context));
         attributes.put("id", label.getId(context));
         attributes.put("style", label.getStyle(context));
