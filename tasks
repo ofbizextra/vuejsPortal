@@ -4,23 +4,12 @@ le link dans ExampleFeatureExternalMenu pointe sur une url du composant example,
 TASK (Doc):
 Supprimer tous les ajouts liés à event-type="redirect" car il n'y a pas use-case pertinemt pour l'instant
 
+TASK (Doc):
+Supprimer tous les ajouts liés à l'usage de ftl pour la gestion des lookup.
+
 TASK :
 Le wait-spinner n'est activé que par le setArea alors que les post peuvent être long.
 Pour l'instant, il faut attendre le résultat des post donc le wait-spinner devrait se déclancher dès le post.
-
-Info :
-searchValueFieldName est utilisé si term est vide, il cherche alors si la valeur est présente dans parameters
-    def searchValueFieldName = parameters.term
-    def fieldValue = null
-    if (searchValueFieldName) {
-        fieldValue = searchValueFieldName
-    } else if (parameters.searchValueFieldName) { // This is to find the description of a lookup value on initialization.
-       fieldValue = parameters.get(parameters.searchValueFieldName)
-       context.description = "true"
-    }
-
-Pour faire des tests du fonctionnement actuel
-https://localhost:8443/example/control/EditExampleFeatureAppls?exampleId=EX02
 
 TASK :
 gérer les champs date renderDateTimeField, il y en a deux dans le edit de la portlet ExampleFeatureAppl
@@ -40,11 +29,27 @@ Le cas d'usage est la page recap avec la portlet ExampleStatus, elle doit se met
 le commit est fait comme si cela fonctionnait
 
 TASK :
+introduire une balise xml dans les screens à l'intérieur de <plateform-specific> qui serait <vuejs avec un fonctionnement similaire à ce qui ce fait pour html
+   syntaxe actuel (exemple): <platform-specific><html><html-template location="component://common-theme/template/includes/SetDependentDropdownValuesJs.ftl"/></html></platform-specific>
+   3 étapes :
+     1) Re-comprendre la logic des renderer et plus particulièrement le FrontJs renderer. Partir du FrontJsScreenViewHandler.java et suivre les appels vers les class Model (lecture du xml)
+        puis l'enchainement des appelles aux renderers et enfin la gestion des output ( screen et entity)
+     2) ajout XSD, model, et donc renderer, en fonction des besoins définitions des attribues dans le XML
+        et bien sur implémentation vueJs
+     3) petite généralisation, soit chargement à la demande, soit multiple paramètres liés à ce composant spécific, via paramètre screen (dans le xml) ou via paramètre de portlet, (dans le context).
+        généralisation possible aussi dans les form xml pour remplacer de l'appel à javascript, (ex de use case: le contenu d'un drop-down dépend d'un autre drop-down)
+  cas d'usage :
+    1) simple les ftl de la gestion des coordonnées, utilisable pour un acteur, une zone de stockage, une commande
+       idem pour la gestion des moyens de paiement
+    2) Représentation en Arbre, les tree en XML, exemple PartyTrees.xml <tree name="OrgTree" 
+
+
+TASK :
 post versus delete pour l'uri deleteExampleFeatureAppl
 faut'il le différentier ? dans le xml et dans le vueJs
 
 TASK :
-Au niveau du lookup autocomplétion, il faudrait le faire via une URI renvoyant du JSON.
+Pour être plus propre, au niveau du lookup autocomplétion, il faudrait le faire via une URI renvoyant du JSON (et non via un screen).
 Pour le faire:
   1) transformer le groovy FindAutocompleteOptions.groovy en event et en java (prendre pour exemple HumanResEvents.java#getChildHRCategoryTree)
     <request-map uri="getHRChild">
@@ -82,15 +87,14 @@ Pour le faire:
     </request-map>
     4) OPTION Tant qu'à être complet inclure dans le java la préparation complete des données donc faire ce qui était fait dans le ftl
        AjaxAutocompleteOptions.ftl
-   
+    5) supprimer tout les fichiers inutile dans example lié au Hack, par exemple les decorator
 
-DONE :
-faire fonctionner l'autocomplétion
-l'idée est de faire sans regarder le javascript ofbiz de manière à être le plus VueJs "classique".
-Pour l'autocomplétion, il faut utiliser lookupFieldFormName en tant que target (comme target d'un on-update) avec comme parametres :
-* ajaxLookup=Y
-* searchValueFieldName=le nom du champ
-* term=le contenu tapé
-* autocompleterViewSize=la taille de la liste en string
-Actuellement ce qui est renvoyé est mis en form par AjaxAutocompleteOptions.ftl, il est dans example donc modifiable
-OH-remarque : Il est possible de le remplacer par une form xml classique. Est ce nécessaire ?
+TASK :
+Activer l'attribue <description-field-name> de la balise lookup, cet attribue sert à mettre à jours un champ "description" présent dans la form avec la description.
+Pour jouer / tester, j'ai utilisé  https://localhost:8443/catalog/control/EditProductAssoc?productId=GZ-1000
+et donc le fichier LookupScreens.xml dans catalog screen name="LookupProduct" et ajout de     <set field="displayFields" value="[productTypeId, internalName]"/>
+puis dans ProductForms.xml au niveau de EditProductAssoc lgn 1164 il est possible de tester les différents attribues du tag lookup, par exemple l'ajout de 
+show-description="true" description-field-name="reason"
+
+
+
