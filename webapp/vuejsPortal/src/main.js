@@ -14,6 +14,8 @@ import BlockUI from 'vue-blockui'
 import VueFlashMessage from 'vue-flash-message'
 import VModal from 'vue-js-modal'
 import VueAutosuggest from 'vue-autosuggest'
+import VueFlatPickr from 'vue-flatpickr-component';
+import 'flatpickr/dist/flatpickr.css';
 
 import App from './components/App'
 import Search from './components/Search'
@@ -88,6 +90,7 @@ Vue.use(VueFlashMessage, {
 require('vue-flash-message/dist/vue-flash-message.min.css')
 Vue.use(VModal)
 Vue.use(VueAutosuggest)
+Vue.use(VueFlatPickr)
 
 Vue.component('login', Login)
 Vue.component('portal', Portal)
