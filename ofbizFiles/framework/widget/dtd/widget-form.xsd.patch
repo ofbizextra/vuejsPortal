@@ -1,8 +1,8 @@
 Index: framework/widget/dtd/widget-form.xsd
 ===================================================================
---- framework/widget/dtd/widget-form.xsd	(révision 1855606)
+--- framework/widget/dtd/widget-form.xsd	(révision 1861341)
 +++ framework/widget/dtd/widget-form.xsd	(copie de travail)
-@@ -582,13 +582,21 @@
+@@ -587,13 +587,21 @@
                  <xs:element minOccurs="0" ref="auto-parameters-service"/>
                  <xs:element minOccurs="0" ref="auto-parameters-entity"/>
                  <xs:element minOccurs="0" maxOccurs="unbounded" ref="parameter" />
@@ -24,7 +24,7 @@ Index: framework/widget/dtd/widget-form.xsd
                      </xs:restriction>
                  </xs:simpleType>
              </xs:attribute>
-@@ -1488,11 +1496,24 @@
+@@ -1493,11 +1501,25 @@
              <xs:documentation>Area to be updated when a field event occurs.</xs:documentation>
          </xs:annotation>
          <xs:complexType>
@@ -46,6 +46,7 @@ Index: framework/widget/dtd/widget-form.xsd
 +                        <xs:enumeration value="setArea" />
 +                        <xs:enumeration value="setWatcher" />
 +                        <xs:enumeration value="submit" />
++                        <xs:enumeration value="setFieldInForm" />
                      </xs:restriction>
                  </xs:simpleType>
              </xs:attribute>
