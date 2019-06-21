@@ -22,26 +22,54 @@
 </template>
 
 <script>
+  import {mapGetters} from 'vuex'
   import constantes from '../js/constantes'
 
   export default {
     name: "VueContainer",
-    props: ['props', 'updateStore'],
+    props: ['props', 'updateStore', 'autoUpdateParams'],
     data() {
       return {
         constantes: constantes
       }
     },
     computed: {
+      ...mapGetters({
+        getWatcher: 'data/watcher'
+      }),
       area() {
         return this.$store.getters['ui/area'](this.areaId)
       },
       areaId() {
         return this.props.attributes.hasOwnProperty('id') ? this.props.attributes.id : null
+      },
+      updateParams() {
+        return this.autoUpdateParams ? this.autoUpdateParams : {}
+      },
+      targetUrl() {
+        return this.updateParams.hasOwnProperty('targetUrl') ? this.updateParams.targetUrl : ''
+      },
+      params() {
+        return this.updateParams.hasOwnProperty('params') ? {...this.updateParams.params, ...this.watcher} : this.watcher
+      },
+      setArea() {
+        return {
+          areaId: this.areaId,
+          targetUrl: this.targetUrl,
+          wait: this.$wait,
+          params: this.params
+        }
+      },
+      watcher() {
+        return this.$store.getters['data/watcher'](this.areaId)
       }
     },
     methods: {},
     created() {
+      if (this.updateParams) {
+        this.$store.dispatch('data/setWatcher', {watcherName: this.id, params: {}})
+      }
+      if (this.areaId.includes('_modalContent')) {return}
       this.$store.dispatch('ui/deleteArea', {areaId: this.props.attributes.id})
     },
     beforeDestroy() {
@@ -49,7 +77,13 @@
     },
     watch: {
       props: function (val) {
+        if (this.areaId.includes('_modalContent')) {return}
         this.$store.dispatch('ui/deleteArea', {areaId: val.attributes.id})
+      },
+      watcher: function () {
+        if (this.updateParams) {
+          this.$store.dispatch('ui/setArea', this.setArea)
+        }
       }
     }
   }

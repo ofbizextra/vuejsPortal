@@ -11,10 +11,10 @@ const state = {
 
 const mutations = {
   ADD_FORM: (state, id) => {
-    state.forms[id] = {}
+    Vue.set(state.forms, id, {})
   },
   SET_FIELD_TO_FORM: (state, data) => {
-    state.forms[data.formId][data.key] = data.value
+    Vue.set(state.forms, data.formId, {...state.forms[data.formId], [data.key]: data.value})
   }
 }
 

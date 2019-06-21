@@ -1939,15 +1939,17 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         this.appendTooltip(cb, context, modelFormField);
         this.makeHyperlinkString(cb, lookupField.getSubHyperlink(), context);
 
-        // OH Temporary code, send only attributes which are understand and manage in vueJs
-        Map<String, Object> attributes = new HashMap<>();
-        attributes.put("formName", formName);
-        attributes.put("name", name);
-        attributes.put("value", value);
-        attributes.put("id", modelFormField.getCurrentContainerId(context));
-        attributes.put("fieldFormName", lookupFieldFormName);
-        attributes.put("size", lookupField.getSize());
-        this.output.putScreen("LookupField", attributes, name, value);
+        this.output.putScreen("LookupField", cb, name, value);
+
+//        // OH Temporary code, send only attributes which are understand and manage in vueJs
+//        Map<String, Object> attributes = new HashMap<>();
+//        attributes.put("formName", formName);
+//        attributes.put("name", name);
+//        attributes.put("value", value);
+//        attributes.put("id", modelFormField.getCurrentContainerId(context));
+//        attributes.put("fieldFormName", lookupFieldFormName);
+//        attributes.put("size", lookupField.getSize());
+//        this.output.putScreen("LookupField", attributes, name, value);
     }
 
     public void renderNextPrev(Appendable writer, Map<String, Object> context, ModelForm modelForm) {

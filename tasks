@@ -12,9 +12,6 @@ Le wait-spinner n'est activé que par le setArea alors que les post peuvent êtr
 Pour l'instant, il faut attendre le résultat des post donc le wait-spinner devrait se déclancher dès le post.
 
 TASK :
-gérer les champs date renderDateTimeField, il y en a deux dans le edit de la portlet ExampleFeatureAppl
-
-TASK :
 ouverture et affichag du screen du lookup dans 1 pop-up
 Est utile aussi pour des boutons actions (de type link) pour pouvoir faire une (ou plusieurs) action/s dans une fenêtre modal (cf ExampleFeature creation/management à partir de la page ExampleMgmt).
 

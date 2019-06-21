@@ -144,6 +144,14 @@
                   form.action = updateArea.areaTarget
                   form.submit()
                   break
+                case 'setFieldInForm':
+                  // do setFieldInForm
+                  this.$store.dispatch('form/setFieldToForm', {
+                    formId: updateArea.areaId,
+                    key: updateArea.areaTarget,
+                    value: this.description
+                  })
+                  break
                 default:
                   // do nothing
                   break

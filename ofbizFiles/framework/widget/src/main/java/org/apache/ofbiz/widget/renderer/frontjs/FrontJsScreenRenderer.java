@@ -127,15 +127,16 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
         if ("lookup".equals(label.getId(context))) {
             attributes.put("description", context.get("description"));
             attributes.put("returnField", context.get("returnField"));
-            attributes.put("displayFields", StringUtil.toList((String) context.get("displayFields")));
+            String displayFieldsStr = context.get("displayFields").toString();
+            attributes.put("displayFields", StringUtil.toList(displayFieldsStr));
             attributes.put("autocompleteOptions", context.get("autocompleteOptions"));
             this.output.putScreen("LookupResult", attributes);
-        } else { // normal label management
-            attributes.put("text", label.getText(context));
-            attributes.put("id", label.getId(context));
-            attributes.put("style", label.getStyle(context));
-            this.output.putScreen("Label", attributes);
+            return;
         }
+        attributes.put("text", label.getText(context));
+        attributes.put("id", label.getId(context));
+        attributes.put("style", label.getStyle(context));
+        this.output.putScreen("Label", attributes);
     }
 
     public void renderHorizontalSeparator(Appendable writer, Map<String, Object> context, ModelScreenWidget.HorizontalSeparator separator) throws IOException {
