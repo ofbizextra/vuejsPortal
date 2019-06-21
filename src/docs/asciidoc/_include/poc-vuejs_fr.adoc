@@ -92,7 +92,8 @@ sont détournés pour des usages VueJs exclusif.
       (clic sur le button "submit")
       **** `setArea` Mettre à jour l'area ayant l'identifiant `areaId` avec le retour (un get) de l'uri `area-target` et avec les
                   éléments `parameter` inclus en tant que paramètre.
-      **** `setWatcher` Mettre à jour le watcher `areaId` avec le/s `parameter` inclus en tant que paramètre/s.
+      **** `setWatcher` Mettre à jour le watcher `areaId` avec le/s `parameter` inclus en tant que paramètre/s. Si aucun paramètre
+      n'est renseigné, le watcher est mis à jour avec l'integralité des champs contenus dans la form.
       **** `submit` il utilise la property `area-target` en tant que uri pour le post avec l'ensemble des champs de la form
                   en tant que paramètre. <A-VERIFIER>Si area-target est vide alors il utilise la `target` de la form.
                   Le retour de la requête est attendu avant d'enchainer sur le `<on-event-update-area` suivant si le retour est
@@ -109,6 +110,8 @@ sont détournés pour des usages VueJs exclusif.
       **** `submit` il utilise la property `area-target` en tant que uri pour faire un submit avec l'ensemble des champs de la form
                   en tant que paramètre. <A-VERIFIER>Si area-target est vide alors il utilise la `target` de la form.
                   </A-VERIFIER>
+      **** `setFieldInForm` il utilise la property `area-target` en tant que field au sein de la form `area-id` afin d'y attribuer
+      la valeur du champs qui comporte l'instruction.
   ** dans la balise `...-event-update-area`
     *** `auto-parameters-portlet` permet de générer l'ensemble des paramètres nécessaire aux portlet, c'est à dire
        **** portalPageId
