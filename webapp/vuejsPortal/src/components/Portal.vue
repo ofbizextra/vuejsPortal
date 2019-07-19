@@ -34,6 +34,13 @@
     },
     mounted() {
       console.log('----- Portal mounted -----', this.$root.$route.fullPath, this.$route.params)
+      let fullPath = window.location.href
+      console.log('FULLPATH ===> ' + fullPath)
+      let pathName = window.location.pathname
+      console.log('PATHNAME ===> ' + pathName)
+      let api = pathName.toString().substring(0, pathName.toString().indexOf('/', 1)) + '/control'
+      console.log('API ===> ' + api)
+      this.$store.dispatch('backOfficeApi/setApi', api)
       if (this.$root.$route.fullPath.includes('?')) {
         console.log('Root FullPath: ', this.$root.$route.fullPath)
         let paramsString = unescape(this.$root.$route.fullPath.split("?")[1])

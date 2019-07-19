@@ -118,7 +118,7 @@
                 case 'post':
                   // do post
                   promiseList.push(this.$store.dispatch('backOfficeApi/doPost', {
-                    uri: `${constantes.apiUrl}/${updateArea.areaTarget}`,
+                    uri: `${getters['backOfficeApi/apiUrl']}/${updateArea.areaTarget}`,
                     params: updateArea.hasOwnProperty('parameterMap') ? updateArea.parameterMap : {}
                   }))
                   break

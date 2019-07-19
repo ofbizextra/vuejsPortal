@@ -89,7 +89,7 @@
         if (this.isPosted) {
           return
         }
-        console.log(cst.apiUrl + cst.showPortlet.path + ' : => ' + this.portalPortletId + '-' + this.portletSeqId)
+        console.log(this.$store.getters['backOfficeApi/apiUrl'] + cst.showPortlet.path + ' : => ' + this.portalPortletId + '-' + this.portletSeqId)
         this.$store.dispatch('ui/setArea', {
           areaId: this.portalPortletId + '-' + this.portletSeqId,
           targetUrl: cst.showPortlet.path,
@@ -104,7 +104,7 @@
     watch: {
       getParams: function (val) {
         console.log('portlet params updated: ', val)
-        console.log(cst.apiUrl + cst.showPortlet.path + ' : => ' + this.portalPortletId + '-' + this.portletSeqId)
+        console.log(this.$store.getters['backOfficeApi/apiUrl'] + cst.showPortlet.path + ' : => ' + this.portalPortletId + '-' + this.portletSeqId)
         this.$store.dispatch('ui/setArea', {
           areaId: this.portletId,
           targetUrl: cst.showPortlet.path,

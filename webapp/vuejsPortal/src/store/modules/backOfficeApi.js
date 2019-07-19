@@ -6,7 +6,8 @@ import queryString from 'query-string'
 Vue.use(Vuex)
 
 const state = {
-  messageList: []
+  messageList: [],
+  currentApi: ''
 }
 
 const mutations = {
@@ -15,11 +16,16 @@ const mutations = {
   },
   DELETE_MESSAGE(state, {message}) {
     state.messageList.splice(state.messageList.indexOf(message), 1)
+  },
+  SET_CURRENT_API(state, api) {
+    Vue.set(state, 'currentApi', api)
   }
 }
 
 const getters = {
-  messageList: state => state.messageList
+  messageList: state => state.messageList,
+  currentApi: state => state.currentApi,
+  apiUrl: state => constantes.hostUrl + state.currentApi
 }
 
 const actions = {
@@ -71,6 +77,9 @@ const actions = {
   },
   deleteMessage({commit}, {message}) {
     commit('DELETE_MESSAGE', {message})
+  },
+  setApi({commit}, api) {
+    commit('SET_CURRENT_API', api)
   }
 }
 

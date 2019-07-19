@@ -1,12 +1,12 @@
 <template>
   <thead id="vue-header" v-bind="data">
-  <div
-    v-for="(component, key) in props.children"
-    :key="key"
-    v-bind:is="constantes.components[component.name]"
-    :props="component"
-    :updateStore="updateStore">
-  </div>
+    <div
+      v-for="(component, key) in props.children"
+      :key="key"
+      v-bind:is="constantes.components[component.name]"
+      :props="component"
+      :updateStore="updateStore">
+    </div>
   </thead>
 </template>
 

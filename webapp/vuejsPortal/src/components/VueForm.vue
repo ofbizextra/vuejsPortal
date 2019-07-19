@@ -1,5 +1,5 @@
 <template>
-  <form v-bind:id="'vue-form_' + data.name" v-bind="data">
+  <form v-bind:id="'vue-form_' + data.name" v-bind="data" :autocomplete="autocomplete">
     <div
       v-for="(component, key) in props.children"
       :key="key"
@@ -37,6 +37,9 @@
           key: this.props.attributes.id,
           value: this.props.attributes.value ? this.props.attributes.value : ''
         }
+      },
+      autocomplete() {
+        return this.data.hasOwnProperty('autocomplete') && this.data.autocomplete !== '' ? 'on' : 'off'
       }
     },
     watch: {

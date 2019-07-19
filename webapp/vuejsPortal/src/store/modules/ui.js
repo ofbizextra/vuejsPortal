@@ -118,12 +118,12 @@ const actions = {
     commit('SET_PORTAL_PAGE', {portalPageId, portalPage})
     commit('SET_CURRENT_PORTAL_PAGE', portalPageId)
   },
-  setPortlet({commit}, {portalPortletId, portletSeqId, params = {}}) {
+  setPortlet({commit, getters}, {portalPortletId, portletSeqId, params = {}}) {
     // this.$wait.start(portalPortletId + '-' + portletSeqId)
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         // this._vm.$wait.start(portalPortletId + '-' + portletSeqId)
-        Vue.http.post(constantes.apiUrl + constantes.showPortlet.path,
+        Vue.http.post(getters['backOfficeApi/apiUrl'] + constantes.showPortlet.path,
           queryString.stringify({
             portalPortletId: portalPortletId,
             ...params
@@ -146,10 +146,10 @@ const actions = {
   setPortletTarget({commit}, {portletId, target}) {
     commit('SET_PORTLET_TARGET', {portletId, target})
   },
-  setContainer({commit}, {containerName, containerTarget, params = {}}) {
+  setContainer({commit, getters}, {containerName, containerTarget, params = {}}) {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
-        Vue.http.post(constantes.apiUrl + constantes.showPortlet.path,
+        Vue.http.post(getters['backOfficeApi/apiUrl'] + constantes.showPortlet.path,
           queryString.stringify({
             portalPortletId: containerTarget,
             ...params

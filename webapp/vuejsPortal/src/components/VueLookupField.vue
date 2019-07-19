@@ -123,7 +123,7 @@
           value: this.valueStored
         })
         this.$store.dispatch('backOfficeApi/doPost', {
-          uri: constantes.apiUrl + '/' + this.fieldFormName,
+          uri: this.$store.getters['backOfficeApi/apiUrl'] + '/' + this.fieldFormName,
           params: this.params
         }).then(result => {
           this.returnField = result.body.viewScreen[0].attributes.returnField
