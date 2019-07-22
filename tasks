@@ -1,29 +1,30 @@
-BUG/TASK :
-le link dans ExampleFeatureExternalMenu pointe sur une url du composant example, pas exampleapi. J'ai donc mis url-mode à inter-app. Il faut donc prendre en compte cette info pour générer correction l'url.
-
-TASK (Doc):
+TASK (Doc): OH
 Supprimer tous les ajouts liés à event-type="redirect" car il n'y a pas use-case pertinemt pour l'instant
+fait à vérifier !
 
-TASK (Doc):
+TASK (Doc): OH
 Supprimer tous les ajouts liés à l'usage de ftl pour la gestion des lookup.
+fait à vérifier !
+
+TASK INFRA : ofbiz13-07-selenium
+la locale ne doit pas être correctement positionné dans le VPS, le test selenium jenkins-ofbiz13-07-wksp1_run-293-ExampleMgmt-findAndListExamples.avi montre qu'il y a un soucis lors de la saisie de la date.
+
 
 TASK :
-Le wait-spinner n'est activé que par le setArea alors que les post peuvent être long.
-Pour l'instant, il faut attendre le résultat des post donc le wait-spinner devrait se déclancher dès le post.
+gestion de la fenêtre modal,
+Celle du lookup n'est pas forcément à la bonne dimention et il manque le bouton de fermeture de la fenêtre.
+
 
 TASK :
-ouverture et affichag du screen du lookup dans 1 pop-up
-Est utile aussi pour des boutons actions (de type link) pour pouvoir faire une (ou plusieurs) action/s dans une fenêtre modal (cf ExampleFeature creation/management à partir de la page ExampleMgmt).
+Faire fonctionner la page portail ExampleRecap:
+Cas de test :
+1) partir de la page ExampleMgmt et utiliser le bouton pour aller à la page recap pour un example. => Il y a 4 portlet qui s'affiche en plus de la portlet search
+2) selection un autre exemple en utilisant la portlet search, => trois des portlets se mettent à jour mais pas la portlet ExampleStatus
+3) en utilisant la portlet ShowExemple, modifier l'exemple, par exemple son statut => la portlet statut ne se met pas à jour
+4) à partir de la page ExampleMgmt et utiliser le bouton pour aller à la page recap pour un example. => Il y a 4 portlet qui s'affiche en plus de la portlet search
+5) en utilisant la portlet ShowExemple, modifier l'exemple, par exemple son statut => la portlet statut se met à jour (ainsi que les 2 autres, ExampleItem et ExampleFeature alors qu'il n'y avait pas besoin de le mettre à jours
+6) en utilisant la portlet ShowExemple, modifier l'exemple, par exemple son statut => seul la portlet ShowExemple se met à jours
 
-TASK :
-syntaxe et fonctionnement du hyperlink de retour d'un lookup.
-La difficulté c'est que, au niveau du formulaire, le lookup list, ne connait pas le formulaire appelant.
-Donc je pensais passer par un store dédié lookup mais ça voudrait dire que le champ du formulaire se mets à jours selon le store entity ou le store lookup !
-
-TASK :
-pouvoir définir 2 watcher pour une portlet dans une portalPage, le nom des multiple watcher sont séparé par une virgule (ou espace ou ...)
-Le cas d'usage est la page recap avec la portlet ExampleStatus, elle doit se mettre à jour quand l'id change via la portlet selectExample et aussi quand editExample à lieu (car le status  peut être modifié).
-le commit est fait comme si cela fonctionnait
 
 TASK :
 introduire une balise xml dans les screens à l'intérieur de <plateform-specific> qui serait <vuejs avec un fonctionnement similaire à ce qui ce fait pour html
@@ -40,10 +41,6 @@ introduire une balise xml dans les screens à l'intérieur de <plateform-specifi
        idem pour la gestion des moyens de paiement
     2) Représentation en Arbre, les tree en XML, exemple PartyTrees.xml <tree name="OrgTree" 
 
-
-TASK :
-post versus delete pour l'uri deleteExampleFeatureAppl
-faut'il le différentier ? dans le xml et dans le vueJs
 
 TASK :
 Pour être plus propre, au niveau du lookup autocomplétion, il faudrait le faire via une URI renvoyant du JSON (et non via un screen).
@@ -86,6 +83,14 @@ Pour le faire:
        AjaxAutocompleteOptions.ftl
     5) supprimer tout les fichiers inutile dans example lié au Hack, par exemple les decorator
 
+
+TASK :
+post versus delete pour l'uri deleteExampleFeatureAppl
+faut'il le différentier ? dans le xml et dans le vueJs
+
+
+
+
 TASK :
 Activer l'attribue <description-field-name> de la balise lookup, cet attribue sert à mettre à jours un champ "description" présent dans la form avec la description.
 Pour jouer / tester, j'ai utilisé  https://localhost:8443/catalog/control/EditProductAssoc?productId=GZ-1000
@@ -93,5 +98,8 @@ et donc le fichier LookupScreens.xml dans catalog screen name="LookupProduct" et
 puis dans ProductForms.xml au niveau de EditProductAssoc lgn 1164 il est possible de tester les différents attribues du tag lookup, par exemple l'ajout de 
 show-description="true" description-field-name="reason"
 
-
+TASK :
+Le wait-spinner n'est activé que par le setArea alors que les post peuvent être long.
+Pour l'instant, il faut attendre le résultat des post donc le wait-spinner devrait se déclancher dès le post.
+OH: compléter le use-case pour revoir sa priorité.
 
