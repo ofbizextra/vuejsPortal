@@ -58,7 +58,7 @@
       setArea(updateArea) {
         return this.$store.dispatch('ui/setArea', {
           areaId: updateArea.areaId,
-          targetUrl: `/exampleapi/control/${updateArea.areaTarget}`,
+          targetUrl: `${this.$store.getters['backOfficeApi/currentApi']}/${updateArea.areaTarget}`,
           wait: this.$wait,
           params: updateArea.hasOwnProperty('parameterMap') ? updateArea.parameterMap : {}
         })

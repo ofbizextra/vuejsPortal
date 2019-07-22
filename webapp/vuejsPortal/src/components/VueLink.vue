@@ -172,7 +172,7 @@
         if (this.data.hasOwnProperty('targetWindow') && this.data.hasOwnProperty('target')) {
           this.$store.dispatch('ui/setArea', {
             areaId: this.data.targetWindow,
-            targetUrl: `/exampleapi/control/${this.data.target}`,
+            targetUrl: `${this.$store.getters['backOfficeApi/currentApi']}/${this.data.target}`,
             wait: this.$wait,
             params: this.parameterMap
           })

@@ -7,7 +7,7 @@ export default {
   ping: {path: '/ping', tokenRequired: false},
   ajaxCheckLogin: {path: '/ajaxCheckLogin', tokenRequired: false},
   portalPageDetail: {path: '/portalPageDetail', tokenRequired: false},
-  showPortlet: {path: '/exampleapi/control/showPortletFj', tokenRequired: false},
+  showPortlet: {path: '/showPortletFj', tokenRequired: false},
 
   components: {
     Form: 'vue-form',
@@ -23,7 +23,7 @@ export default {
     FieldRow: 'vue-field-row',
     FieldRowTitleCell: 'vue-field-row-title-cell',
     FieldRowWidgetCell: 'vue-field-row-widget-cell',
-    FieldGroup: '?', // todo
+    FieldGroup: 'vue-field-group', // todo
     FieldTitle: 'vue-field-title',
     TextField: 'vue-text-field',
     TextAreaField: 'vue-text-area-field',

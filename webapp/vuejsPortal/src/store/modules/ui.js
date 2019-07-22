@@ -123,7 +123,7 @@ const actions = {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         // this._vm.$wait.start(portalPortletId + '-' + portletSeqId)
-        Vue.http.post(getters['backOfficeApi/apiUrl'] + constantes.showPortlet.path,
+        Vue.http.post(getters['backOfficeApi/apiUrl'] + getters['backOfficeApi/currentApi'] + constantes.showPortlet.path,
           queryString.stringify({
             portalPortletId: portalPortletId,
             ...params
@@ -149,7 +149,7 @@ const actions = {
   setContainer({commit, getters}, {containerName, containerTarget, params = {}}) {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
-        Vue.http.post(getters['backOfficeApi/apiUrl'] + constantes.showPortlet.path,
+        Vue.http.post(getters['backOfficeApi/apiUrl'] + getters['backOfficeApi/currentApi'] + constantes.showPortlet.path,
           queryString.stringify({
             portalPortletId: containerTarget,
             ...params

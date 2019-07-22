@@ -157,7 +157,7 @@
       showModal() {
         this.$store.dispatch('ui/setArea', {
           areaId: this.id + '_modalContent',
-          targetUrl: '/exampleapi/control/' + this.fieldFormName,
+          targetUrl: `${this.$store.getters['backOfficeApi/currentApi']}/${this.fieldFormName}`,
           wait: this.$wait,
           params: {presentation: 'layer'}
         }).then(
