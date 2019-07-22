@@ -407,7 +407,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         if (textareaField.isReadOnly()) {
             readonly = "readonly";
         }
-        Map<String, Object> userLogin = UtilGenerics.checkMap(context.get("userLogin"));
+        Map<String, Object> userLogin = UtilGenerics.cast(context.get("userLogin"));
         String language = "en";
         if (userLogin != null) {
             language = UtilValidate.isEmpty((String) userLogin.get("lastLocale")) ? "en" : (String) userLogin.get("lastLocale");
@@ -484,7 +484,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
             }
             timeValues.append("]");
         }
-        Map<String, String> uiLabelMap = UtilGenerics.checkMap(context.get("uiLabelMap"));
+        Map<String, String> uiLabelMap = UtilGenerics.cast(context.get("uiLabelMap"));
         if (uiLabelMap == null) {
             Debug.logWarning("Could not find uiLabelMap in context", module);
         }
@@ -1297,8 +1297,9 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
     public void renderFormatListWrapperOpen(Appendable writer, Map<String, Object> context, ModelForm modelForm) {
         String action = null;
         Map<String, Object> data = null;
-        Map<String, Object> inputFields = UtilGenerics.checkMap(context.get("requestParameters"));
-        Map<String, Object> queryStringMap = UtilGenerics.toMap(context.get("queryStringMap"));
+        Map<String, Object> inputFields = UtilGenerics.cast(context.get("requestParameters"));
+        Object obj = context.get("queryStringMap");
+        Map<String, Object> queryStringMap = (obj instanceof Map) ? UtilGenerics.cast(obj) : null;
         if (UtilValidate.isNotEmpty(queryStringMap)) {
             inputFields.putAll(queryStringMap);
         }
@@ -1679,7 +1680,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         String opUpThruDay = UtilProperties.getMessage("conditionalUiLabels", "up_thru_day", locale);
         String opIsEmpty = UtilProperties.getMessage("conditionalUiLabels", "is_empty", locale);
         String conditionGroup = modelFormField.getConditionGroup();
-        Map<String, String> uiLabelMap = UtilGenerics.checkMap(context.get("uiLabelMap"));
+        Map<String, String> uiLabelMap = UtilGenerics.cast(context.get("uiLabelMap"));
         if (uiLabelMap == null) {
             Debug.logWarning("Could not find uiLabelMap in context", module);
         }
@@ -1737,7 +1738,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
             value2 = "";
         }
         if (context.containsKey("parameters")) {
-            Map<String, Object> parameters = UtilGenerics.checkMap(context.get("parameters"));
+            Map<String, Object> parameters = UtilGenerics.cast(context.get("parameters"));
             if (parameters.containsKey(name + "_fld0_value")) {
                 value = (String) parameters.get(name + "_fld0_value");
             }
@@ -1875,7 +1876,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         }
         Boolean isInitiallyCollapsed = lookupField.getInitiallyCollapsed();
         String clearText = "";
-        Map<String, Object> uiLabelMap = UtilGenerics.checkMap(context.get("uiLabelMap"));
+        Map<String, Object> uiLabelMap = UtilGenerics.cast(context.get("uiLabelMap"));
         if (uiLabelMap != null) {
             clearText = (String) uiLabelMap.get("CommonClear");
         } else {
@@ -1979,7 +1980,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         int highIndex = Paginator.getHighIndex(context);
         int actualPageSize = Paginator.getActualPageSize(context);
         // needed for the "Page" and "rows" labels
-        Map<String, String> uiLabelMap = UtilGenerics.checkMap(context.get("uiLabelMap"));
+        Map<String, String> uiLabelMap = UtilGenerics.cast(context.get("uiLabelMap"));
         String pageLabel = "";
         String commonDisplaying = "";
         if (uiLabelMap == null) {
@@ -2297,7 +2298,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         String collapseToolTip = "";
         if (UtilValidate.isNotEmpty(style) || UtilValidate.isNotEmpty(id) || UtilValidate.isNotEmpty(title)) {
             if (fieldGroup.collapsible()) {
-                Map<String, Object> uiLabelMap = UtilGenerics.checkMap(context.get("uiLabelMap"));
+                Map<String, Object> uiLabelMap = UtilGenerics.cast(context.get("uiLabelMap"));
                 if (uiLabelMap != null) {
                     expandToolTip = (String) uiLabelMap.get("CommonExpand");
                     collapseToolTip = (String) uiLabelMap.get("CommonCollapse");
@@ -2485,8 +2486,8 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
             sb.append(this.rh.makeLink(this.request, this.response,urlPath)).append(",");
             String queryString = UtilHttp.getQueryStringFromTarget(ajaxTarget).replace("?", "");
             Map<String, Object> parameters = UtilHttp.getQueryStringOnlyParameterMap(queryString);
-            Map<String, Object> ctx = UtilGenerics.checkMap(context);
-            Map<String, Object> updateParams = UtilGenerics.checkMap(updateArea.getParameterMap(ctx));
+            Map<String, Object> ctx = UtilGenerics.cast(context);
+            Map<String, Object> updateParams = UtilGenerics.cast(updateArea.getParameterMap(ctx));
             parameters.putAll(updateParams);
             UtilHttp.canonicalizeParameterMap(parameters);
             parameters.putAll(extraParams);
@@ -2522,7 +2523,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
             } else {
                 ajaxUrl += ",";
             }
-            Map<String, Object> ctx = UtilGenerics.checkMap(context);
+            Map<String, Object> ctx = UtilGenerics.cast(context);
             Map<String, String> parameters = updateArea.getParameterMap(ctx);
             String targetUrl = updateArea.getAreaTarget(context);
             String ajaxParams;

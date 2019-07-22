@@ -571,8 +571,8 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
 //            showMore = true;
             if (collapsible) {
                 this.getNextElementId();
-                Map<String, Object> uiLabelMap = UtilGenerics.checkMap(context.get("uiLabelMap"));
-                Map<String, Object> paramMap = UtilGenerics.checkMap(context.get("requestParameters"));
+                Map<String, Object> uiLabelMap = UtilGenerics.cast(context.get("uiLabelMap"));
+                Map<String, Object> paramMap = UtilGenerics.cast(context.get("requestParameters"));
                 Map<String, Object> requestParameters = new HashMap<>(paramMap);
                 if (uiLabelMap != null) {
                     expandToolTip = (String) uiLabelMap.get("CommonExpand");
@@ -700,7 +700,7 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
         ServletContext ctx = (ServletContext) request.getAttribute("servletContext");
         RequestHandler rh = (RequestHandler) ctx.getAttribute("_REQUEST_HANDLER_");
 
-        Map<String, Object> inputFields = UtilGenerics.toMap(context.get("requestParameters"));
+        Map<String, Object> inputFields = UtilGenerics.cast(context.get("requestParameters"));
         // strip out any multi form fields if the form is of type multi
         if ("multi".equals(modelForm.getType())) {
             inputFields = UtilHttp.removeMultiFormParameters(inputFields);

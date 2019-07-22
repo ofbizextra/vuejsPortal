@@ -118,7 +118,7 @@ public class FrontJsOutput {
         if (action != null) {
             if (action.equals("PUSH_ENTITY")) {
                 // TODO
-                this.pushEntity((String) context.get("entityName"), UtilGenerics.checkList(context.get("primaryKeys")));
+                this.pushEntity((String) context.get("entityName"), UtilGenerics.cast(context.get("primaryKeys")));
             }
             if (action.equals("NEW_RECORD")) {
                 this.newRecord(context);
@@ -168,7 +168,7 @@ public class FrontJsOutput {
             entity.put("entityName", entityName);
             viewEntities.put(entityName, entity);
         } else {
-            entity = UtilGenerics.checkMap(viewEntities.get(entityName));
+            entity = UtilGenerics.cast(viewEntities.get(entityName));
         }
         entitiesStack.push(entity);
     }
@@ -188,7 +188,7 @@ public class FrontJsOutput {
             // currentRecord
             Map<String, Object> record = new HashMap<>();
             // build stPointerId
-            List<String> pkList = UtilGenerics.checkList(this.entitiesStack.peek().get("primaryKeys"));
+            List<String> pkList = UtilGenerics.cast(this.entitiesStack.peek().get("primaryKeys"));
             int i = 0;
             String pkey = "";
             do {
@@ -198,7 +198,7 @@ public class FrontJsOutput {
             record.put("stId", pkey);
             recordsStack.push(record);
 
-            List<Map<String, Object>> entitiesStackPeekList = UtilGenerics.checkList(entitiesStack.peek().get("list"));
+            List<Map<String, Object>> entitiesStackPeekList = UtilGenerics.cast(entitiesStack.peek().get("list"));
             entitiesStackPeekList.add(record);
         }
     }
@@ -229,7 +229,7 @@ public class FrontJsOutput {
             Map<String, Object> data = new HashMap<>();
             String entityName = (String) this.entitiesStack.peek().get("entityName");
             data.put("entity", entityName);
-            List<String> primaryKeys = UtilGenerics.checkList(this.entitiesStack.peek().get("primaryKeys"));
+            List<String> primaryKeys = UtilGenerics.cast(this.entitiesStack.peek().get("primaryKeys"));
             data.put("id", context.get(primaryKeys.get(0)));
             return data;
         } else {

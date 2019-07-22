@@ -17,7 +17,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.StringWriter;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,7 +30,8 @@ public class FrontJsTreeRenderer implements TreeStringRenderer {
     }
     public void renderNodeBegin(Appendable writer, Map<String, Object> context, ModelTree.ModelNode node, int depth) throws IOException {
         String currentNodeTrailPiped;
-        List<String> currentNodeTrail = UtilGenerics.toList(context.get("currentNodeTrail"));
+        Object obj = context.get("currentNodeTrail");
+        List<String> currentNodeTrail = (obj instanceof List) ? UtilGenerics.cast(obj) : null;
 
         String style = "";
         if (node.isRootNode()) {
@@ -47,7 +47,7 @@ public class FrontJsTreeRenderer implements TreeStringRenderer {
         String entityId;
         String entryName = node.getEntryName();
         if (UtilValidate.isNotEmpty(entryName)) {
-            Map<String, String> map = UtilGenerics.checkMap(context.get(entryName));
+            Map<String, String> map = UtilGenerics.cast(context.get(entryName));
             entityId = map.get(pkName);
         } else {
             entityId = (String) context.get(pkName);
@@ -59,7 +59,8 @@ public class FrontJsTreeRenderer implements TreeStringRenderer {
             // FIXME: Using a widget model in this way is an ugly hack.
             ModelTree.ModelNode.Link expandCollapseLink = null;
             String targetEntityId = null;
-            List<String> targetNodeTrail = UtilGenerics.toList(context.get("targetNodeTrail"));
+            Object obj1 = context.get("targetNodeTrail");
+            List<String> targetNodeTrail = (obj1 instanceof List) ? UtilGenerics.cast(obj1) : null;
             if (depth < targetNodeTrail.size()) {
                 targetEntityId = targetNodeTrail.get(depth);
             }

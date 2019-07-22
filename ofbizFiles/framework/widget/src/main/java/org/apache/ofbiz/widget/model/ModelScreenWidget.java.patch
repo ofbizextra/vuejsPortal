@@ -1,8 +1,8 @@
 Index: framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelScreenWidget.java
 ===================================================================
---- framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelScreenWidget.java	(révision 1861341)
+--- framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelScreenWidget.java	(révision 1863538)
 +++ framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelScreenWidget.java	(copie de travail)
-@@ -1870,6 +1870,10 @@
+@@ -1871,6 +1871,10 @@
      public static final class PortalPage extends ModelScreenWidget {
          public static final String TAG_NAME = "include-portal-page";
          private final FlexibleStringExpander idExdr;
@@ -13,7 +13,7 @@ Index: framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelScreenW
          private final FlexibleStringExpander confModeExdr;
          private final Boolean usePrivate;
  
-@@ -1878,6 +1882,15 @@
+@@ -1879,6 +1883,15 @@
              this.idExdr = FlexibleStringExpander.getInstance(portalPageElement.getAttribute("id"));
              this.confModeExdr = FlexibleStringExpander.getInstance(portalPageElement.getAttribute("conf-mode"));
              this.usePrivate = !("false".equals(portalPageElement.getAttribute("use-private")));
@@ -29,7 +29,7 @@ Index: framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelScreenW
          }
  
          private GenericValue getPortalPageValue(Map<String, Object> context) {
-@@ -1915,6 +1928,7 @@
+@@ -1916,6 +1929,7 @@
                  List<GenericValue> portletAttributes = null;
                  GenericValue portalPage = getPortalPageValue(context);
                  String actualPortalPageId = portalPage.getString("portalPageId");
@@ -37,7 +37,7 @@ Index: framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelScreenW
                  portalPageColumns = EntityQuery.use(delegator)
                                                 .from("PortalPageColumn")
                                                 .where("portalPageId", actualPortalPageId)
-@@ -2009,6 +2023,71 @@
+@@ -2010,6 +2024,71 @@
                  }
                  // Renders the portalPage footer
                  screenStringRenderer.renderPortalPageEnd(writer, context, this);
