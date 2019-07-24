@@ -1,0 +1,30 @@
+Index: framework/widget/src/main/java/org/apache/ofbiz/widget/model/XmlWidgetVisitor.java
+===================================================================
+--- framework/widget/src/main/java/org/apache/ofbiz/widget/model/XmlWidgetVisitor.java	(révision 1863538)
++++ framework/widget/src/main/java/org/apache/ofbiz/widget/model/XmlWidgetVisitor.java	(copie de travail)
+@@ -44,6 +44,7 @@
+ import org.apache.ofbiz.widget.model.ModelScreenWidget.Screenlet;
+ import org.apache.ofbiz.widget.model.ModelScreenWidget.Section;
+ import org.apache.ofbiz.widget.model.ModelScreenWidget.Tree;
++import org.apache.ofbiz.widget.model.ModelScreenWidget.VueJs;
+ import org.apache.ofbiz.widget.model.ModelTree.ModelNode;
+ import org.apache.ofbiz.widget.model.ModelTree.ModelNode.ModelSubNode;
+ 
+@@ -229,6 +230,17 @@
+     }
+ 
+     @Override
++    public void visit(VueJs vuejs) throws Exception {
++        // TODO OHE to be review
++        writer.append("<vuejs");
++        visitModelWidget(vuejs);
++        visitAttribute("component-name", vuejs.getComponentName(null));
++        visitAttribute("param-map", "paramMap");
++        writer.append(">");
++        writer.append("</label>");
++    }
++
++    @Override
+     public void visit(Menu menu) throws Exception {
+         writer.append("<include-menu");
+         visitModelWidget(menu);
