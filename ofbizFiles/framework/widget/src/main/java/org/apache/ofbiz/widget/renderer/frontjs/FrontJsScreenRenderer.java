@@ -137,6 +137,10 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
             this.output.putScreen("Label", attributes);
         }
     }
+    public void renderVueJs(Appendable writer, Map<String, Object> context, ModelScreenWidget.VueJs vuejs) throws IOException {
+        Map<String, Object> attributes = new HashMap<>();
+        this.output.putScreen(vuejs.getComponentName(context), attributes);
+    }
 
     public void renderHorizontalSeparator(Appendable writer, Map<String, Object> context, ModelScreenWidget.HorizontalSeparator separator) throws IOException {
         Map<String, Object> parameters = new HashMap<>();
