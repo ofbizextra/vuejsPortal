@@ -10,17 +10,16 @@ Index: framework/widget/src/main/java/org/apache/ofbiz/widget/model/XmlWidgetVis
  import org.apache.ofbiz.widget.model.ModelTree.ModelNode;
  import org.apache.ofbiz.widget.model.ModelTree.ModelNode.ModelSubNode;
  
-@@ -229,6 +230,17 @@
+@@ -229,6 +230,16 @@
      }
  
      @Override
 +    public void visit(VueJs vuejs) throws Exception {
-+        // TODO OHE to be review
 +        writer.append("<vuejs");
 +        visitModelWidget(vuejs);
-+        visitAttribute("component-name", vuejs.getComponentName(null));
-+        visitAttribute("param-map", "paramMap");
++        visitAttribute("component-name", vuejs.getComponentNameExdr());
 +        writer.append(">");
++        visitParameters(vuejs.getParameterList());
 +        writer.append("</label>");
 +    }
 +

@@ -139,6 +139,12 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
     }
     public void renderVueJs(Appendable writer, Map<String, Object> context, ModelScreenWidget.VueJs vuejs) throws IOException {
         Map<String, Object> attributes = new HashMap<>();
+        Map<String, String> parameterMap = vuejs.getParameterMap(context);
+        if (!parameterMap.isEmpty()) {
+            for (String key : parameterMap.keySet()) {
+                attributes.put(key, parameterMap.get(key));
+            }
+        }
         this.output.putScreen(vuejs.getComponentName(context), attributes);
     }
 
