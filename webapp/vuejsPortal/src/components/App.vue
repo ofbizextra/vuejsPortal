@@ -24,7 +24,6 @@
     name: 'app',
     data() {
       return {
-        image: logo
       }
     },
     computed: {
