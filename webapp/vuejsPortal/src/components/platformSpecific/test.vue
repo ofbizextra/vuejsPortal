@@ -8,6 +8,8 @@
                        v-if="countContactsByType('POSTAL_ADDRESS') > 0"></PostalAddress>
         <TelecomNumber :props="contactsByType('TELECOM_NUMBER')" @update="updateDataSet"
                        v-if="countContactsByType('TELECOM_NUMBER') > 0"></TelecomNumber>
+        <EmailAddress :props="contactsByType('EMAIL_ADDRESS')" @update="updateDataSet"
+                           v-if="countContactsByType('EMAIL_ADDRESS') > 0"></EmailAddress>
       </v-flex>
       <v-divider class="ma-4"></v-divider>
       <v-flex text-left xs12 md12 lg12>
@@ -23,7 +25,7 @@
               Electronic Address
             </v-expansion-panel-header>
             <v-expansion-panel-content>
-              <v-form ref="createEmail" :lazy-validator="lazy" v-model="forms.electronicAddress.valid"
+              <v-form ref="createElectronicAddress" :lazy-validator="lazy" v-model="forms.electronicAddress.valid"
                       v-on:submit.prevent="createElectronicAddress">
                 <v-row>
                   <v-text-field name="email" label="Email" :rules="forms.electronicAddress.rules.email"
@@ -112,9 +114,21 @@
               Email Address
             </v-expansion-panel-header>
             <v-expansion-panel-content>
-              <v-text-field label="Email"></v-text-field>
-              <v-switch label="Allow Solicitation?"></v-switch>
-              <v-btn color="#2196F3" align="right" dark>Create</v-btn>
+              <v-form ref="createEmailAddress" :lazy-validator="lazy" v-model="forms.emailAddress.valid"
+                      v-on:submit.prevent="createEmailAddress">
+                <v-row>
+                  <v-text-field name="email" label="Email" :rules="forms.emailAddress.rules.emailAddress"
+                                v-model="forms.emailAddress.fields.emailAddress" prepend-icon="mdi-at"></v-text-field>
+                </v-row>
+                <v-row justify="end">
+                  <v-switch name="allowSolicitation" label="Allow Solicitation?" class="ma-2"
+                            v-model="forms.emailAddress.fields.allowSolicitation" trueValue="Y"
+                            falseValue="N"></v-switch>
+                  <v-btn color="#2196F3" class="ma-2" :disabled="!forms.emailAddress.valid"
+                         @click.native="createEmailAddress">Create
+                  </v-btn>
+                </v-row>
+              </v-form>
             </v-expansion-panel-content>
           </v-expansion-panel>
           <v-expansion-panel>
@@ -195,6 +209,7 @@
   import ElectronicAddress from './test/ElectronicAddress'
   import PostalAddress from './test/PostalAddress'
   import TelecomNumber from './test/TelecomNumber'
+  import EmailAddress from './test/EmailAddress'
 
   const getContactMechUrl = 'https://localhost:8443/partymgrapi/control/getcontactmech'
   const createEmailAddressUrl = 'https://localhost:8443/partymgrapi/control/createEmailAddress'
@@ -205,7 +220,7 @@
 
   export default {
     name: "test",
-    components: {ElectronicAddress, PostalAddress, TelecomNumber},
+    components: {ElectronicAddress, PostalAddress, TelecomNumber, EmailAddress},
     props: ['props', 'updateStore'],
     data() {
       return {
@@ -291,6 +306,19 @@
               allowSolicitation: []
             },
           },
+          emailAddress: {
+            valid: true,
+            fields: {
+              emailAddress: '',
+              allowSolicitation: 'N'
+            },
+            rules: {
+              emailAddress: [
+                v => !!v || 'E-mail is required',
+                v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
+              ]
+            },
+          },
         },
         lazy: false
       }
@@ -368,6 +396,21 @@
           }
         )
       },
+      createEmailAddress() {
+        this.$http.post(createEmailAddressUrl, {
+          contactMechTypeId: 'EMAIL_ADDRESS',
+          partyId: 'DemoLead3',
+          emailAddress: this.forms.emailAddress.fields.emailAddress,
+          allowSolicitation: this.forms.emailAddress.fields.allowSolicitation
+        }).then(
+          result => {
+            this.updateDataSet()
+          },
+          error => {
+            console.log('Error during email address creation')
+          }
+        )
+      }
     },
     mounted() {
       this.updateDataSet()
