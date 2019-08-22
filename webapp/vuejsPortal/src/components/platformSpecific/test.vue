@@ -12,6 +12,8 @@
                       v-if="countContactsByType('EMAIL_ADDRESS') > 0"></EmailAddress>
         <IpAddress :props="contactsByType('IP_ADDRESS')" @update="updateDataSet"
                       v-if="countContactsByType('IP_ADDRESS') > 0"></IpAddress>
+        <DomainName :props="contactsByType('DOMAIN_NAME')" @update="updateDataSet"
+                   v-if="countContactsByType('DOMAIN_NAME') > 0"></DomainName>
       </v-flex>
       <v-divider class="ma-4"></v-divider>
       <v-flex text-left xs12 md12 lg12>
@@ -169,9 +171,21 @@
               Internet Domain Name
             </v-expansion-panel-header>
             <v-expansion-panel-content>
-              <v-text-field label="Internet Domain Name"></v-text-field>
-              <v-switch label="Allow Solicitation?"></v-switch>
-              <v-btn color="#2196F3" align="right" dark>Create</v-btn>
+              <v-form ref="createElectronicAddress" :lazy-validator="lazy" v-model="forms.domain.valid"
+                      v-on:submit.prevent="createDomain">
+                <v-row>
+                  <v-text-field name="domain" label="Domain" :rules="forms.domain.rules.domain"
+                                v-model="forms.domain.fields.domain"></v-text-field>
+                </v-row>
+                <v-row justify="end">
+                  <v-switch name="allowSolicitation" label="Allow Solicitation?" class="ma-2"
+                            v-model="forms.domain.fields.allowSolicitation" trueValue="Y"
+                            falseValue="N"></v-switch>
+                  <v-btn color="#2196F3" class="ma-2" :disabled="!forms.domain.valid"
+                         @click.native="createDomain">Create
+                  </v-btn>
+                </v-row>
+              </v-form>
             </v-expansion-panel-content>
           </v-expansion-panel>
           <v-expansion-panel>
@@ -234,6 +248,7 @@
   import TelecomNumber from './test/TelecomNumber'
   import EmailAddress from './test/EmailAddress'
   import IpAddress from './test/IpAddress'
+  import DomainName from './test/DomainName'
 
   const getContactMechUrl = 'https://localhost:8443/partymgrapi/control/getcontactmech'
   const createEmailAddressUrl = 'https://localhost:8443/partymgrapi/control/createEmailAddress'
@@ -244,7 +259,7 @@
 
   export default {
     name: "test",
-    components: {ElectronicAddress, PostalAddress, TelecomNumber, EmailAddress, IpAddress},
+    components: {ElectronicAddress, PostalAddress, TelecomNumber, EmailAddress, IpAddress, DomainName},
     props: ['props', 'updateStore'],
     data() {
       return {
@@ -356,6 +371,19 @@
               ]
             },
           },
+          domain: {
+            valid: true,
+            fields: {
+              domain: '',
+              allowSolicitation: 'N'
+            },
+            rules: {
+              domain: [
+                v => !!v || 'Ip address is required',
+                v => /.+\..+/.test(v) || 'Domain must be valid (ex: my-domain.com)',
+              ]
+            },
+          },
         },
         lazy: false
       }
@@ -454,6 +482,21 @@
           partyId: 'DemoLead3',
           infoString: this.forms.ipAddress.fields.ipAddress,
           allowSolicitation: this.forms.ipAddress.fields.allowSolicitation
+        }).then(
+          result => {
+            this.updateDataSet()
+          },
+          error => {
+            console.log('Error during contactMech creation')
+          }
+        )
+      },
+      createDomain() {
+        this.$http.post(createContactMech, {
+          contactMechTypeId: 'DOMAIN_NAME',
+          partyId: 'DemoLead3',
+          infoString: this.forms.domain.fields.domain,
+          allowSolicitation: this.forms.domain.fields.allowSolicitation
         }).then(
           result => {
             this.updateDataSet()
