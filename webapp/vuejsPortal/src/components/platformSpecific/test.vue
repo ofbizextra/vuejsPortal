@@ -9,7 +9,9 @@
         <TelecomNumber :props="contactsByType('TELECOM_NUMBER')" @update="updateDataSet"
                        v-if="countContactsByType('TELECOM_NUMBER') > 0"></TelecomNumber>
         <EmailAddress :props="contactsByType('EMAIL_ADDRESS')" @update="updateDataSet"
-                           v-if="countContactsByType('EMAIL_ADDRESS') > 0"></EmailAddress>
+                      v-if="countContactsByType('EMAIL_ADDRESS') > 0"></EmailAddress>
+        <IpAddress :props="contactsByType('IP_ADDRESS')" @update="updateDataSet"
+                      v-if="countContactsByType('IP_ADDRESS') > 0"></IpAddress>
       </v-flex>
       <v-divider class="ma-4"></v-divider>
       <v-flex text-left xs12 md12 lg12>
@@ -94,17 +96,26 @@
               Phone Number
             </v-expansion-panel-header>
             <v-expansion-panel-content>
-              <v-form ref="createPhoneNumber" :lazy-validator="lazy" v-model="forms.phoneNumber.valid" v-on:submit.prevent="createTelecomNumber">
+              <v-form ref="createPhoneNumber" :lazy-validator="lazy" v-model="forms.phoneNumber.valid"
+                      v-on:submit.prevent="createTelecomNumber">
                 <v-row>
                   <v-icon class="mr-4">mdi-phone</v-icon>
-                  <v-text-field name="countryCode" label="Country Code" class="mr-4" v-model="forms.phoneNumber.fields.countryCode"></v-text-field>
-                  <v-text-field name="areaCode" label="Area Code" class="mr-4" v-model="forms.phoneNumber.fields.areaCode"></v-text-field>
-                  <v-text-field name="contactNumber" label="Contact Number *" class="mr-4" v-model="forms.phoneNumber.fields.contactNumber" :rules="forms.phoneNumber.rules.contactNumber"></v-text-field>
-                  <v-text-field name="extension" label="Ext" v-model="forms.phoneNumber.fields.extension"></v-text-field>
+                  <v-text-field name="countryCode" label="Country Code" class="mr-4"
+                                v-model="forms.phoneNumber.fields.countryCode"></v-text-field>
+                  <v-text-field name="areaCode" label="Area Code" class="mr-4"
+                                v-model="forms.phoneNumber.fields.areaCode"></v-text-field>
+                  <v-text-field name="contactNumber" label="Contact Number *" class="mr-4"
+                                v-model="forms.phoneNumber.fields.contactNumber"
+                                :rules="forms.phoneNumber.rules.contactNumber"></v-text-field>
+                  <v-text-field name="extension" label="Ext"
+                                v-model="forms.phoneNumber.fields.extension"></v-text-field>
                 </v-row>
                 <v-row justify="end">
-                  <v-switch label="Allow Solicitation?" class="mr-4" v-model="forms.phoneNumber.fields.allowSolicitation"></v-switch>
-                  <v-btn color="#2196F3" align="right" class="mt-2" @click.native="createTelecomNumber" :disabled="!forms.phoneNumber.valid">Create</v-btn>
+                  <v-switch label="Allow Solicitation?" class="mr-4"
+                            v-model="forms.phoneNumber.fields.allowSolicitation"></v-switch>
+                  <v-btn color="#2196F3" align="right" class="mt-2" @click.native="createTelecomNumber"
+                         :disabled="!forms.phoneNumber.valid">Create
+                  </v-btn>
                 </v-row>
               </v-form>
             </v-expansion-panel-content>
@@ -136,9 +147,21 @@
               Internet IP Address
             </v-expansion-panel-header>
             <v-expansion-panel-content>
-              <v-text-field label="Internet IP Address"></v-text-field>
-              <v-switch label="Allow Solicitation?"></v-switch>
-              <v-btn color="#2196F3" align="right" dark>Create</v-btn>
+              <v-form ref="createElectronicAddress" :lazy-validator="lazy" v-model="forms.ipAddress.valid"
+                      v-on:submit.prevent="createIpAddress">
+                <v-row>
+                  <v-text-field name="ipAddress" label="Internet IP Address" v-model="forms.ipAddress.fields.ipAddress"
+                                :rules="forms.ipAddress.rules.ipAddress"></v-text-field>
+                </v-row>
+                <v-row justify="end">
+                  <v-switch name="allowSolicitation" label="Allow Solicitation?" class="ma-2"
+                            v-model="forms.ipAddress.fields.allowSolicitation" trueValue="Y"
+                            falseValue="N"></v-switch>
+                  <v-btn color="#2196F3" class="ma-2" :disabled="!forms.ipAddress.valid"
+                         @click.native="createIpAddress">Create
+                  </v-btn>
+                </v-row>
+              </v-form>
             </v-expansion-panel-content>
           </v-expansion-panel>
           <v-expansion-panel>
@@ -210,6 +233,7 @@
   import PostalAddress from './test/PostalAddress'
   import TelecomNumber from './test/TelecomNumber'
   import EmailAddress from './test/EmailAddress'
+  import IpAddress from './test/IpAddress'
 
   const getContactMechUrl = 'https://localhost:8443/partymgrapi/control/getcontactmech'
   const createEmailAddressUrl = 'https://localhost:8443/partymgrapi/control/createEmailAddress'
@@ -220,7 +244,7 @@
 
   export default {
     name: "test",
-    components: {ElectronicAddress, PostalAddress, TelecomNumber, EmailAddress},
+    components: {ElectronicAddress, PostalAddress, TelecomNumber, EmailAddress, IpAddress},
     props: ['props', 'updateStore'],
     data() {
       return {
@@ -319,6 +343,19 @@
               ]
             },
           },
+          ipAddress: {
+            valid: true,
+            fields: {
+              ipAddress: '',
+              allowSolicitation: 'N'
+            },
+            rules: {
+              ipAddress: [
+                v => !!v || 'Ip address is required',
+                v => /.+\..+\..+\..+/.test(v) || 'Ip address must be valid (ex: 124.75.24.66)',
+              ]
+            },
+          },
         },
         lazy: false
       }
@@ -408,6 +445,21 @@
           },
           error => {
             console.log('Error during email address creation')
+          }
+        )
+      },
+      createIpAddress() {
+        this.$http.post(createContactMech, {
+          contactMechTypeId: 'IP_ADDRESS',
+          partyId: 'DemoLead3',
+          infoString: this.forms.ipAddress.fields.ipAddress,
+          allowSolicitation: this.forms.ipAddress.fields.allowSolicitation
+        }).then(
+          result => {
+            this.updateDataSet()
+          },
+          error => {
+            console.log('Error during contactMech creation')
           }
         )
       }
