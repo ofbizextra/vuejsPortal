@@ -73,8 +73,13 @@ import VueContainer from './components/VueContainer'
 import VueMessageList from './components/VueMessageList'
 import VueLogin from './components/VueLogin'
 import VueFormatEmptySpace from './components/VueFormatEmptySpace'
+import VuePlatformSpecific from './components/VuePlatformSpecific'
+
+// Platform Specific
+import test from './components/platformSpecific/test'
 
 import store from './store'
+import vuetify from './plugins/vuetify';
 
 Vue.use(VueResource)
 Vue.use(VueRouter)
@@ -148,6 +153,10 @@ Vue.component('vue-container', VueContainer)
 Vue.component('vue-message-list', VueMessageList)
 Vue.component( 'vue-login', VueLogin)
 Vue.component('vue-format-empty-space', VueFormatEmptySpace)
+Vue.component('vue-platform-specific', VuePlatformSpecific)
+
+// Platform Specific
+Vue.component('test', test)
 
 Vue.mixin({
   methods: {
@@ -231,8 +240,18 @@ new Vue({
   props: ['content'],
   store: store,
   router: router,
+
   wait: new VueWait({
     useVuex: true
   }),
+
+  vuetify,
+  css: {
+    loaderOptions: {
+      sass: {
+        data: `@import "~@./sass/main.scss"`,
+      },
+    },
+  },
   render: h => h(App)
 })

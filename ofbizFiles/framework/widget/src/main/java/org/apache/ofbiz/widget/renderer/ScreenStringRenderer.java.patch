@@ -1,6 +1,6 @@
 Index: framework/widget/src/main/java/org/apache/ofbiz/widget/renderer/ScreenStringRenderer.java
 ===================================================================
---- framework/widget/src/main/java/org/apache/ofbiz/widget/renderer/ScreenStringRenderer.java	(révision 1863538)
+--- framework/widget/src/main/java/org/apache/ofbiz/widget/renderer/ScreenStringRenderer.java	(révision 1861341)
 +++ framework/widget/src/main/java/org/apache/ofbiz/widget/renderer/ScreenStringRenderer.java	(copie de travail)
 @@ -46,6 +46,7 @@
  

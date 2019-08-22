@@ -145,7 +145,8 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
                 attributes.put(key, parameterMap.get(key));
             }
         }
-        this.output.putScreen(vuejs.getComponentName(context), attributes);
+        attributes.put("componentName", vuejs.getComponentName(context));
+        this.output.putScreen("VueJs", attributes);
     }
 
     public void renderHorizontalSeparator(Appendable writer, Map<String, Object> context, ModelScreenWidget.HorizontalSeparator separator) throws IOException {

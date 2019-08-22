@@ -47,6 +47,8 @@ export default {
     Container: 'vue-container',
     PortalPagePortlet: 'vue-portlet',
     FormatEmptySpace: 'vue-format-empty-space',
-    Label: 'vue-label'
+    Label: 'vue-label',
+    VueJs: 'vue-platform-specific',
+    test: 'test'
   }
 }
