@@ -14,6 +14,8 @@
                       v-if="countContactsByType('IP_ADDRESS') > 0"></IpAddress>
         <DomainName :props="contactsByType('DOMAIN_NAME')" @update="updateDataSet"
                    v-if="countContactsByType('DOMAIN_NAME') > 0"></DomainName>
+        <WebAddress :props="contactsByType('WEB_ADDRESS')" @update="updateDataSet"
+                    v-if="countContactsByType('WEB_ADDRESS') > 0"></WebAddress>
       </v-flex>
       <v-divider class="ma-4"></v-divider>
       <v-flex text-left xs12 md12 lg12>
@@ -193,9 +195,21 @@
               Web URL/Address
             </v-expansion-panel-header>
             <v-expansion-panel-content>
-              <v-text-field label="Web URL?Address"></v-text-field>
-              <v-switch label="Allow Solicitation?"></v-switch>
-              <v-btn color="#2196F3" align="right" dark>Create</v-btn>
+              <v-form ref="createWebAddress" :lazy-validator="lazy" v-model="forms.webAddress.valid"
+                      v-on:submit.prevent="createWebAddress">
+                <v-row>
+                  <v-text-field name="webAddress" label="Web URL?Address" :rules="forms.webAddress.rules.webAddress"
+                                v-model="forms.webAddress.fields.webAddress"></v-text-field>
+                </v-row>
+                <v-row justify="end">
+                  <v-switch name="allowSolicitation" label="Allow Solicitation?" class="ma-2"
+                            v-model="forms.webAddress.fields.allowSolicitation" trueValue="Y"
+                            falseValue="N"></v-switch>
+                  <v-btn color="#2196F3" class="ma-2" :disabled="!forms.webAddress.valid"
+                         @click.native="createWebAddress">Create
+                  </v-btn>
+                </v-row>
+              </v-form>
             </v-expansion-panel-content>
           </v-expansion-panel>
           <v-expansion-panel>
@@ -249,6 +263,7 @@
   import EmailAddress from './test/EmailAddress'
   import IpAddress from './test/IpAddress'
   import DomainName from './test/DomainName'
+  import WebAddress from './test/WebAddress'
 
   const getContactMechUrl = 'https://localhost:8443/partymgrapi/control/getcontactmech'
   const createEmailAddressUrl = 'https://localhost:8443/partymgrapi/control/createEmailAddress'
@@ -259,7 +274,7 @@
 
   export default {
     name: "test",
-    components: {ElectronicAddress, PostalAddress, TelecomNumber, EmailAddress, IpAddress, DomainName},
+    components: {ElectronicAddress, PostalAddress, TelecomNumber, EmailAddress, IpAddress, DomainName, WebAddress},
     props: ['props', 'updateStore'],
     data() {
       return {
@@ -384,6 +399,19 @@
               ]
             },
           },
+          webAddress: {
+            valid: true,
+            fields: {
+              webAddress: '',
+              allowSolicitation: 'N'
+            },
+            rules: {
+              webAddress: [
+                v => !!v || 'Ip address is required',
+                v => /.+\..+/.test(v) || 'Domain must be valid (ex: www.my-example.com)',
+              ]
+            },
+          }
         },
         lazy: false
       }
@@ -505,7 +533,22 @@
             console.log('Error during contactMech creation')
           }
         )
-      }
+      },
+      createWebAddress() {
+        this.$http.post(createContactMech, {
+          contactMechTypeId: 'WEB_ADDRESS',
+          partyId: 'DemoLead3',
+          infoString: this.forms.webAddress.fields.webAddress,
+          allowSolicitation: this.forms.webAddress.fields.allowSolicitation
+        }).then(
+          result => {
+            this.updateDataSet()
+          },
+          error => {
+            console.log('Error during contactMech creation')
+          }
+        )
+      },
     },
     mounted() {
       this.updateDataSet()
