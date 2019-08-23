@@ -16,6 +16,8 @@
                    v-if="countContactsByType('DOMAIN_NAME') > 0"></DomainName>
         <WebAddress :props="contactsByType('WEB_ADDRESS')" @update="updateDataSet"
                     v-if="countContactsByType('WEB_ADDRESS') > 0"></WebAddress>
+        <InternalNote :props="contactsByType('INTERNAL_PARTYID')" @update="updateDataSet"
+                    v-if="countContactsByType('INTERNAL_PARTYID') > 0"></InternalNote>
       </v-flex>
       <v-divider class="ma-4"></v-divider>
       <v-flex text-left xs12 md12 lg12>
@@ -217,9 +219,21 @@
               Internal Party Note
             </v-expansion-panel-header>
             <v-expansion-panel-content>
-              <v-text-field label="Internal Party Note"></v-text-field>
-              <v-switch label="Allow Solicitation?"></v-switch>
-              <v-btn color="#2196F3" align="right" dark>Create</v-btn>
+              <v-form ref="createInternalNote" :lazy-validator="lazy" v-model="forms.internalNote.valid"
+                      v-on:submit.prevent="createInternalNote">
+                <v-row>
+                  <v-text-field name="internalNote" label="Internal Party Note" :rules="forms.internalNote.rules.internalNote"
+                                v-model="forms.internalNote.fields.internalNote"></v-text-field>
+                </v-row>
+                <v-row justify="end">
+                  <v-switch name="allowSolicitation" label="Allow Solicitation?" class="ma-2"
+                            v-model="forms.internalNote.fields.allowSolicitation" trueValue="Y"
+                            falseValue="N"></v-switch>
+                  <v-btn color="#2196F3" class="ma-2" :disabled="!forms.internalNote.valid"
+                         @click.native="createInternalNote">Create
+                  </v-btn>
+                </v-row>
+              </v-form>
             </v-expansion-panel-content>
           </v-expansion-panel>
           <v-expansion-panel>
@@ -264,6 +278,7 @@
   import IpAddress from './test/IpAddress'
   import DomainName from './test/DomainName'
   import WebAddress from './test/WebAddress'
+  import InternalNote from './test/InternalNote'
 
   const getContactMechUrl = 'https://localhost:8443/partymgrapi/control/getcontactmech'
   const createEmailAddressUrl = 'https://localhost:8443/partymgrapi/control/createEmailAddress'
@@ -274,7 +289,16 @@
 
   export default {
     name: "test",
-    components: {ElectronicAddress, PostalAddress, TelecomNumber, EmailAddress, IpAddress, DomainName, WebAddress},
+    components: {
+      ElectronicAddress,
+      PostalAddress,
+      TelecomNumber,
+      EmailAddress,
+      IpAddress,
+      DomainName,
+      WebAddress,
+      InternalNote
+    },
     props: ['props', 'updateStore'],
     data() {
       return {
@@ -409,6 +433,18 @@
               webAddress: [
                 v => !!v || 'Ip address is required',
                 v => /.+\..+/.test(v) || 'Domain must be valid (ex: www.my-example.com)',
+              ]
+            },
+          },
+          internalNote: {
+            valid: true,
+            fields: {
+              internalNote: '',
+              allowSolicitation: 'N'
+            },
+            rules: {
+              internalNote: [
+                v => !!v || 'Ip address is required',
               ]
             },
           }
@@ -549,6 +585,21 @@
           }
         )
       },
+      createInternalNote() {
+        this.$http.post(createContactMech, {
+          contactMechTypeId: 'INTERNAL_PARTYID',
+          partyId: 'DemoLead3',
+          infoString: this.forms.internalNote.fields.internalNote,
+          allowSolicitation: this.forms.internalNote.fields.allowSolicitation
+        }).then(
+          result => {
+            this.updateDataSet()
+          },
+          error => {
+            console.log('Error during internal note creation')
+          }
+        )
+      }
     },
     mounted() {
       this.updateDataSet()
