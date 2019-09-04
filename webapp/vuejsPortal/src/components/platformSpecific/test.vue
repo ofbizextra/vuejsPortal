@@ -1,5 +1,5 @@
 <template>
-  <v-container grid-list-md text-center>
+  <v-container grid-list-xs text-center>
     <v-layout wrap justify-space-around>
       <v-flex text-center xs12>
         <ElectronicAddress :props="contactsByType('ELECTRONIC_ADDRESS')" @update="updateDataSet"
@@ -11,13 +11,15 @@
         <EmailAddress :props="contactsByType('EMAIL_ADDRESS')" @update="updateDataSet"
                       v-if="countContactsByType('EMAIL_ADDRESS') > 0"></EmailAddress>
         <IpAddress :props="contactsByType('IP_ADDRESS')" @update="updateDataSet"
-                      v-if="countContactsByType('IP_ADDRESS') > 0"></IpAddress>
+                   v-if="countContactsByType('IP_ADDRESS') > 0"></IpAddress>
         <DomainName :props="contactsByType('DOMAIN_NAME')" @update="updateDataSet"
-                   v-if="countContactsByType('DOMAIN_NAME') > 0"></DomainName>
+                    v-if="countContactsByType('DOMAIN_NAME') > 0"></DomainName>
         <WebAddress :props="contactsByType('WEB_ADDRESS')" @update="updateDataSet"
                     v-if="countContactsByType('WEB_ADDRESS') > 0"></WebAddress>
         <InternalNote :props="contactsByType('INTERNAL_PARTYID')" @update="updateDataSet"
-                    v-if="countContactsByType('INTERNAL_PARTYID') > 0"></InternalNote>
+                      v-if="countContactsByType('INTERNAL_PARTYID') > 0"></InternalNote>
+        <FtpAddress :props="contactsByType('FTP_ADDRESS')" @update="updateDataSet"
+                      v-if="countContactsByType('FTP_ADDRESS') > 0"></FtpAddress>
       </v-flex>
       <v-divider class="ma-4"></v-divider>
       <v-flex text-left xs12 md12 lg12>
@@ -222,7 +224,8 @@
               <v-form ref="createInternalNote" :lazy-validator="lazy" v-model="forms.internalNote.valid"
                       v-on:submit.prevent="createInternalNote">
                 <v-row>
-                  <v-text-field name="internalNote" label="Internal Party Note" :rules="forms.internalNote.rules.internalNote"
+                  <v-text-field name="internalNote" label="Internal Party Note"
+                                :rules="forms.internalNote.rules.internalNote"
                                 v-model="forms.internalNote.fields.internalNote"></v-text-field>
                 </v-row>
                 <v-row justify="end">
@@ -241,17 +244,33 @@
               File Server
             </v-expansion-panel-header>
             <v-expansion-panel-content>
-              <v-text-field label="Host name"></v-text-field>
-              <v-text-field label="Port"></v-text-field>
-              <v-text-field label="User Name"></v-text-field>
-              <v-text-field label="Password"></v-text-field>
-              <v-switch label="Binary Transfert"></v-switch>
-              <v-text-field label="Path"></v-text-field>
-              <v-switch label="File compression"></v-switch>
-              <v-switch label="Passive mode"></v-switch>
-              <v-text-field label="Pathefault timeout"></v-text-field>
-              <v-switch label="Allow Solicitation?"></v-switch>
-              <v-btn color="#2196F3" align="right" dark>Create</v-btn>
+              <v-form>
+                <v-row>
+                  <v-text-field name="hostname" label="Host name" class="mr-4" :rules="forms.ftpAddress.rules.hostname" v-model="forms.ftpAddress.fields.hostname"></v-text-field>
+                  <v-text-field name="port" label="Port" class="" :rules="forms.ftpAddress.rules.port" v-model="forms.ftpAddress.fields.port"></v-text-field>
+                </v-row>
+                <v-row>
+                  <v-text-field name="username" label="User Name" class="mr-4" :rules="forms.ftpAddress.rules.username" v-model="forms.ftpAddress.fields.username"></v-text-field>
+                  <v-text-field name="ftpPassword" label="Password" :rules="forms.ftpAddress.rules.ftpPassword" v-model="forms.ftpAddress.fields.ftpPassword"></v-text-field>
+                </v-row>
+                <v-row>
+                  <v-text-field name="filePath" label="Path" class="mr-4" :rules="forms.ftpAddress.rules.filePath" v-model="forms.ftpAddress.fields.filePath"></v-text-field>
+                  <v-text-field name="defaultTimeout" label="Path default timeout" class="" :rules="forms.ftpAddress.rules.defaultTimeout" v-model="forms.ftpAddress.fields.defaultTimeout"></v-text-field>
+                </v-row>
+                <v-row justify="space-around">
+                  <v-switch name="binaryTransfer" label="Binary Transfert" class="mr-4" trueValue="Y" falseValue="N" :rules="forms.ftpAddress.rules.binaryTransfer" v-model="forms.ftpAddress.fields.binaryTransfer"></v-switch>
+                  <v-switch name="zipFile" label="File compression" class="mr-4" trueValue="Y" falseValue="N" :rules="forms.ftpAddress.rules.zipFile" v-model="forms.ftpAddress.fields.zipFile"></v-switch>
+                  <v-switch name="passiveMode" label="Passive mode" trueValue="Y" falseValue="N" :rules="forms.ftpAddress.rules.passiveMode" v-model="forms.ftpAddress.fields.passiveMode"></v-switch>
+                </v-row>
+                <v-row justify="end">
+                  <v-switch name="allowSolicitation" label="Allow Solicitation?" class="ma-2"
+                            v-model="forms.ftpAddress.fields.allowSolicitation" trueValue="Y"
+                            falseValue="N"></v-switch>
+                  <v-btn color="#2196F3" class="ma-2" :disabled="!forms.ftpAddress.valid"
+                         @click.native="createFtpAddress">Create
+                  </v-btn>
+                </v-row>
+              </v-form>
             </v-expansion-panel-content>
           </v-expansion-panel>
           <v-expansion-panel>
@@ -279,6 +298,7 @@
   import DomainName from './test/DomainName'
   import WebAddress from './test/WebAddress'
   import InternalNote from './test/InternalNote'
+  import FtpAddress from './test/FtpAddress'
 
   const getContactMechUrl = 'https://localhost:8443/partymgrapi/control/getcontactmech'
   const createEmailAddressUrl = 'https://localhost:8443/partymgrapi/control/createEmailAddress'
@@ -286,6 +306,7 @@
   const createElectroniclAddressUrl = 'https://localhost:8443/partymgrapi/control/createElectronicAddress'
   const createTelecomNumberUrl = 'https://localhost:8443/partymgrapi/control/createTelecomNumber'
   const createContactMech = 'https://localhost:8443/partymgrapi/control/createContactMech'
+  const createFtpAddressUrl = 'https://localhost:8443/partymgrapi/control/createFtpAddress'
 
   export default {
     name: "test",
@@ -297,7 +318,8 @@
       IpAddress,
       DomainName,
       WebAddress,
-      InternalNote
+      InternalNote,
+      FtpAddress
     },
     props: ['props', 'updateStore'],
     data() {
@@ -446,6 +468,35 @@
               internalNote: [
                 v => !!v || 'Ip address is required',
               ]
+            },
+          },
+          ftpAddress: {
+            valid: true,
+            fields: {
+              hostname: '',
+              port: '',
+              username: '',
+              ftpPassword: '',
+              binaryTransfer: '',
+              filePath: '',
+              zipFile: '',
+              passiveMode: '',
+              defaultTimeout: 0,
+              allowSolicitation: 'N'
+            },
+            rules: {
+              hostname: [
+                v => !!v || 'Hostname is required',
+              ],
+              port: [],
+              username: [],
+              ftpPassword: [],
+              binaryTransfer: [],
+              filePath: [],
+              zipFile: [],
+              passiveMode: [],
+              defaultTimeout: [],
+              allowSolicitation: []
             },
           }
         },
@@ -597,6 +648,29 @@
           },
           error => {
             console.log('Error during internal note creation')
+          }
+        )
+      },
+      createFtpAddress() {
+        this.$http.post(createFtpAddressUrl, {
+          contactMechTypeId: 'FTP_ADDRESS',
+          partyId: 'DemoLead3',
+          hostname: this.forms.ftpAddress.fields.hostname,
+          port: this.forms.ftpAddress.fields.port,
+          username: this.forms.ftpAddress.fields.username,
+          ftpPassword: this.forms.ftpAddress.fields.ftpPassword,
+          binaryTransfer: this.forms.ftpAddress.fields.binaryTransfer,
+          filePath: this.forms.ftpAddress.fields.filePath,
+          zipFile: this.forms.ftpAddress.fields.zipFile,
+          passiveMode: this.forms.ftpAddress.fields.passiveMode,
+          defaultTimeout: this.forms.ftpAddress.fields.defaultTimeout,
+          allowSolicitation: this.forms.ftpAddress.fields.allowSolicitation
+        }).then(
+          result => {
+            this.updateDataSet()
+          },
+          error => {
+            console.log('Error during FTP Address creation')
           }
         )
       }
