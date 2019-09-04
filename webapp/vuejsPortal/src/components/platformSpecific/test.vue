@@ -20,6 +20,8 @@
                       v-if="countContactsByType('INTERNAL_PARTYID') > 0"></InternalNote>
         <FtpAddress :props="contactsByType('FTP_ADDRESS')" @update="updateDataSet"
                       v-if="countContactsByType('FTP_ADDRESS') > 0"></FtpAddress>
+        <LdapAddress :props="contactsByType('LDAP_ADDRESS')" @update="updateDataSet"
+                    v-if="countContactsByType('LDAP_ADDRESS') > 0"></LdapAddress>
       </v-flex>
       <v-divider class="ma-4"></v-divider>
       <v-flex text-left xs12 md12 lg12>
@@ -244,7 +246,7 @@
               File Server
             </v-expansion-panel-header>
             <v-expansion-panel-content>
-              <v-form>
+              <v-form ref="createFtpAddress" :lazy-validator="lazy" v-model="forms.ftpAddress.valid" v-on:submit.prevent="createFtpAddress">
                 <v-row>
                   <v-text-field name="hostname" label="Host name" class="mr-4" :rules="forms.ftpAddress.rules.hostname" v-model="forms.ftpAddress.fields.hostname"></v-text-field>
                   <v-text-field name="port" label="Port" class="" :rules="forms.ftpAddress.rules.port" v-model="forms.ftpAddress.fields.port"></v-text-field>
@@ -278,9 +280,19 @@
               LDAP Address
             </v-expansion-panel-header>
             <v-expansion-panel-content>
-              <v-text-field label="LDAP Address"></v-text-field>
-              <v-switch label="Allow Solicitation?"></v-switch>
-              <v-btn color="#2196F3" align="right" dark>Create</v-btn>
+              <v-form ref="createLdapAddress" :lazy-validator="lazy" v-model="forms.internalNote.valid" v-on:submit.prevent="createLdapAddress">
+                <v-row>
+                  <v-text-field name="LdapAddress" label="LDAP Address" :rules="forms.ldapAddress.rules.ldapAddress" v-model="forms.ldapAddress.fields.ldapAddress"></v-text-field>
+                </v-row>
+                <v-row justify="end">
+                  <v-switch name="allowSolicitation" label="Allow Solicitation?" class="ma-2"
+                            v-model="forms.ldapAddress.fields.allowSolicitation" trueValue="Y"
+                            falseValue="N"></v-switch>
+                  <v-btn color="#2196F3" class="ma-2" :disabled="!forms.ldapAddress.valid"
+                         @click.native="createLdapAddress">Create
+                  </v-btn>
+                </v-row>
+              </v-form>
             </v-expansion-panel-content>
           </v-expansion-panel>
         </v-expansion-panels>
@@ -299,6 +311,7 @@
   import WebAddress from './test/WebAddress'
   import InternalNote from './test/InternalNote'
   import FtpAddress from './test/FtpAddress'
+  import LdapAddress from './test/LdapAddress'
 
   const getContactMechUrl = 'https://localhost:8443/partymgrapi/control/getcontactmech'
   const createEmailAddressUrl = 'https://localhost:8443/partymgrapi/control/createEmailAddress'
@@ -319,7 +332,8 @@
       DomainName,
       WebAddress,
       InternalNote,
-      FtpAddress
+      FtpAddress,
+      LdapAddress
     },
     props: ['props', 'updateStore'],
     data() {
@@ -498,7 +512,19 @@
               defaultTimeout: [],
               allowSolicitation: []
             },
-          }
+          },
+          ldapAddress: {
+            valid: true,
+            fields: {
+              ldapAddress: '',
+              allowSolicitation: 'N'
+            },
+            rules: {
+              ldapAddress: [
+                v => !!v || 'LDAP address is required',
+              ]
+            },
+          },
         },
         lazy: false
       }
@@ -673,7 +699,22 @@
             console.log('Error during FTP Address creation')
           }
         )
-      }
+      },
+      createLdapAddress() {
+        this.$http.post(createContactMech, {
+          contactMechTypeId: 'LDAP_ADDRESS',
+          partyId: 'DemoLead3',
+          infoString: this.forms.ldapAddress.fields.ldapAddress,
+          allowSolicitation: this.forms.ldapAddress.fields.allowSolicitation
+        }).then(
+          result => {
+            this.updateDataSet()
+          },
+          error => {
+            console.log('Error during internal note creation')
+          }
+        )
+      },
     },
     mounted() {
       this.updateDataSet()
