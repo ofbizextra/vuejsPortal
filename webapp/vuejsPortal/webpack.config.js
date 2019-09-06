@@ -2,14 +2,14 @@ var path = require('path')
 var webpack = require('webpack')
 const VueLoaderPlugin = require('vue-loader/lib/plugin')
 const VuetifyLoaderPlugin = require('vuetify-loader/lib/plugin')
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 // const BrotliPlugin = require('brotli-webpack-plugin')
 
 module.exports = {
   plugins: [
     new VueLoaderPlugin(),
     new VuetifyLoaderPlugin(),
-    new BundleAnalyzerPlugin(),
+    // new BundleAnalyzerPlugin(),
     // new BrotliPlugin({
     //   asset: '[path].br[query]',
     //   test: /\.(js|css|html|svg)$/,
