@@ -28,7 +28,7 @@
     "vue-resource": "^1.5.1",
     "vue-router": "^3.1.2",
     "vue-wait": "^1.4.6",
-    "vuetify": "^2.0.7",
+    "vuetify": "^2.0.14",
     "vuex": "^3.1.1",
     "vuex-strong-cache": "^0.1.1",
     "xml2js": "^0.4.19"
