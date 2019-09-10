@@ -1,6 +1,173 @@
 <template>
   <v-container grid-list-xs text-center>
-    <v-layout wrap justify-space-around>
+    <v-layout wrap justify-space-around v-if="cardMode">
+      <v-flex text-left stretch xs12>
+        <v-card>
+          <v-card-title>
+            Contact mech
+            <v-btn fab color="primary" top right absolute @click="toggleEdit" v-if="!editMode">
+              <v-icon>mdi-pencil</v-icon>
+            </v-btn>
+          </v-card-title>
+          <v-card-text>
+            <v-row wrap dense>
+              <v-col cols="12" md="6" align-self="start">
+                <v-list>
+                  <v-subheader inset>Telecom number</v-subheader>
+                  <v-list-item v-for="phoneNumber in contactsByType('TELECOM_NUMBER')"
+                               :key="phoneNumber.contactMech.contactMechId">
+                    <v-list-item-icon>
+                      <v-icon left>mdi-phone</v-icon>
+                    </v-list-item-icon>
+                    <v-list-item-content>
+                      <v-list-item-title v-if="!editMode">
+                        {{`${phoneNumber.telecomNumber.countryCode || ''} ${phoneNumber.telecomNumber.areaCode || ''}
+                        ${phoneNumber.telecomNumber.contactNumber || ''} ${phoneNumber.telecomNumber.extension || ''}`}}
+                      </v-list-item-title>
+                      <v-list-item-title v-if="editMode">
+                        <v-row>
+                          <v-col class="col-lg-2 col-sm-6 col-12">
+                            <v-text-field label="Country code"
+                                          v-model="phoneNumber.telecomNumber.countryCode"></v-text-field>
+                          </v-col>
+                          <v-col class="col-lg-2 col-sm-6 col-12">
+                            <v-text-field label="Area code" v-model="phoneNumber.telecomNumber.areaCode"></v-text-field>
+                          </v-col>
+                          <v-col class="col-lg-6 col-sm-12 col-12">
+                            <v-text-field label="Number"
+                                          v-model="phoneNumber.telecomNumber.contactNumber"></v-text-field>
+                          </v-col>
+                          <v-col class="col-lg-2 col-sm-6 col-12">
+                            <v-text-field label="Ext" v-model="phoneNumber.telecomNumber.extension"></v-text-field>
+                          </v-col>
+                        </v-row>
+                      </v-list-item-title>
+                      <v-list-item-subtitle>
+                        <v-chip class="primary" x-small>
+                          purpose one
+                        </v-chip class="primary" x-small>
+                        <v-chip class="primary" x-small>
+                          purpose two
+                        </v-chip class="primary" x-small>
+                      </v-list-item-subtitle>
+                    </v-list-item-content>
+                  </v-list-item>
+                  <v-divider inset></v-divider>
+                  <v-subheader inset>Email address</v-subheader>
+                  <v-list-item v-for="email in contactsByType('EMAIL_ADDRESS')"
+                               :key="email.contactMech.contactMechId">
+                    <v-list-item-icon>
+                      <v-icon left>mdi-at</v-icon>
+                    </v-list-item-icon>
+                    <v-list-item-content>
+                      <v-list-item-title v-if="!editMode">
+                        {{email.contactMech.infoString}}
+                      </v-list-item-title>
+                      <v-list-item-title v-if="editMode">
+                        <v-row>
+                          <v-col>
+                            <v-text-field label="Email address" v-model="email.contactMech.infoString"></v-text-field>
+                          </v-col>
+                        </v-row>
+                      </v-list-item-title>
+                      <v-list-item-subtitle>
+                        <v-chip class="primary" x-small>
+                          purpose one
+                        </v-chip class="primary" x-small>
+                        <v-chip class="primary" x-small>
+                          purpose two
+                        </v-chip class="primary" x-small>
+                      </v-list-item-subtitle>
+                    </v-list-item-content>
+                  </v-list-item>
+                </v-list>
+              </v-col>
+              <v-col cols="12" md="6" align-self="start">
+                <v-list>
+                  <v-subheader inset>Postal address</v-subheader>
+                  <v-list-item v-for="postalAddress in contactsByType('POSTAL_ADDRESS')"
+                               :key="postalAddress.contactMech.contactMechId">
+                    <v-list-item-icon>
+                      <v-icon left>mdi-mailbox</v-icon>
+                    </v-list-item-icon>
+                    <v-list-item-content>
+                      <v-list-item-title>
+                        {{postalAddress.postalAddress.toName}} {{postalAddress.postalAddress.attnName}}
+                      </v-list-item-title>
+                      <div>
+                        {{postalAddress.postalAddress.address1}}
+                      </div>
+                      <div>
+                        {{postalAddress.postalAddress.address2}}
+                      </div>
+                      <div>
+                        {{postalAddress.postalAddress.city}}, {{postalAddress.postalAddress.postalCode}}
+                      </div>
+                      <v-list-item-subtitle>
+                        <v-chip class="primary" x-small>
+                          purpose one
+                        </v-chip class="primary" x-small>
+                        <v-chip class="primary" x-small>
+                          purpose two
+                        </v-chip class="primary" x-small>
+                      </v-list-item-subtitle>
+                    </v-list-item-content>
+                  </v-list-item>
+                  <span v-if="showMore">
+              <v-divider inset></v-divider>
+              <v-subheader inset>Internal Note</v-subheader>
+              <v-list-item v-for="internalNote in contactsByType('INTERNAL_PARTYID')"
+                           :key="internalNote.contactMech.contactMechId">
+                <v-list-item-icon>
+                  <v-icon left>mdi-note</v-icon>
+                </v-list-item-icon>
+                <v-list-item-content>
+                  <v-list-item-title v-if="!editMode">
+                    {{internalNote.contactMech.infoString}}
+                  </v-list-item-title>
+                  <v-list-item-title v-if="editMode">
+                    <v-row>
+                      <v-col>
+                        <v-text-field label="Internal note"
+                                      v-model="internalNote.contactMech.infoString"></v-text-field>
+                      </v-col>
+                    </v-row>
+                  </v-list-item-title>
+                  <v-list-item-subtitle>
+                  <v-chip class="primary" x-small>
+                    purpose one
+                  </v-chip class="primary" x-small>
+                  <v-chip class="primary" x-small>
+                    purpose two
+                  </v-chip class="primary" x-small>
+                  </v-list-item-subtitle>
+                </v-list-item-content>
+              </v-list-item>
+            </span>
+                </v-list>
+              </v-col>
+            </v-row>
+            <v-row justify="center">
+              <v-btn text @click="toggleShowMore" v-if="!showMore">Show more</v-btn>
+              <v-btn text @click="toggleShowMore" v-if="showMore">Show less</v-btn>
+            </v-row>
+          </v-card-text>
+          <v-card-action v-if="editMode">
+            <v-row justify="end">
+              <v-btn color="error" dark class="ma-2 mr-0" @click="toggleEdit">
+                <v-icon prepend>mdi-arrow-left</v-icon>
+                Back
+              </v-btn>
+              <v-btn color="success" dark class="ma-2 mr-5" @click="toggleEdit">
+                <v-icon prepend>mdi-check</v-icon>
+                Save
+              </v-btn>
+            </v-row>
+          </v-card-action>
+        </v-card>
+      </v-flex>
+    </v-layout>
+    <v-layout wrap justify-space-around v-else>
       <v-flex text-center xs12>
         <ElectronicAddress :props="contactsByType('ELECTRONIC_ADDRESS')" @update="updateDataSet"
                            v-if="countContactsByType('ELECTRONIC_ADDRESS') > 0"></ElectronicAddress>
@@ -19,9 +186,9 @@
         <InternalNote :props="contactsByType('INTERNAL_PARTYID')" @update="updateDataSet"
                       v-if="countContactsByType('INTERNAL_PARTYID') > 0"></InternalNote>
         <FtpAddress :props="contactsByType('FTP_ADDRESS')" @update="updateDataSet"
-                      v-if="countContactsByType('FTP_ADDRESS') > 0"></FtpAddress>
+                    v-if="countContactsByType('FTP_ADDRESS') > 0"></FtpAddress>
         <LdapAddress :props="contactsByType('LDAP_ADDRESS')" @update="updateDataSet"
-                    v-if="countContactsByType('LDAP_ADDRESS') > 0"></LdapAddress>
+                     v-if="countContactsByType('LDAP_ADDRESS') > 0"></LdapAddress>
       </v-flex>
       <v-divider class="ma-4"></v-divider>
       <v-flex text-left xs12 md12 lg12>
@@ -246,23 +413,37 @@
               File Server
             </v-expansion-panel-header>
             <v-expansion-panel-content>
-              <v-form ref="createFtpAddress" :lazy-validator="lazy" v-model="forms.ftpAddress.valid" v-on:submit.prevent="createFtpAddress">
+              <v-form ref="createFtpAddress" :lazy-validator="lazy" v-model="forms.ftpAddress.valid"
+                      v-on:submit.prevent="createFtpAddress">
                 <v-row>
-                  <v-text-field name="hostname" label="Host name" class="mr-4" :rules="forms.ftpAddress.rules.hostname" v-model="forms.ftpAddress.fields.hostname"></v-text-field>
-                  <v-text-field name="port" label="Port" class="" :rules="forms.ftpAddress.rules.port" v-model="forms.ftpAddress.fields.port"></v-text-field>
+                  <v-text-field name="hostname" label="Host name" class="mr-4" :rules="forms.ftpAddress.rules.hostname"
+                                v-model="forms.ftpAddress.fields.hostname"></v-text-field>
+                  <v-text-field name="port" label="Port" class="" :rules="forms.ftpAddress.rules.port"
+                                v-model="forms.ftpAddress.fields.port"></v-text-field>
                 </v-row>
                 <v-row>
-                  <v-text-field name="username" label="User Name" class="mr-4" :rules="forms.ftpAddress.rules.username" v-model="forms.ftpAddress.fields.username"></v-text-field>
-                  <v-text-field name="ftpPassword" label="Password" :rules="forms.ftpAddress.rules.ftpPassword" v-model="forms.ftpAddress.fields.ftpPassword"></v-text-field>
+                  <v-text-field name="username" label="User Name" class="mr-4" :rules="forms.ftpAddress.rules.username"
+                                v-model="forms.ftpAddress.fields.username"></v-text-field>
+                  <v-text-field name="ftpPassword" label="Password" :rules="forms.ftpAddress.rules.ftpPassword"
+                                v-model="forms.ftpAddress.fields.ftpPassword"></v-text-field>
                 </v-row>
                 <v-row>
-                  <v-text-field name="filePath" label="Path" class="mr-4" :rules="forms.ftpAddress.rules.filePath" v-model="forms.ftpAddress.fields.filePath"></v-text-field>
-                  <v-text-field name="defaultTimeout" label="Path default timeout" class="" :rules="forms.ftpAddress.rules.defaultTimeout" v-model="forms.ftpAddress.fields.defaultTimeout"></v-text-field>
+                  <v-text-field name="filePath" label="Path" class="mr-4" :rules="forms.ftpAddress.rules.filePath"
+                                v-model="forms.ftpAddress.fields.filePath"></v-text-field>
+                  <v-text-field name="defaultTimeout" label="Path default timeout" class=""
+                                :rules="forms.ftpAddress.rules.defaultTimeout"
+                                v-model="forms.ftpAddress.fields.defaultTimeout"></v-text-field>
                 </v-row>
                 <v-row justify="space-around">
-                  <v-switch name="binaryTransfer" label="Binary Transfert" class="mr-4" trueValue="Y" falseValue="N" :rules="forms.ftpAddress.rules.binaryTransfer" v-model="forms.ftpAddress.fields.binaryTransfer"></v-switch>
-                  <v-switch name="zipFile" label="File compression" class="mr-4" trueValue="Y" falseValue="N" :rules="forms.ftpAddress.rules.zipFile" v-model="forms.ftpAddress.fields.zipFile"></v-switch>
-                  <v-switch name="passiveMode" label="Passive mode" trueValue="Y" falseValue="N" :rules="forms.ftpAddress.rules.passiveMode" v-model="forms.ftpAddress.fields.passiveMode"></v-switch>
+                  <v-switch name="binaryTransfer" label="Binary Transfert" class="mr-4" trueValue="Y" falseValue="N"
+                            :rules="forms.ftpAddress.rules.binaryTransfer"
+                            v-model="forms.ftpAddress.fields.binaryTransfer"></v-switch>
+                  <v-switch name="zipFile" label="File compression" class="mr-4" trueValue="Y" falseValue="N"
+                            :rules="forms.ftpAddress.rules.zipFile"
+                            v-model="forms.ftpAddress.fields.zipFile"></v-switch>
+                  <v-switch name="passiveMode" label="Passive mode" trueValue="Y" falseValue="N"
+                            :rules="forms.ftpAddress.rules.passiveMode"
+                            v-model="forms.ftpAddress.fields.passiveMode"></v-switch>
                 </v-row>
                 <v-row justify="end">
                   <v-switch name="allowSolicitation" label="Allow Solicitation?" class="ma-2"
@@ -280,9 +461,11 @@
               LDAP Address
             </v-expansion-panel-header>
             <v-expansion-panel-content>
-              <v-form ref="createLdapAddress" :lazy-validator="lazy" v-model="forms.internalNote.valid" v-on:submit.prevent="createLdapAddress">
+              <v-form ref="createLdapAddress" :lazy-validator="lazy" v-model="forms.internalNote.valid"
+                      v-on:submit.prevent="createLdapAddress">
                 <v-row>
-                  <v-text-field name="LdapAddress" label="LDAP Address" :rules="forms.ldapAddress.rules.ldapAddress" v-model="forms.ldapAddress.fields.ldapAddress"></v-text-field>
+                  <v-text-field name="LdapAddress" label="LDAP Address" :rules="forms.ldapAddress.rules.ldapAddress"
+                                v-model="forms.ldapAddress.fields.ldapAddress"></v-text-field>
                 </v-row>
                 <v-row justify="end">
                   <v-switch name="allowSolicitation" label="Allow Solicitation?" class="ma-2"
@@ -339,6 +522,9 @@
     data() {
       return {
         dataSet: {},
+        cardMode: true,
+        editMode: false,
+        showMore: false,
         items: [
           'item 1',
           'item 2',
@@ -532,7 +718,10 @@
     computed: {},
     methods: {
       contactsByType(type) {
-        return this.dataSet.hasOwnProperty('valueMaps') ? this.dataSet.valueMaps.filter(contact => contact.contactMech.contactMechTypeId === type) : []
+        if (this.showMore) {
+          return this.dataSet.hasOwnProperty('valueMaps') ? this.dataSet.valueMaps.filter(contact => contact.contactMech.contactMechTypeId === type) : []
+        }
+        return this.dataSet.hasOwnProperty('valueMaps') ? this.dataSet.valueMaps.filter(contact => contact.contactMech.contactMechTypeId === type).splice(0, 1) : []
       },
       countContactsByType(type) {
         return this.dataSet.hasOwnProperty('valueMaps') ? this.dataSet.valueMaps.filter(contact => contact.contactMech.contactMechTypeId === type).length : []
@@ -715,6 +904,12 @@
           }
         )
       },
+      toggleEdit() {
+        this.editMode = !this.editMode
+      },
+      toggleShowMore() {
+        this.showMore = !this.showMore
+      }
     },
     mounted() {
       this.updateDataSet()
