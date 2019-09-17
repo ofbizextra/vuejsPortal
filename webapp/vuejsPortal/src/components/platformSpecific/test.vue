@@ -3,17 +3,28 @@
     <v-layout wrap justify-space-around v-if="cardMode">
       <v-flex text-left stretch xs12>
         <v-card>
-          <v-card-title>
-            Contact mech
-            <v-btn fab color="primary" top right absolute @click="toggleEdit" v-if="!editMode">
+          <v-toolbar flat v-if="!editMode">
+            <v-toolbar-title>Contact mech</v-toolbar-title>
+            <div class="flex-grow-1"></div>
+            <v-btn icon @click="toggleEdit">
               <v-icon>mdi-pencil</v-icon>
             </v-btn>
-          </v-card-title>
+          </v-toolbar>
+          <v-toolbar flat v-if="editMode">
+            <v-btn icon @click="toggleEdit">
+              <v-icon>mdi-arrow-left</v-icon>
+            </v-btn>
+            <v-toolbar-title>Edit contact mech</v-toolbar-title>
+            <div class="flex-grow-1"></div>
+            <v-btn icon @click="toggleEdit">
+              <v-icon>mdi-check</v-icon>
+            </v-btn>
+          </v-toolbar>
+          <v-divider></v-divider>
           <v-card-text>
-            <v-row wrap dense>
+            <v-row stretch dense>
               <v-col cols="12" md="6" align-self="start">
                 <v-list>
-                  <v-subheader inset>Telecom number</v-subheader>
                   <v-list-item v-for="phoneNumber in contactsByType('TELECOM_NUMBER')"
                                :key="phoneNumber.contactMech.contactMechId">
                     <v-list-item-icon>
@@ -26,34 +37,33 @@
                       </v-list-item-title>
                       <v-list-item-title v-if="editMode">
                         <v-row>
-                          <v-col class="col-lg-2 col-sm-6 col-12">
+                          <v-col class="col-3">
                             <v-text-field label="Country code"
                                           v-model="phoneNumber.telecomNumber.countryCode"></v-text-field>
                           </v-col>
-                          <v-col class="col-lg-2 col-sm-6 col-12">
-                            <v-text-field label="Area code" v-model="phoneNumber.telecomNumber.areaCode"></v-text-field>
-                          </v-col>
-                          <v-col class="col-lg-6 col-sm-12 col-12">
+                          <v-col class="col-9">
                             <v-text-field label="Number"
                                           v-model="phoneNumber.telecomNumber.contactNumber"></v-text-field>
-                          </v-col>
-                          <v-col class="col-lg-2 col-sm-6 col-12">
-                            <v-text-field label="Ext" v-model="phoneNumber.telecomNumber.extension"></v-text-field>
                           </v-col>
                         </v-row>
                       </v-list-item-title>
                       <v-list-item-subtitle>
-                        <v-chip class="primary" x-small>
-                          purpose one
-                        </v-chip class="primary" x-small>
-                        <v-chip class="primary" x-small>
-                          purpose two
+                        <v-chip class="primary mr-2" x-small v-for="purpose in phoneNumber.partyContactMechPurposes" :key="purpose.contactMechId + '-' + purpose.contactMechPurpostTypeId">
+                          {{purpose.contactMechPurposeTypeId}}
                         </v-chip class="primary" x-small>
                       </v-list-item-subtitle>
                     </v-list-item-content>
                   </v-list-item>
+                  <v-list-item v-if="editMode">
+                    <v-list-item-icon></v-list-item-icon>
+                    <v-list-item-content>
+                      <v-list-item-subtitle @click="toggleEdit">
+                          <v-icon left>mdi-plus-circle</v-icon>
+                          Add
+                      </v-list-item-subtitle>
+                    </v-list-item-content>
+                  </v-list-item>
                   <v-divider inset></v-divider>
-                  <v-subheader inset>Email address</v-subheader>
                   <v-list-item v-for="email in contactsByType('EMAIL_ADDRESS')"
                                :key="email.contactMech.contactMechId">
                     <v-list-item-icon>
@@ -71,11 +81,8 @@
                         </v-row>
                       </v-list-item-title>
                       <v-list-item-subtitle>
-                        <v-chip class="primary" x-small>
-                          purpose one
-                        </v-chip class="primary" x-small>
-                        <v-chip class="primary" x-small>
-                          purpose two
+                        <v-chip class="primary mr-2" x-small v-for="purpose in email.partyContactMechPurposes" :key="purpose.contactMechId + '-' + purpose.contactMechPurpostTypeId">
+                          {{purpose.contactMechPurposeTypeId}}
                         </v-chip class="primary" x-small>
                       </v-list-item-subtitle>
                     </v-list-item-content>
@@ -84,7 +91,6 @@
               </v-col>
               <v-col cols="12" md="6" align-self="start">
                 <v-list>
-                  <v-subheader inset>Postal address</v-subheader>
                   <v-list-item v-for="postalAddress in contactsByType('POSTAL_ADDRESS')"
                                :key="postalAddress.contactMech.contactMechId">
                     <v-list-item-icon>
@@ -104,18 +110,14 @@
                         {{postalAddress.postalAddress.city}}, {{postalAddress.postalAddress.postalCode}}
                       </div>
                       <v-list-item-subtitle>
-                        <v-chip class="primary" x-small>
-                          purpose one
-                        </v-chip class="primary" x-small>
-                        <v-chip class="primary" x-small>
-                          purpose two
+                        <v-chip class="primary mr-2" x-small v-for="purpose in postalAddress.partyContactMechPurposes" :key="purpose.contactMechId + '-' + purpose.contactMechPurpostTypeId">
+                          {{purpose.contactMechPurposeTypeId}}
                         </v-chip class="primary" x-small>
                       </v-list-item-subtitle>
                     </v-list-item-content>
                   </v-list-item>
                   <span v-if="showMore">
               <v-divider inset></v-divider>
-              <v-subheader inset>Internal Note</v-subheader>
               <v-list-item v-for="internalNote in contactsByType('INTERNAL_PARTYID')"
                            :key="internalNote.contactMech.contactMechId">
                 <v-list-item-icon>
@@ -134,12 +136,9 @@
                     </v-row>
                   </v-list-item-title>
                   <v-list-item-subtitle>
-                  <v-chip class="primary" x-small>
-                    purpose one
-                  </v-chip class="primary" x-small>
-                  <v-chip class="primary" x-small>
-                    purpose two
-                  </v-chip class="primary" x-small>
+                    <v-chip class="primary mr-2" x-small v-for="purpose in internalNote.partyContactMechPurposes" :key="purpose.contactMechId + '-' + purpose.contactMechPurpostTypeId">
+                          {{purpose.contactMechPurposeTypeId}}
+                    </v-chip class="primary" x-small>
                   </v-list-item-subtitle>
                 </v-list-item-content>
               </v-list-item>
@@ -152,18 +151,6 @@
               <v-btn text @click="toggleShowMore" v-if="showMore">Show less</v-btn>
             </v-row>
           </v-card-text>
-          <v-card-action v-if="editMode">
-            <v-row justify="end">
-              <v-btn color="error" dark class="ma-2 mr-0" @click="toggleEdit">
-                <v-icon prepend>mdi-arrow-left</v-icon>
-                Back
-              </v-btn>
-              <v-btn color="success" dark class="ma-2 mr-5" @click="toggleEdit">
-                <v-icon prepend>mdi-check</v-icon>
-                Save
-              </v-btn>
-            </v-row>
-          </v-card-action>
         </v-card>
       </v-flex>
     </v-layout>
