@@ -138,6 +138,30 @@
                       </v-list-item-subtitle>
                     </v-list-item-content>
                   </v-list-item>
+                  <v-list-item v-for="ldapAddress in contactsByType('LDAP_ADDRESS')"
+                               :key="ldapAddress.contactMech.contactMechId" v-if="showMore">
+                    <v-list-item-icon>
+                      <v-icon left>mdi-at</v-icon>
+                    </v-list-item-icon>
+                    <v-list-item-content>
+                      <v-list-item-title v-if="!editMode">
+                        {{ldapAddress.contactMech.infoString}}
+                      </v-list-item-title>
+                      <v-list-item-title v-if="editMode">
+                        <v-row>
+                          <v-col>
+                            <v-text-field label="LDAP address" v-model="ldapAddress.contactMech.infoString"></v-text-field>
+                          </v-col>
+                        </v-row>
+                      </v-list-item-title>
+                      <v-list-item-subtitle>
+                        <v-chip class="primary mr-2" x-small v-for="purpose in ldapAddress.partyContactMechPurposes"
+                                :key="purpose.contactMechId + '-' + purpose.contactMechPurpostTypeId">
+                          {{purpose.contactMechPurposeTypeId}}
+                        </v-chip class="primary" x-small>
+                      </v-list-item-subtitle>
+                    </v-list-item-content>
+                  </v-list-item>
                 </v-list>
               </v-col>
               <v-col cols="12" md="6" align-self="start">
