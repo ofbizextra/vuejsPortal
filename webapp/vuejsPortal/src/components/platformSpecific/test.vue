@@ -24,7 +24,7 @@
           <v-card-text>
             <v-row stretch dense>
               <v-col cols="12" md="6" align-self="start">
-                <v-list>
+                <v-list dense>
                   <v-list-item v-for="phoneNumber in contactsByType('TELECOM_NUMBER')"
                                :key="phoneNumber.contactMech.contactMechId">
                     <v-list-item-icon>
@@ -38,16 +38,16 @@
                       <v-list-item-title v-if="editMode">
                         <v-row>
                           <v-col class="col-3">
-                            <v-text-field label="Country code"
+                            <v-text-field hide-details label="Country code"
                                           v-model="phoneNumber.telecomNumber.countryCode"></v-text-field>
                           </v-col>
                           <v-col class="col-9">
-                            <v-text-field label="Number"
+                            <v-text-field hide-details label="Number"
                                           v-model="phoneNumber.telecomNumber.contactNumber"></v-text-field>
                           </v-col>
                         </v-row>
                       </v-list-item-title>
-                      <v-list-item-subtitle>
+                      <v-list-item-subtitle v-if="phoneNumber.partyContactMechPurposes.length > 0">
                         <v-chip class="primary mr-2" x-small v-for="purpose in phoneNumber.partyContactMechPurposes"
                                 :key="purpose.contactMechId + '-' + purpose.contactMechPurpostTypeId">
                           {{purpose.contactMechPurposeTypeId}}
@@ -77,11 +77,11 @@
                       <v-list-item-title v-if="editMode">
                         <v-row>
                           <v-col>
-                            <v-text-field label="Email address" v-model="email.contactMech.infoString"></v-text-field>
+                            <v-text-field hide-details label="Email address" v-model="email.contactMech.infoString"></v-text-field>
                           </v-col>
                         </v-row>
                       </v-list-item-title>
-                      <v-list-item-subtitle>
+                      <v-list-item-subtitle v-if="email.partyContactMechPurposes.length > 0">
                         <v-chip class="primary mr-2" x-small v-for="purpose in email.partyContactMechPurposes"
                                 :key="purpose.contactMechId + '-' + purpose.contactMechPurpostTypeId">
                           {{purpose.contactMechPurposeTypeId}}
@@ -101,11 +101,11 @@
                       <v-list-item-title v-if="editMode">
                         <v-row>
                           <v-col>
-                            <v-text-field label="IP address" v-model="ipAddress.contactMech.infoString"></v-text-field>
+                            <v-text-field hide-details label="IP address" v-model="ipAddress.contactMech.infoString"></v-text-field>
                           </v-col>
                         </v-row>
                       </v-list-item-title>
-                      <v-list-item-subtitle>
+                      <v-list-item-subtitle v-if="ipAddress.partyContactMechPurposes.length > 0">
                         <v-chip class="primary mr-2" x-small v-for="purpose in ipAddress.partyContactMechPurposes"
                                 :key="purpose.contactMechId + '-' + purpose.contactMechPurpostTypeId">
                           {{purpose.contactMechPurposeTypeId}}
@@ -125,12 +125,12 @@
                       <v-list-item-title v-if="editMode">
                         <v-row>
                           <v-col>
-                            <v-text-field label="Domain Name"
+                            <v-text-field hide-details label="Domain Name"
                                           v-model="domainName.contactMech.infoString"></v-text-field>
                           </v-col>
                         </v-row>
                       </v-list-item-title>
-                      <v-list-item-subtitle>
+                      <v-list-item-subtitle v-if="domainName.partyContactMechPurposes.length > 0">
                         <v-chip class="primary mr-2" x-small v-for="purpose in domainName.partyContactMechPurposes"
                                 :key="purpose.contactMechId + '-' + purpose.contactMechPurpostTypeId">
                           {{purpose.contactMechPurposeTypeId}}
@@ -150,11 +150,11 @@
                       <v-list-item-title v-if="editMode">
                         <v-row>
                           <v-col>
-                            <v-text-field label="LDAP address" v-model="ldapAddress.contactMech.infoString"></v-text-field>
+                            <v-text-field hide-details label="LDAP address" v-model="ldapAddress.contactMech.infoString"></v-text-field>
                           </v-col>
                         </v-row>
                       </v-list-item-title>
-                      <v-list-item-subtitle>
+                      <v-list-item-subtitle v-if="ldapAddress.partyContactMechPurposes.length > 0">
                         <v-chip class="primary mr-2" x-small v-for="purpose in ldapAddress.partyContactMechPurposes"
                                 :key="purpose.contactMechId + '-' + purpose.contactMechPurpostTypeId">
                           {{purpose.contactMechPurposeTypeId}}
@@ -165,7 +165,7 @@
                 </v-list>
               </v-col>
               <v-col cols="12" md="6" align-self="start">
-                <v-list>
+                <v-list dense>
                   <v-list-item v-for="postalAddress in contactsByType('POSTAL_ADDRESS')"
                                :key="postalAddress.contactMech.contactMechId">
                     <v-list-item-icon>
@@ -184,7 +184,7 @@
                       <div>
                         {{postalAddress.postalAddress.city}}, {{postalAddress.postalAddress.postalCode}}
                       </div>
-                      <v-list-item-subtitle>
+                      <v-list-item-subtitle v-if="postalAddress.partyContactMechPurposes.length > 0">
                         <v-chip class="primary mr-2" x-small v-for="purpose in postalAddress.partyContactMechPurposes"
                                 :key="purpose.contactMechId + '-' + purpose.contactMechPurpostTypeId">
                           {{purpose.contactMechPurposeTypeId}}
@@ -192,28 +192,28 @@
                       </v-list-item-subtitle>
                     </v-list-item-content>
                     <v-list-item-content v-if="editMode">
-                      <v-form class="ml-8" :lazy-validator="lazy">
+                      <v-form class="ml-3" :lazy-validator="lazy">
                         <v-row>
-                          <v-text-field name="toName" label="To Name" :rules="forms.postalAddress.rules.toName"
+                          <v-text-field hide-details name="toName" label="To Name" :rules="forms.postalAddress.rules.toName"
                                         v-model="postalAddress.postalAddress.toName" class="mr-4"></v-text-field>
-                          <v-text-field name="attentionName" label="Attention Name"
+                          <v-text-field hide-details name="attentionName" label="Attention Name"
                                         :rules="forms.postalAddress.rules.attentionName"
                                         v-model="postalAddress.postalAddress.attnName"></v-text-field>
                         </v-row>
                         <v-row>
-                          <v-text-field name="addressLine1" label="Address Line 1 *"
+                          <v-text-field hide-details name="addressLine1" label="Address Line 1 *"
                                         :rules="forms.postalAddress.rules.addressLine1"
                                         v-model="postalAddress.postalAddress.address1"></v-text-field>
                         </v-row>
                         <v-row>
-                          <v-text-field name="addressLine2" label="Address Line 2"
+                          <v-text-field hide-details name="addressLine2" label="Address Line 2"
                                         :rules="forms.postalAddress.rules.addressLine2"
                                         v-model="postalAddress.postalAddress.address2"></v-text-field>
                         </v-row>
                         <v-row>
-                          <v-text-field name="city" label="City *" v-model="postalAddress.postalAddress.city"
+                          <v-text-field hide-details name="city" label="City *" v-model="postalAddress.postalAddress.city"
                                         :rules="forms.postalAddress.rules.city" class="mr-4"></v-text-field>
-                          <v-text-field name="zipPostalCode" label="Zip/Postal Code *"
+                          <v-text-field hide-details name="zipPostalCode" label="Zip/Postal Code *"
                                         v-model="postalAddress.postalAddress.postalCode"
                                         :rules="forms.postalAddress.rules.zipPostalCode" class="mr-4"></v-text-field>
                         </v-row>
@@ -234,12 +234,12 @@
                   <v-list-item-title v-if="editMode">
                     <v-row>
                       <v-col>
-                        <v-text-field label="Internal note"
+                        <v-text-field hide-details label="Internal note"
                                       v-model="internalNote.contactMech.infoString"></v-text-field>
                       </v-col>
                     </v-row>
                   </v-list-item-title>
-                  <v-list-item-subtitle>
+                  <v-list-item-subtitle v-if="internalNote.partyContactMechPurposes.length > 0">
                     <v-chip class="primary mr-2" x-small v-for="purpose in internalNote.partyContactMechPurposes"
                             :key="purpose.contactMechId + '-' + purpose.contactMechPurpostTypeId">
                           {{purpose.contactMechPurposeTypeId}}
@@ -259,12 +259,12 @@
                   <v-list-item-title v-if="editMode">
                     <v-row>
                       <v-col>
-                        <v-text-field label="Web Address"
+                        <v-text-field hide-details label="Web Address"
                                       v-model="webAddress.contactMech.infoString"></v-text-field>
                       </v-col>
                     </v-row>
                   </v-list-item-title>
-                  <v-list-item-subtitle>
+                  <v-list-item-subtitle v-if="webAddress.partyContactMechPurposes.length > 0">
                     <v-chip class="primary mr-2" x-small v-for="purpose in webAddress.partyContactMechPurposes"
                             :key="purpose.contactMechId + '-' + purpose.contactMechPurpostTypeId">
                       {{purpose.contactMechPurposeTypeId}}
@@ -297,7 +297,7 @@
                                 true-value="Y" false-value="N"></v-switch>
                     </v-row>
                   </div>
-                  <v-list-item-subtitle>
+                  <v-list-item-subtitle v-if="ftpAddress.partyContactMechPurposes.length > 0">
                     <v-chip class="primary mr-2" x-small v-for="purpose in ftpAddress.partyContactMechPurposes"
                             :key="purpose.contactMechId + '-' + purpose.contactMechPurpostTypeId">
                       {{purpose.contactMechPurposeTypeId}}
@@ -305,23 +305,23 @@
                   </v-list-item-subtitle>
                 </v-list-item-content>
                 <v-list-item-content v-if="editMode">
-                  <v-form class="ml-8" :lazy-validator="lazy">
+                  <v-form class="ml-3" :lazy-validator="lazy">
                     <v-row>
-                      <v-text-field name="hostname" label="Host name" class="mr-4" :rules="forms.ftpAddress.rules.hostname"
+                      <v-text-field hide-details name="hostname" label="Host name" class="mr-4" :rules="forms.ftpAddress.rules.hostname"
                                     v-model="ftpAddress.ftpAddress.hostname"></v-text-field>
-                      <v-text-field name="port" label="Port" class="" :rules="forms.ftpAddress.rules.port"
+                      <v-text-field hide-details name="port" label="Port" class="" :rules="forms.ftpAddress.rules.port"
                                     v-model="ftpAddress.ftpAddress.port"></v-text-field>
                     </v-row>
                     <v-row>
-                      <v-text-field name="username" label="User Name" class="mr-4" :rules="forms.ftpAddress.rules.username"
+                      <v-text-field hide-details name="username" label="User Name" class="mr-4" :rules="forms.ftpAddress.rules.username"
                                     v-model="ftpAddress.ftpAddress.username"></v-text-field>
-                      <v-text-field name="ftpPassword" label="Password" :rules="forms.ftpAddress.rules.ftpPassword"
+                      <v-text-field hide-details name="ftpPassword" label="Password" :rules="forms.ftpAddress.rules.ftpPassword"
                                     v-model="ftpAddress.ftpAddress.ftpPassword"></v-text-field>
                     </v-row>
                     <v-row>
-                      <v-text-field name="filePath" label="Path" class="mr-4" :rules="forms.ftpAddress.rules.filePath"
+                      <v-text-field hide-details name="filePath" label="Path" class="mr-4" :rules="forms.ftpAddress.rules.filePath"
                                     v-model="ftpAddress.ftpAddress.filePath"></v-text-field>
-                      <v-text-field name="defaultTimeout" label="Path default timeout" class=""
+                      <v-text-field hide-details name="defaultTimeout" label="Path default timeout" class=""
                                     :rules="forms.ftpAddress.rules.defaultTimeout"
                                     v-model="ftpAddress.ftpAddress.defaultTimeout"></v-text-field>
                     </v-row>
