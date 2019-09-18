@@ -171,7 +171,7 @@
                     <v-list-item-icon>
                       <v-icon left>mdi-mailbox</v-icon>
                     </v-list-item-icon>
-                    <v-list-item-content>
+                    <v-list-item-content v-if="!editMode">
                       <v-list-item-title>
                         {{postalAddress.postalAddress.toName}} {{postalAddress.postalAddress.attnName}}
                       </v-list-item-title>
@@ -190,6 +190,34 @@
                           {{purpose.contactMechPurposeTypeId}}
                         </v-chip class="primary" x-small>
                       </v-list-item-subtitle>
+                    </v-list-item-content>
+                    <v-list-item-content v-if="editMode">
+                      <v-form class="ml-8" :lazy-validator="lazy">
+                        <v-row>
+                          <v-text-field name="toName" label="To Name" :rules="forms.postalAddress.rules.toName"
+                                        v-model="postalAddress.postalAddress.toName" class="mr-4"></v-text-field>
+                          <v-text-field name="attentionName" label="Attention Name"
+                                        :rules="forms.postalAddress.rules.attentionName"
+                                        v-model="postalAddress.postalAddress.attnName"></v-text-field>
+                        </v-row>
+                        <v-row>
+                          <v-text-field name="addressLine1" label="Address Line 1 *"
+                                        :rules="forms.postalAddress.rules.addressLine1"
+                                        v-model="postalAddress.postalAddress.address1"></v-text-field>
+                        </v-row>
+                        <v-row>
+                          <v-text-field name="addressLine2" label="Address Line 2"
+                                        :rules="forms.postalAddress.rules.addressLine2"
+                                        v-model="postalAddress.postalAddress.address2"></v-text-field>
+                        </v-row>
+                        <v-row>
+                          <v-text-field name="city" label="City *" v-model="postalAddress.postalAddress.city"
+                                        :rules="forms.postalAddress.rules.city" class="mr-4"></v-text-field>
+                          <v-text-field name="zipPostalCode" label="Zip/Postal Code *"
+                                        v-model="postalAddress.postalAddress.postalCode"
+                                        :rules="forms.postalAddress.rules.zipPostalCode" class="mr-4"></v-text-field>
+                        </v-row>
+                      </v-form>
                     </v-list-item-content>
                   </v-list-item>
                   <span v-if="showMore">
