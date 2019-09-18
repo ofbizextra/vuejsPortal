@@ -48,7 +48,8 @@
                         </v-row>
                       </v-list-item-title>
                       <v-list-item-subtitle>
-                        <v-chip class="primary mr-2" x-small v-for="purpose in phoneNumber.partyContactMechPurposes" :key="purpose.contactMechId + '-' + purpose.contactMechPurpostTypeId">
+                        <v-chip class="primary mr-2" x-small v-for="purpose in phoneNumber.partyContactMechPurposes"
+                                :key="purpose.contactMechId + '-' + purpose.contactMechPurpostTypeId">
                           {{purpose.contactMechPurposeTypeId}}
                         </v-chip class="primary" x-small>
                       </v-list-item-subtitle>
@@ -58,8 +59,8 @@
                     <v-list-item-icon></v-list-item-icon>
                     <v-list-item-content>
                       <v-list-item-subtitle @click="toggleEdit">
-                          <v-icon left>mdi-plus-circle</v-icon>
-                          Add
+                        <v-icon left>mdi-plus-circle</v-icon>
+                        Add
                       </v-list-item-subtitle>
                     </v-list-item-content>
                   </v-list-item>
@@ -81,7 +82,8 @@
                         </v-row>
                       </v-list-item-title>
                       <v-list-item-subtitle>
-                        <v-chip class="primary mr-2" x-small v-for="purpose in email.partyContactMechPurposes" :key="purpose.contactMechId + '-' + purpose.contactMechPurpostTypeId">
+                        <v-chip class="primary mr-2" x-small v-for="purpose in email.partyContactMechPurposes"
+                                :key="purpose.contactMechId + '-' + purpose.contactMechPurpostTypeId">
                           {{purpose.contactMechPurposeTypeId}}
                         </v-chip class="primary" x-small>
                       </v-list-item-subtitle>
@@ -104,7 +106,33 @@
                         </v-row>
                       </v-list-item-title>
                       <v-list-item-subtitle>
-                        <v-chip class="primary mr-2" x-small v-for="purpose in ipAddress.partyContactMechPurposes" :key="purpose.contactMechId + '-' + purpose.contactMechPurpostTypeId">
+                        <v-chip class="primary mr-2" x-small v-for="purpose in ipAddress.partyContactMechPurposes"
+                                :key="purpose.contactMechId + '-' + purpose.contactMechPurpostTypeId">
+                          {{purpose.contactMechPurposeTypeId}}
+                        </v-chip class="primary" x-small>
+                      </v-list-item-subtitle>
+                    </v-list-item-content>
+                  </v-list-item>
+                  <v-list-item v-for="domainName in contactsByType('DOMAIN_NAME')"
+                               :key="domainName.contactMech.contactMechId" v-if="showMore">
+                    <v-list-item-icon>
+                      <v-icon left>mdi-web</v-icon>
+                    </v-list-item-icon>
+                    <v-list-item-content>
+                      <v-list-item-title v-if="!editMode">
+                        {{domainName.contactMech.infoString}}
+                      </v-list-item-title>
+                      <v-list-item-title v-if="editMode">
+                        <v-row>
+                          <v-col>
+                            <v-text-field label="Domain Name"
+                                          v-model="domainName.contactMech.infoString"></v-text-field>
+                          </v-col>
+                        </v-row>
+                      </v-list-item-title>
+                      <v-list-item-subtitle>
+                        <v-chip class="primary mr-2" x-small v-for="purpose in domainName.partyContactMechPurposes"
+                                :key="purpose.contactMechId + '-' + purpose.contactMechPurpostTypeId">
                           {{purpose.contactMechPurposeTypeId}}
                         </v-chip class="primary" x-small>
                       </v-list-item-subtitle>
@@ -133,7 +161,8 @@
                         {{postalAddress.postalAddress.city}}, {{postalAddress.postalAddress.postalCode}}
                       </div>
                       <v-list-item-subtitle>
-                        <v-chip class="primary mr-2" x-small v-for="purpose in postalAddress.partyContactMechPurposes" :key="purpose.contactMechId + '-' + purpose.contactMechPurpostTypeId">
+                        <v-chip class="primary mr-2" x-small v-for="purpose in postalAddress.partyContactMechPurposes"
+                                :key="purpose.contactMechId + '-' + purpose.contactMechPurpostTypeId">
                           {{purpose.contactMechPurposeTypeId}}
                         </v-chip class="primary" x-small>
                       </v-list-item-subtitle>
@@ -159,7 +188,8 @@
                     </v-row>
                   </v-list-item-title>
                   <v-list-item-subtitle>
-                    <v-chip class="primary mr-2" x-small v-for="purpose in internalNote.partyContactMechPurposes" :key="purpose.contactMechId + '-' + purpose.contactMechPurpostTypeId">
+                    <v-chip class="primary mr-2" x-small v-for="purpose in internalNote.partyContactMechPurposes"
+                            :key="purpose.contactMechId + '-' + purpose.contactMechPurpostTypeId">
                           {{purpose.contactMechPurposeTypeId}}
                     </v-chip class="primary" x-small>
                   </v-list-item-subtitle>
