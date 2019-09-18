@@ -244,6 +244,39 @@
                   </v-list-item-subtitle>
                 </v-list-item-content>
               </v-list-item>
+                <v-list-item v-for="ftpAddress in contactsByType('FTP_ADDRESS')"
+                             :key="ftpAddress.contactMech.contactMechId">
+                <v-list-item-icon>
+                  <v-icon left>mdi-mailbox</v-icon>
+                </v-list-item-icon>
+                <v-list-item-content>
+                  <v-list-item-title>
+                    {{ftpAddress.ftpAddress.hostname}}:{{ftpAddress.ftpAddress.port}}
+                  </v-list-item-title>
+                  <div>
+                    user: {{ftpAddress.ftpAddress.username}} - pass: {{ftpAddress.ftpAddress.ftpPassword}}
+                  </div>
+                  <div>
+                    {{ftpAddress.ftpAddress.filePath}} - {{ftpAddress.ftpAddress.defaultTimeout}}ms
+                  </div>
+                  <div>
+                    <v-row inset class="justify-space-around">
+                      <v-switch small label="binary" :disabled="!editMode" v-model="ftpAddress.ftpAddress.binaryTransfer"
+                                true-value="Y" false-value="N"></v-switch>
+                      <v-switch small label="zip" :disabled="!editMode" v-model="ftpAddress.ftpAddress.zipFile"
+                                true-value="Y" false-value="N"></v-switch>
+                      <v-switch small label="passive" :disabled="!editMode" v-model="ftpAddress.ftpAddress.passiveMode"
+                                true-value="Y" false-value="N"></v-switch>
+                    </v-row>
+                  </div>
+                  <v-list-item-subtitle>
+                    <v-chip class="primary mr-2" x-small v-for="purpose in ftpAddress.partyContactMechPurposes"
+                            :key="purpose.contactMechId + '-' + purpose.contactMechPurpostTypeId">
+                      {{purpose.contactMechPurposeTypeId}}
+                    </v-chip class="primary" x-small>
+                  </v-list-item-subtitle>
+                </v-list-item-content>
+              </v-list-item>
             </span>
                 </v-list>
               </v-col>
