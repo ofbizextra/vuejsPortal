@@ -277,7 +277,7 @@
                 <v-list-item-icon>
                   <v-icon left>mdi-mailbox</v-icon>
                 </v-list-item-icon>
-                <v-list-item-content>
+                <v-list-item-content v-if="!editMode">
                   <v-list-item-title>
                     {{ftpAddress.ftpAddress.hostname}}:{{ftpAddress.ftpAddress.port}}
                   </v-list-item-title>
@@ -303,6 +303,40 @@
                       {{purpose.contactMechPurposeTypeId}}
                     </v-chip class="primary" x-small>
                   </v-list-item-subtitle>
+                </v-list-item-content>
+                <v-list-item-content v-if="editMode">
+                  <v-form class="ml-8" :lazy-validator="lazy">
+                    <v-row>
+                      <v-text-field name="hostname" label="Host name" class="mr-4" :rules="forms.ftpAddress.rules.hostname"
+                                    v-model="ftpAddress.ftpAddress.hostname"></v-text-field>
+                      <v-text-field name="port" label="Port" class="" :rules="forms.ftpAddress.rules.port"
+                                    v-model="ftpAddress.ftpAddress.port"></v-text-field>
+                    </v-row>
+                    <v-row>
+                      <v-text-field name="username" label="User Name" class="mr-4" :rules="forms.ftpAddress.rules.username"
+                                    v-model="ftpAddress.ftpAddress.username"></v-text-field>
+                      <v-text-field name="ftpPassword" label="Password" :rules="forms.ftpAddress.rules.ftpPassword"
+                                    v-model="ftpAddress.ftpAddress.ftpPassword"></v-text-field>
+                    </v-row>
+                    <v-row>
+                      <v-text-field name="filePath" label="Path" class="mr-4" :rules="forms.ftpAddress.rules.filePath"
+                                    v-model="ftpAddress.ftpAddress.filePath"></v-text-field>
+                      <v-text-field name="defaultTimeout" label="Path default timeout" class=""
+                                    :rules="forms.ftpAddress.rules.defaultTimeout"
+                                    v-model="ftpAddress.ftpAddress.defaultTimeout"></v-text-field>
+                    </v-row>
+                    <v-row justify="space-around">
+                      <v-switch name="binaryTransfer" label="Binary Transfert" class="mr-4" trueValue="Y" falseValue="N"
+                                :rules="forms.ftpAddress.rules.binaryTransfer"
+                                v-model="ftpAddress.ftpAddress.binaryTransfer"></v-switch>
+                      <v-switch name="zipFile" label="File compression" class="mr-4" trueValue="Y" falseValue="N"
+                                :rules="forms.ftpAddress.rules.zipFile"
+                                v-model="ftpAddress.ftpAddress.zipFile"></v-switch>
+                      <v-switch name="passiveMode" label="Passive mode" trueValue="Y" falseValue="N"
+                                :rules="forms.ftpAddress.rules.passiveMode"
+                                v-model="ftpAddress.ftpAddress.passiveMode"></v-switch>
+                    </v-row>
+                  </v-form>
                 </v-list-item-content>
               </v-list-item>
             </span>
