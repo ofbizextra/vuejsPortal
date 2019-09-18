@@ -16,7 +16,7 @@
             </v-btn>
             <v-toolbar-title>Edit contact mech</v-toolbar-title>
             <div class="flex-grow-1"></div>
-            <v-btn icon @click="toggleEdit">
+            <v-btn icon @click="updateAll">
               <v-icon>mdi-check</v-icon>
             </v-btn>
           </v-toolbar>
@@ -49,7 +49,7 @@
                       </v-list-item-title>
                       <v-list-item-subtitle v-if="phoneNumber.partyContactMechPurposes.length > 0">
                         <v-chip class="primary mr-2" x-small v-for="purpose in phoneNumber.partyContactMechPurposes"
-                                :key="purpose.contactMechId + '-' + purpose.contactMechPurpostTypeId">
+                                :key="purpose.contactMechId + '-' + purpose.contactMechPurposeTypeId">
                           {{purpose.contactMechPurposeTypeId}}
                         </v-chip class="primary" x-small>
                       </v-list-item-subtitle>
@@ -77,7 +77,8 @@
                       <v-list-item-title v-if="editMode">
                         <v-row>
                           <v-col>
-                            <v-text-field hide-details label="Email address" v-model="email.contactMech.infoString"></v-text-field>
+                            <v-text-field hide-details label="Email address"
+                                          v-model="email.contactMech.infoString"></v-text-field>
                           </v-col>
                         </v-row>
                       </v-list-item-title>
@@ -101,7 +102,8 @@
                       <v-list-item-title v-if="editMode">
                         <v-row>
                           <v-col>
-                            <v-text-field hide-details label="IP address" v-model="ipAddress.contactMech.infoString"></v-text-field>
+                            <v-text-field hide-details label="IP address"
+                                          v-model="ipAddress.contactMech.infoString"></v-text-field>
                           </v-col>
                         </v-row>
                       </v-list-item-title>
@@ -150,7 +152,8 @@
                       <v-list-item-title v-if="editMode">
                         <v-row>
                           <v-col>
-                            <v-text-field hide-details label="LDAP address" v-model="ldapAddress.contactMech.infoString"></v-text-field>
+                            <v-text-field hide-details label="LDAP address"
+                                          v-model="ldapAddress.contactMech.infoString"></v-text-field>
                           </v-col>
                         </v-row>
                       </v-list-item-title>
@@ -194,7 +197,8 @@
                     <v-list-item-content v-if="editMode">
                       <v-form class="ml-3" :lazy-validator="lazy">
                         <v-row>
-                          <v-text-field hide-details name="toName" label="To Name" :rules="forms.postalAddress.rules.toName"
+                          <v-text-field hide-details name="toName" label="To Name"
+                                        :rules="forms.postalAddress.rules.toName"
                                         v-model="postalAddress.postalAddress.toName" class="mr-4"></v-text-field>
                           <v-text-field hide-details name="attentionName" label="Attention Name"
                                         :rules="forms.postalAddress.rules.attentionName"
@@ -211,7 +215,8 @@
                                         v-model="postalAddress.postalAddress.address2"></v-text-field>
                         </v-row>
                         <v-row>
-                          <v-text-field hide-details name="city" label="City *" v-model="postalAddress.postalAddress.city"
+                          <v-text-field hide-details name="city" label="City *"
+                                        v-model="postalAddress.postalAddress.city"
                                         :rules="forms.postalAddress.rules.city" class="mr-4"></v-text-field>
                           <v-text-field hide-details name="zipPostalCode" label="Zip/Postal Code *"
                                         v-model="postalAddress.postalAddress.postalCode"
@@ -289,7 +294,8 @@
                   </div>
                   <div>
                     <v-row inset class="justify-space-around">
-                      <v-switch small label="binary" :disabled="!editMode" v-model="ftpAddress.ftpAddress.binaryTransfer"
+                      <v-switch small label="binary" :disabled="!editMode"
+                                v-model="ftpAddress.ftpAddress.binaryTransfer"
                                 true-value="Y" false-value="N"></v-switch>
                       <v-switch small label="zip" :disabled="!editMode" v-model="ftpAddress.ftpAddress.zipFile"
                                 true-value="Y" false-value="N"></v-switch>
@@ -307,19 +313,23 @@
                 <v-list-item-content v-if="editMode">
                   <v-form class="ml-3" :lazy-validator="lazy">
                     <v-row>
-                      <v-text-field hide-details name="hostname" label="Host name" class="mr-4" :rules="forms.ftpAddress.rules.hostname"
+                      <v-text-field hide-details name="hostname" label="Host name" class="mr-4"
+                                    :rules="forms.ftpAddress.rules.hostname"
                                     v-model="ftpAddress.ftpAddress.hostname"></v-text-field>
                       <v-text-field hide-details name="port" label="Port" class="" :rules="forms.ftpAddress.rules.port"
                                     v-model="ftpAddress.ftpAddress.port"></v-text-field>
                     </v-row>
                     <v-row>
-                      <v-text-field hide-details name="username" label="User Name" class="mr-4" :rules="forms.ftpAddress.rules.username"
+                      <v-text-field hide-details name="username" label="User Name" class="mr-4"
+                                    :rules="forms.ftpAddress.rules.username"
                                     v-model="ftpAddress.ftpAddress.username"></v-text-field>
-                      <v-text-field hide-details name="ftpPassword" label="Password" :rules="forms.ftpAddress.rules.ftpPassword"
+                      <v-text-field hide-details name="ftpPassword" label="Password"
+                                    :rules="forms.ftpAddress.rules.ftpPassword"
                                     v-model="ftpAddress.ftpAddress.ftpPassword"></v-text-field>
                     </v-row>
                     <v-row>
-                      <v-text-field hide-details name="filePath" label="Path" class="mr-4" :rules="forms.ftpAddress.rules.filePath"
+                      <v-text-field hide-details name="filePath" label="Path" class="mr-4"
+                                    :rules="forms.ftpAddress.rules.filePath"
                                     v-model="ftpAddress.ftpAddress.filePath"></v-text-field>
                       <v-text-field hide-details name="defaultTimeout" label="Path default timeout" class=""
                                     :rules="forms.ftpAddress.rules.defaultTimeout"
@@ -687,6 +697,11 @@
   const createTelecomNumberUrl = 'https://localhost:8443/partymgrapi/control/createTelecomNumber'
   const createContactMech = 'https://localhost:8443/partymgrapi/control/createContactMech'
   const createFtpAddressUrl = 'https://localhost:8443/partymgrapi/control/createFtpAddress'
+  const updateContactMechUrl = 'https://localhost:8443/partymgrapi/control/updateContactMech'
+  const updatePostalAddressUrl = 'https://localhost:8443/partymgrapi/control/updatePostalAddress'
+  const updateTelecomNumberUrl = 'https://localhost:8443/partymgrapi/control/updateTelecomNumber'
+  const updateEmailAddressUrl = 'https://localhost:8443/partymgrapi/control/updateEmailAddress'
+  const updateFtpAddressUrl = 'https://localhost:8443/partymgrapi/control/updateFtpAddress'
 
   export default {
     name: "test",
@@ -1093,6 +1108,50 @@
       },
       toggleShowMore() {
         this.showMore = !this.showMore
+      },
+      updateAll() {
+        let promises = []
+        for (let contactMech of this.dataSet.valueMaps) {
+          switch (contactMech.contactMech.contactMechTypeId) {
+            case 'POSTAL_ADDRESS':
+              // do update
+              break
+            case 'TELECOM_NUMBER':
+              // do update
+              break
+            case 'EMAIL_ADDRESS':
+              // do update
+              break
+            case 'FTP_ADDRESS':
+              // do update
+              break
+            default:
+              // do update
+              promises.push(new Promise((resolve, reject) => {
+                setTimeout(() => {
+                  this.$http.post(updateContactMechUrl, {
+                    contactMechId: contactMech.contactMech.contactMechId,
+                    contactMechTypeId: contactMech.contactMech.contactMechTypeId,
+                    partyId: 'DemoLead3',
+                    infoString: contactMech.contactMech.infoString
+                  }).then(
+                    result => {
+                      resolve()
+                    },
+                    error => {
+                      console.log('Error during contactMech update.')
+                      reject()
+                    }
+                  )
+                }, 0)
+              }))
+              break
+          }
+        }
+        this.toggleEdit()
+        Promise.all(promises).then(() => {
+          this.updateDataSet()
+        })
       }
     },
     mounted() {
