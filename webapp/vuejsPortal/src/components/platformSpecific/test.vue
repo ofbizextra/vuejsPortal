@@ -195,6 +195,31 @@
                   </v-list-item-subtitle>
                 </v-list-item-content>
               </v-list-item>
+                <v-list-item v-for="webAddress in contactsByType('WEB_ADDRESS')"
+                             :key="webAddress.contactMech.contactMechId" v-if="showMore">
+                <v-list-item-icon>
+                  <v-icon left>mdi-web</v-icon>
+                </v-list-item-icon>
+                <v-list-item-content>
+                  <v-list-item-title v-if="!editMode">
+                    {{webAddress.contactMech.infoString}}
+                  </v-list-item-title>
+                  <v-list-item-title v-if="editMode">
+                    <v-row>
+                      <v-col>
+                        <v-text-field label="Web Address"
+                                      v-model="webAddress.contactMech.infoString"></v-text-field>
+                      </v-col>
+                    </v-row>
+                  </v-list-item-title>
+                  <v-list-item-subtitle>
+                    <v-chip class="primary mr-2" x-small v-for="purpose in webAddress.partyContactMechPurposes"
+                            :key="purpose.contactMechId + '-' + purpose.contactMechPurpostTypeId">
+                      {{purpose.contactMechPurposeTypeId}}
+                    </v-chip class="primary" x-small>
+                  </v-list-item-subtitle>
+                </v-list-item-content>
+              </v-list-item>
             </span>
                 </v-list>
               </v-col>
