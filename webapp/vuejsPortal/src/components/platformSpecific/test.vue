@@ -133,7 +133,7 @@
                       </v-list-item-subtitle>
                     </v-list-item-content>
                   </v-list-item>
-                  <v-list-item v-for="domainName in contactsByType('DOMAIN_NAME')"
+                  <v-list-item v-for="domainName in domainNameList"
                                :key="domainName.contactMech.contactMechId" v-if="showMore">
                     <v-list-item-icon>
                       <v-icon left>mdi-web</v-icon>
@@ -155,6 +155,15 @@
                                 :key="purpose.contactMechId + '-' + purpose.contactMechPurpostTypeId">
                           {{purpose.contactMechPurposeTypeId}}
                         </v-chip class="primary" x-small>
+                      </v-list-item-subtitle>
+                    </v-list-item-content>
+                  </v-list-item>
+                  <v-list-item v-if="editMode">
+                    <v-list-item-icon></v-list-item-icon>
+                    <v-list-item-content>
+                      <v-list-item-subtitle @click="addDomainName">
+                        <v-icon left>mdi-plus-circle</v-icon>
+                        Add
                       </v-list-item-subtitle>
                     </v-list-item-content>
                   </v-list-item>
@@ -1012,6 +1021,12 @@
         }
         return this.dataSet.hasOwnProperty('valueMaps') ? [...this.dataSet.valueMaps.filter(contact => contact.contactMech.contactMechTypeId === 'INTERNAL_PARTYID').splice(0, 1), ...this.toCreate.filter(contact => contact.contactMech.contactMechTypeId === 'INTERNAL_PARTYID')] : []
       },
+      domainNameList() {
+        if (this.showMore) {
+          return this.dataSet.hasOwnProperty('valueMaps') ? [...this.dataSet.valueMaps, ...this.toCreate].filter(contact => contact.contactMech.contactMechTypeId === 'DOMAIN_NAME') : []
+        }
+        return this.dataSet.hasOwnProperty('valueMaps') ? [...this.dataSet.valueMaps.filter(contact => contact.contactMech.contactMechTypeId === 'DOMAIN_NAME').splice(0, 1), ...this.toCreate.filter(contact => contact.contactMech.contactMechTypeId === 'DOMAIN_NAME')] : []
+      },
     },
     methods: {
       contactsByType(type) {
@@ -1268,7 +1283,14 @@
         })
       },
       addDomainName() {
-
+        this.toCreate.push({
+          contactMech: {
+            partyId: 'DemoLead3',
+            contactMechTypeId: 'DOMAIN_NAME',
+            infoString: ''
+          },
+          partyContactMechPurposes: []
+        })
       },
       addInternalPartyId() {
         this.toCreate.push({
