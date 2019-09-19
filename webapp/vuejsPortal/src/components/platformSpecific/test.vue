@@ -99,7 +99,7 @@
                       </v-list-item-subtitle>
                     </v-list-item-content>
                   </v-list-item>
-                  <v-list-item v-for="ipAddress in contactsByType('IP_ADDRESS')"
+                  <v-list-item v-for="ipAddress in ipAddressList"
                                :key="ipAddress.contactMech.contactMechId" v-if="showMore">
                     <v-list-item-icon>
                       <v-icon left>mdi-web</v-icon>
@@ -121,6 +121,15 @@
                                 :key="purpose.contactMechId + '-' + purpose.contactMechPurpostTypeId">
                           {{purpose.contactMechPurposeTypeId}}
                         </v-chip class="primary" x-small>
+                      </v-list-item-subtitle>
+                    </v-list-item-content>
+                  </v-list-item>
+                  <v-list-item v-if="editMode">
+                    <v-list-item-icon></v-list-item-icon>
+                    <v-list-item-content>
+                      <v-list-item-subtitle @click="addIpAddress">
+                        <v-icon left>mdi-plus-circle</v-icon>
+                        Add
                       </v-list-item-subtitle>
                     </v-list-item-content>
                   </v-list-item>
@@ -295,7 +304,7 @@
                   </v-list-item-subtitle>
                 </v-list-item-content>
               </v-list-item>
-                <v-list-item v-for="ftpAddress in contactsByType('FTP_ADDRESS')"
+                <v-list-item v-for="ftpAddress in ftpAddressList"
                              :key="ftpAddress.contactMech.contactMechId">
                 <v-list-item-icon>
                   <v-icon left>mdi-mailbox</v-icon>
@@ -961,6 +970,18 @@
         }
         return this.dataSet.hasOwnProperty('valueMaps') ? [...this.dataSet.valueMaps.filter(contact => contact.contactMech.contactMechTypeId === 'POSTAL_ADDRESS').splice(0, 1), ...this.toCreate.filter(contact => contact.contactMech.contactMechTypeId === 'POSTAL_ADDRESS')] : []
       },
+      ftpAddressList() {
+        if (this.showMore) {
+          return this.dataSet.hasOwnProperty('valueMaps') ? [...this.dataSet.valueMaps, ...this.toCreate].filter(contact => contact.contactMech.contactMechTypeId === 'FTP_ADDRESS') : []
+        }
+        return this.dataSet.hasOwnProperty('valueMaps') ? [...this.dataSet.valueMaps.filter(contact => contact.contactMech.contactMechTypeId === 'FTP_ADDRESS').splice(0, 1), ...this.toCreate.filter(contact => contact.contactMech.contactMechTypeId === 'FTP_ADDRESS')] : []
+      },
+      ipAddressList() {
+        if (this.showMore) {
+          return this.dataSet.hasOwnProperty('valueMaps') ? [...this.dataSet.valueMaps, ...this.toCreate].filter(contact => contact.contactMech.contactMechTypeId === 'IP_ADDRESS') : []
+        }
+        return this.dataSet.hasOwnProperty('valueMaps') ? [...this.dataSet.valueMaps.filter(contact => contact.contactMech.contactMechTypeId === 'IP_ADDRESS').splice(0, 1), ...this.toCreate.filter(contact => contact.contactMech.contactMechTypeId === 'IP_ADDRESS')] : []
+      },
     },
     methods: {
       contactsByType(type) {
@@ -1197,7 +1218,14 @@
         })
       },
       addIpAddress() {
-
+        this.toCreate.push({
+          contactMech: {
+            partyId: 'DemoLead3',
+            contactMechTypeId: 'IP_ADDRESS',
+            infoString: ''
+          },
+          partyContactMechPurposes: []
+        })
       },
       addWebAddress() {
 
