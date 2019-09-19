@@ -65,7 +65,7 @@
                     </v-list-item-content>
                   </v-list-item>
                   <v-divider inset></v-divider>
-                  <v-list-item v-for="email in contactsByType('EMAIL_ADDRESS')"
+                  <v-list-item v-for="email in emailAddressList"
                                :key="email.contactMech.contactMechId">
                     <v-list-item-icon>
                       <v-icon left>mdi-at</v-icon>
@@ -87,6 +87,15 @@
                                 :key="purpose.contactMechId + '-' + purpose.contactMechPurpostTypeId">
                           {{purpose.contactMechPurposeTypeId}}
                         </v-chip class="primary" x-small>
+                      </v-list-item-subtitle>
+                    </v-list-item-content>
+                  </v-list-item>
+                  <v-list-item v-if="editMode">
+                    <v-list-item-icon></v-list-item-icon>
+                    <v-list-item-content>
+                      <v-list-item-subtitle @click="addEmailAddress">
+                        <v-icon left>mdi-plus-circle</v-icon>
+                        Add
                       </v-list-item-subtitle>
                     </v-list-item-content>
                   </v-list-item>
@@ -922,6 +931,12 @@
         }
         return this.dataSet.hasOwnProperty('valueMaps') ? [...this.dataSet.valueMaps.filter(contact => contact.contactMech.contactMechTypeId === 'TELECOM_NUMBER').splice(0, 1), ...this.toCreate.filter(contact => contact.contactMech.contactMechTypeId === 'TELECOM_NUMBER')] : []
       },
+      emailAddressList() {
+        if (this.showMore) {
+          return this.dataSet.hasOwnProperty('valueMaps') ? [...this.dataSet.valueMaps, ...this.toCreate].filter(contact => contact.contactMech.contactMechTypeId === 'EMAIL_ADDRESS') : []
+        }
+        return this.dataSet.hasOwnProperty('valueMaps') ? [...this.dataSet.valueMaps.filter(contact => contact.contactMech.contactMechTypeId === 'EMAIL_ADDRESS').splice(0, 1), ...this.toCreate.filter(contact => contact.contactMech.contactMechTypeId === 'EMAIL_ADDRESS')] : []
+      },
     },
     methods: {
       contactsByType(type) {
@@ -1118,7 +1133,14 @@
         )
       },
       addEmailAddress() {
-
+        this.toCreate.push({
+          contactMech: {
+            partyId: 'DemoLead3',
+            contactMechTypeId: 'EMAIL_ADDRESS',
+            infoString: ''
+          },
+          partyContactMechPurposes: []
+        })
       },
       addTelecomNumber() {
         this.toCreate.push({
