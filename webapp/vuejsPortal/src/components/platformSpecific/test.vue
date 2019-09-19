@@ -1340,6 +1340,28 @@
           switch (contactMech.contactMech.contactMechTypeId) {
             case 'POSTAL_ADDRESS':
               // do creation
+              promises.push(new Promise((resolve, reject) => {
+                setTimeout(() => {
+                  this.$http.post(createPostalAddressUrl, {
+                    contactMechTypeId: 'POSTAL_ADDRESS',
+                    partyId: 'DemoLead3',
+                    toName: contactMech.postalAddress.toName,
+                    attnName: contactMech.postalAddress.attnName,
+                    address1: contactMech.postalAddress.address1,
+                    address2: contactMech.postalAddress.address2,
+                    city: contactMech.postalAddress.city,
+                    postalCode: contactMech.postalAddress.postalCode,
+                  }).then(
+                    result => {
+                      resolve()
+                    },
+                    error => {
+                      console.log('Error during postal address creation')
+                      reject()
+                    }
+                  )
+                }, 0)
+              }))
               break
             case 'TELECOM_NUMBER':
               // do creation
