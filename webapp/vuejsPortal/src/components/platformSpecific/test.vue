@@ -1290,8 +1290,26 @@
             case 'POSTAL_ADDRESS':
               // do creation
               break
-            case 'TELECOM_ADDRESS':
+            case 'TELECOM_NUMBER':
               // do creation
+              promises.push(new Promise((resolve, reject) => {
+                setTimeout(() => {
+                  this.$http.post(createTelecomNumberUrl, {
+                    contactMechTypeId: 'TELECOM_NUMBER',
+                    partyId: 'DemoLead3',
+                    countryCode: contactMech.telecomNumber.countryCode,
+                    contactNumber: contactMech.telecomNumber.contactNumber,
+                  }).then(
+                    result => {
+                      resolve()
+                    },
+                    error => {
+                      console.log('Error during telecom number creation')
+                      reject()
+                    }
+                  )
+                }, 0)
+              }))
               break
             case 'EMAIL_ADDRESS':
               // do creation
@@ -1305,10 +1323,9 @@
           }
         }
         this.toggleEdit()
+        this.toCreate = []
         Promise.all(promises).then(() => {
-          this.updateDataSet().then(() => {
-            this.toCreate = []
-          })
+          this.updateDataSet()
         })
       }
     },
