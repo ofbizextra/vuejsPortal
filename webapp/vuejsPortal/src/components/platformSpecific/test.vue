@@ -1335,6 +1335,23 @@
               break
             case 'EMAIL_ADDRESS':
               // do creation
+              promises.push(new Promise((resolve, reject) => {
+                setTimeout(() => {
+                  this.$http.post(createEmailAddressUrl, {
+                    contactMechTypeId: 'EMAIL_ADDRESS',
+                    partyId: 'DemoLead3',
+                    emailAddress: contactMech.contactMech.infoString,
+                  }).then(
+                    result => {
+                      resolve()
+                    },
+                    error => {
+                      console.log('Error during email address creation')
+                      reject()
+                    }
+                  )
+                }, 0)
+              }))
               break
             case 'FTP_ADDRESS':
               // do creation
