@@ -367,6 +367,15 @@
                   </v-form>
                 </v-list-item-content>
               </v-list-item>
+              <v-list-item v-if="editMode">
+                <v-list-item-icon></v-list-item-icon>
+                <v-list-item-content>
+                  <v-list-item-subtitle @click="addFtpAddress">
+                    <v-icon left>mdi-plus-circle</v-icon>
+                    Add
+                  </v-list-item-subtitle>
+                </v-list-item-content>
+              </v-list-item>
             </span>
                 </v-list>
               </v-col>
@@ -1200,7 +1209,24 @@
 
       },
       addFtpAddress() {
-
+        this.toCreate.push({
+          contactMech: {
+            partyId: 'DemoLead3',
+            contactMechTypeId: 'FTP_ADDRESS'
+          },
+          partyContactMechPurposes: [],
+          ftpAddress: {
+            hostname: '',
+            port: '',
+            username: '',
+            ftpPassword: '',
+            filePath: '',
+            defaultTimeout: '',
+            binaryTransfer: false,
+            zipFile: false,
+            passiveMode: false,
+          }
+        })
       },
       addLdapAddress() {
 
