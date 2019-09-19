@@ -1161,6 +1161,32 @@
               break
             case 'FTP_ADDRESS':
               // do update
+              promises.push(new Promise((resolve, reject) => {
+                setTimeout(() => {
+                  this.$http.post(updateFtpAddressUrl, {
+                    contactMechId: contactMech.contactMech.contactMechId,
+                    contactMechTypeId: contactMech.contactMech.contactMechTypeId,
+                    partyId: 'DemoLead3',
+                    hostname: contactMech.ftpAddress.hostname,
+                    port: contactMech.ftpAddress.port,
+                    username: contactMech.ftpAddress.username,
+                    ftpPassword: contactMech.ftpAddress.ftpPassword,
+                    filePath: contactMech.ftpAddress.filePath,
+                    defaultTimeout: contactMech.ftpAddress.defaultTimeout,
+                    binaryTransfer: contactMech.ftpAddress.binaryTransfer,
+                    zipFile: contactMech.ftpAddress.zipFile,
+                    passiveMode: contactMech.ftpAddress.passiveMode,
+                  }).then(
+                    result => {
+                      resolve()
+                    },
+                    error => {
+                      console.log('Error during contactMech update.')
+                      reject()
+                    }
+                  )
+                }, 0)
+              }))
               break
             default:
               // do update
