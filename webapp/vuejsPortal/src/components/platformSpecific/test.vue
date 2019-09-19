@@ -178,7 +178,7 @@
               </v-col>
               <v-col cols="12" md="6" align-self="start">
                 <v-list dense>
-                  <v-list-item v-for="postalAddress in contactsByType('POSTAL_ADDRESS')"
+                  <v-list-item v-for="postalAddress in postalAddressList"
                                :key="postalAddress.contactMech.contactMechId">
                     <v-list-item-icon>
                       <v-icon left>mdi-mailbox</v-icon>
@@ -232,6 +232,15 @@
                                         :rules="forms.postalAddress.rules.zipPostalCode" class="mr-4"></v-text-field>
                         </v-row>
                       </v-form>
+                    </v-list-item-content>
+                  </v-list-item>
+                  <v-list-item v-if="editMode">
+                    <v-list-item-icon></v-list-item-icon>
+                    <v-list-item-content>
+                      <v-list-item-subtitle @click="addPostalAddress">
+                        <v-icon left>mdi-plus-circle</v-icon>
+                        Add
+                      </v-list-item-subtitle>
                     </v-list-item-content>
                   </v-list-item>
                   <span v-if="showMore">
@@ -937,6 +946,12 @@
         }
         return this.dataSet.hasOwnProperty('valueMaps') ? [...this.dataSet.valueMaps.filter(contact => contact.contactMech.contactMechTypeId === 'EMAIL_ADDRESS').splice(0, 1), ...this.toCreate.filter(contact => contact.contactMech.contactMechTypeId === 'EMAIL_ADDRESS')] : []
       },
+      postalAddressList() {
+        if (this.showMore) {
+          return this.dataSet.hasOwnProperty('valueMaps') ? [...this.dataSet.valueMaps, ...this.toCreate].filter(contact => contact.contactMech.contactMechTypeId === 'POSTAL_ADDRESS') : []
+        }
+        return this.dataSet.hasOwnProperty('valueMaps') ? [...this.dataSet.valueMaps.filter(contact => contact.contactMech.contactMechTypeId === 'POSTAL_ADDRESS').splice(0, 1), ...this.toCreate.filter(contact => contact.contactMech.contactMechTypeId === 'POSTAL_ADDRESS')] : []
+      },
     },
     methods: {
       contactsByType(type) {
@@ -1156,7 +1171,21 @@
         })
       },
       addPostalAddress() {
-
+        this.toCreate.push({
+          contactMech: {
+            partyId: 'DemoLead3',
+            contactMechTypeId: 'POSTAL_ADDRESS'
+          },
+          partyContactMechPurposes: [],
+          postalAddress: {
+            toName: '',
+            attnName: '',
+            address1: '',
+            address2: '',
+            city: '',
+            postalCode: ''
+          }
+        })
       },
       addIpAddress() {
 
