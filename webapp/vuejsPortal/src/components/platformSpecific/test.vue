@@ -1488,6 +1488,23 @@
               break
             default:
               // do creation
+              promises.push(new Promise((resolve, reject) => {
+                setTimeout(() => {
+                  this.$http.post(createContactMech, {
+                    contactMechTypeId: contactMech.contactMech.contactMechTypeId,
+                    partyId: 'DemoLead3',
+                    infoString: contactMech.contactMech.infoString,
+                  }).then(
+                    result => {
+                      resolve()
+                    },
+                    error => {
+                      console.log('Error during contactMech creation')
+                      reject()
+                    }
+                  )
+                }, 0)
+              }))
               break
           }
         }
