@@ -55,9 +55,9 @@
                       </v-list-item-subtitle>
                     </v-list-item-content>
                     <v-list-item-action v-if="editMode">
-                      <v-btn-icon @click="removeContactMech(phoneNumber)">
+                      <v-btn icon @click="removeContactMech(phoneNumber)">
                         <v-icon color="red">mdi-delete</v-icon>
-                      </v-btn-icon>
+                      </v-btn>
                     </v-list-item-action>
                   </v-list-item>
                   <v-list-item v-if="editMode">
@@ -779,6 +779,7 @@
   const updateTelecomNumberUrl = 'https://localhost:8443/partymgrapi/control/updateTelecomNumber'
   const updateEmailAddressUrl = 'https://localhost:8443/partymgrapi/control/updateEmailAddress'
   const updateFtpAddressUrl = 'https://localhost:8443/partymgrapi/control/updateFtpAddress'
+  const deleteContactMechUrl = 'https://localhost:8443/partymgrapi/control/deleteContactMech'
 
   export default {
     name: "test",
@@ -1606,6 +1607,24 @@
               }))
               break
           }
+        }
+        for (let contactMechId of this.toDelete) {
+          promises.push(new Promise((resolve, reject) => {
+            setTimeout(() => {
+              this.$http.post(deleteContactMechUrl, {
+                contactMechId: contactMechId,
+                partyId: 'DemoLead3'
+              }).then(
+                result => {
+                  resolve()
+                },
+                error => {
+                  console.log('Error during contactMech deletion')
+                  reject()
+                }
+              )
+            }, 0)
+          }))
         }
         this.toggleEdit()
         this.toCreate = []
