@@ -1140,6 +1140,24 @@
               break
             case 'EMAIL_ADDRESS':
               // do update
+              promises.push(new Promise((resolve, reject) => {
+                setTimeout(() => {
+                  this.$http.post(updateEmailAddressUrl, {
+                    contactMechId: contactMech.contactMech.contactMechId,
+                    contactMechTypeId: contactMech.contactMech.contactMechTypeId,
+                    partyId: 'DemoLead3',
+                    emailAddress: contactMech.contactMech.infoString
+                  }).then(
+                    result => {
+                      resolve()
+                    },
+                    error => {
+                      console.log('Error during contactMech update.')
+                      reject()
+                    }
+                  )
+                }, 0)
+              }))
               break
             case 'FTP_ADDRESS':
               // do update
