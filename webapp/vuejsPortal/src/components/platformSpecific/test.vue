@@ -1222,9 +1222,9 @@
             ftpPassword: '',
             filePath: '',
             defaultTimeout: '',
-            binaryTransfer: false,
-            zipFile: false,
-            passiveMode: false,
+            binaryTransfer: 'N',
+            zipFile: 'N',
+            passiveMode: 'N',
           }
         })
       },
@@ -1432,6 +1432,31 @@
               break
             case 'FTP_ADDRESS':
               // do creation
+              promises.push(new Promise((resolve, reject) => {
+                setTimeout(() => {
+                  this.$http.post(createFtpAddressUrl, {
+                    contactMechTypeId: 'FTP_ADDRESS',
+                    partyId: 'DemoLead3',
+                    hostname: contactMech.ftpAddress.hostname,
+                    port: contactMech.ftpAddress.port,
+                    username: contactMech.ftpAddress.username,
+                    ftpPassword: contactMech.ftpAddress.ftpPassword,
+                    filePath: contactMech.ftpAddress.filePath,
+                    defaultTimeout: contactMech.ftpAddress.defaultTimeout,
+                    binaryTransfer: contactMech.ftpAddress.binaryTransfer,
+                    zipFile: contactMech.ftpAddress.zipFile,
+                    passiveMode: contactMech.ftpAddress.passiveMode,
+                  }).then(
+                    result => {
+                      resolve()
+                    },
+                    error => {
+                      console.log('Error during FTP address creation')
+                      reject()
+                    }
+                  )
+                }, 0)
+              }))
               break
             default:
               // do creation
