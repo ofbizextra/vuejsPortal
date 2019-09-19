@@ -254,7 +254,7 @@
                   </v-list-item>
                   <span v-if="showMore">
               <v-divider inset></v-divider>
-              <v-list-item v-for="internalNote in contactsByType('INTERNAL_PARTYID')"
+              <v-list-item v-for="internalNote in internalPartyIdList"
                            :key="internalNote.contactMech.contactMechId">
                 <v-list-item-icon>
                   <v-icon left>mdi-note</v-icon>
@@ -279,6 +279,15 @@
                   </v-list-item-subtitle>
                 </v-list-item-content>
               </v-list-item>
+                    <v-list-item v-if="editMode">
+                    <v-list-item-icon></v-list-item-icon>
+                    <v-list-item-content>
+                      <v-list-item-subtitle @click="addInternalPartyId">
+                        <v-icon left>mdi-plus-circle</v-icon>
+                        Add
+                      </v-list-item-subtitle>
+                    </v-list-item-content>
+                  </v-list-item>
                 <v-list-item v-for="webAddress in webAddressList"
                              :key="webAddress.contactMech.contactMechId" v-if="showMore">
                 <v-list-item-icon>
@@ -997,6 +1006,12 @@
         }
         return this.dataSet.hasOwnProperty('valueMaps') ? [...this.dataSet.valueMaps.filter(contact => contact.contactMech.contactMechTypeId === 'WEB_ADDRESS').splice(0, 1), ...this.toCreate.filter(contact => contact.contactMech.contactMechTypeId === 'WEB_ADDRESS')] : []
       },
+      internalPartyIdList() {
+        if (this.showMore) {
+          return this.dataSet.hasOwnProperty('valueMaps') ? [...this.dataSet.valueMaps, ...this.toCreate].filter(contact => contact.contactMech.contactMechTypeId === 'INTERNAL_PARTYID') : []
+        }
+        return this.dataSet.hasOwnProperty('valueMaps') ? [...this.dataSet.valueMaps.filter(contact => contact.contactMech.contactMechTypeId === 'INTERNAL_PARTYID').splice(0, 1), ...this.toCreate.filter(contact => contact.contactMech.contactMechTypeId === 'INTERNAL_PARTYID')] : []
+      },
     },
     methods: {
       contactsByType(type) {
@@ -1255,8 +1270,15 @@
       addDomainName() {
 
       },
-      addInternalNote() {
-
+      addInternalPartyId() {
+        this.toCreate.push({
+          contactMech: {
+            partyId: 'DemoLead3',
+            contactMechTypeId: 'INTERNAL_PARTYID',
+            infoString: ''
+          },
+          partyContactMechPurposes: []
+        })
       },
       addFtpAddress() {
         this.toCreate.push({
