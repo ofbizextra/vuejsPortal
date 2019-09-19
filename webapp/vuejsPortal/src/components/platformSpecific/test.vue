@@ -25,7 +25,7 @@
             <v-row stretch dense>
               <v-col cols="12" md="6" align-self="start">
                 <v-list dense>
-                  <v-list-item v-for="phoneNumber in contactsByType('TELECOM_NUMBER')"
+                  <v-list-item v-for="phoneNumber in telecomNumberList"
                                :key="phoneNumber.contactMech.contactMechId">
                     <v-list-item-icon>
                       <v-icon left>mdi-phone</v-icon>
@@ -58,7 +58,7 @@
                   <v-list-item v-if="editMode">
                     <v-list-item-icon></v-list-item-icon>
                     <v-list-item-content>
-                      <v-list-item-subtitle @click="toggleEdit">
+                      <v-list-item-subtitle @click="addTelecomNumber">
                         <v-icon left>mdi-plus-circle</v-icon>
                         Add
                       </v-list-item-subtitle>
@@ -915,7 +915,14 @@
         lazy: false
       }
     },
-    computed: {},
+    computed: {
+      telecomNumberList() {
+        if (this.showMore) {
+          return this.dataSet.hasOwnProperty('valueMaps') ? [...this.dataSet.valueMaps, ...this.toCreate].filter(contact => contact.contactMech.contactMechTypeId === 'TELECOM_NUMBER') : []
+        }
+        return this.dataSet.hasOwnProperty('valueMaps') ? [...this.dataSet.valueMaps.filter(contact => contact.contactMech.contactMechTypeId === 'TELECOM_NUMBER').splice(0, 1), ...this.toCreate.filter(contact => contact.contactMech.contactMechTypeId === 'TELECOM_NUMBER')] : []
+      },
+    },
     methods: {
       contactsByType(type) {
         if (this.showMore) {
@@ -927,14 +934,20 @@
         return this.dataSet.hasOwnProperty('valueMaps') ? this.dataSet.valueMaps.filter(contact => contact.contactMech.contactMechTypeId === type).length : []
       },
       updateDataSet() {
-        this.$http.post(getContactMechUrl, {partyId: 'DemoLead3'}).then(
-          result => {
-            this.dataSet = result.body
-          },
-          error => {
-            console.log('Error during contactMech acquisition')
-          }
-        )
+        return new Promise((resolve, reject) => {
+          setTimeout(() => {
+            this.$http.post(getContactMechUrl, {partyId: 'DemoLead3'}).then(
+              result => {
+                this.dataSet = result.body
+                resolve()
+              },
+              error => {
+                console.log('Error during contactMech acquisition')
+                reject()
+              }
+            )
+          }, 0)
+        })
       },
       createElectronicAddress() {
         this.$http.post(createContactMech, {
@@ -1107,8 +1120,18 @@
       addEmailAddress() {
 
       },
-      addPhoneNumber() {
-
+      addTelecomNumber() {
+        this.toCreate.push({
+          contactMech: {
+            partyId: 'DemoLead3',
+            contactMechTypeId: 'TELECOM_NUMBER'
+          },
+          partyContactMechPurposes: [],
+          telecomNumber: {
+            contactNumber: '',
+            countryCode: ''
+          }
+        })
       },
       addPostalAddress() {
 
@@ -1262,7 +1285,7 @@
               break
           }
         }
-        for (contactMech of this.toCreate) {
+        for (let contactMech of this.toCreate) {
           switch (contactMech.contactMech.contactMechTypeId) {
             case 'POSTAL_ADDRESS':
               // do creation
@@ -1283,7 +1306,9 @@
         }
         this.toggleEdit()
         Promise.all(promises).then(() => {
-          this.updateDataSet()
+          this.updateDataSet().then(() => {
+            this.toCreate = []
+          })
         })
       }
     },
