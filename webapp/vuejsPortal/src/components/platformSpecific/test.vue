@@ -279,7 +279,7 @@
                   </v-list-item-subtitle>
                 </v-list-item-content>
               </v-list-item>
-                <v-list-item v-for="webAddress in contactsByType('WEB_ADDRESS')"
+                <v-list-item v-for="webAddress in webAddressList"
                              :key="webAddress.contactMech.contactMechId" v-if="showMore">
                 <v-list-item-icon>
                   <v-icon left>mdi-web</v-icon>
@@ -304,6 +304,15 @@
                   </v-list-item-subtitle>
                 </v-list-item-content>
               </v-list-item>
+                    <v-list-item v-if="editMode">
+                    <v-list-item-icon></v-list-item-icon>
+                    <v-list-item-content>
+                      <v-list-item-subtitle @click="addWebAddress">
+                        <v-icon left>mdi-plus-circle</v-icon>
+                        Add
+                      </v-list-item-subtitle>
+                    </v-list-item-content>
+                  </v-list-item>
                 <v-list-item v-for="ftpAddress in ftpAddressList"
                              :key="ftpAddress.contactMech.contactMechId">
                 <v-list-item-icon>
@@ -982,6 +991,12 @@
         }
         return this.dataSet.hasOwnProperty('valueMaps') ? [...this.dataSet.valueMaps.filter(contact => contact.contactMech.contactMechTypeId === 'IP_ADDRESS').splice(0, 1), ...this.toCreate.filter(contact => contact.contactMech.contactMechTypeId === 'IP_ADDRESS')] : []
       },
+      webAddressList() {
+        if (this.showMore) {
+          return this.dataSet.hasOwnProperty('valueMaps') ? [...this.dataSet.valueMaps, ...this.toCreate].filter(contact => contact.contactMech.contactMechTypeId === 'WEB_ADDRESS') : []
+        }
+        return this.dataSet.hasOwnProperty('valueMaps') ? [...this.dataSet.valueMaps.filter(contact => contact.contactMech.contactMechTypeId === 'WEB_ADDRESS').splice(0, 1), ...this.toCreate.filter(contact => contact.contactMech.contactMechTypeId === 'WEB_ADDRESS')] : []
+      },
     },
     methods: {
       contactsByType(type) {
@@ -1228,7 +1243,14 @@
         })
       },
       addWebAddress() {
-
+        this.toCreate.push({
+          contactMech: {
+            partyId: 'DemoLead3',
+            contactMechTypeId: 'WEB_ADDRESS',
+            infoString: ''
+          },
+          partyContactMechPurposes: []
+        })
       },
       addDomainName() {
 
