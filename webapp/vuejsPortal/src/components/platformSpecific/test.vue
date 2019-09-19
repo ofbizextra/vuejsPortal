@@ -919,9 +919,9 @@
     methods: {
       contactsByType(type) {
         if (this.showMore) {
-          return this.dataSet.hasOwnProperty('valueMaps') ? this.dataSet.valueMaps.filter(contact => contact.contactMech.contactMechTypeId === type) : []
+          return this.dataSet.hasOwnProperty('valueMaps') ? [...this.dataSet.valueMaps, ...this.toCreate].filter(contact => contact.contactMech.contactMechTypeId === type) : []
         }
-        return this.dataSet.hasOwnProperty('valueMaps') ? this.dataSet.valueMaps.filter(contact => contact.contactMech.contactMechTypeId === type).splice(0, 1) : []
+        return this.dataSet.hasOwnProperty('valueMaps') ? [...this.dataSet.valueMaps, ...this.toCreate].filter(contact => contact.contactMech.contactMechTypeId === type).splice(0, 1) : []
       },
       countContactsByType(type) {
         return this.dataSet.hasOwnProperty('valueMaps') ? this.dataSet.valueMaps.filter(contact => contact.contactMech.contactMechTypeId === type).length : []
@@ -1103,6 +1103,33 @@
             console.log('Error during internal note creation')
           }
         )
+      },
+      addEmailAddress() {
+
+      },
+      addPhoneNumber() {
+
+      },
+      addPostalAddress() {
+
+      },
+      addIpAddress() {
+
+      },
+      addWebAddress() {
+
+      },
+      addDomainName() {
+
+      },
+      addInternalNote() {
+
+      },
+      addFtpAddress() {
+
+      },
+      addLdapAddress() {
+
       },
       toggleEdit() {
         this.editMode = !this.editMode
