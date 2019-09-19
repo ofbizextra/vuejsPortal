@@ -1118,6 +1118,25 @@
               break
             case 'TELECOM_NUMBER':
               // do update
+              promises.push(new Promise((resolve, reject) => {
+                setTimeout(() => {
+                  this.$http.post(updateTelecomNumberUrl, {
+                    contactMechId: contactMech.contactMech.contactMechId,
+                    contactMechTypeId: contactMech.contactMech.contactMechTypeId,
+                    partyId: 'DemoLead3',
+                    countryCode: contactMech.telecomNumber.countryCode,
+                    contactNumber: contactMech.telecomNumber.contactNumber
+                  }).then(
+                    result => {
+                      resolve()
+                    },
+                    error => {
+                      console.log('Error during contactMech update.')
+                      reject()
+                    }
+                  )
+                }, 0)
+              }))
               break
             case 'EMAIL_ADDRESS':
               // do update
