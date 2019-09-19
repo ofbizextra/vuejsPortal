@@ -721,6 +721,7 @@
     data() {
       return {
         dataSet: {},
+        toCreate: [],
         cardMode: true,
         editMode: false,
         showMore: false,
@@ -1231,6 +1232,25 @@
                   )
                 }, 0)
               }))
+              break
+          }
+        }
+        for (contactMech of this.toCreate) {
+          switch (contactMech.contactMech.contactMechTypeId) {
+            case 'POSTAL_ADDRESS':
+              // do creation
+              break
+            case 'TELECOM_ADDRESS':
+              // do creation
+              break
+            case 'EMAIL_ADDRESS':
+              // do creation
+              break
+            case 'FTP_ADDRESS':
+              // do creation
+              break
+            default:
+              // do creation
               break
           }
         }
