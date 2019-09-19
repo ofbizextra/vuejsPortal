@@ -94,6 +94,11 @@
                         </v-chip class="primary" x-small>
                       </v-list-item-subtitle>
                     </v-list-item-content>
+                    <v-list-item-action v-if="editMode">
+                      <v-btn icon @click="removeContactMech(email)">
+                        <v-icon color="red">mdi-delete</v-icon>
+                      </v-btn>
+                    </v-list-item-action>
                   </v-list-item>
                   <v-list-item v-if="editMode">
                     <v-list-item-icon></v-list-item-icon>
@@ -128,6 +133,11 @@
                         </v-chip class="primary" x-small>
                       </v-list-item-subtitle>
                     </v-list-item-content>
+                    <v-list-item-action v-if="editMode">
+                      <v-btn icon @click="removeContactMech(ipAddress)">
+                        <v-icon color="red">mdi-delete</v-icon>
+                      </v-btn>
+                    </v-list-item-action>
                   </v-list-item>
                   <v-list-item v-if="editMode">
                     <v-list-item-icon></v-list-item-icon>
@@ -162,6 +172,11 @@
                         </v-chip class="primary" x-small>
                       </v-list-item-subtitle>
                     </v-list-item-content>
+                    <v-list-item-action v-if="editMode">
+                      <v-btn icon @click="removeContactMech(domainName)">
+                        <v-icon color="red">mdi-delete</v-icon>
+                      </v-btn>
+                    </v-list-item-action>
                   </v-list-item>
                   <v-list-item v-if="editMode">
                     <v-list-item-icon></v-list-item-icon>
@@ -196,6 +211,11 @@
                         </v-chip class="primary" x-small>
                       </v-list-item-subtitle>
                     </v-list-item-content>
+                    <v-list-item-action v-if="editMode">
+                      <v-btn icon @click="removeContactMech(ldapAddress)">
+                        <v-icon color="red">mdi-delete</v-icon>
+                      </v-btn>
+                    </v-list-item-action>
                   </v-list-item>
                   <v-list-item v-if="editMode">
                     <v-list-item-icon></v-list-item-icon>
@@ -265,6 +285,11 @@
                         </v-row>
                       </v-form>
                     </v-list-item-content>
+                    <v-list-item-action v-if="editMode">
+                      <v-btn icon @click="removeContactMech(postalAddress)">
+                        <v-icon color="red">mdi-delete</v-icon>
+                      </v-btn>
+                    </v-list-item-action>
                   </v-list-item>
                   <v-list-item v-if="editMode">
                     <v-list-item-icon></v-list-item-icon>
@@ -301,6 +326,11 @@
                     </v-chip class="primary" x-small>
                   </v-list-item-subtitle>
                 </v-list-item-content>
+                <v-list-item-action v-if="editMode">
+                      <v-btn icon @click="removeContactMech(internalNote)">
+                        <v-icon color="red">mdi-delete</v-icon>
+                      </v-btn>
+                    </v-list-item-action>
               </v-list-item>
                     <v-list-item v-if="editMode">
                     <v-list-item-icon></v-list-item-icon>
@@ -335,6 +365,11 @@
                     </v-chip class="primary" x-small>
                   </v-list-item-subtitle>
                 </v-list-item-content>
+                  <v-list-item-action v-if="editMode">
+                      <v-btn icon @click="removeContactMech(webAddress)">
+                        <v-icon color="red">mdi-delete</v-icon>
+                      </v-btn>
+                    </v-list-item-action>
               </v-list-item>
                     <v-list-item v-if="editMode">
                     <v-list-item-icon></v-list-item-icon>
@@ -416,6 +451,11 @@
                     </v-row>
                   </v-form>
                 </v-list-item-content>
+                  <v-list-item-action v-if="editMode">
+                      <v-btn icon @click="removeContactMech(ftpAddress)">
+                        <v-icon color="red">mdi-delete</v-icon>
+                      </v-btn>
+                    </v-list-item-action>
               </v-list-item>
               <v-list-item v-if="editMode">
                 <v-list-item-icon></v-list-item-icon>
@@ -1355,9 +1395,12 @@
         })
       },
       removeContactMech(contactMech) {
-        this.toDelete.push(contactMech.contactMech.contactMechId)
-        this.dataSet.valueMaps.splice(this.dataSet.valueMaps.indexOf(contactMech), 1)
-        this.toCreate.splice(this.toCreate.indexOf(contactMech), 1)
+        if (contactMech.contactMech.hasOwnProperty('contactMechId')) {
+          this.toDelete.push(contactMech.contactMech.contactMechId)
+          this.dataSet.valueMaps.splice(this.dataSet.valueMaps.indexOf(contactMech), 1)
+        } else {
+          this.toCreate.splice(this.toCreate.indexOf(contactMech), 1)
+        }
       },
       toggleEdit() {
         this.editMode = !this.editMode
