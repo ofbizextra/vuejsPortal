@@ -73,7 +73,7 @@
                   <v-list-item v-for="email in emailAddressList"
                                :key="email.contactMech.contactMechId">
                     <v-list-item-icon>
-                      <v-icon left>mdi-at</v-icon>
+                      <v-icon left>mdi-email</v-icon>
                     </v-list-item-icon>
                     <v-list-item-content>
                       <v-list-item-title v-if="!editMode">
@@ -112,7 +112,7 @@
                   <v-list-item v-for="ipAddress in ipAddressList"
                                :key="ipAddress.contactMech.contactMechId" v-if="showMore">
                     <v-list-item-icon>
-                      <v-icon left>mdi-web</v-icon>
+                      <v-icon left>mdi-desktop-tower</v-icon>
                     </v-list-item-icon>
                     <v-list-item-content>
                       <v-list-item-title v-if="!editMode">
@@ -151,7 +151,7 @@
                   <v-list-item v-for="domainName in domainNameList"
                                :key="domainName.contactMech.contactMechId" v-if="showMore">
                     <v-list-item-icon>
-                      <v-icon left>mdi-web</v-icon>
+                      <v-icon left>mdi-at</v-icon>
                     </v-list-item-icon>
                     <v-list-item-content>
                       <v-list-item-title v-if="!editMode">
@@ -190,7 +190,7 @@
                   <v-list-item v-for="ldapAddress in ldapAddressList"
                                :key="ldapAddress.contactMech.contactMechId" v-if="showMore">
                     <v-list-item-icon>
-                      <v-icon left>mdi-at</v-icon>
+                      <v-icon left>mdi-file-cloud</v-icon>
                     </v-list-item-icon>
                     <v-list-item-content>
                       <v-list-item-title v-if="!editMode">
@@ -233,7 +233,7 @@
                   <v-list-item v-for="postalAddress in postalAddressList"
                                :key="postalAddress.contactMech.contactMechId">
                     <v-list-item-icon>
-                      <v-icon left>mdi-mailbox</v-icon>
+                      <v-icon left>mdi-map-marker</v-icon>
                     </v-list-item-icon>
                     <v-list-item-content v-if="!editMode">
                       <v-list-item-title>
@@ -305,7 +305,7 @@
               <v-list-item v-for="internalNote in internalPartyIdList"
                            :key="internalNote.contactMech.contactMechId">
                 <v-list-item-icon>
-                  <v-icon left>mdi-note</v-icon>
+                  <v-icon left>mdi-note-text</v-icon>
                 </v-list-item-icon>
                 <v-list-item-content>
                   <v-list-item-title v-if="!editMode">
@@ -383,7 +383,7 @@
                 <v-list-item v-for="ftpAddress in ftpAddressList"
                              :key="ftpAddress.contactMech.contactMechId">
                 <v-list-item-icon>
-                  <v-icon left>mdi-mailbox</v-icon>
+                  <v-icon left>mdi-server</v-icon>
                 </v-list-item-icon>
                 <v-list-item-content v-if="!editMode">
                   <v-list-item-title>
