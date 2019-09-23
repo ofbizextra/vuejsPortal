@@ -109,6 +109,7 @@
                       </v-list-item-subtitle>
                     </v-list-item-content>
                   </v-list-item>
+                  <v-divider inset></v-divider>
                   <v-list-item v-for="ipAddress in ipAddressList"
                                :key="ipAddress.contactMech.contactMechId" v-if="showMore">
                     <v-list-item-icon>
@@ -139,7 +140,7 @@
                       </v-btn>
                     </v-list-item-action>
                   </v-list-item>
-                  <v-list-item v-if="editMode">
+                  <v-list-item v-if="editMode && showMore">
                     <v-list-item-icon></v-list-item-icon>
                     <v-list-item-content>
                       <v-list-item-subtitle @click="addIpAddress">
@@ -148,6 +149,7 @@
                       </v-list-item-subtitle>
                     </v-list-item-content>
                   </v-list-item>
+                  <v-divider inset v-if="showMore"></v-divider>
                   <v-list-item v-for="domainName in domainNameList"
                                :key="domainName.contactMech.contactMechId" v-if="showMore">
                     <v-list-item-icon>
@@ -178,7 +180,7 @@
                       </v-btn>
                     </v-list-item-action>
                   </v-list-item>
-                  <v-list-item v-if="editMode">
+                  <v-list-item v-if="editMode && showMore">
                     <v-list-item-icon></v-list-item-icon>
                     <v-list-item-content>
                       <v-list-item-subtitle @click="addDomainName">
@@ -187,6 +189,7 @@
                       </v-list-item-subtitle>
                     </v-list-item-content>
                   </v-list-item>
+                  <v-divider inset v-if="showMore"></v-divider>
                   <v-list-item v-for="ldapAddress in ldapAddressList"
                                :key="ldapAddress.contactMech.contactMechId" v-if="showMore">
                     <v-list-item-icon>
@@ -217,7 +220,7 @@
                       </v-btn>
                     </v-list-item-action>
                   </v-list-item>
-                  <v-list-item v-if="editMode">
+                  <v-list-item v-if="editMode && showMore">
                     <v-list-item-icon></v-list-item-icon>
                     <v-list-item-content>
                       <v-list-item-subtitle @click="addLdapAddress">
@@ -226,6 +229,7 @@
                       </v-list-item-subtitle>
                     </v-list-item-content>
                   </v-list-item>
+                  <v-divider inset v-if="showMore"></v-divider>
                 </v-list>
               </v-col>
               <v-col cols="12" md="6" align-self="start">
@@ -300,8 +304,8 @@
                       </v-list-item-subtitle>
                     </v-list-item-content>
                   </v-list-item>
+                  <v-divider inset></v-divider>
                   <span v-if="showMore">
-              <v-divider inset></v-divider>
               <v-list-item v-for="internalNote in internalPartyIdList"
                            :key="internalNote.contactMech.contactMechId">
                 <v-list-item-icon>
@@ -341,6 +345,7 @@
                       </v-list-item-subtitle>
                     </v-list-item-content>
                   </v-list-item>
+                    <v-divider inset v-if="showMore"></v-divider>
                 <v-list-item v-for="webAddress in webAddressList"
                              :key="webAddress.contactMech.contactMechId" v-if="showMore">
                 <v-list-item-icon>
@@ -380,6 +385,7 @@
                       </v-list-item-subtitle>
                     </v-list-item-content>
                   </v-list-item>
+                    <v-divider inset v-if="showMore"></v-divider>
                 <v-list-item v-for="ftpAddress in ftpAddressList"
                              :key="ftpAddress.contactMech.contactMechId">
                 <v-list-item-icon>
@@ -396,15 +402,17 @@
                     {{ftpAddress.ftpAddress.filePath}} - {{ftpAddress.ftpAddress.defaultTimeout}}ms
                   </div>
                   <div>
-                    <v-row inset class="justify-space-around">
-                      <v-switch small label="binary" :disabled="!editMode"
-                                v-model="ftpAddress.ftpAddress.binaryTransfer"
-                                true-value="Y" false-value="N"></v-switch>
-                      <v-switch small label="zip" :disabled="!editMode" v-model="ftpAddress.ftpAddress.zipFile"
-                                true-value="Y" false-value="N"></v-switch>
-                      <v-switch small label="passive" :disabled="!editMode" v-model="ftpAddress.ftpAddress.passiveMode"
-                                true-value="Y" false-value="N"></v-switch>
-                    </v-row>
+                    <v-row class="ml-1" justify="space-around">
+                      <v-checkbox class="ma-0 mr-1" hide-details small label="binary" :disabled="!editMode"
+                                  v-model="ftpAddress.ftpAddress.binaryTransfer"
+                                  true-value="Y" false-value="N"></v-checkbox>
+                      <v-checkbox class="ma-0 mr-1" hide-details small label="zip" :disabled="!editMode"
+                                  v-model="ftpAddress.ftpAddress.zipFile"
+                                  true-value="Y" false-value="N"></v-checkbox>
+                      <v-checkbox class="ma-0 mr-1" hide-details small label="passive" :disabled="!editMode"
+                                  v-model="ftpAddress.ftpAddress.passiveMode"
+                                  true-value="Y" false-value="N"></v-checkbox>
+                  </v-row>
                   </div>
                   <v-list-item-subtitle v-if="ftpAddress.partyContactMechPurposes.length > 0">
                     <v-chip class="primary mr-2" x-small v-for="purpose in ftpAddress.partyContactMechPurposes"
@@ -438,16 +446,16 @@
                                     :rules="forms.ftpAddress.rules.defaultTimeout"
                                     v-model="ftpAddress.ftpAddress.defaultTimeout"></v-text-field>
                     </v-row>
-                    <v-row justify="space-around">
-                      <v-switch name="binaryTransfer" label="Binary Transfert" class="mr-4" trueValue="Y" falseValue="N"
+                    <v-row>
+                      <v-checkbox class="ma-0 mr-1" name="binaryTransfer" label="Binary Transfert" trueValue="Y" falseValue="N"
                                 :rules="forms.ftpAddress.rules.binaryTransfer"
-                                v-model="ftpAddress.ftpAddress.binaryTransfer"></v-switch>
-                      <v-switch name="zipFile" label="File compression" class="mr-4" trueValue="Y" falseValue="N"
+                                v-model="ftpAddress.ftpAddress.binaryTransfer"></v-checkbox>
+                      <v-checkbox class="ma-0 mr-1" name="zipFile" label="File compression" trueValue="Y" falseValue="N"
                                 :rules="forms.ftpAddress.rules.zipFile"
-                                v-model="ftpAddress.ftpAddress.zipFile"></v-switch>
-                      <v-switch name="passiveMode" label="Passive mode" trueValue="Y" falseValue="N"
+                                v-model="ftpAddress.ftpAddress.zipFile"></v-checkbox>
+                      <v-checkbox class="ma-0 mr-1" name="passiveMode" label="Passive mode" trueValue="Y" falseValue="N"
                                 :rules="forms.ftpAddress.rules.passiveMode"
-                                v-model="ftpAddress.ftpAddress.passiveMode"></v-switch>
+                                v-model="ftpAddress.ftpAddress.passiveMode"></v-checkbox>
                     </v-row>
                   </v-form>
                 </v-list-item-content>
@@ -466,6 +474,7 @@
                   </v-list-item-subtitle>
                 </v-list-item-content>
               </v-list-item>
+                    <v-divider inset v-if="showMore"></v-divider>
             </span>
                 </v-list>
               </v-col>
@@ -1403,6 +1412,11 @@
         }
       },
       toggleEdit() {
+        if (this.editMode) {
+          this.updateDataSet()
+          this.toCreate = []
+          this.toDelete = []
+        }
         this.editMode = !this.editMode
       },
       toggleShowMore() {
@@ -1669,10 +1683,9 @@
             }, 0)
           }))
         }
-        this.toggleEdit()
-        this.toCreate = []
         Promise.all(promises).then(() => {
-          this.updateDataSet()
+          this.toggleEdit()
+          this.toCreate = []
         })
       }
     },
