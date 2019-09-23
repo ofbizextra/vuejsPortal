@@ -47,11 +47,24 @@
                           </v-col>
                         </v-row>
                       </v-list-item-title>
-                      <v-list-item-subtitle v-if="phoneNumber.partyContactMechPurposes.length > 0">
+                      <v-list-item-subtitle v-if="phoneNumber.partyContactMechPurposes.length > 0 && !editMode">
                         <v-chip class="primary mr-2" x-small v-for="purpose in phoneNumber.partyContactMechPurposes"
                                 :key="purpose.contactMechId + '-' + purpose.contactMechPurposeTypeId">
-                          {{purpose.contactMechPurposeTypeId}}
+                          {{displayPurpose('TELECOM_NUMBER', purpose.contactMechPurposeTypeId)}}
                         </v-chip class="primary" x-small>
+                      </v-list-item-subtitle>
+                      <v-list-item-subtitle v-if="editMode">
+                        <v-select
+                          label="purposes"
+                          v-model="phoneNumber.purposes"
+                          :items="purposeListByType.TELECOM_NUMBER"
+                          deletable-chips
+                          chips
+                          hide-selected
+                          multiple
+                          item-text="description"
+                          item-value="contactMechPurposeTypeId">
+                        </v-select>
                       </v-list-item-subtitle>
                     </v-list-item-content>
                     <v-list-item-action v-if="editMode">
@@ -87,11 +100,24 @@
                           </v-col>
                         </v-row>
                       </v-list-item-title>
-                      <v-list-item-subtitle v-if="email.partyContactMechPurposes.length > 0">
+                      <v-list-item-subtitle v-if="email.partyContactMechPurposes.length > 0 && !editMode">
                         <v-chip class="primary mr-2" x-small v-for="purpose in email.partyContactMechPurposes"
-                                :key="purpose.contactMechId + '-' + purpose.contactMechPurpostTypeId">
-                          {{purpose.contactMechPurposeTypeId}}
+                                :key="purpose.contactMechId + '-' + purpose.contactMechPurposeTypeId">
+                          {{displayPurpose('EMAIL_ADDRESS', purpose.contactMechPurposeTypeId)}}
                         </v-chip class="primary" x-small>
+                      </v-list-item-subtitle>
+                      <v-list-item-subtitle v-if="editMode">
+                        <v-select
+                          label="purposes"
+                          v-model="email.purposes"
+                          :items="purposeListByType.EMAIL_ADDRESS"
+                          deletable-chips
+                          chips
+                          hide-selected
+                          multiple
+                          item-text="description"
+                          item-value="contactMechPurposeTypeId">
+                        </v-select>
                       </v-list-item-subtitle>
                     </v-list-item-content>
                     <v-list-item-action v-if="editMode">
@@ -207,11 +233,24 @@
                           </v-col>
                         </v-row>
                       </v-list-item-title>
-                      <v-list-item-subtitle v-if="ldapAddress.partyContactMechPurposes.length > 0">
+                      <v-list-item-subtitle v-if="ldapAddress.partyContactMechPurposes.length > 0 && !editMode">
                         <v-chip class="primary mr-2" x-small v-for="purpose in ldapAddress.partyContactMechPurposes"
-                                :key="purpose.contactMechId + '-' + purpose.contactMechPurpostTypeId">
-                          {{purpose.contactMechPurposeTypeId}}
+                                :key="purpose.contactMechId + '-' + purpose.contactMechPurposeTypeId">
+                          {{displayPurpose('LDAP_ADDRESS', purpose.contactMechPurposeTypeId)}}
                         </v-chip class="primary" x-small>
+                      </v-list-item-subtitle>
+                      <v-list-item-subtitle v-if="editMode">
+                        <v-select
+                          label="purposes"
+                          v-model="ldapAddress.purposes"
+                          :items="purposeListByType.LDAP_ADDRESS"
+                          deletable-chips
+                          chips
+                          hide-selected
+                          multiple
+                          item-text="description"
+                          item-value="contactMechPurposeTypeId">
+                        </v-select>
                       </v-list-item-subtitle>
                     </v-list-item-content>
                     <v-list-item-action v-if="editMode">
@@ -252,10 +291,10 @@
                       <div>
                         {{postalAddress.postalAddress.city}}, {{postalAddress.postalAddress.postalCode}}
                       </div>
-                      <v-list-item-subtitle v-if="postalAddress.partyContactMechPurposes.length > 0">
+                      <v-list-item-subtitle v-if="postalAddress.partyContactMechPurposes.length > 0 && !editMode">
                         <v-chip class="primary mr-2" x-small v-for="purpose in postalAddress.partyContactMechPurposes"
-                                :key="purpose.contactMechId + '-' + purpose.contactMechPurpostTypeId">
-                          {{purpose.contactMechPurposeTypeId}}
+                                :key="purpose.contactMechId + '-' + purpose.contactMechPurposeTypeId">
+                          {{displayPurpose('POSTAL_ADDRESS', purpose.contactMechPurposeTypeId)}}
                         </v-chip class="primary" x-small>
                       </v-list-item-subtitle>
                     </v-list-item-content>
@@ -287,6 +326,19 @@
                                         v-model="postalAddress.postalAddress.postalCode"
                                         :rules="forms.postalAddress.rules.zipPostalCode" class="mr-4"></v-text-field>
                         </v-row>
+                        <v-list-item-subtitle v-if="editMode">
+                          <v-select
+                            label="purposes"
+                            v-model="postalAddress.purposes"
+                            :items="purposeListByType.POSTAL_ADDRESS"
+                            deletable-chips
+                            chips
+                            hide-selected
+                            multiple
+                            item-text="description"
+                            item-value="contactMechPurposeTypeId">
+                          </v-select>
+                        </v-list-item-subtitle>
                       </v-form>
                     </v-list-item-content>
                     <v-list-item-action v-if="editMode">
@@ -363,12 +415,25 @@
                       </v-col>
                     </v-row>
                   </v-list-item-title>
-                  <v-list-item-subtitle v-if="webAddress.partyContactMechPurposes.length > 0">
-                    <v-chip class="primary mr-2" x-small v-for="purpose in webAddress.partyContactMechPurposes"
-                            :key="purpose.contactMechId + '-' + purpose.contactMechPurpostTypeId">
-                      {{purpose.contactMechPurposeTypeId}}
-                    </v-chip class="primary" x-small>
-                  </v-list-item-subtitle>
+                  <v-list-item-subtitle v-if="webAddress.partyContactMechPurposes.length > 0 && !editMode">
+                        <v-chip class="primary mr-2" x-small v-for="purpose in webAddress.partyContactMechPurposes"
+                                :key="purpose.contactMechId + '-' + purpose.contactMechPurposeTypeId">
+                          {{displayPurpose('WEB_ADDRESS', purpose.contactMechPurposeTypeId)}}
+                        </v-chip class="primary" x-small>
+                      </v-list-item-subtitle>
+                      <v-list-item-subtitle v-if="editMode">
+                        <v-select
+                          label="purposes"
+                          v-model="webAddress.purposes"
+                          :items="purposeListByType.WEB_ADDRESS"
+                          deletable-chips
+                          chips
+                          hide-selected
+                          multiple
+                          item-text="description"
+                          item-value="contactMechPurposeTypeId">
+                        </v-select>
+                      </v-list-item-subtitle>
                 </v-list-item-content>
                   <v-list-item-action v-if="editMode">
                       <v-btn icon @click="removeContactMech(webAddress)">
@@ -829,6 +894,9 @@
   const updateEmailAddressUrl = 'https://localhost:8443/partymgrapi/control/updateEmailAddress'
   const updateFtpAddressUrl = 'https://localhost:8443/partymgrapi/control/updateFtpAddress'
   const deleteContactMechUrl = 'https://localhost:8443/partymgrapi/control/deleteContactMech'
+  const getContactmechPurposeTypeUrl = 'https://localhost:8443/partymgrapi/control/getContactmechPurposeType'
+  const createPartyContactMechPurposeUrl = 'https://localhost:8443/partymgrapi/control/createPartyContactMechPurpose'
+  const expirePartyContactMechPurposeUrl = 'https://localhost:8443/partymgrapi/control/expirePartyContactMechPurpose'
 
   export default {
     name: "test",
@@ -870,6 +938,18 @@
           "FTP_ADDRESS",
           "LDAP_ADDRESS"
         ],
+        purposeListByType: {
+          "ELECTRONIC_ADDRESS": [],
+          "POSTAL_ADDRESS": [],
+          "TELECOM_NUMBER": [],
+          "EMAIL_ADDRESS": [],
+          "IP_ADDRESS": [],
+          "DOMAIN_NAME": [],
+          "WEB_ADDRESS": [],
+          "INTERNAL_PARTYID": [],
+          "FTP_ADDRESS": [],
+          "LDAP_ADDRESS": []
+        },
         forms: {
           electronicAddress: {
             valid: true,
@@ -1044,6 +1124,9 @@
       }
     },
     computed: {
+      contactMechList() {
+        return this.dataSet.hasOwnProperty('valueMaps') ? [...this.dataSet.valueMaps, ...this.toCreate] : []
+      },
       telecomNumberList() {
         if (this.showMore) {
           return this.dataSet.hasOwnProperty('valueMaps') ? [...this.dataSet.valueMaps, ...this.toCreate].filter(contact => contact.contactMech.contactMechTypeId === 'TELECOM_NUMBER') : []
@@ -1300,7 +1383,8 @@
             contactMechTypeId: 'EMAIL_ADDRESS',
             infoString: ''
           },
-          partyContactMechPurposes: []
+          partyContactMechPurposes: [],
+          purposes: []
         })
       },
       addTelecomNumber() {
@@ -1313,7 +1397,8 @@
           telecomNumber: {
             contactNumber: '',
             countryCode: ''
-          }
+          },
+          purposes: []
         })
       },
       addPostalAddress() {
@@ -1330,7 +1415,8 @@
             address2: '',
             city: '',
             postalCode: ''
-          }
+          },
+          purposes: []
         })
       },
       addIpAddress() {
@@ -1340,7 +1426,8 @@
             contactMechTypeId: 'IP_ADDRESS',
             infoString: ''
           },
-          partyContactMechPurposes: []
+          partyContactMechPurposes: [],
+          purposes: []
         })
       },
       addWebAddress() {
@@ -1350,7 +1437,8 @@
             contactMechTypeId: 'WEB_ADDRESS',
             infoString: ''
           },
-          partyContactMechPurposes: []
+          partyContactMechPurposes: [],
+          purposes: []
         })
       },
       addDomainName() {
@@ -1360,7 +1448,8 @@
             contactMechTypeId: 'DOMAIN_NAME',
             infoString: ''
           },
-          partyContactMechPurposes: []
+          partyContactMechPurposes: [],
+          purposes: []
         })
       },
       addInternalPartyId() {
@@ -1370,7 +1459,8 @@
             contactMechTypeId: 'INTERNAL_PARTYID',
             infoString: ''
           },
-          partyContactMechPurposes: []
+          partyContactMechPurposes: [],
+          purposes: []
         })
       },
       addFtpAddress() {
@@ -1390,7 +1480,8 @@
             binaryTransfer: 'N',
             zipFile: 'N',
             passiveMode: 'N',
-          }
+          },
+          purposes: []
         })
       },
       addLdapAddress() {
@@ -1400,7 +1491,8 @@
             contactMechTypeId: 'LDAP_ADDRESS',
             infoString: ''
           },
-          partyContactMechPurposes: []
+          partyContactMechPurposes: [],
+          purposes: []
         })
       },
       removeContactMech(contactMech) {
@@ -1411,11 +1503,22 @@
           this.toCreate.splice(this.toCreate.indexOf(contactMech), 1)
         }
       },
+      displayPurpose(contactMechTypeId, purposeTypeId) {
+        return this.purposeListByType[contactMechTypeId].filter(item => item.contactMechPurposeTypeId === purposeTypeId)[0].description
+      },
+      formatDate(timestamp) {
+        let d = new Date(timestamp)
+        return `${d.getFullYear()}-${d.getMonth() < 9 ? '0' : ''}${d.getMonth() + 1}-${d.getDate() < 10 ? '0' : ''}${d.getDate()} ${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}.${d.getMilliseconds()}`
+      },
       toggleEdit() {
         if (this.editMode) {
           this.updateDataSet()
           this.toCreate = []
           this.toDelete = []
+        } else {
+          for (let contactMech of this.dataSet.valueMaps) {
+            this.$set(contactMech, 'purposes', contactMech.partyContactMechPurposes.map(purpose => purpose.contactMechPurposeTypeId))
+          }
         }
         this.editMode = !this.editMode
       },
@@ -1684,13 +1787,66 @@
           }))
         }
         Promise.all(promises).then(() => {
-          this.toggleEdit()
-          this.toCreate = []
+          promises = []
+          for (let contactMech of this.dataSet.valueMaps) {
+            for (let purpose of contactMech.purposes) {
+              if (contactMech.partyContactMechPurposes.filter(item => item.contactMechPurposeTypeId === purpose).length === 0) {
+                // do post createPurpose
+                promises.push(
+                  new Promise((resolve, reject) => {
+                    setTimeout(() => {
+                      this.$http.post(createPartyContactMechPurposeUrl, {
+                        contactMechId: contactMech.contactMech.contactMechId,
+                        contactMechPurposeTypeId: purpose,
+                        partyId: contactMech.partyContactMech.partyId,
+                      }).then(
+                        success => {resolve()},
+                        error => {console.log(error), reject()}
+                      )
+                    }, 0)
+                  })
+                )
+              }
+            }
+            for (let purpose of contactMech.partyContactMechPurposes) {
+              if (!contactMech.purposes.includes(purpose.contactMechPurposeTypeId)) {
+                // do post expirePurpose
+                promises.push(
+                  new Promise((resolve, reject) => {
+                    setTimeout(() => {
+                      this.$http.post(expirePartyContactMechPurposeUrl, {
+                        contactMechId: contactMech.contactMech.contactMechId,
+                        partyId: contactMech.partyContactMech.partyId,
+                        fromDate: this.formatDate(purpose.fromDate),
+                        contactMechPurposeTypeId: purpose.contactMechPurposeTypeId
+                      }).then(
+                        success => {resolve()},
+                        error => {console.log(error), reject()}
+                      )
+                    }, 0)
+                  })
+                )
+              }
+            }
+          }
+          Promise.all(promises).then(() => {
+            this.toggleEdit()
+            this.toCreate = []
+          })
         })
       }
     },
     mounted() {
       this.updateDataSet()
+      for (let type of this.contactTypes) {
+        this.$http.post(getContactmechPurposeTypeUrl, {
+          contactMechTypeId: type
+        }).then(response => {
+          this.purposeListByType[type] = response.body.purposeTypeList
+        }, error => {
+          console.log('Error during purposes acquisition...', error)
+        })
+      }
     }
   }
 </script>
