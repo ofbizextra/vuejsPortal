@@ -13,7 +13,7 @@
     <p>{{modalResult}}</p>
     <modal :name="id + '_modal'" :id="id + '_modal'" :adaptive="true" :resizable="true">
       <vue-container :props="{attributes: {id: id + '_modalContent'}}"
-                     :auto-update-params="{targetUrl: '/exampleapi/control/' + fieldFormName, params: {presentation: 'layer'}}">
+                     :auto-update-params="{targetUrl: getCurrentApi + '/' + fieldFormName, params: {presentation: 'layer'}}">
 
       </vue-container>
     </modal>
@@ -68,7 +68,8 @@
       },
       ...mapGetters({
         getForm: 'form/form',
-        getDataFromForm: 'form/fieldInForm'
+        getDataFromForm: 'form/fieldInForm',
+        getCurrentApi: 'backOfficeApi/currentApi'
       }),
       id() {
         return this.data.hasOwnProperty('id') ? this.data.id : ''
