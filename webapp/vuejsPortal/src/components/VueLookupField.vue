@@ -2,15 +2,18 @@
   <span class="field-lookup">
     <div class="autosuggest-container" :style="{display: 'inline-block'}">
       <vue-autosuggest v-model="valueStored" :name="data.name" :id="data.id" :size="data.size" @input="updateWordList"
-                       :suggestions="[{data: [...wordList]}]" :input-props="{id: data.id, name: data.name, size: data.size}"
-                       @selected="onSelected" :get-suggestion-value="getSuggestionValue" :render-suggestion="renderSuggestion">
+                       :suggestions="[{data: [...wordList]}]"
+                       :input-props="{id: data.id, name: data.name, size: data.size}"
+                       @selected="onSelected" :get-suggestion-value="getSuggestionValue"
+                       :render-suggestion="renderSuggestion">
       </vue-autosuggest>
     </div>
     <a href="#" :style="{display: 'inline-block'}" @click="showModal"></a>
     <span v-if="tooltip" :id="'0_lookupId_' + id" class="tooltip">{{tooltip}}</span>
     <p>{{modalResult}}</p>
     <modal :name="id + '_modal'" :id="id + '_modal'" :adaptive="true" :resizable="true">
-      <vue-container :props="{attributes: {id: id + '_modalContent'}}" :auto-update-params="{targetUrl: '/exampleapi/control/' + fieldFormName, params: {presentation: 'layer'}}">
+      <vue-container :props="{attributes: {id: id + '_modalContent'}}"
+                     :auto-update-params="{targetUrl: '/exampleapi/control/' + fieldFormName, params: {presentation: 'layer'}}">
 
       </vue-container>
     </modal>
@@ -107,10 +110,10 @@
         }
         let str = ''
         for (let i = 0; i < this.displayFields.length; i++) {
-            str += selectedItem[this.displayFields[i]]
-            if (i < this.displayFields.length - 1) {
-              str += ' - '
-            }
+          str += selectedItem[this.displayFields[i]]
+          if (i < this.displayFields.length - 1) {
+            str += ' - '
+          }
         }
         return str
       }
@@ -149,8 +152,8 @@
         let str = ''
         for (let i = 0; i < this.displayFields.length; i++) {
           str += suggestion.item[this.displayFields[i]]
-            str += ' - '
-          }
+          str += ' - '
+        }
         str += `[${suggestion.item[this.returnField]}]`
         return str
       },

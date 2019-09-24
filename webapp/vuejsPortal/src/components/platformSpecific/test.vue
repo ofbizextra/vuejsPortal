@@ -7,7 +7,7 @@
             <v-toolbar-title>Contact mech</v-toolbar-title>
             <div class="flex-grow-1"></div>
             <v-btn icon @click="toggleEdit">
-              <v-icon>mdi-pencil</v-icon>
+              <v-icon v-on="on">mdi-pencil</v-icon>
             </v-btn>
           </v-toolbar>
           <v-toolbar flat v-if="editMode">
@@ -27,9 +27,14 @@
                 <v-list dense>
                   <v-list-item v-for="phoneNumber in telecomNumberList"
                                :key="phoneNumber.contactMech.contactMechId">
-                    <v-list-item-icon>
-                      <v-icon left>mdi-phone</v-icon>
-                    </v-list-item-icon>
+                    <v-tooltip top>
+                      <template v-slot:activator="{ on }">
+                        <v-list-item-icon v-on="on">
+                          <v-icon left>mdi-phone</v-icon>
+                        </v-list-item-icon>
+                      </template>
+                      <span>Telecom number</span>
+                    </v-tooltip>
                     <v-list-item-content>
                       <v-list-item-title v-if="!editMode">
                         {{`${phoneNumber.telecomNumber.countryCode || ''} ${phoneNumber.telecomNumber.areaCode || ''}
@@ -38,11 +43,11 @@
                       <v-list-item-title v-if="editMode">
                         <v-row>
                           <v-col class="col-3">
-                            <v-text-field hide-details label="Country code"
+                            <v-text-field class="ignore-css" hide-details label="Country code"
                                           v-model="phoneNumber.telecomNumber.countryCode"></v-text-field>
                           </v-col>
                           <v-col class="col-9">
-                            <v-text-field hide-details label="Number"
+                            <v-text-field class="ignore-css" hide-details label="Number"
                                           v-model="phoneNumber.telecomNumber.contactNumber"></v-text-field>
                           </v-col>
                         </v-row>
@@ -51,7 +56,7 @@
                         <v-chip class="primary mr-2" x-small v-for="purpose in phoneNumber.partyContactMechPurposes"
                                 :key="purpose.contactMechId + '-' + purpose.contactMechPurposeTypeId">
                           {{displayPurpose('TELECOM_NUMBER', purpose.contactMechPurposeTypeId)}}
-                        </v-chip class="primary" x-small>
+                        </v-chip>
                       </v-list-item-subtitle>
                       <v-list-item-subtitle v-if="editMode">
                         <v-select
@@ -78,15 +83,20 @@
                     <v-list-item-content>
                       <v-list-item-subtitle @click="addTelecomNumber">
                         <v-icon left>mdi-plus-circle</v-icon>
-                        Add
+                        Add telecom number
                       </v-list-item-subtitle>
                     </v-list-item-content>
                   </v-list-item>
-                  <v-divider inset></v-divider>
+                  <v-divider inset v-if="telecomNumberList.length > 0 || editMode"></v-divider>
                   <v-list-item v-for="email in emailAddressList"
                                :key="email.contactMech.contactMechId">
                     <v-list-item-icon>
-                      <v-icon left>mdi-email</v-icon>
+                      <v-tooltip top>
+                        <template v-slot:activator="{ on }">
+                          <v-icon left v-on="on">mdi-email</v-icon>
+                        </template>
+                        <span>Email address</span>
+                      </v-tooltip>
                     </v-list-item-icon>
                     <v-list-item-content>
                       <v-list-item-title v-if="!editMode">
@@ -104,7 +114,7 @@
                         <v-chip class="primary mr-2" x-small v-for="purpose in email.partyContactMechPurposes"
                                 :key="purpose.contactMechId + '-' + purpose.contactMechPurposeTypeId">
                           {{displayPurpose('EMAIL_ADDRESS', purpose.contactMechPurposeTypeId)}}
-                        </v-chip class="primary" x-small>
+                        </v-chip>
                       </v-list-item-subtitle>
                       <v-list-item-subtitle v-if="editMode">
                         <v-select
@@ -131,15 +141,20 @@
                     <v-list-item-content>
                       <v-list-item-subtitle @click="addEmailAddress">
                         <v-icon left>mdi-plus-circle</v-icon>
-                        Add
+                        Add email address
                       </v-list-item-subtitle>
                     </v-list-item-content>
                   </v-list-item>
-                  <v-divider inset></v-divider>
+                  <v-divider inset v-if="emailAddressList.length > 0 || editMode"></v-divider>
                   <v-list-item v-for="ipAddress in ipAddressList"
                                :key="ipAddress.contactMech.contactMechId" v-if="showMore">
                     <v-list-item-icon>
-                      <v-icon left>mdi-desktop-tower</v-icon>
+                      <v-tooltip top>
+                        <template v-slot:activator="{ on }">
+                          <v-icon left v-on="on">mdi-desktop-tower</v-icon>
+                        </template>
+                        <span>IP address</span>
+                      </v-tooltip>
                     </v-list-item-icon>
                     <v-list-item-content>
                       <v-list-item-title v-if="!editMode">
@@ -157,7 +172,7 @@
                         <v-chip class="primary mr-2" x-small v-for="purpose in ipAddress.partyContactMechPurposes"
                                 :key="purpose.contactMechId + '-' + purpose.contactMechPurpostTypeId">
                           {{purpose.contactMechPurposeTypeId}}
-                        </v-chip class="primary" x-small>
+                        </v-chip>
                       </v-list-item-subtitle>
                     </v-list-item-content>
                     <v-list-item-action v-if="editMode">
@@ -171,15 +186,20 @@
                     <v-list-item-content>
                       <v-list-item-subtitle @click="addIpAddress">
                         <v-icon left>mdi-plus-circle</v-icon>
-                        Add
+                        Add IP address
                       </v-list-item-subtitle>
                     </v-list-item-content>
                   </v-list-item>
-                  <v-divider inset v-if="showMore"></v-divider>
+                  <v-divider inset v-if="(ipAddressList.length > 0 && showMore) || (editMode && showMore)"></v-divider>
                   <v-list-item v-for="domainName in domainNameList"
                                :key="domainName.contactMech.contactMechId" v-if="showMore">
                     <v-list-item-icon>
-                      <v-icon left>mdi-at</v-icon>
+                      <v-tooltip top>
+                        <template v-slot:activator="{ on }">
+                          <v-icon left v-on="on">mdi-at</v-icon>
+                        </template>
+                        <span>Domain Name</span>
+                      </v-tooltip>
                     </v-list-item-icon>
                     <v-list-item-content>
                       <v-list-item-title v-if="!editMode">
@@ -197,7 +217,7 @@
                         <v-chip class="primary mr-2" x-small v-for="purpose in domainName.partyContactMechPurposes"
                                 :key="purpose.contactMechId + '-' + purpose.contactMechPurpostTypeId">
                           {{purpose.contactMechPurposeTypeId}}
-                        </v-chip class="primary" x-small>
+                        </v-chip>
                       </v-list-item-subtitle>
                     </v-list-item-content>
                     <v-list-item-action v-if="editMode">
@@ -211,15 +231,20 @@
                     <v-list-item-content>
                       <v-list-item-subtitle @click="addDomainName">
                         <v-icon left>mdi-plus-circle</v-icon>
-                        Add
+                        Add domain name
                       </v-list-item-subtitle>
                     </v-list-item-content>
                   </v-list-item>
-                  <v-divider inset v-if="showMore"></v-divider>
+                  <v-divider inset v-if="(domainNameList.length > 0 && showMore) || (showMore && editMode)"></v-divider>
                   <v-list-item v-for="ldapAddress in ldapAddressList"
                                :key="ldapAddress.contactMech.contactMechId" v-if="showMore">
                     <v-list-item-icon>
-                      <v-icon left>mdi-file-cloud</v-icon>
+                      <v-tooltip top>
+                        <template v-slot:activator="{ on }">
+                          <v-icon left v-on="on">mdi-file-cloud</v-icon>
+                        </template>
+                        <span>LDAP address</span>
+                      </v-tooltip>
                     </v-list-item-icon>
                     <v-list-item-content>
                       <v-list-item-title v-if="!editMode">
@@ -237,7 +262,7 @@
                         <v-chip class="primary mr-2" x-small v-for="purpose in ldapAddress.partyContactMechPurposes"
                                 :key="purpose.contactMechId + '-' + purpose.contactMechPurposeTypeId">
                           {{displayPurpose('LDAP_ADDRESS', purpose.contactMechPurposeTypeId)}}
-                        </v-chip class="primary" x-small>
+                        </v-chip>
                       </v-list-item-subtitle>
                       <v-list-item-subtitle v-if="editMode">
                         <v-select
@@ -264,11 +289,12 @@
                     <v-list-item-content>
                       <v-list-item-subtitle @click="addLdapAddress">
                         <v-icon left>mdi-plus-circle</v-icon>
-                        Add
+                        Add LDAP address
                       </v-list-item-subtitle>
                     </v-list-item-content>
                   </v-list-item>
-                  <v-divider inset v-if="showMore"></v-divider>
+                  <v-divider inset
+                             v-if="(ldapAddressList.length > 0 && showMore) || (showMore && editMode)"></v-divider>
                 </v-list>
               </v-col>
               <v-col cols="12" md="6" align-self="start">
@@ -276,7 +302,12 @@
                   <v-list-item v-for="postalAddress in postalAddressList"
                                :key="postalAddress.contactMech.contactMechId">
                     <v-list-item-icon>
-                      <v-icon left>mdi-map-marker</v-icon>
+                      <v-tooltip top>
+                        <template v-slot:activator="{ on }">
+                          <v-icon left v-on="on">mdi-map-marker</v-icon>
+                        </template>
+                        <span>Postal address</span>
+                      </v-tooltip>
                     </v-list-item-icon>
                     <v-list-item-content v-if="!editMode">
                       <v-list-item-title>
@@ -295,7 +326,7 @@
                         <v-chip class="primary mr-2" x-small v-for="purpose in postalAddress.partyContactMechPurposes"
                                 :key="purpose.contactMechId + '-' + purpose.contactMechPurposeTypeId">
                           {{displayPurpose('POSTAL_ADDRESS', purpose.contactMechPurposeTypeId)}}
-                        </v-chip class="primary" x-small>
+                        </v-chip>
                       </v-list-item-subtitle>
                     </v-list-item-content>
                     <v-list-item-content v-if="editMode">
@@ -352,16 +383,21 @@
                     <v-list-item-content>
                       <v-list-item-subtitle @click="addPostalAddress">
                         <v-icon left>mdi-plus-circle</v-icon>
-                        Add
+                        Add postal address
                       </v-list-item-subtitle>
                     </v-list-item-content>
                   </v-list-item>
-                  <v-divider inset></v-divider>
+                  <v-divider inset v-if="postalAddressList.length > 0"></v-divider>
                   <span v-if="showMore">
               <v-list-item v-for="internalNote in internalPartyIdList"
                            :key="internalNote.contactMech.contactMechId">
                 <v-list-item-icon>
-                  <v-icon left>mdi-note-text</v-icon>
+                  <v-tooltip top>
+                    <template v-slot:activator="{ on }">
+                      <v-icon left v-on="on">mdi-note-text</v-icon>
+                    </template>
+                    <span>Internal note</span>
+                  </v-tooltip>
                 </v-list-item-icon>
                 <v-list-item-content>
                   <v-list-item-title v-if="!editMode">
@@ -379,7 +415,7 @@
                     <v-chip class="primary mr-2" x-small v-for="purpose in internalNote.partyContactMechPurposes"
                             :key="purpose.contactMechId + '-' + purpose.contactMechPurpostTypeId">
                           {{purpose.contactMechPurposeTypeId}}
-                    </v-chip class="primary" x-small>
+                    </v-chip>
                   </v-list-item-subtitle>
                 </v-list-item-content>
                 <v-list-item-action v-if="editMode">
@@ -393,15 +429,20 @@
                     <v-list-item-content>
                       <v-list-item-subtitle @click="addInternalPartyId">
                         <v-icon left>mdi-plus-circle</v-icon>
-                        Add
+                        Add internal note
                       </v-list-item-subtitle>
                     </v-list-item-content>
                   </v-list-item>
-                    <v-divider inset v-if="showMore"></v-divider>
+                    <v-divider inset v-if="(internalPartyIdList.length > 0 && showMore) || (editMode && showMore)"></v-divider>
                 <v-list-item v-for="webAddress in webAddressList"
                              :key="webAddress.contactMech.contactMechId" v-if="showMore">
                 <v-list-item-icon>
-                  <v-icon left>mdi-web</v-icon>
+                  <v-tooltip top>
+                    <template v-slot:activator="{ on }">
+                      <v-icon left v-on="on">mdi-web</v-icon>
+                    </template>
+                    <span>Web address</span>
+                  </v-tooltip>
                 </v-list-item-icon>
                 <v-list-item-content>
                   <v-list-item-title v-if="!editMode">
@@ -419,7 +460,7 @@
                         <v-chip class="primary mr-2" x-small v-for="purpose in webAddress.partyContactMechPurposes"
                                 :key="purpose.contactMechId + '-' + purpose.contactMechPurposeTypeId">
                           {{displayPurpose('WEB_ADDRESS', purpose.contactMechPurposeTypeId)}}
-                        </v-chip class="primary" x-small>
+                        </v-chip>
                       </v-list-item-subtitle>
                       <v-list-item-subtitle v-if="editMode">
                         <v-select
@@ -446,15 +487,20 @@
                     <v-list-item-content>
                       <v-list-item-subtitle @click="addWebAddress">
                         <v-icon left>mdi-plus-circle</v-icon>
-                        Add
+                        Add web address
                       </v-list-item-subtitle>
                     </v-list-item-content>
                   </v-list-item>
-                    <v-divider inset v-if="showMore"></v-divider>
+                    <v-divider inset v-if="(webAddressList.length > 0 && showMore) || (editMode && showMore)"></v-divider>
                 <v-list-item v-for="ftpAddress in ftpAddressList"
                              :key="ftpAddress.contactMech.contactMechId">
                 <v-list-item-icon>
-                  <v-icon left>mdi-server</v-icon>
+                  <v-tooltip top>
+                    <template v-slot:activator="{ on }">
+                      <v-icon left v-on="on">mdi-server</v-icon>
+                    </template>
+                    <span>FTP server</span>
+                  </v-tooltip>
                 </v-list-item-icon>
                 <v-list-item-content v-if="!editMode">
                   <v-list-item-title>
@@ -483,7 +529,7 @@
                     <v-chip class="primary mr-2" x-small v-for="purpose in ftpAddress.partyContactMechPurposes"
                             :key="purpose.contactMechId + '-' + purpose.contactMechPurpostTypeId">
                       {{purpose.contactMechPurposeTypeId}}
-                    </v-chip class="primary" x-small>
+                    </v-chip>
                   </v-list-item-subtitle>
                 </v-list-item-content>
                 <v-list-item-content v-if="editMode">
@@ -512,15 +558,16 @@
                                     v-model="ftpAddress.ftpAddress.defaultTimeout"></v-text-field>
                     </v-row>
                     <v-row>
-                      <v-checkbox class="ma-0 mr-1" name="binaryTransfer" label="Binary Transfert" trueValue="Y" falseValue="N"
-                                :rules="forms.ftpAddress.rules.binaryTransfer"
-                                v-model="ftpAddress.ftpAddress.binaryTransfer"></v-checkbox>
+                      <v-checkbox class="ma-0 mr-1" name="binaryTransfer" label="Binary Transfert" trueValue="Y"
+                                  falseValue="N"
+                                  :rules="forms.ftpAddress.rules.binaryTransfer"
+                                  v-model="ftpAddress.ftpAddress.binaryTransfer"></v-checkbox>
                       <v-checkbox class="ma-0 mr-1" name="zipFile" label="File compression" trueValue="Y" falseValue="N"
-                                :rules="forms.ftpAddress.rules.zipFile"
-                                v-model="ftpAddress.ftpAddress.zipFile"></v-checkbox>
+                                  :rules="forms.ftpAddress.rules.zipFile"
+                                  v-model="ftpAddress.ftpAddress.zipFile"></v-checkbox>
                       <v-checkbox class="ma-0 mr-1" name="passiveMode" label="Passive mode" trueValue="Y" falseValue="N"
-                                :rules="forms.ftpAddress.rules.passiveMode"
-                                v-model="ftpAddress.ftpAddress.passiveMode"></v-checkbox>
+                                  :rules="forms.ftpAddress.rules.passiveMode"
+                                  v-model="ftpAddress.ftpAddress.passiveMode"></v-checkbox>
                     </v-row>
                   </v-form>
                 </v-list-item-content>
@@ -535,11 +582,11 @@
                 <v-list-item-content>
                   <v-list-item-subtitle @click="addFtpAddress">
                     <v-icon left>mdi-plus-circle</v-icon>
-                    Add
+                    Add FTP address
                   </v-list-item-subtitle>
                 </v-list-item-content>
               </v-list-item>
-                    <v-divider inset v-if="showMore"></v-divider>
+                    <v-divider inset v-if="(ftpAddressList.length > 0 && showMore) || (editMode && showMore)"></v-divider>
             </span>
                 </v-list>
               </v-col>
@@ -1800,8 +1847,12 @@
                         contactMechPurposeTypeId: purpose,
                         partyId: contactMech.partyContactMech.partyId,
                       }).then(
-                        success => {resolve()},
-                        error => {console.log(error), reject()}
+                        success => {
+                          resolve()
+                        },
+                        error => {
+                          console.log(error), reject()
+                        }
                       )
                     }, 0)
                   })
@@ -1820,8 +1871,12 @@
                         fromDate: this.formatDate(purpose.fromDate),
                         contactMechPurposeTypeId: purpose.contactMechPurposeTypeId
                       }).then(
-                        success => {resolve()},
-                        error => {console.log(error), reject()}
+                        success => {
+                          resolve()
+                        },
+                        error => {
+                          console.log(error), reject()
+                        }
                       )
                     }, 0)
                   })
@@ -1851,6 +1906,11 @@
   }
 </script>
 
-<style scoped lang="sass">
-  $expansion-panel-content-padding: 0 10px 10px !default
+<style scoped>
+
+  div.row {
+    background-color: white !important;
+    text-align: left !important;
+    margin: auto !important;
+  }
 </style>
