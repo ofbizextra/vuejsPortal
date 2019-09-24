@@ -1,6 +1,6 @@
 <template>
   <div id="vue-platform-specific">
-    <div v-bind:is="componentName"></div>
+    <div v-bind:is="componentName" :props="props.attributes"></div>
   </div>
 </template>
 

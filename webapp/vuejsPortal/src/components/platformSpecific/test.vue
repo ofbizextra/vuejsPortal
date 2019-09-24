@@ -4,7 +4,7 @@
       <v-flex text-left stretch xs12>
         <v-card>
           <v-toolbar flat v-if="!editMode">
-            <v-toolbar-title>Contact mech</v-toolbar-title>
+            <v-toolbar-title>Contact mech "{{this.props.partyId}}"</v-toolbar-title>
             <div class="flex-grow-1"></div>
             <v-btn icon @click="toggleEdit">
               <v-icon v-on="on">mdi-pencil</v-icon>
@@ -1171,6 +1171,9 @@
       }
     },
     computed: {
+      partyId() {
+        return this.props.partyId
+      },
       contactMechList() {
         return this.dataSet.hasOwnProperty('valueMaps') ? [...this.dataSet.valueMaps, ...this.toCreate] : []
       },
@@ -1242,7 +1245,7 @@
       updateDataSet() {
         return new Promise((resolve, reject) => {
           setTimeout(() => {
-            this.$http.post(getContactMechUrl, {partyId: 'DemoLead3'}).then(
+            this.$http.post(getContactMechUrl, {partyId: this.partyId}).then(
               result => {
                 this.dataSet = result.body
                 resolve()
@@ -1258,7 +1261,7 @@
       createElectronicAddress() {
         this.$http.post(createContactMech, {
           contactMechTypeId: 'ELECTRONIC_ADDRESS',
-          partyId: 'DemoLead3',
+          partyId: this.partyId,
           infoString: this.forms.electronicAddress.fields.email,
           allowSolicitation: this.forms.electronicAddress.fields.allowSolicitation
         }).then(
@@ -1273,7 +1276,7 @@
       createPostalAddress() {
         this.$http.post(createPostalAddressUrl, {
           contactMechTypeId: 'POSTAL_ADDRESS',
-          partyId: 'DemoLead3',
+          partyId: this.partyId,
           toName: this.forms.postalAddress.fields.toName,
           attnName: this.forms.postalAddress.fields.attentionName,
           address1: this.forms.postalAddress.fields.addressLine1,
@@ -1295,7 +1298,7 @@
       createTelecomNumber() {
         this.$http.post(createTelecomNumberUrl, {
           contactMechTypeId: 'TELECOM_NUMBER',
-          partyId: 'DemoLead3',
+          partyId: this.partyId,
           countryCode: this.forms.phoneNumber.fields.countryCode,
           areaCode: this.forms.phoneNumber.fields.areaCode,
           contactNumber: this.forms.phoneNumber.fields.contactNumber,
@@ -1313,7 +1316,7 @@
       createEmailAddress() {
         this.$http.post(createEmailAddressUrl, {
           contactMechTypeId: 'EMAIL_ADDRESS',
-          partyId: 'DemoLead3',
+          partyId: this.partyId,
           emailAddress: this.forms.emailAddress.fields.emailAddress,
           allowSolicitation: this.forms.emailAddress.fields.allowSolicitation
         }).then(
@@ -1328,7 +1331,7 @@
       createIpAddress() {
         this.$http.post(createContactMech, {
           contactMechTypeId: 'IP_ADDRESS',
-          partyId: 'DemoLead3',
+          partyId: this.partyId,
           infoString: this.forms.ipAddress.fields.ipAddress,
           allowSolicitation: this.forms.ipAddress.fields.allowSolicitation
         }).then(
@@ -1343,7 +1346,7 @@
       createDomain() {
         this.$http.post(createContactMech, {
           contactMechTypeId: 'DOMAIN_NAME',
-          partyId: 'DemoLead3',
+          partyId: this.partyId,
           infoString: this.forms.domain.fields.domain,
           allowSolicitation: this.forms.domain.fields.allowSolicitation
         }).then(
@@ -1358,7 +1361,7 @@
       createWebAddress() {
         this.$http.post(createContactMech, {
           contactMechTypeId: 'WEB_ADDRESS',
-          partyId: 'DemoLead3',
+          partyId: this.partyId,
           infoString: this.forms.webAddress.fields.webAddress,
           allowSolicitation: this.forms.webAddress.fields.allowSolicitation
         }).then(
@@ -1373,7 +1376,7 @@
       createInternalNote() {
         this.$http.post(createContactMech, {
           contactMechTypeId: 'INTERNAL_PARTYID',
-          partyId: 'DemoLead3',
+          partyId: this.partyId,
           infoString: this.forms.internalNote.fields.internalNote,
           allowSolicitation: this.forms.internalNote.fields.allowSolicitation
         }).then(
@@ -1388,7 +1391,7 @@
       createFtpAddress() {
         this.$http.post(createFtpAddressUrl, {
           contactMechTypeId: 'FTP_ADDRESS',
-          partyId: 'DemoLead3',
+          partyId: this.partyId,
           hostname: this.forms.ftpAddress.fields.hostname,
           port: this.forms.ftpAddress.fields.port,
           username: this.forms.ftpAddress.fields.username,
@@ -1411,7 +1414,7 @@
       createLdapAddress() {
         this.$http.post(createContactMech, {
           contactMechTypeId: 'LDAP_ADDRESS',
-          partyId: 'DemoLead3',
+          partyId: this.partyId,
           infoString: this.forms.ldapAddress.fields.ldapAddress,
           allowSolicitation: this.forms.ldapAddress.fields.allowSolicitation
         }).then(
@@ -1426,7 +1429,7 @@
       addEmailAddress() {
         this.toCreate.push({
           contactMech: {
-            partyId: 'DemoLead3',
+            partyId: this.partyId,
             contactMechTypeId: 'EMAIL_ADDRESS',
             infoString: ''
           },
@@ -1437,7 +1440,7 @@
       addTelecomNumber() {
         this.toCreate.push({
           contactMech: {
-            partyId: 'DemoLead3',
+            partyId: this.partyId,
             contactMechTypeId: 'TELECOM_NUMBER'
           },
           partyContactMechPurposes: [],
@@ -1451,7 +1454,7 @@
       addPostalAddress() {
         this.toCreate.push({
           contactMech: {
-            partyId: 'DemoLead3',
+            partyId: this.partyId,
             contactMechTypeId: 'POSTAL_ADDRESS'
           },
           partyContactMechPurposes: [],
@@ -1469,7 +1472,7 @@
       addIpAddress() {
         this.toCreate.push({
           contactMech: {
-            partyId: 'DemoLead3',
+            partyId: this.partyId,
             contactMechTypeId: 'IP_ADDRESS',
             infoString: ''
           },
@@ -1480,7 +1483,7 @@
       addWebAddress() {
         this.toCreate.push({
           contactMech: {
-            partyId: 'DemoLead3',
+            partyId: this.partyId,
             contactMechTypeId: 'WEB_ADDRESS',
             infoString: ''
           },
@@ -1491,7 +1494,7 @@
       addDomainName() {
         this.toCreate.push({
           contactMech: {
-            partyId: 'DemoLead3',
+            partyId: this.partyId,
             contactMechTypeId: 'DOMAIN_NAME',
             infoString: ''
           },
@@ -1502,7 +1505,7 @@
       addInternalPartyId() {
         this.toCreate.push({
           contactMech: {
-            partyId: 'DemoLead3',
+            partyId: this.partyId,
             contactMechTypeId: 'INTERNAL_PARTYID',
             infoString: ''
           },
@@ -1513,7 +1516,7 @@
       addFtpAddress() {
         this.toCreate.push({
           contactMech: {
-            partyId: 'DemoLead3',
+            partyId: this.partyId,
             contactMechTypeId: 'FTP_ADDRESS'
           },
           partyContactMechPurposes: [],
@@ -1534,7 +1537,7 @@
       addLdapAddress() {
         this.toCreate.push({
           contactMech: {
-            partyId: 'DemoLead3',
+            partyId: this.partyId,
             contactMechTypeId: 'LDAP_ADDRESS',
             infoString: ''
           },
@@ -1583,7 +1586,7 @@
                   this.$http.post(updatePostalAddressUrl, {
                     contactMechId: contactMech.contactMech.contactMechId,
                     contactMechTypeId: contactMech.contactMech.contactMechTypeId,
-                    partyId: 'DemoLead3',
+                    partyId: this.partyId,
                     toName: contactMech.postalAddress.toName,
                     attnName: contactMech.postalAddress.attnName,
                     address1: contactMech.postalAddress.address1,
@@ -1609,7 +1612,7 @@
                   this.$http.post(updateTelecomNumberUrl, {
                     contactMechId: contactMech.contactMech.contactMechId,
                     contactMechTypeId: contactMech.contactMech.contactMechTypeId,
-                    partyId: 'DemoLead3',
+                    partyId: this.partyId,
                     countryCode: contactMech.telecomNumber.countryCode,
                     contactNumber: contactMech.telecomNumber.contactNumber
                   }).then(
@@ -1631,7 +1634,7 @@
                   this.$http.post(updateEmailAddressUrl, {
                     contactMechId: contactMech.contactMech.contactMechId,
                     contactMechTypeId: contactMech.contactMech.contactMechTypeId,
-                    partyId: 'DemoLead3',
+                    partyId: this.partyId,
                     emailAddress: contactMech.contactMech.infoString
                   }).then(
                     result => {
@@ -1652,7 +1655,7 @@
                   this.$http.post(updateFtpAddressUrl, {
                     contactMechId: contactMech.contactMech.contactMechId,
                     contactMechTypeId: contactMech.contactMech.contactMechTypeId,
-                    partyId: 'DemoLead3',
+                    partyId: this.partyId,
                     hostname: contactMech.ftpAddress.hostname,
                     port: contactMech.ftpAddress.port,
                     username: contactMech.ftpAddress.username,
@@ -1681,7 +1684,7 @@
                   this.$http.post(updateContactMechUrl, {
                     contactMechId: contactMech.contactMech.contactMechId,
                     contactMechTypeId: contactMech.contactMech.contactMechTypeId,
-                    partyId: 'DemoLead3',
+                    partyId: this.partyId,
                     infoString: contactMech.contactMech.infoString
                   }).then(
                     result => {
@@ -1705,7 +1708,7 @@
                 setTimeout(() => {
                   this.$http.post(createPostalAddressUrl, {
                     contactMechTypeId: 'POSTAL_ADDRESS',
-                    partyId: 'DemoLead3',
+                    partyId: this.partyId,
                     toName: contactMech.postalAddress.toName,
                     attnName: contactMech.postalAddress.attnName,
                     address1: contactMech.postalAddress.address1,
@@ -1730,7 +1733,7 @@
                 setTimeout(() => {
                   this.$http.post(createTelecomNumberUrl, {
                     contactMechTypeId: 'TELECOM_NUMBER',
-                    partyId: 'DemoLead3',
+                    partyId: this.partyId,
                     countryCode: contactMech.telecomNumber.countryCode,
                     contactNumber: contactMech.telecomNumber.contactNumber,
                   }).then(
@@ -1751,7 +1754,7 @@
                 setTimeout(() => {
                   this.$http.post(createEmailAddressUrl, {
                     contactMechTypeId: 'EMAIL_ADDRESS',
-                    partyId: 'DemoLead3',
+                    partyId: this.partyId,
                     emailAddress: contactMech.contactMech.infoString,
                   }).then(
                     result => {
@@ -1771,7 +1774,7 @@
                 setTimeout(() => {
                   this.$http.post(createFtpAddressUrl, {
                     contactMechTypeId: 'FTP_ADDRESS',
-                    partyId: 'DemoLead3',
+                    partyId: this.partyId,
                     hostname: contactMech.ftpAddress.hostname,
                     port: contactMech.ftpAddress.port,
                     username: contactMech.ftpAddress.username,
@@ -1799,7 +1802,7 @@
                 setTimeout(() => {
                   this.$http.post(createContactMech, {
                     contactMechTypeId: contactMech.contactMech.contactMechTypeId,
-                    partyId: 'DemoLead3',
+                    partyId: this.partyId,
                     infoString: contactMech.contactMech.infoString,
                   }).then(
                     result => {
@@ -1820,7 +1823,7 @@
             setTimeout(() => {
               this.$http.post(deleteContactMechUrl, {
                 contactMechId: contactMechId,
-                partyId: 'DemoLead3'
+                partyId: this.partyId
               }).then(
                 result => {
                   resolve()
@@ -1901,6 +1904,11 @@
         }, error => {
           console.log('Error during purposes acquisition...', error)
         })
+      }
+    },
+    watch: {
+      partyId() {
+        this.updateDataSet()
       }
     }
   }
