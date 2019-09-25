@@ -928,22 +928,22 @@
   import FtpAddress from './test/FtpAddress'
   import LdapAddress from './test/LdapAddress'
 
-  const getContactMechUrl = 'https://localhost:8443/partymgrapi/control/getcontactmech'
-  const createEmailAddressUrl = 'https://localhost:8443/partymgrapi/control/createEmailAddress'
-  const createPostalAddressUrl = 'https://localhost:8443/partymgrapi/control/createPostalAddress'
-  const createElectroniclAddressUrl = 'https://localhost:8443/partymgrapi/control/createElectronicAddress'
-  const createTelecomNumberUrl = 'https://localhost:8443/partymgrapi/control/createTelecomNumber'
-  const createContactMech = 'https://localhost:8443/partymgrapi/control/createContactMech'
-  const createFtpAddressUrl = 'https://localhost:8443/partymgrapi/control/createFtpAddress'
-  const updateContactMechUrl = 'https://localhost:8443/partymgrapi/control/updateContactMech'
-  const updatePostalAddressUrl = 'https://localhost:8443/partymgrapi/control/updatePostalAddress'
-  const updateTelecomNumberUrl = 'https://localhost:8443/partymgrapi/control/updateTelecomNumber'
-  const updateEmailAddressUrl = 'https://localhost:8443/partymgrapi/control/updateEmailAddress'
-  const updateFtpAddressUrl = 'https://localhost:8443/partymgrapi/control/updateFtpAddress'
-  const deleteContactMechUrl = 'https://localhost:8443/partymgrapi/control/deleteContactMech'
-  const getContactmechPurposeTypeUrl = 'https://localhost:8443/partymgrapi/control/getContactmechPurposeType'
-  const createPartyContactMechPurposeUrl = 'https://localhost:8443/partymgrapi/control/createPartyContactMechPurpose'
-  const expirePartyContactMechPurposeUrl = 'https://localhost:8443/partymgrapi/control/expirePartyContactMechPurpose'
+  const getContactMechUrl = 'https://localhost:8443/partymgrfjs/control/getcontactmech'
+  const createEmailAddressUrl = 'https://localhost:8443/partymgrfjs/control/createEmailAddress'
+  const createPostalAddressUrl = 'https://localhost:8443/partymgrfjs/control/createPostalAddress'
+  const createElectroniclAddressUrl = 'https://localhost:8443/partymgrfjs/control/createElectronicAddress'
+  const createTelecomNumberUrl = 'https://localhost:8443/partymgrfjs/control/createTelecomNumber'
+  const createContactMech = 'https://localhost:8443/partymgrfjs/control/createContactMech'
+  const createFtpAddressUrl = 'https://localhost:8443/partymgrfjs/control/createFtpAddress'
+  const updateContactMechUrl = 'https://localhost:8443/partymgrfjs/control/updateContactMech'
+  const updatePostalAddressUrl = 'https://localhost:8443/partymgrfjs/control/updatePostalAddress'
+  const updateTelecomNumberUrl = 'https://localhost:8443/partymgrfjs/control/updateTelecomNumber'
+  const updateEmailAddressUrl = 'https://localhost:8443/partymgrfjs/control/updateEmailAddress'
+  const updateFtpAddressUrl = 'https://localhost:8443/partymgrfjs/control/updateFtpAddress'
+  const deleteContactMechUrl = 'https://localhost:8443/partymgrfjs/control/deleteContactMech'
+  const getContactmechPurposeTypeUrl = 'https://localhost:8443/partymgrfjs/control/getContactmechPurposeType'
+  const createPartyContactMechPurposeUrl = 'https://localhost:8443/partymgrfjs/control/createPartyContactMechPurpose'
+  const expirePartyContactMechPurposeUrl = 'https://localhost:8443/partymgrfjs/control/expirePartyContactMechPurpose'
 
   export default {
     name: "test",
@@ -1908,6 +1908,9 @@
     },
     watch: {
       partyId() {
+        if (this.editMode) {
+          this.toggleEdit()
+        }
         this.updateDataSet()
       }
     }
