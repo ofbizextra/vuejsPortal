@@ -1,5 +1,5 @@
 export default {
-  apiUrl: 'https://localhost:8443/exampleapi/control',
+  apiUrl: 'https://localhost:8443/examplefjs/control',
   formApiUrl: 'https://localhost:8443/example/control',
   hostUrl: 'https://localhost:8443',
   main: {path: '/main', tokenRequired: false},
