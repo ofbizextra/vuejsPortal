@@ -56,7 +56,8 @@
       },
       ...mapGetters({
         getData: 'data/entityRowAttribute',
-        getForm: 'form/form'
+        getForm: 'form/form',
+        currentApi: 'backOfficeApi/currentApi'
       }),
       target() {
         return this.attributes.hasOwnProperty('target') ? this.attributes.target : null
@@ -118,7 +119,7 @@
                 case 'post':
                   // do post
                   promiseList.push(this.$store.dispatch('backOfficeApi/doPost', {
-                    uri: `${getters['backOfficeApi/apiUrl']}/${updateArea.areaTarget}`,
+                    uri: `${this.currentApi}/${updateArea.areaTarget}`,
                     params: updateArea.hasOwnProperty('parameterMap') ? updateArea.parameterMap : {}
                   }))
                   break
