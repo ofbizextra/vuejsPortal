@@ -1,6 +1,8 @@
 <template>
   <div id="vue-submit-field">
-    <input type="submit" :value="data.title" v-bind="data" v-on:click.prevent="resolveEvents"/>
+    <v-btn type="submit" v-bind="data" v-on:click.prevent="resolveEvents">
+    {{data.title}}
+    </v-btn>
   </div>
 </template>
 

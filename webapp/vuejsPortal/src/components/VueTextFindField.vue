@@ -1,26 +1,19 @@
 <template>
-  <div id="vue-text-find-field">
-    <select class="selectBox" v-if="data.opEquals" v-model="valueOp">
-      <option value="equals">egal</option>
-      <option value="like">debute</option>
-      <option value="contains">contient</option>
-      <option value="empty">est vide</option>
-      <option value="notEqual">Diff.</option>
-    </select>
-    <input
-      type="text"
+  <v-row class="ma-0">
+    <v-select class="col-4 mt-0 mb-0" :items="items" v-if="data.opEquals" v-model="valueOp" hide-display>
+    </v-select>
+    <v-text-field class="col-6 mt-0 mb-0"
+      :label="data.name"
       v-bind:name="data.name"
       v-bind:size="data.size"
       v-model="value"
       v-bind:maxlength="data.maxlength"
       v-bind:autocomplete="data.autocomplete"
-      v-bind:tabindex="data.tabindex"
+      v-bind:tabindex="data.tabindex" hide-display
     />
-    <span v-bind:class="data.titleStyle ? data.titleStyle : ''">
       <input v-if="data.hideIgnoreCase" type="hidden" :name="data.name + '_ic'" :value="data.ignCase ? 'Y' : ''"/>
-      <input v-else type="checkbox" :name="data.name + '_ic'" value="Y" v-model="valueIc" checked="data.ignCase"/>
-    </span>
-  </div>
+      <v-checkbox class="col-2 mt-0 mb-0" v-else type="checkbox" label="ignore case" :name="data.name + '_ic'" false-value="N" true-value="Y" v-model="valueIc" hide-display/>
+  </v-row>
 </template>
 
 <script>
@@ -30,7 +23,15 @@
     name: "VueTextFindField",
     props: ['props', 'updateStore'],
     data() {
-      return {}
+      return {
+        items: [
+          {text: 'egal', value: 'equals'},
+          {text: 'débute', value: 'like'},
+          {text: 'contient', value: 'contains'},
+          {text: 'est vide', value: 'empty'},
+          {text: 'Diff', value: 'notEqual'}
+          ]
+      }
     },
     computed: {
       data() {

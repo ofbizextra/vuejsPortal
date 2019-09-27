@@ -1,17 +1,8 @@
 <template>
   <div id="vue-drop-down-field">
-    <select v-model="value" v-bind="data">
-      <option value="" v-if="data.allowEmpty || (data.allowEmpty && props.children.length === 0)"></option>
-      <option v-if="data.firstInList && value && !data.multiple" selected="selected" :value="value">
-        {{data.explicitDescription}}
-      </option>
-      <vue-option
-        v-for="option in data.options"
-        :key="option.key"
-        :props="option"
-        :selected="option.key === value">
-      </vue-option>
-    </select>
+    <v-select :items="data.options" item-value="key" item-text="description" v-model="value">
+
+    </v-select>
   </div>
 </template>
 
