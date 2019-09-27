@@ -68,12 +68,12 @@ const getters = {
 }
 
 const actions = {
-  login({commit}, credentials) {
+  login({commit, rootGetters}, credentials) {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         commit('LOGIN')
         Vue.http.post(
-          constantes.apiUrl + constantes.login.path,
+          constantes.hostUrl + rootGetters['backOfficeApi/currentApi'] + constantes.login.path,
           queryString.stringify({
             JavaScriptEnabled: 'Y',
             USERNAME: credentials.username,
@@ -121,11 +121,11 @@ const actions = {
       }, 1000)
     })
   },
-  check({commit}) {
+  check({commit, rootGetters}) {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         Vue.http.post(
-          constantes.apiUrl + constantes.ajaxCheckLogin.path,
+          constantes.hostUrl + rootGetters['backOfficeApi/currentApi'] + constantes.ajaxCheckLogin.path,
           queryString.stringify({
           }),
           {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}).then(response => {

@@ -38,6 +38,9 @@
     },
     mounted() {
       console.log(this.$route.path)
+      let pathname = window.location.pathname
+      let api = pathname.substring(0, pathname.indexOf('/', 1)) + '/control'
+      this.$store.dispatch('backOfficeApi/setApi', api)
       // Vue.http.setRequestHeader('Content-Security-Policy', "default-src 'self'")
       this.$store.dispatch('login/check').then(() => {
         if (this.$route.fullPath.includes('/exampleapi/control')) {
