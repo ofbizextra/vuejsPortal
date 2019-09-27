@@ -9,6 +9,7 @@ Vue.use(Vuex)
 
 const state = {
   currentPortalPage: '',
+  currentPortalPageParams: {},
   portalPages: {},
   portlets: {},
   portletTarget: {},
@@ -29,6 +30,9 @@ const mutations = {
   },
   REMOVE_PORTAL_PAGE: (state, id) => {
     state.portalPages.slice(id)
+  },
+  SET_CURRENT_PORTAL_PAGE_PARAMS: (state, params) => {
+    Vue.set(state, 'currentPortalPageParams', params)
   },
   SET_PORTLET: (state, {portletId, data}) => {
     Vue.set(state.portlets, portletId, data)
@@ -72,6 +76,7 @@ const mutations = {
 const getters = {
   currentPortalPage: state => state.currentPortalPage,
   currentPortalPageDetail: state => state.portalPages[state.currentPortalPage],
+  currentPortalPageParams: state => state.currentPortalPageParams,
   portalPage: state => (id) => {
     return state.portalPages[id]
   },
@@ -276,6 +281,7 @@ const actions = {
       console.log('PortalPage : ', portalPage)
       commit('SET_PORTAL_PAGE', {portalPageId: params.portalPageId, portalPage})
       commit('SET_CURRENT_PORTAL_PAGE', params.portalPageId)
+      commit('SET_CURRENT_PORTAL_PAGE_PARAMS', params)
     }, error => {
       console.log('Error during portalPage acquisition : ', error)
     })
