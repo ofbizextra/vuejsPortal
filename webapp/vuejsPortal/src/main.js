@@ -76,7 +76,7 @@ import VueFormatEmptySpace from './components/VueFormatEmptySpace'
 import VuePlatformSpecific from './components/VuePlatformSpecific'
 
 // Platform Specific
-import test from './components/platformSpecific/test'
+import ContactMech from './components/platformSpecific/ContactMech'
 
 import store from './store'
 import vuetify from './plugins/vuetify';
@@ -156,7 +156,7 @@ Vue.component('vue-format-empty-space', VueFormatEmptySpace)
 Vue.component('vue-platform-specific', VuePlatformSpecific)
 
 // Platform Specific
-Vue.component('test', test)
+Vue.component('ContactMech', ContactMech)
 
 Vue.mixin({
   methods: {
