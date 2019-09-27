@@ -3,6 +3,7 @@ import Vue from 'vue'
 import queryString from 'query-string'
 import constantes from './../../js/constantes'
 import VueWait from 'vue-wait'
+import response from 'vue-resource/src/http/response'
 
 Vue.use(Vuex)
 
@@ -249,6 +250,35 @@ const actions = {
   },
   deleteErrorMessage({commit}, {errorMessage}) {
     commit('DELETE_ERROR_MESSAGE', {errorMessage})
+  },
+  initialize({commit, dispatch}, location) {
+    console.log('location : ', location)
+    let origin = location.origin
+    let pathname = location.pathname
+    let path = origin + pathname
+    let search = location.search
+    console.log('path : ', path)
+    console.log('Params : ', search)
+    let params = {portalPageId: PORTAL_PAGE_ID}
+    search.substr(1).split('&').forEach(param => {
+      let tmp = param.split('=')
+      params[tmp[0]] = tmp[1]
+    })
+    console.log('params : ', params)
+    let api = pathname.substring(0, pathname.indexOf('/', 1)) + '/control'
+    console.log('API ===> ' + api)
+    dispatch('loadPortalPageDetail', {api: api, params: params})
+  },
+  loadPortalPageDetail({commit, dispatch}, {api, params}) {
+    dispatch('backOfficeApi/setApi', api, {root: true})
+    dispatch('backOfficeApi/doPost', {uri: constantes.hostUrl + api + '/' + constantes.portalPageDetail.path, params}, {root: true}).then(response => {
+      let portalPage = response.body
+      console.log('PortalPage : ', portalPage)
+      commit('SET_PORTAL_PAGE', {portalPageId: params.portalPageId, portalPage})
+      commit('SET_CURRENT_PORTAL_PAGE', params.portalPageId)
+    }, error => {
+      console.log('Error during portalPage acquisition : ', error)
+    })
   }
 }
 

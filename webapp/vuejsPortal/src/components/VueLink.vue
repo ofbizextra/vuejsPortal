@@ -25,8 +25,9 @@
       :data-dialog-height="height"
       :data-dialog-title="text"
       :class="style"
-      v-bind:href="`${href}#${href}`"
+      @click="loadPortalPage"
     >
+<!--      v-bind:href="`${href}#${href}`"-->
       <!--v-on:click="redirect"-->
 
       <img :src="imgSrc" :title="imgTitle" alt="" v-if="hasImage"/>
@@ -144,10 +145,10 @@
         let href
         switch (this.urlMode) {
           case 'intra-app':
-            href = this.constantes.hostUrl + this.linkUrl
+            href = this.constantes.hostUrl + this.linkUrl.split('?')[0]
             break
           case 'inter-app':
-            href = this.constantes.hostUrl + this.linkUrl
+            href = this.constantes.hostUrl + this.linkUrl.split('?')[0]
             break
           case 'plain':
             href = this.linkUrl()
@@ -164,6 +165,9 @@
         } else {
           return 'intra-app'
         }
+      },
+      api() {
+        return this.linkUrl.split('?')[0].substring(0, this.linkUrl.indexOf('/', 1)) + '/control'
       }
     },
     methods: {
@@ -177,6 +181,9 @@
             params: this.parameterMap
           })
         }
+      },
+      loadPortalPage() {
+        this.$store.dispatch('ui/loadPortalPageDetail', {api: this.api, params: this.parameterMap})
       }
     }
   }
