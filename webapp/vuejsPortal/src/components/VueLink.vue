@@ -190,7 +190,7 @@
         }
       },
       loadPortalPage() {
-        if (this.linkType === 'intra-app') {
+        if (this.urlMode === 'intra-app') {
           this.$store.dispatch('ui/loadPortalPageDetail', {api: this.currentApi, params: this.parameterMap})
         } else {
           this.$store.dispatch('ui/loadPortalPageDetail', {api: this.api, params: this.parameterMap})
