@@ -130,6 +130,9 @@
       imgTitle() {
         return this.data.img.hasOwnProperty('title') ? this.data.img.title : ''
       },
+      target() {
+        return this.data.hasOwnProperty('target') ? this.data.target : ''
+      },
       params() {
         if (this.uniqueItemName.length > 0) {
           return ""
