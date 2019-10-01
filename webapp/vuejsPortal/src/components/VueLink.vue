@@ -63,6 +63,7 @@
 
 <script>
   import constantes from '../js/constantes'
+  import {mapGetters} from 'vuex'
 
   export default {
     name: "VueLink",
@@ -78,6 +79,9 @@
         delete data['value']
         return data
       },
+      ...mapGetters({
+        currentApi: 'backOfficeApi/currentApi'
+      }),
       linkUrl() {
         return this.data.hasOwnProperty('linkUrl') ? this.data.linkUrl : ''
       },
@@ -167,7 +171,7 @@
         }
       },
       api() {
-        return this.linkUrl.split('?')[0].substring(0, this.linkUrl.indexOf('/', 1)) + '/control'
+        return this.target.split('?')[0].substring(0, this.linkUrl.indexOf('/', 1)) + '/control'
       }
     },
     methods: {
@@ -183,7 +187,11 @@
         }
       },
       loadPortalPage() {
-        this.$store.dispatch('ui/loadPortalPageDetail', {api: this.api, params: this.parameterMap})
+        if (this.linkType === 'intra-app') {
+          this.$store.dispatch('ui/loadPortalPageDetail', {api: this.currentApi, params: this.parameterMap})
+        } else {
+          this.$store.dispatch('ui/loadPortalPageDetail', {api: this.api, params: this.parameterMap})
+        }
       }
     }
   }

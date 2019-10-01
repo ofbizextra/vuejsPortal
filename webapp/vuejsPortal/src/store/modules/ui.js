@@ -276,7 +276,7 @@ const actions = {
   },
   loadPortalPageDetail({commit, dispatch}, {api, params}) {
     dispatch('backOfficeApi/setApi', api, {root: true})
-    dispatch('backOfficeApi/doPost', {uri: constantes.hostUrl + api + '/' + constantes.portalPageDetail.path, params}, {root: true}).then(response => {
+    dispatch('backOfficeApi/doPost', {uri: constantes.hostUrl + api + constantes.portalPageDetail.path, params}, {root: true}).then(response => {
       let portalPage = response.body
       console.log('PortalPage : ', portalPage)
       commit('SET_PORTAL_PAGE', {portalPageId: params.portalPageId, portalPage})
