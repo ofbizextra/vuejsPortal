@@ -68,7 +68,15 @@ const getters = {
   },
   watcher(state) {
     return function (watcherName) {
-      return state.watchers[watcherName]
+      if (watcherName.includes(',')) {
+        watcherName = watcherName.replace(/\s+/g, '')
+        let watchers = watcherName.split(',')
+        let response = {}
+        watchers.forEach(watcher => response = {...state.watchers[watcher], ...response})
+        return response
+      } else {
+        return state.watchers[watcherName]
+      }
     }
   }
 }
