@@ -37,6 +37,12 @@
       show() {
         return this.listSize > 0
       }
+    },
+    created() {
+      if (this.props.attributes.hasOwnProperty('errorMessage')) {
+        error.log(this.props.attributes.errorMessage)
+        this._vm.flash(this.props.attributes.errorMessage, 'error', 10000)
+      }
     }
   }
 </script>
