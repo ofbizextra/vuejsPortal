@@ -18,7 +18,7 @@
     </form>
     <!--:data-dialog-url="linkUrl"-->
     <a
-      v-if="linkType === 'auto'"
+      v-if="linkType === 'auto' && urlMode === 'intra-app'"
       v-bind:id="id + '_link'"
       :data-dialog-params="params"
       :data-dialog-width="width"
@@ -28,6 +28,22 @@
       @click="loadPortalPage"
     >
 <!--      v-bind:href="`${href}#${href}`"-->
+      <!--v-on:click="redirect"-->
+
+      <img :src="imgSrc" :title="imgTitle" alt="" v-if="hasImage"/>
+      {{text}}
+    </a>
+    <a
+      v-else-if="linkType === 'auto'"
+      v-bind:id="id + '_link'"
+      :data-dialog-params="params"
+      :data-dialog-width="width"
+      :data-dialog-height="height"
+      :data-dialog-title="text"
+      :class="style"
+      :href="href"
+    >
+      <!--      v-bind:href="`${href}#${href}`"-->
       <!--v-on:click="redirect"-->
 
       <img :src="imgSrc" :title="imgTitle" alt="" v-if="hasImage"/>
@@ -190,11 +206,7 @@
         }
       },
       loadPortalPage() {
-        if (this.urlMode === 'intra-app') {
-          this.$store.dispatch('ui/loadPortalPageDetail', {api: this.currentApi, params: this.parameterMap})
-        } else {
-          this.$store.dispatch('ui/loadPortalPageDetail', {api: this.api, params: this.parameterMap})
-        }
+        this.$store.dispatch('ui/loadPortalPageDetail', {api: this.currentApi, params: this.parameterMap})
       }
     }
   }
