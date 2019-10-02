@@ -604,22 +604,22 @@
 
 <script>
 
-  const getContactMechUrl = 'https://localhost:8443/partymgrfjs/control/getcontactmech'
-  const createEmailAddressUrl = 'https://localhost:8443/partymgrfjs/control/createEmailAddress'
-  const createPostalAddressUrl = 'https://localhost:8443/partymgrfjs/control/createPostalAddress'
-  const createElectroniclAddressUrl = 'https://localhost:8443/partymgrfjs/control/createElectronicAddress'
-  const createTelecomNumberUrl = 'https://localhost:8443/partymgrfjs/control/createTelecomNumber'
-  const createContactMech = 'https://localhost:8443/partymgrfjs/control/createContactMech'
-  const createFtpAddressUrl = 'https://localhost:8443/partymgrfjs/control/createFtpAddress'
-  const updateContactMechUrl = 'https://localhost:8443/partymgrfjs/control/updateContactMech'
-  const updatePostalAddressUrl = 'https://localhost:8443/partymgrfjs/control/updatePostalAddress'
-  const updateTelecomNumberUrl = 'https://localhost:8443/partymgrfjs/control/updateTelecomNumber'
-  const updateEmailAddressUrl = 'https://localhost:8443/partymgrfjs/control/updateEmailAddress'
-  const updateFtpAddressUrl = 'https://localhost:8443/partymgrfjs/control/updateFtpAddress'
-  const deleteContactMechUrl = 'https://localhost:8443/partymgrfjs/control/deleteContactMech'
-  const getContactmechPurposeTypeUrl = 'https://localhost:8443/partymgrfjs/control/getContactmechPurposeType'
-  const createPartyContactMechPurposeUrl = 'https://localhost:8443/partymgrfjs/control/createPartyContactMechPurpose'
-  const expirePartyContactMechPurposeUrl = 'https://localhost:8443/partymgrfjs/control/expirePartyContactMechPurpose'
+  const getContactMechUrl = '/partymgrfjs/control/getcontactmech'
+  const createEmailAddressUrl = '/partymgrfjs/control/createEmailAddress'
+  const createPostalAddressUrl = '/partymgrfjs/control/createPostalAddress'
+  const createElectroniclAddressUrl = '/partymgrfjs/control/createElectronicAddress'
+  const createTelecomNumberUrl = '/partymgrfjs/control/createTelecomNumber'
+  const createContactMech = '/partymgrfjs/control/createContactMech'
+  const createFtpAddressUrl = '/partymgrfjs/control/createFtpAddress'
+  const updateContactMechUrl = '/partymgrfjs/control/updateContactMech'
+  const updatePostalAddressUrl = '/partymgrfjs/control/updatePostalAddress'
+  const updateTelecomNumberUrl = '/partymgrfjs/control/updateTelecomNumber'
+  const updateEmailAddressUrl = '/partymgrfjs/control/updateEmailAddress'
+  const updateFtpAddressUrl = '/partymgrfjs/control/updateFtpAddress'
+  const deleteContactMechUrl = '/partymgrfjs/control/deleteContactMech'
+  const getContactmechPurposeTypeUrl = '/partymgrfjs/control/getContactmechPurposeType'
+  const createPartyContactMechPurposeUrl = '/partymgrfjs/control/createPartyContactMechPurpose'
+  const expirePartyContactMechPurposeUrl = '/partymgrfjs/control/expirePartyContactMechPurpose'
 
   export default {
     name: "ContactMech",
