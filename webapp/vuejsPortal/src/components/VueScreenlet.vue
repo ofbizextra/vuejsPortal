@@ -54,7 +54,7 @@
         collapsibleStatus: 'ui/collapsibleStatus'
       }),
       collapsed() {
-        return this.collapsibleStatus(this.data.id)
+        return this.collapsibleStatus(this.data.name)
       },
       data() {
         let data = this.props.attributes
@@ -94,12 +94,12 @@
     },
     methods: {
       toggle() {
-        this.$store.dispatch('ui/setCollapsibleStatus', {areaId: this.data.id, areaTarget: !this.collapsed})
+        this.$store.dispatch('ui/setCollapsibleStatus', {areaId: this.data.name, areaTarget: !this.collapsed})
       }
     },
     created() {
       if (this.data.collapsible) {
-        this.$store.dispatch('ui/setCollapsibleStatus', {areaId: this.props.attributes.id, areaTarget: this.props.attributes.collapsed})
+        this.$store.dispatch('ui/setCollapsibleStatus', {areaId: this.props.attributes.name, areaTarget: this.props.attributes.collapsed})
       }
     }
   }
