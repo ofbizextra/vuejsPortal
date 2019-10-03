@@ -153,6 +153,37 @@
                     value: this.description
                   })
                   break
+                case 'collapse':
+                  switch (updateArea.areaTarget) {
+                    case 'collapse':
+                      // collapse
+                      this.$store.dispatch('ui/setCollapsibleStatus', {
+                        areaId: updateArea.areaId,
+                        areaTarget: true
+                      })
+                      break
+                    case 'expand':
+                      // expand
+                      this.$store.dispatch('ui/setCollapsibleStatus', {
+                        areaId: updateArea.areaId,
+                        areaTarget: false
+                      })
+                      break
+                    case 'toggle':
+                      // toggle
+                      this.$store.dispatch('ui/setCollapsibleStatus', {
+                        areaId: updateArea.areaId,
+                        areaTarget: !this.$store.getters['ui/collapsibleStatus'](updateArea.areaId)
+                      })
+                      break
+                    default:
+                      // toggle
+                      this.$store.dispatch('ui/setCollapsibleStatus', {
+                        areaId: updateArea.areaId,
+                        areaTarget: !this.$store.getters['ui/collapsibleStatus'](updateArea.areaId)
+                      })
+                      break
+                  }
                 default:
                   // do nothing
                   break

@@ -18,7 +18,8 @@ const state = {
   areas: {},
   watchers: {},
   updateCpt: 0,
-  errorMessageList: []
+  errorMessageList: [],
+  collapsibleStatus: {}
 }
 
 const mutations = {
@@ -70,6 +71,9 @@ const mutations = {
   },
   DELETE_ERROR_MESSAGE: (state, {errorMessage}) => {
     state.errorMessageList.splice(state.errorMessageList.indexOf(errorMessage), 1)
+  },
+  SET_COLLAPSIBLE_STATUS: (state, {areaId, areaTarget}) => {
+    Vue.set(state.collapsibleStatus, areaId, areaTarget)
   }
 }
 
@@ -116,7 +120,12 @@ const getters = {
     }
   },
   updateCpt: state => state.updateCpt,
-  errorMessageList: state => state.errorMessageList
+  errorMessageList: state => state.errorMessageList,
+  collapsibleStatus(state) {
+    return function (areaId) {
+      return state.collapsibleStatus.hasOwnProperty(areaId) ? state.collapsibleStatus[areaId] : false
+    }
+  }
 }
 
 const actions = {
@@ -285,6 +294,9 @@ const actions = {
     }, error => {
       console.log('Error during portalPage acquisition : ', error)
     })
+  },
+  setCollapsibleStatus({commit}, {areaId, areaTarget}) {
+    commit('SET_COLLAPSIBLE_STATUS', {areaId, areaTarget})
   }
 }
 

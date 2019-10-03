@@ -6,7 +6,7 @@
           <li class="h3" v-if="data.hasOwnProperty('title')">
             {{data.title}}
           </li>
-          <li :class="data.collapsed ? 'collapsed' : 'expanded'" v-if="data.collapsible">
+          <li :class="collapsed ? 'collapsed' : 'expanded'" v-if="data.collapsible">
             <a
               v-bind:title="toolTip"
               v-on:click.prevent="toggle"
@@ -39,6 +39,7 @@
 
 <script>
   import constantes from '../js/constantes'
+  import {mapGetters} from 'vuex'
 
   export default {
     name: "VueScreenlet",
@@ -49,6 +50,12 @@
       }
     },
     computed: {
+      ...mapGetters({
+        collapsibleStatus: 'ui/collapsibleStatus'
+      }),
+      collapsed() {
+        return this.collapsibleStatus(this.data.id)
+      },
       data() {
         let data = this.props.attributes
         delete data['value']
@@ -75,7 +82,7 @@
       },
       style() {
         if (this.data.collapsible) {
-          if (this.data.collapsed) {
+          if (this.collapsed) {
             return {display: 'none'}
           } else {
             return {}
@@ -87,7 +94,12 @@
     },
     methods: {
       toggle() {
-        this.data.collapsed = !this.data.collapsed
+        this.$store.dispatch('ui/setCollapsibleStatus', {areaId: this.data.id, areaTarget: !this.collapsed})
+      }
+    },
+    created() {
+      if (this.data.collapsible) {
+        this.$store.dispatch('ui/setCollapsibleStatus', {areaId: this.props.attributes.id, areaTarget: this.props.attributes.collapsed})
       }
     }
   }
