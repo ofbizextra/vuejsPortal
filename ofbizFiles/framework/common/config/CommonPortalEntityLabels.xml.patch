@@ -7,11 +7,11 @@ Index: framework/common/config/CommonPortalEntityLabels.xml
          <value xml:lang="zh-TW">場所</value>
      </property>
 +    <!--Begin For ExampleVueJs plugin -->
-+    <property key="PortalPage.portalPageName.RecapPageFrontJs">
++    <property key="PortalPage.portalPageName.ExampleRecapJs">
 +        <value xml:lang="en">One example (RecapPageFrontJs)</value>
 +        <value xml:lang="fr">Un exemple (RecapPageFrontJs)</value>
 +    </property>
-+    <property key="PortalPage.portalPageName.MgmtPageFrontJs">
++    <property key="PortalPage.portalPageName.ExampleMgmtFrontJs">
 +        <value xml:lang="en">Examples management (MgmtPageFrontJs)</value>
 +        <value xml:lang="fr">Gestion des exemples (MgmtPageFrontJs)</value>
 +    </property>
