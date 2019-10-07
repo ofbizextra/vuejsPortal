@@ -18,6 +18,23 @@
  */
 package org.apache.ofbiz.widget.renderer.frontjs;
 
+import org.apache.ofbiz.base.util.*;
+import org.apache.ofbiz.entity.GenericValue;
+import org.apache.ofbiz.webapp.control.RequestHandler;
+import org.apache.ofbiz.webapp.taglib.ContentUrlTag;
+import org.apache.ofbiz.widget.WidgetWorker;
+import org.apache.ofbiz.widget.model.*;
+import org.apache.ofbiz.widget.model.ModelScreenWidget.ColumnContainer;
+import org.apache.ofbiz.widget.renderer.MenuStringRenderer;
+import org.apache.ofbiz.widget.renderer.Paginator;
+import org.apache.ofbiz.widget.renderer.ScreenStringRenderer;
+import org.apache.ofbiz.widget.renderer.VisualTheme;
+import org.xml.sax.SAXException;
+
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.math.BigDecimal;
@@ -25,31 +42,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Map;
-
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.apache.ofbiz.base.util.*;
-import org.apache.ofbiz.entity.GenericValue;
-import org.apache.ofbiz.webapp.control.RequestHandler;
-import org.apache.ofbiz.webapp.taglib.ContentUrlTag;
-import org.apache.ofbiz.widget.WidgetWorker;
-import org.apache.ofbiz.widget.model.AbstractModelAction;
-import org.apache.ofbiz.widget.model.ModelForm;
-import org.apache.ofbiz.widget.model.ModelMenu;
-import org.apache.ofbiz.widget.model.ModelMenuItem;
-import org.apache.ofbiz.widget.model.ModelScreen;
-import org.apache.ofbiz.widget.model.ModelScreenWidget;
-import org.apache.ofbiz.widget.model.ModelScreenWidget.ColumnContainer;
-import org.apache.ofbiz.widget.model.ModelTheme;
-import org.apache.ofbiz.widget.model.ScreenFactory;
-import org.apache.ofbiz.widget.renderer.MenuStringRenderer;
-import org.apache.ofbiz.widget.renderer.Paginator;
-import org.apache.ofbiz.widget.renderer.ScreenStringRenderer;
-import org.apache.ofbiz.widget.renderer.VisualTheme;
-import org.xml.sax.SAXException;
 
 public class FrontJsScreenRenderer implements ScreenStringRenderer {
 //    private static final String NOT_YET_SUPPORTED = "Not yet supported";
@@ -542,6 +534,7 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
 
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("title", title);
+        parameters.put("name", screenlet.getName());
         parameters.put("collapsible", collapsible);
         parameters.put("saveCollapsed", screenlet.saveCollapsed());
         if (UtilValidate.isNotEmpty (screenlet.getId(context))) {
