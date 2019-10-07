@@ -132,7 +132,7 @@
         }).then(result => {
           this.returnField = result.body.viewScreen[0].attributes.returnField
           this.displayFields = result.body.viewScreen[0].attributes.displayFields
-          this.wordList = result.body.viewScreen[0].attributes.autocompleteOptions
+          this.wordList = result.body.viewScreen[0].attributes.autocompleteOptions === null ? [] : result.body.viewScreen[0].attributes.autocompleteOptions
           return result.body
         }, error => {
           return error.body
