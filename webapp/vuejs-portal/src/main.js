@@ -240,17 +240,19 @@ new Vue({
   props: ['content'],
   store: store,
   router: router,
-
   wait: new VueWait({
     useVuex: true
   }),
-
   vuetify,
   css: {
+    extract: false,
     loaderOptions: {
       sass: {
         data: `@import "~@./sass/main.scss"`,
       },
+      css: {
+        extract: false
+      }
     },
   },
   render: h => h(App)

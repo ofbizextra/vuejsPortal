@@ -1,0 +1,28 @@
+== Plugin structure
+.Plugin
+. config/
+.. manage UiLabels
+. data/
+.. manage data (xml format)
+.. portalPage are data
+. dtd/
+. entitydef/
+. groovyScripts/
+.. contain plugin specific groovy script
+. minilang/
+.. contain plugin specific xml service
+. servicedef/
+.. manage service directory
+. src/
+.. contain common java service
+.. contain some doc
+. template/
+.. contain the ftl that inject Vue.js app
+. testdef/
+.. contain tests
+. webapp/
+.. manage apis and api's url in /apiName/WEB-INF/controller.xml
+. widget/
+.. manage menu, screen and form
+. build.gradle
+. ofbiz-component.xml
