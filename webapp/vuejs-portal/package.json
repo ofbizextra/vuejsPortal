@@ -7,7 +7,10 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build-default": "vue-cli-service build",
-    "build" : "vue-cli-service build --target lib --name vuejs-portal --inline-vue 'src/main.js'",
+    "build-prod" : "vue-cli-service build --target lib --name vuejs-portal --inline-vue 'src/main.js'",
+    "build-prod-watch" : "vue-cli-service build --watch --target lib --name vuejs-portal --inline-vue 'src/main.js'",
+    "build-dev" : "vue-cli-service build --mode development --target lib --name vuejs-portal --inline-vue 'src/main.js'",
+    "build-dev-watch" : "vue-cli-service build --mode development --watch --target lib --name vuejs-portal --inline-vue 'src/main.js'",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
