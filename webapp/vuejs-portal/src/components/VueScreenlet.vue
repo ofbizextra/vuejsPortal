@@ -1,6 +1,6 @@
 <template>
   <div id="vue-screenlet">
-    <div :id="data.id" class="screenlet">
+    <div :id="id" class="screenlet">
       <div class="screenlet-title-bar" v-if="data.showMore">
         <ul>
           <li class="h3" v-if="data.hasOwnProperty('title')">
@@ -90,6 +90,9 @@
         } else {
           return {}
         }
+      },
+      id() {
+        return `${this.data.id}-${this.data.name}`
       }
     },
     methods: {
