@@ -177,7 +177,7 @@ const actions = {
           console.log(error)
           reject()
         })
-      }, 1000)
+      }, 0)
     })
   },
   setContainerWatcher({commit}, {watcherName, watcherTarget, params}) {
@@ -234,23 +234,23 @@ const actions = {
             Promise.all(records).then(() => {
               setTimeout(() => {
                 wait.end(areaId)
-              }, 1000)
+              }, 500)
               resolve(areaId)
             })
           } else {
             setTimeout(() => {
               wait.end(areaId)
-            }, 1000)
+            }, 500)
             resolve(areaId)
           }
         }, error => {
           console.log(error)
           setTimeout(() => {
             wait.end(areaId)
-          }, 1000)
+          }, 500)
           reject(error)
         })
-      }, 1000)
+      }, 0)
     })
   },
   deleteArea({commit}, {areaId}) {

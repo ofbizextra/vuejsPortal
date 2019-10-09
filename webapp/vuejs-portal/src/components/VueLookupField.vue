@@ -1,7 +1,7 @@
 <template>
   <span class="field-lookup">
     <div class="autosuggest-container" :style="{display: 'inline-block'}">
-      <vue-autosuggest v-model="valueStored" :name="data.name" :id="data.id" :size="data.size" @input="updateWordList"
+      <vue-autosuggest v-model="valueStored" :name="data.name" :id="data.id" :size="data.size" @input="debounceUpdateWordList"
                        :suggestions="[{data: [...wordList]}]"
                        :input-props="{id: data.id, name: data.name, size: data.size}"
                        @selected="onSelected" :get-suggestion-value="getSuggestionValue"
@@ -22,8 +22,8 @@
 
 <script>
   import {mapGetters} from 'vuex'
-  import constantes from '../js/constantes'
   import VueJsModal from 'vue-js-modal/src/Modal'
+  import _ from 'lodash'
 
   export default {
     name: "VueLookupField",
@@ -120,23 +120,24 @@
       }
     },
     methods: {
+      debounceUpdateWordList: _.debounce(function () {this.updateWordList();}, 250),
       updateWordList() {
-        this.$store.dispatch('form/setFieldToForm', {
-          formId: this.props.attributes.formName,
-          key: this.props.attributes.name,
-          value: this.valueStored
-        })
-        this.$store.dispatch('backOfficeApi/doPost', {
-          uri: this.$store.getters['backOfficeApi/apiUrl'] + '/' + this.fieldFormName,
-          params: this.params
-        }).then(result => {
-          this.returnField = result.body.viewScreen[0].attributes.returnField === null ? '' : result.body.viewScreen[0].attributes.returnField
-          this.displayFields = result.body.viewScreen[0].attributes.displayFields
-          this.wordList = result.body.viewScreen[0].attributes.autocompleteOptions === null ? [] : result.body.viewScreen[0].attributes.autocompleteOptions
-          return result.body
-        }, error => {
-          return error.body
-        })
+          this.$store.dispatch('form/setFieldToForm', {
+            formId: this.props.attributes.formName,
+            key: this.props.attributes.name,
+            value: this.valueStored
+          })
+          this.$store.dispatch('backOfficeApi/doPost', {
+            uri: this.$store.getters['backOfficeApi/apiUrl'] + '/' + this.fieldFormName,
+            params: this.params
+          }).then(result => {
+            this.returnField = result.body.viewScreen[0].attributes.returnField === null ? '' : result.body.viewScreen[0].attributes.returnField
+            this.displayFields = result.body.viewScreen[0].attributes.displayFields
+            this.wordList = result.body.viewScreen[0].attributes.autocompleteOptions === null ? [] : result.body.viewScreen[0].attributes.autocompleteOptions
+            return result.body
+          }, error => {
+            return error.body
+          })
       },
       onSelected(item) {
         this.valueStored = item.item[this.name]

@@ -16,6 +16,7 @@ import VModal from 'vue-js-modal'
 import VueAutosuggest from 'vue-autosuggest'
 import VueFlatPickr from 'vue-flatpickr-component';
 import 'flatpickr/dist/flatpickr.css';
+import _ from 'lodash'
 
 import App from './components/App'
 import Search from './components/Search'
@@ -157,6 +158,8 @@ Vue.component('vue-platform-specific', VuePlatformSpecific)
 
 // Platform Specific
 Vue.component('ContactMech', ContactMech)
+
+Object.defineProperty(Vue.prototype, '$_', {value: _})
 
 Vue.mixin({
   methods: {

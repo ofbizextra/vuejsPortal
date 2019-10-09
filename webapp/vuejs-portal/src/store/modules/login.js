@@ -108,7 +108,7 @@ const actions = {
           commit('LOGIN_FAILURE')
           reject(error)
         })
-      }, 1000)
+      }, 0)
     })
   },
   logout({commit}) {
@@ -118,7 +118,7 @@ const actions = {
         localStorage.removeItem('token')
         commit('LOGOUT')
         resolve()
-      }, 1000)
+      }, 0)
     })
   },
   check({commit, rootGetters}) {
@@ -145,7 +145,7 @@ const actions = {
           commit('CHECK_FAILURE')
           reject()
         })
-      }, 1000)
+      }, 0)
     })
   }
 }
