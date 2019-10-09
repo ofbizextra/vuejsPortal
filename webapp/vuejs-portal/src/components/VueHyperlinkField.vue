@@ -110,86 +110,107 @@
       }
     },
     methods: {
+      resolveEvent(updateArea) {
+        switch (updateArea.eventType) {
+          case 'post':
+            // do post
+            return this.$store.dispatch('backOfficeApi/doPost', {
+              uri: `${this.currentApi}/${updateArea.areaTarget}`,
+              params: updateArea.hasOwnProperty('parameterMap') ? updateArea.parameterMap : {}
+            })
+          case 'setArea':
+            // do setArea
+            return this.$store.dispatch('ui/setArea', {
+              areaId: updateArea.areaId,
+              targetUrl: `${this.$store.getters['backOfficeApi/currentApi']}/${updateArea.areaTarget}`,
+              wait: this.$wait,
+              params: updateArea.parameterMap
+            })
+          case 'setWatcher':
+            // do setWatcher
+            this.$store.dispatch('data/setWatcher', {
+              watcherName: updateArea.areaId,
+              params: updateArea.hasOwnProperty('parameterMap') && Object.keys(updateArea.parameterMap).length > 0 ? updateArea.parameterMap : {}
+            })
+            return new Promise((resolve, reject) => {
+              setTimeout(() => {
+                resolve()
+              },0)
+            })
+          case 'submit':
+            // submit
+            let form = this.$el.closest('form')
+            form.action = updateArea.areaTarget
+            form.submit()
+            return new Promise((resolve, reject) => {
+              setTimeout(() => {
+                resolve()
+              },0)
+            })
+          case 'setFieldInForm':
+            // do setFieldInForm
+            this.$store.dispatch('form/setFieldToForm', {
+              formId: updateArea.areaId,
+              key: updateArea.areaTarget,
+              value: this.description
+            })
+            return new Promise((resolve, reject) => {
+              setTimeout(() => {
+                resolve()
+              },0)
+            })
+          case 'collapse':
+            switch (updateArea.areaTarget) {
+              case 'collapse':
+                // collapse
+                this.$store.dispatch('ui/setCollapsibleStatus', {
+                  areaId: updateArea.areaId,
+                  areaTarget: true
+                })
+                break
+              case 'expand':
+                // expand
+                this.$store.dispatch('ui/setCollapsibleStatus', {
+                  areaId: updateArea.areaId,
+                  areaTarget: false
+                })
+                break
+              case 'toggle':
+                // toggle
+                this.$store.dispatch('ui/setCollapsibleStatus', {
+                  areaId: updateArea.areaId,
+                  areaTarget: !this.$store.getters['ui/collapsibleStatus'](updateArea.areaId)
+                })
+                break
+              default:
+                // toggle
+                this.$store.dispatch('ui/setCollapsibleStatus', {
+                  areaId: updateArea.areaId,
+                  areaTarget: !this.$store.getters['ui/collapsibleStatus'](updateArea.areaId)
+                })
+                break
+            }
+            return new Promise((resolve, reject) => {
+              setTimeout(() => {
+                resolve()
+              },0)
+            })
+          default:
+            // do nothing
+            return new Promise((resolve, reject) => {
+              setTimeout(() => {
+                resolve()
+              },0)
+            })
+        }
+      },
       submit() {
         if (!this.requestConfirmation || confirm(this.confirmationMessage)) {
-          let promiseList = []
-          for (let updateArea of this.updateAreas) {
-            Promise.all(promiseList).then(() => {
-              switch (updateArea.eventType) {
-                case 'post':
-                  // do post
-                  promiseList.push(this.$store.dispatch('backOfficeApi/doPost', {
-                    uri: `${this.currentApi}/${updateArea.areaTarget}`,
-                    params: updateArea.hasOwnProperty('parameterMap') ? updateArea.parameterMap : {}
-                  }))
-                  break
-                case 'setArea':
-                  // do setArea
-                  promiseList.push(this.$store.dispatch('ui/setArea', {
-                    areaId: updateArea.areaId,
-                    targetUrl: `${this.$store.getters['backOfficeApi/currentApi']}/${updateArea.areaTarget}`,
-                    wait: this.$wait,
-                    params: updateArea.parameterMap
-                  }))
-                  break
-                case 'setWatcher':
-                  // do setWatcher
-                  this.$store.dispatch('data/setWatcher', {
-                    watcherName: updateArea.areaId,
-                    params: updateArea.hasOwnProperty('parameterMap') && Object.keys(updateArea.parameterMap).length > 0 ? updateArea.parameterMap : {}
-                  })
-                  break
-                case 'submit':
-                  // submit
-                  let form = this.$el.closest('form')
-                  form.action = updateArea.areaTarget
-                  form.submit()
-                  break
-                case 'setFieldInForm':
-                  // do setFieldInForm
-                  this.$store.dispatch('form/setFieldToForm', {
-                    formId: updateArea.areaId,
-                    key: updateArea.areaTarget,
-                    value: this.description
-                  })
-                  break
-                case 'collapse':
-                  switch (updateArea.areaTarget) {
-                    case 'collapse':
-                      // collapse
-                      this.$store.dispatch('ui/setCollapsibleStatus', {
-                        areaId: updateArea.areaId,
-                        areaTarget: true
-                      })
-                      break
-                    case 'expand':
-                      // expand
-                      this.$store.dispatch('ui/setCollapsibleStatus', {
-                        areaId: updateArea.areaId,
-                        areaTarget: false
-                      })
-                      break
-                    case 'toggle':
-                      // toggle
-                      this.$store.dispatch('ui/setCollapsibleStatus', {
-                        areaId: updateArea.areaId,
-                        areaTarget: !this.$store.getters['ui/collapsibleStatus'](updateArea.areaId)
-                      })
-                      break
-                    default:
-                      // toggle
-                      this.$store.dispatch('ui/setCollapsibleStatus', {
-                        areaId: updateArea.areaId,
-                        areaTarget: !this.$store.getters['ui/collapsibleStatus'](updateArea.areaId)
-                      })
-                      break
-                  }
-                default:
-                  // do nothing
-                  break
-              }
+          this.updateAreas.reduce((accumulatorPromise, nextUpdateArea) => {
+            return accumulatorPromise.then(() => {
+              return this.resolveEvent(nextUpdateArea)
             })
-          }
+          }, Promise.resolve())
         }
 
         // if (this.targetWindow) {

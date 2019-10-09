@@ -63,61 +63,74 @@
           params: updateArea.hasOwnProperty('parameterMap') ? updateArea.parameterMap : {}
         })
       },
+      resolveEvent(updateArea) {
+        switch (updateArea.eventType) {
+          case 'submit':
+            // do post
+            return this.submit()
+          case 'setWatcher':
+            // do update store
+            this.setWatcher(updateArea)
+            return new Promise((resolve, reject) => {
+              setTimeout(() => {
+                resolve()
+              },0)
+            })
+          case 'setArea':
+            // do post then set area
+            return this.setArea(updateArea)
+          case 'collapse':
+            switch (updateArea.areaTarget) {
+              case 'collapse':
+                // collapse
+                this.$store.dispatch('ui/setCollapsibleStatus', {
+                  areaId: updateArea.areaId,
+                  areaTarget: true
+                })
+                break
+              case 'expand':
+                // expand
+                this.$store.dispatch('ui/setCollapsibleStatus', {
+                  areaId: updateArea.areaId,
+                  areaTarget: false
+                })
+                break
+              case 'toggle':
+                // toggle
+                this.$store.dispatch('ui/setCollapsibleStatus', {
+                  areaId: updateArea.areaId,
+                  areaTarget: !this.$store.getters['ui/collapsibleStatus'](updateArea.areaId)
+                })
+                break
+              default:
+                // toggle
+                this.$store.dispatch('ui/setCollapsibleStatus', {
+                  areaId: updateArea.areaId,
+                  areaTarget: !this.$store.getters['ui/collapsibleStatus'](updateArea.areaId)
+                })
+                break
+            }
+            return new Promise((resolve, reject) => {
+              setTimeout(() => {
+                resolve()
+              },0)
+            })
+          default:
+            // do nothing
+            return new Promise((resolve, reject) => {
+              setTimeout(() => {
+                resolve()
+              },0)
+            })
+        }
+      },
       resolveEvents() {
         if (this.haveUpdateAreas) {
-          let promiseList = []
-          for (let updateArea of this.updateAreas) {
-            Promise.all(promiseList).then(() => {
-              switch (updateArea.eventType) {
-                case 'submit':
-                  // do post
-                  promiseList.push(this.submit())
-                  break
-                case 'setWatcher':
-                  // do update store
-                  this.setWatcher(updateArea)
-                  break
-                case 'setArea':
-                  // do post then set area
-                  promiseList.push(this.setArea(updateArea))
-                  break
-                case 'collapse':
-                  switch (updateArea.areaTarget) {
-                    case 'collapse':
-                      // collapse
-                      this.$store.dispatch('ui/setCollapsibleStatus', {
-                        areaId: updateArea.areaId,
-                        areaTarget: true
-                      })
-                      break
-                    case 'expand':
-                      // expand
-                      this.$store.dispatch('ui/setCollapsibleStatus', {
-                        areaId: updateArea.areaId,
-                        areaTarget: false
-                      })
-                      break
-                    case 'toggle':
-                      // toggle
-                      this.$store.dispatch('ui/setCollapsibleStatus', {
-                        areaId: updateArea.areaId,
-                        areaTarget: !this.$store.getters['ui/collapsibleStatus'](updateArea.areaId)
-                      })
-                      break
-                    default:
-                      // toggle
-                      this.$store.dispatch('ui/setCollapsibleStatus', {
-                        areaId: updateArea.areaId,
-                        areaTarget: !this.$store.getters['ui/collapsibleStatus'](updateArea.areaId)
-                      })
-                      break
-                  }
-                default:
-                  // do nothing
-                  break
-              }
+          this.updateAreas.reduce((accumulatorPromise, nextUpdateArea) => {
+            return accumulatorPromise.then(() => {
+              return this.resolveEvent(nextUpdateArea)
             })
-          }
+          }, Promise.resolve())
         } else {
           this.submit()
         }

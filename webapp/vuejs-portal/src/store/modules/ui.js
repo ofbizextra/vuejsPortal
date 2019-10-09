@@ -234,20 +234,20 @@ const actions = {
             Promise.all(records).then(() => {
               setTimeout(() => {
                 wait.end(areaId)
-              }, 500)
+              }, 0)
               resolve(areaId)
             })
           } else {
             setTimeout(() => {
               wait.end(areaId)
-            }, 500)
+            }, 0)
             resolve(areaId)
           }
         }, error => {
           console.log(error)
           setTimeout(() => {
             wait.end(areaId)
-          }, 500)
+          }, 0)
           reject(error)
         })
       }, 0)
