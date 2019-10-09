@@ -2,7 +2,7 @@
   <v-app id="app">
     <v-content>
       <input type="hidden" id="updateCpt" :value="updateCpt">
-      <BlockUI v-if="$wait.any" message="Fetching datas...">
+      <BlockUI v-if="$wait.any && blockUi" message="Fetching datas...">
         <spinner
           id="loader-wrapper"
           :animation-duration="1200"
@@ -20,6 +20,8 @@
 <script>
   import {mapGetters} from 'vuex'
   import Vue from 'vue'
+  import constantes from '../js/constantes'
+
   export default {
     name: 'app',
     data() {
@@ -29,7 +31,10 @@
     computed: {
       ...mapGetters({
         updateCpt: 'ui/updateCpt'
-      })
+      }),
+      blockUi() {
+        return constantes.blockUi
+      }
     },
     methods: {
       increment() {

@@ -232,16 +232,22 @@ const actions = {
               }))
             })
             Promise.all(records).then(() => {
-              wait.end(areaId)
+              setTimeout(() => {
+                wait.end(areaId)
+              }, 1000)
               resolve(areaId)
             })
           } else {
-            wait.end(areaId)
+            setTimeout(() => {
+              wait.end(areaId)
+            }, 1000)
             resolve(areaId)
           }
         }, error => {
           console.log(error)
-          wait.end(areaId)
+          setTimeout(() => {
+            wait.end(areaId)
+          }, 1000)
           reject(error)
         })
       }, 1000)

@@ -130,7 +130,7 @@
           uri: this.$store.getters['backOfficeApi/apiUrl'] + '/' + this.fieldFormName,
           params: this.params
         }).then(result => {
-          this.returnField = result.body.viewScreen[0].attributes.returnField
+          this.returnField = result.body.viewScreen[0].attributes.returnField === null ? '' : result.body.viewScreen[0].attributes.returnField
           this.displayFields = result.body.viewScreen[0].attributes.displayFields
           this.wordList = result.body.viewScreen[0].attributes.autocompleteOptions === null ? [] : result.body.viewScreen[0].attributes.autocompleteOptions
           return result.body

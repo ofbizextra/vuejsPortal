@@ -7,7 +7,8 @@ Vue.use(Vuex)
 
 const state = {
   messageList: [],
-  currentApi: ''
+  currentApi: '',
+  postId: 0
 }
 
 const mutations = {
@@ -19,19 +20,26 @@ const mutations = {
   },
   SET_CURRENT_API(state, api) {
     Vue.set(state, 'currentApi', api)
+  },
+  INCREMENT_POST_ID(state) {
+    state.postId++
   }
 }
 
 const getters = {
   messageList: state => state.messageList,
   currentApi: state => state.currentApi,
-  apiUrl: state => constantes.hostUrl + state.currentApi
+  apiUrl: state => constantes.hostUrl + state.currentApi,
+  postId: state => state.postId
 }
 
 const actions = {
-  doPost({commit, dispatch}, {uri, params}) {
+  doPost({commit, dispatch, getters}, {uri, params}) {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
+        let postId = getters['postId']
+        commit('INCREMENT_POST_ID')
+        dispatch('wait/start', `post-${postId}`, {root: true})
         Vue.http.post(uri,
           queryString.stringify({
             ...params
@@ -43,11 +51,17 @@ const actions = {
           if (typeof response.body === 'string' && response.body.includes('login failed')) {
             // todo: handle login popUp
             this._vm.$modal.show('login')
+            setTimeout(() => {
+              dispatch('wait/end', `post-${postId}`, {root: true})
+            }, 1000)
             reject(response)
           }
           if (response.body.hasOwnProperty('_ERROR_MESSAGE_')) {
             commit('ADD_MESSAGE', {messageContent: response.body['_ERROR_MESSAGE_'], messageType: 'error'})
             this._vm.flash(response.body['_ERROR_MESSAGE_'], 'error', {timeout: 0})
+            setTimeout(() => {
+              dispatch('wait/end', `post-${postId}`, {root: true})
+            }, 1000)
             reject(response)
           }
           if (response.body.hasOwnProperty('_ERROR_MESSAGE_LIST_')) {
@@ -55,6 +69,9 @@ const actions = {
               commit('ADD_MESSAGE', {messageContent: errorMessage, messageType: 'error'})
               this._vm.flash(errorMessage, 'error', {timeout: 0})
             }
+            setTimeout(() => {
+              dispatch('wait/end', `post-${postId}`, {root: true})
+            }, 1000)
             reject(response)
           }
           if (response.body.hasOwnProperty('_EVENT_MESSAGE_')) {
@@ -67,6 +84,9 @@ const actions = {
               this._vm.flash(eventMessage, 'success', 5000)
             }
           }
+          setTimeout(() => {
+              dispatch('wait/end', `post-${postId}`, {root: true})
+            }, 1000)
           resolve(response)
         }, error => {
           console.log(error)
