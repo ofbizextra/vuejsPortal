@@ -1,6 +1,6 @@
 <template>
   <div id="vue-sort-field">
-    <a :class="data.style" href="linkUrl" v-on:click.prevent="sort" v-bind:title="data.tooltip">{{data.title}}</a>
+    <a :class="data.style" :href="linkUrl" v-on:click.prevent="sort" v-bind:title="data.tooltip">{{data.title}}</a>
   </div>
 </template>
 

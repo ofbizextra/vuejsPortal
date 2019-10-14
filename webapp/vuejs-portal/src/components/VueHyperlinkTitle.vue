@@ -1,6 +1,6 @@
 <template>
   <div id="vue-hyperlink-title">
-    <a href="data.linkUrl" :title="data.title ? data.title : ''">{{data.value ? data.value : ''}}</a>
+    <a :href="data.linkUrl" :title="data.title ? data.title : ''">{{data.value ? data.value : ''}}</a>
   </div>
 </template>
 

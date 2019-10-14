@@ -1,13 +1,13 @@
 <template>
   <li id="vue-menu-item" v-bind:class="style" v-bind:title="toolTip">
     <ul v-if="containsNestedMenus">
-      <div
+      <li
         v-for="(component, index) in props.children"
         :key="index"
         v-bind:is="constantes.components[component.name]"
         :props="component"
         :updateStore="updateStore"
-      />
+      ></li>
     </ul>
     <div
       v-else
@@ -16,7 +16,7 @@
       v-bind:is="constantes.components[component.name]"
       :props="component"
       :updateStore="updateStore"
-    />
+    ></div>
   </li>
 </template>
 

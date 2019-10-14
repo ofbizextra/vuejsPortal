@@ -42,7 +42,7 @@
               </div>
               <div class="form-group">
                 <div class="offset-md-4 col-md-8">
-                  <a href="#/passwordLost"> Mot de passe perdu ? </a>
+                  <p> Mot de passe perdu ? </p>
                 </div>
               </div>
               <div class="form-group">

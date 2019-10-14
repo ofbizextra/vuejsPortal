@@ -12,7 +12,7 @@
     </a>
     <a
       v-else
-      href="data.linkUrl"
+      :href="data.linkUrl"
       :title="title"
       :class="className"
     >

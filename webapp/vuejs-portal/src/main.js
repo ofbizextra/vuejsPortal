@@ -14,7 +14,6 @@ import _ from 'lodash'
 
 import App from './components/App'
 import Search from './components/Search'
-import List from './components/List'
 import Login from './components/Login'
 import Portal from './components/Portal'
 import VueForm from './components/VueForm'

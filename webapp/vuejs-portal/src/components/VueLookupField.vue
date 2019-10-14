@@ -22,12 +22,10 @@
 
 <script>
   import {mapGetters} from 'vuex'
-  import VueJsModal from 'vue-js-modal/src/Modal'
   import _ from 'lodash'
 
   export default {
     name: "VueLookupField",
-    components: {VueJsModal},
     props: ['props', 'updateStore'],
     data() {
       return {
@@ -184,7 +182,7 @@
       }
     },
     watch: {
-      data: function (from, to) {
+      data: function () {
         this.$store.dispatch('form/setFieldToForm', this.storeForm)
       }
     },

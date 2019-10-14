@@ -1,12 +1,12 @@
 <template>
   <table id="vue-single-wrapper" v-bind="data">
-    <div
+    <tr
       v-for="(component, key) in props.children"
       :key="key"
       v-bind:is="constantes.components[component.name]"
       :props="component"
       :updateStore="updateStore">
-    </div>
+    </tr>
   </table>
 </template>
 

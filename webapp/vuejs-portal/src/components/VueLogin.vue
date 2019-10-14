@@ -7,7 +7,7 @@
         </div>
         <div class="screenlet-body">
           <form name="loginform">
-            <table class="basic-table" cellspacing="0">
+            <table class="basic-table">
               <tbody>
               <tr>
                 <td class="label">User Name</td>
@@ -18,7 +18,7 @@
                 <td><input name="PASSWORD" autocomplete="off" v-model="password" size="20" type="password"></td>
               </tr>
               <tr>
-                <td colspan="2" align="center">
+                <td colspan="2">
                   <input value="Login" type="button" @click.prevent="singIn">
                 </td>
               </tr>
