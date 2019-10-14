@@ -1,8 +1,8 @@
 <template>
   <div id="vue-text-find-field">
-    <select class="selectBox" v-if="data.opEquals" v-model="valueOp">
+    <select class="selectBox" v-if="opEquals" v-model="valueOp">
       <option value="equals">egal</option>
-      <option value="like">debute</option>
+      <option value="like">débute</option>
       <option value="contains">contient</option>
       <option value="empty">est vide</option>
       <option value="notEqual">Diff.</option>
@@ -16,8 +16,8 @@
       v-bind:autocomplete="data.autocomplete"
       v-bind:tabindex="data.tabindex"
     />
-    <span v-bind:class="data.titleStyle ? data.titleStyle : ''">
-      <input v-if="data.hideIgnoreCase" type="hidden" :name="data.name + '_ic'" :value="data.ignCase ? 'Y' : ''"/>
+    <span v-bind:class="titleStyle">
+      <input v-if="hideIgnoreCase" type="hidden" :name="data.name + '_ic'" :value="data.ignCase ? 'Y' : ''"/>
       <input v-else type="checkbox" :name="data.name + '_ic'" value="Y" v-model="valueIc" checked="data.ignCase"/>
     </span>
   </div>
@@ -98,13 +98,22 @@
           })
         }
       },
+      opEquals() {
+        return this.data.hasOwnProperty('opEquals') ? this.data.opEquals : false
+      },
+      titleStyle() {
+        return this.data.hasOwnProperty('titleStyle') ? this.data.titleStyle : ''
+      },
+      hideIgnoreCase() {
+        return this.data.hasOwnProperty('hideIgnoreCase') ? this.data.hideIgnoreCase : false
+      },
       ...mapGetters({
         getForm: 'form/form',
         getDataFromForm: 'form/fieldInForm'
       })
     },
     watch: {
-      data: function (from, to) {
+      data: function () {
         this.$store.dispatch('form/setFieldToForm', this.storeForm)
         this.$store.dispatch('form/setFieldToForm', this.storeFormOp)
         this.$store.dispatch('form/setFieldToForm', this.storeFormIc)

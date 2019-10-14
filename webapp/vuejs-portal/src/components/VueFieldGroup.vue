@@ -20,7 +20,6 @@
 </template>
 
 <script>
-  import Vue from 'vue'
   import constantes from '../js/constantes'
 
   export default {

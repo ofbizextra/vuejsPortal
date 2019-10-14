@@ -154,8 +154,8 @@
           return ""
         }
         let params = "{&quot;presentation&quot;:&quot;layer&quot; "
-        for (let parameter in this.parameterList) {
-          params += `,&quot;${parameter.name}&quot;: &quot;${parameter.value}&quot;`
+        for (let key in Object.keys(this.parameterMap)) {
+          params += `,&quot;${key}&quot;: &quot;${this.parameterMap[key]}&quot;`
         }
         params += "}"
         return params

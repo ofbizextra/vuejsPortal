@@ -6,8 +6,6 @@
 
 <script>
   import {mapGetters} from 'vuex'
-  import constantes from '../js/constantes'
-  import queryString from 'query-string'
 
   export default {
     name: "VueSubmitField",
@@ -42,10 +40,8 @@
     },
     methods: {
       submit() {
-        let linkUrl = this.getDataFromForm({formId: this.props.attributes.formName, key: 'linkUrl'})
-        let url = linkUrl
         return this.$store.dispatch('backOfficeApi/doPost', {
-          uri: url,
+          uri: this.getDataFromForm({formId: this.props.attributes.formName, key: 'linkUrl'}),
           params: this.form
         })
       },
@@ -71,7 +67,7 @@
           case 'setWatcher':
             // do update store
             this.setWatcher(updateArea)
-            return new Promise((resolve, reject) => {
+            return new Promise((resolve) => {
               setTimeout(() => {
                 resolve()
               },0)
@@ -110,14 +106,14 @@
                 })
                 break
             }
-            return new Promise((resolve, reject) => {
+            return new Promise((resolve) => {
               setTimeout(() => {
                 resolve()
               },0)
             })
           default:
             // do nothing
-            return new Promise((resolve, reject) => {
+            return new Promise((resolve) => {
               setTimeout(() => {
                 resolve()
               },0)

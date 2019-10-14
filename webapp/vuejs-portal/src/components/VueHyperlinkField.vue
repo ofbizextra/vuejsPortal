@@ -24,7 +24,6 @@
 
 <script>
   import {mapGetters} from 'vuex'
-  import constantes from './../js/constantes'
   export default {
     name: "VueHyperlinkField",
     props: ['props'],
@@ -132,17 +131,16 @@
               watcherName: updateArea.areaId,
               params: updateArea.hasOwnProperty('parameterMap') && Object.keys(updateArea.parameterMap).length > 0 ? updateArea.parameterMap : {}
             })
-            return new Promise((resolve, reject) => {
+            return new Promise((resolve) => {
               setTimeout(() => {
                 resolve()
               },0)
             })
           case 'submit':
             // submit
-            let form = this.$el.closest('form')
-            form.action = updateArea.areaTarget
-            form.submit()
-            return new Promise((resolve, reject) => {
+            this.$el.closest('form').action = updateArea.areaTarget
+            this.$el.closest('form').submit()
+            return new Promise((resolve) => {
               setTimeout(() => {
                 resolve()
               },0)
@@ -154,7 +152,7 @@
               key: updateArea.areaTarget,
               value: this.description
             })
-            return new Promise((resolve, reject) => {
+            return new Promise((resolve) => {
               setTimeout(() => {
                 resolve()
               },0)
@@ -190,14 +188,14 @@
                 })
                 break
             }
-            return new Promise((resolve, reject) => {
+            return new Promise((resolve) => {
               setTimeout(() => {
                 resolve()
               },0)
             })
           default:
             // do nothing
-            return new Promise((resolve, reject) => {
+            return new Promise((resolve) => {
               setTimeout(() => {
                 resolve()
               },0)
@@ -212,20 +210,6 @@
             })
           }, Promise.resolve())
         }
-
-        // if (this.targetWindow) {
-        //   this.$store.dispatch('ui/setArea', {areaId: this.targetWindow, targetUrl: '/exampleapi/control/' + this.target, wait: this.$wait, params: this.parameterMap})
-        // } else {
-        //   if (this.pointer.entityName !== '') {
-        //     console.log('setWatcher by pointer')
-        //     console.log('getPointer: ' + this.getPointer)
-        //     this.$store.dispatch('data/setWatcher', {watcherName: this.target, params: {[this.pointer.attribute]: this.getPointer}})
-        //   } else {
-        //     console.log('setWatcher by data.value')
-        //     console.log('data.value: ' + this.data.value.toString())
-        //     this.$store.dispatch('data/setWatcher', {watcherName: this.getNestedObject(this.data, ['updateArea']), params: {exampleId: this.data.value}})
-        //   }
-        // }
       }
     },
     mounted() {

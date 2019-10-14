@@ -2,7 +2,7 @@
   <v-app id="app">
     <v-content>
       <input type="hidden" id="updateCpt" :value="updateCpt">
-      <BlockUI v-if="$wait.any && blockUi" message="Fetching datas...">
+      <BlockUI v-if="waitAny && blockUi" message="Fetching datas...">
         <spinner
           id="loader-wrapper"
           :animation-duration="1200"
@@ -19,7 +19,6 @@
 
 <script>
   import {mapGetters} from 'vuex'
-  import Vue from 'vue'
   import constantes from '../js/constantes'
 
   export default {
@@ -34,6 +33,9 @@
       }),
       blockUi() {
         return constantes.blockUi
+      },
+      waitAny() {
+        return this.$wait.any
       }
     },
     methods: {
@@ -48,12 +50,7 @@
       this.$store.dispatch('backOfficeApi/setApi', api)
       // Vue.http.setRequestHeader('Content-Security-Policy', "default-src 'self'")
       this.$store.dispatch('login/check').then(() => {
-        if (this.$route.fullPath.includes('/exampleapi/control')) {
-          let path = this.$route.fullPath.substring(this.$route.fullPath.indexOf('/exampleapi/control'))
-          this.$router.push({path: path})
-        } else {
-          this.$router.push({path: this.$route.fullPath})
-        }
+        this.$router.push({path: this.$route.fullPath})
       }, () => {
         this.$router.push('/login')
       })

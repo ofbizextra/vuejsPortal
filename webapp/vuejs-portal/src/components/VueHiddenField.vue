@@ -50,7 +50,7 @@
       })
     },
     watch: {
-      data: function (from, to) {
+      data: function () {
         console.log('vue-hidden : ', this.storeForm)
         this.$store.dispatch('form/setFieldToForm', this.storeForm)
       }

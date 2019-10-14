@@ -1,7 +1,7 @@
 <template>
   <div id="vue-radio-field">
     <input v-if="data.conditionGroup" type="hidden" :name="data.name + '_grp'" v-bind:value="data.conditionGroup"/>
-    <span v-for="item in props.attributes.items">
+    <span v-for="(item, key) in props.attributes.items" :key="key">
       <input type="radio"
              :checked="!!((data.currentValue && data.currentValue === item.key) || (!data.currentValue && data.noCurrentSelectedKey && data.noCurrentSelectedKey === item.key))"
              :tabIndex="data.currentValue && data.tabIndex ? data.tabIndex : false"
@@ -58,7 +58,7 @@
       })
     },
     watch: {
-      data: function (from, to) {
+      data: function () {
         console.log('vue-radio : ', this.storeForm)
         this.$store.dispatch('form/setFieldToForm', this.storeForm)
       }

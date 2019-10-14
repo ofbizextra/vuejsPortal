@@ -37,7 +37,6 @@ import VueAsterisks from './components/VueAsterisks'
 import VueTable from './components/VueTable'
 import VueTr from './components/VueTr'
 import VueTd from './components/VueTd'
-import Test from './components/Test'
 import VueSortField from './components/VueSortField'
 import VueColumnPortlet from './components/VueColumnPortlet'
 import VuePortlet from './components/VuePortlet'
@@ -94,7 +93,6 @@ Vue.use(VueFlatPickr)
 Vue.component('login', Login)
 Vue.component('portal', Portal)
 Vue.component('search', Search)
-Vue.component('list', List)
 Vue.component('vue-form', VueForm)
 Vue.component('vue-field', VueField)
 Vue.component('vue-drop-down-field', VueDropDownField)
@@ -118,7 +116,6 @@ Vue.component('vue-asterisks', VueAsterisks)
 Vue.component('vue-table', VueTable)
 Vue.component('vue-tr', VueTr)
 Vue.component('vue-td', VueTd)
-Vue.component('test', Test)
 Vue.component('vue-sort-field', VueSortField)
 Vue.component('vue-column-portlet', VueColumnPortlet)
 Vue.component('vue-portlet', VuePortlet)
@@ -190,7 +187,6 @@ const router = new VueRouter({
   mode: 'hash',
   routes: [
     {path: '/', component: Portal, beforeEnter: requireAuth},
-    {path: '/test', component: Test, beforeEnter: requireAuth},
     {path: '/login', component: Login, beforeEnter: requireAuth},
     {path: '/exampleapi/control/:params', component: Portal, beforeEnter: requireAuth}
   ]

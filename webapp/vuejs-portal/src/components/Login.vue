@@ -62,7 +62,7 @@
 </template>
 
 <script>
-  import { mapActions, mapGetters } from 'vuex'
+  import { mapGetters } from 'vuex'
 
   export default {
     name: 'login',
@@ -84,9 +84,9 @@
     methods: {
       submit() {
         console.log("Connecting ...",this.credentials)
-        this.$store.dispatch('login/login', this.credentials).then(response => {
+        this.$store.dispatch('login/login', this.credentials).then(() => {
           this.$router.push('/')
-        }, error => {
+        }, () => {
           console.log('Echec de la connexion')
         })
       },

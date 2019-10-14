@@ -11,7 +11,6 @@
 </template>
 
 <script>
-  import {mapGetters} from 'vuex'
   import cst from '../js/constantes'
 
   export default {
@@ -32,7 +31,7 @@
         if (data.style) {
           data.class = data.style
         }
-        if (data.oddRowStyle) {
+        if (data.hasOwnProperty('oddRowStyle')) {
           data.class = data.oddRowStyle
         }
         return data

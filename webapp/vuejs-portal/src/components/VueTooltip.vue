@@ -1,11 +1,10 @@
 <template>
-  <span id="vue-tooltip" v-if="data.tooltip" v-bind:class="data.tooltipStyle ? data.tooltipStyle : ''">
+  <span id="vue-tooltip" v-if="data.tooltip" v-bind:class="tooltipStyle">
     {{data.tooltip}}
   </span>
 </template>
 
 <script>
-  import { mapGetters } from 'vuex'
 
   export default {
     name: "VueTooltip",
@@ -22,6 +21,9 @@
           data.class = data.className ? data.className : '' + ' ' + data.alert === true ? 'alert' : ''
         }
         return data
+      },
+      tooltipStyle() {
+        return this.data.hasOwnProperty('tooltipStyle') ? this.data.tooltipStyle : ''
       }
     }
   }

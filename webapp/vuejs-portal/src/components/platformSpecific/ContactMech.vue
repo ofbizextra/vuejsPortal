@@ -146,41 +146,43 @@
                     </v-list-item-content>
                   </v-list-item>
                   <v-divider inset v-if="emailAddressList.length > 0 || editMode"></v-divider>
-                  <v-list-item v-for="ipAddress in ipAddressList"
-                               :key="ipAddress.contactMech.contactMechId" v-if="showMore">
-                    <v-list-item-icon>
-                      <v-tooltip top>
-                        <template v-slot:activator="{ on }">
-                          <v-icon left v-on="on">mdi-desktop-tower</v-icon>
-                        </template>
-                        <span>IP address</span>
-                      </v-tooltip>
-                    </v-list-item-icon>
-                    <v-list-item-content>
-                      <v-list-item-title v-if="!editMode">
-                        {{ipAddress.contactMech.infoString}}
-                      </v-list-item-title>
-                      <v-list-item-title v-if="editMode">
-                        <v-row>
-                          <v-col>
-                            <v-text-field hide-details label="IP address"
-                                          v-model="ipAddress.contactMech.infoString"></v-text-field>
-                          </v-col>
-                        </v-row>
-                      </v-list-item-title>
-                      <v-list-item-subtitle v-if="ipAddress.partyContactMechPurposes.length > 0">
-                        <v-chip class="primary mr-2" x-small v-for="purpose in ipAddress.partyContactMechPurposes"
-                                :key="purpose.contactMechId + '-' + purpose.contactMechPurpostTypeId">
-                          {{purpose.contactMechPurposeTypeId}}
-                        </v-chip>
-                      </v-list-item-subtitle>
-                    </v-list-item-content>
-                    <v-list-item-action v-if="editMode">
-                      <v-btn icon @click="removeContactMech(ipAddress)">
-                        <v-icon color="red">mdi-delete</v-icon>
-                      </v-btn>
-                    </v-list-item-action>
-                  </v-list-item>
+                  <div v-if="showMore">
+                    <v-list-item v-for="ipAddress in ipAddressList"
+                                 :key="ipAddress.contactMech.contactMechId">
+                      <v-list-item-icon>
+                        <v-tooltip top>
+                          <template v-slot:activator="{ on }">
+                            <v-icon left v-on="on">mdi-desktop-tower</v-icon>
+                          </template>
+                          <span>IP address</span>
+                        </v-tooltip>
+                      </v-list-item-icon>
+                      <v-list-item-content>
+                        <v-list-item-title v-if="!editMode">
+                          {{ipAddress.contactMech.infoString}}
+                        </v-list-item-title>
+                        <v-list-item-title v-if="editMode">
+                          <v-row>
+                            <v-col>
+                              <v-text-field hide-details label="IP address"
+                                            v-model="ipAddress.contactMech.infoString"></v-text-field>
+                            </v-col>
+                          </v-row>
+                        </v-list-item-title>
+                        <v-list-item-subtitle v-if="ipAddress.partyContactMechPurposes.length > 0">
+                          <v-chip class="primary mr-2" x-small v-for="purpose in ipAddress.partyContactMechPurposes"
+                                  :key="purpose.contactMechId + '-' + purpose.contactMechPurpostTypeId">
+                            {{purpose.contactMechPurposeTypeId}}
+                          </v-chip>
+                        </v-list-item-subtitle>
+                      </v-list-item-content>
+                      <v-list-item-action v-if="editMode">
+                        <v-btn icon @click="removeContactMech(ipAddress)">
+                          <v-icon color="red">mdi-delete</v-icon>
+                        </v-btn>
+                      </v-list-item-action>
+                    </v-list-item>
+                  </div>
                   <v-list-item v-if="editMode && showMore">
                     <v-list-item-icon></v-list-item-icon>
                     <v-list-item-content>
@@ -191,41 +193,43 @@
                     </v-list-item-content>
                   </v-list-item>
                   <v-divider inset v-if="(ipAddressList.length > 0 && showMore) || (editMode && showMore)"></v-divider>
-                  <v-list-item v-for="domainName in domainNameList"
-                               :key="domainName.contactMech.contactMechId" v-if="showMore">
-                    <v-list-item-icon>
-                      <v-tooltip top>
-                        <template v-slot:activator="{ on }">
-                          <v-icon left v-on="on">mdi-at</v-icon>
-                        </template>
-                        <span>Domain Name</span>
-                      </v-tooltip>
-                    </v-list-item-icon>
-                    <v-list-item-content>
-                      <v-list-item-title v-if="!editMode">
-                        {{domainName.contactMech.infoString}}
-                      </v-list-item-title>
-                      <v-list-item-title v-if="editMode">
-                        <v-row>
-                          <v-col>
-                            <v-text-field hide-details label="Domain Name"
-                                          v-model="domainName.contactMech.infoString"></v-text-field>
-                          </v-col>
-                        </v-row>
-                      </v-list-item-title>
-                      <v-list-item-subtitle v-if="domainName.partyContactMechPurposes.length > 0">
-                        <v-chip class="primary mr-2" x-small v-for="purpose in domainName.partyContactMechPurposes"
-                                :key="purpose.contactMechId + '-' + purpose.contactMechPurpostTypeId">
-                          {{purpose.contactMechPurposeTypeId}}
-                        </v-chip>
-                      </v-list-item-subtitle>
-                    </v-list-item-content>
-                    <v-list-item-action v-if="editMode">
-                      <v-btn icon @click="removeContactMech(domainName)">
-                        <v-icon color="red">mdi-delete</v-icon>
-                      </v-btn>
-                    </v-list-item-action>
-                  </v-list-item>
+                  <div v-if="showMore">
+                    <v-list-item v-for="domainName in domainNameList"
+                                 :key="domainName.contactMech.contactMechId">
+                      <v-list-item-icon>
+                        <v-tooltip top>
+                          <template v-slot:activator="{ on }">
+                            <v-icon left v-on="on">mdi-at</v-icon>
+                          </template>
+                          <span>Domain Name</span>
+                        </v-tooltip>
+                      </v-list-item-icon>
+                      <v-list-item-content>
+                        <v-list-item-title v-if="!editMode">
+                          {{domainName.contactMech.infoString}}
+                        </v-list-item-title>
+                        <v-list-item-title v-if="editMode">
+                          <v-row>
+                            <v-col>
+                              <v-text-field hide-details label="Domain Name"
+                                            v-model="domainName.contactMech.infoString"></v-text-field>
+                            </v-col>
+                          </v-row>
+                        </v-list-item-title>
+                        <v-list-item-subtitle v-if="domainName.partyContactMechPurposes.length > 0">
+                          <v-chip class="primary mr-2" x-small v-for="purpose in domainName.partyContactMechPurposes"
+                                  :key="purpose.contactMechId + '-' + purpose.contactMechPurpostTypeId">
+                            {{purpose.contactMechPurposeTypeId}}
+                          </v-chip>
+                        </v-list-item-subtitle>
+                      </v-list-item-content>
+                      <v-list-item-action v-if="editMode">
+                        <v-btn icon @click="removeContactMech(domainName)">
+                          <v-icon color="red">mdi-delete</v-icon>
+                        </v-btn>
+                      </v-list-item-action>
+                    </v-list-item>
+                  </div>
                   <v-list-item v-if="editMode && showMore">
                     <v-list-item-icon></v-list-item-icon>
                     <v-list-item-content>
@@ -236,54 +240,56 @@
                     </v-list-item-content>
                   </v-list-item>
                   <v-divider inset v-if="(domainNameList.length > 0 && showMore) || (showMore && editMode)"></v-divider>
-                  <v-list-item v-for="ldapAddress in ldapAddressList"
-                               :key="ldapAddress.contactMech.contactMechId" v-if="showMore">
-                    <v-list-item-icon>
-                      <v-tooltip top>
-                        <template v-slot:activator="{ on }">
-                          <v-icon left v-on="on">mdi-file-cloud</v-icon>
-                        </template>
-                        <span>LDAP address</span>
-                      </v-tooltip>
-                    </v-list-item-icon>
-                    <v-list-item-content>
-                      <v-list-item-title v-if="!editMode">
-                        {{ldapAddress.contactMech.infoString}}
-                      </v-list-item-title>
-                      <v-list-item-title v-if="editMode">
-                        <v-row>
-                          <v-col>
-                            <v-text-field hide-details label="LDAP address"
-                                          v-model="ldapAddress.contactMech.infoString"></v-text-field>
-                          </v-col>
-                        </v-row>
-                      </v-list-item-title>
-                      <v-list-item-subtitle v-if="ldapAddress.partyContactMechPurposes.length > 0 && !editMode">
-                        <v-chip class="primary mr-2" x-small v-for="purpose in ldapAddress.partyContactMechPurposes"
-                                :key="purpose.contactMechId + '-' + purpose.contactMechPurposeTypeId">
-                          {{displayPurpose('LDAP_ADDRESS', purpose.contactMechPurposeTypeId)}}
-                        </v-chip>
-                      </v-list-item-subtitle>
-                      <v-list-item-subtitle v-if="editMode">
-                        <v-select
-                          label="purposes"
-                          v-model="ldapAddress.purposes"
-                          :items="purposeListByType.LDAP_ADDRESS"
-                          deletable-chips
-                          chips
-                          hide-selected
-                          multiple
-                          item-text="description"
-                          item-value="contactMechPurposeTypeId">
-                        </v-select>
-                      </v-list-item-subtitle>
-                    </v-list-item-content>
-                    <v-list-item-action v-if="editMode">
-                      <v-btn icon @click="removeContactMech(ldapAddress)">
-                        <v-icon color="red">mdi-delete</v-icon>
-                      </v-btn>
-                    </v-list-item-action>
-                  </v-list-item>
+                  <div v-if="showMore">
+                    <v-list-item v-for="ldapAddress in ldapAddressList"
+                                 :key="ldapAddress.contactMech.contactMechId">
+                      <v-list-item-icon>
+                        <v-tooltip top>
+                          <template v-slot:activator="{ on }">
+                            <v-icon left v-on="on">mdi-file-cloud</v-icon>
+                          </template>
+                          <span>LDAP address</span>
+                        </v-tooltip>
+                      </v-list-item-icon>
+                      <v-list-item-content>
+                        <v-list-item-title v-if="!editMode">
+                          {{ldapAddress.contactMech.infoString}}
+                        </v-list-item-title>
+                        <v-list-item-title v-if="editMode">
+                          <v-row>
+                            <v-col>
+                              <v-text-field hide-details label="LDAP address"
+                                            v-model="ldapAddress.contactMech.infoString"></v-text-field>
+                            </v-col>
+                          </v-row>
+                        </v-list-item-title>
+                        <v-list-item-subtitle v-if="ldapAddress.partyContactMechPurposes.length > 0 && !editMode">
+                          <v-chip class="primary mr-2" x-small v-for="purpose in ldapAddress.partyContactMechPurposes"
+                                  :key="purpose.contactMechId + '-' + purpose.contactMechPurposeTypeId">
+                            {{displayPurpose('LDAP_ADDRESS', purpose.contactMechPurposeTypeId)}}
+                          </v-chip>
+                        </v-list-item-subtitle>
+                        <v-list-item-subtitle v-if="editMode">
+                          <v-select
+                            label="purposes"
+                            v-model="ldapAddress.purposes"
+                            :items="purposeListByType.LDAP_ADDRESS"
+                            deletable-chips
+                            chips
+                            hide-selected
+                            multiple
+                            item-text="description"
+                            item-value="contactMechPurposeTypeId">
+                          </v-select>
+                        </v-list-item-subtitle>
+                      </v-list-item-content>
+                      <v-list-item-action v-if="editMode">
+                        <v-btn icon @click="removeContactMech(ldapAddress)">
+                          <v-icon color="red">mdi-delete</v-icon>
+                        </v-btn>
+                      </v-list-item-action>
+                    </v-list-item>
+                  </div>
                   <v-list-item v-if="editMode && showMore">
                     <v-list-item-icon></v-list-item-icon>
                     <v-list-item-content>
@@ -434,54 +440,56 @@
                     </v-list-item-content>
                   </v-list-item>
                     <v-divider inset v-if="(internalPartyIdList.length > 0 && showMore) || (editMode && showMore)"></v-divider>
-                <v-list-item v-for="webAddress in webAddressList"
-                             :key="webAddress.contactMech.contactMechId" v-if="showMore">
-                <v-list-item-icon>
-                  <v-tooltip top>
-                    <template v-slot:activator="{ on }">
-                      <v-icon left v-on="on">mdi-web</v-icon>
-                    </template>
-                    <span>Web address</span>
-                  </v-tooltip>
-                </v-list-item-icon>
-                <v-list-item-content>
-                  <v-list-item-title v-if="!editMode">
-                    {{webAddress.contactMech.infoString}}
-                  </v-list-item-title>
-                  <v-list-item-title v-if="editMode">
-                    <v-row>
-                      <v-col>
-                        <v-text-field hide-details label="Web Address"
-                                      v-model="webAddress.contactMech.infoString"></v-text-field>
-                      </v-col>
-                    </v-row>
-                  </v-list-item-title>
-                  <v-list-item-subtitle v-if="webAddress.partyContactMechPurposes.length > 0 && !editMode">
-                        <v-chip class="primary mr-2" x-small v-for="purpose in webAddress.partyContactMechPurposes"
-                                :key="purpose.contactMechId + '-' + purpose.contactMechPurposeTypeId">
-                          {{displayPurpose('WEB_ADDRESS', purpose.contactMechPurposeTypeId)}}
-                        </v-chip>
-                      </v-list-item-subtitle>
-                      <v-list-item-subtitle v-if="editMode">
-                        <v-select
-                          label="purposes"
-                          v-model="webAddress.purposes"
-                          :items="purposeListByType.WEB_ADDRESS"
-                          deletable-chips
-                          chips
-                          hide-selected
-                          multiple
-                          item-text="description"
-                          item-value="contactMechPurposeTypeId">
-                        </v-select>
-                      </v-list-item-subtitle>
-                </v-list-item-content>
-                  <v-list-item-action v-if="editMode">
-                      <v-btn icon @click="removeContactMech(webAddress)">
-                        <v-icon color="red">mdi-delete</v-icon>
-                      </v-btn>
-                    </v-list-item-action>
-              </v-list-item>
+                    <div v-if="showMore">
+                  <v-list-item v-for="webAddress in webAddressList"
+                               :key="webAddress.contactMech.contactMechId">
+                  <v-list-item-icon>
+                    <v-tooltip top>
+                      <template v-slot:activator="{ on }">
+                        <v-icon left v-on="on">mdi-web</v-icon>
+                      </template>
+                      <span>Web address</span>
+                    </v-tooltip>
+                  </v-list-item-icon>
+                  <v-list-item-content>
+                    <v-list-item-title v-if="!editMode">
+                      {{webAddress.contactMech.infoString}}
+                    </v-list-item-title>
+                    <v-list-item-title v-if="editMode">
+                      <v-row>
+                        <v-col>
+                          <v-text-field hide-details label="Web Address"
+                                        v-model="webAddress.contactMech.infoString"></v-text-field>
+                        </v-col>
+                      </v-row>
+                    </v-list-item-title>
+                    <v-list-item-subtitle v-if="webAddress.partyContactMechPurposes.length > 0 && !editMode">
+                          <v-chip class="primary mr-2" x-small v-for="purpose in webAddress.partyContactMechPurposes"
+                                  :key="purpose.contactMechId + '-' + purpose.contactMechPurposeTypeId">
+                            {{displayPurpose('WEB_ADDRESS', purpose.contactMechPurposeTypeId)}}
+                          </v-chip>
+                        </v-list-item-subtitle>
+                        <v-list-item-subtitle v-if="editMode">
+                          <v-select
+                            label="purposes"
+                            v-model="webAddress.purposes"
+                            :items="purposeListByType.WEB_ADDRESS"
+                            deletable-chips
+                            chips
+                            hide-selected
+                            multiple
+                            item-text="description"
+                            item-value="contactMechPurposeTypeId">
+                          </v-select>
+                        </v-list-item-subtitle>
+                  </v-list-item-content>
+                    <v-list-item-action v-if="editMode">
+                        <v-btn icon @click="removeContactMech(webAddress)">
+                          <v-icon color="red">mdi-delete</v-icon>
+                        </v-btn>
+                      </v-list-item-action>
+                </v-list-item>
+                    </div>
                     <v-list-item v-if="editMode">
                     <v-list-item-icon></v-list-item-icon>
                     <v-list-item-content>
@@ -607,7 +615,6 @@
   const getContactMechUrl = '/partymgrfjs/control/getcontactmech'
   const createEmailAddressUrl = '/partymgrfjs/control/createEmailAddress'
   const createPostalAddressUrl = '/partymgrfjs/control/createPostalAddress'
-  const createElectroniclAddressUrl = '/partymgrfjs/control/createElectronicAddress'
   const createTelecomNumberUrl = '/partymgrfjs/control/createTelecomNumber'
   const createContactMech = '/partymgrfjs/control/createContactMech'
   const createFtpAddressUrl = '/partymgrfjs/control/createFtpAddress'
@@ -915,7 +922,7 @@
                 this.dataSet = result.body
                 resolve()
               },
-              error => {
+              () => {
                 console.log('Error during contactMech acquisition')
                 reject()
               }
@@ -930,10 +937,10 @@
           infoString: this.forms.electronicAddress.fields.email,
           allowSolicitation: this.forms.electronicAddress.fields.allowSolicitation
         }).then(
-          result => {
+          () => {
             this.updateDataSet()
           },
-          error => {
+          () => {
             console.log('Error during contactMech creation')
           }
         )
@@ -949,13 +956,13 @@
           city: this.forms.postalAddress.fields.city,
           stateProvinceGeoId: this.forms.postalAddress.fields.stateProvince,
           postalCode: this.forms.postalAddress.fields.zipPostalCode,
-          courtryGeoId: this.forms.postalAddress.fields.country,
+          countryGeoId: this.forms.postalAddress.fields.country,
           allowSolicitation: this.forms.postalAddress.fields.allowSolicitation
         }).then(
-          result => {
+          () => {
             this.updateDataSet()
           },
-          error => {
+          () => {
             console.log('Error during postalAddress creation')
           }
         )
@@ -970,10 +977,10 @@
           extension: this.forms.phoneNumber.fields.extension,
           allowSolicitation: this.forms.phoneNumber.fields.allowSolicitation
         }).then(
-          result => {
+          () => {
             this.updateDataSet()
           },
-          error => {
+          () => {
             console.log('Error during contactMech creation')
           }
         )
@@ -985,10 +992,10 @@
           emailAddress: this.forms.emailAddress.fields.emailAddress,
           allowSolicitation: this.forms.emailAddress.fields.allowSolicitation
         }).then(
-          result => {
+          () => {
             this.updateDataSet()
           },
-          error => {
+          () => {
             console.log('Error during email address creation')
           }
         )
@@ -1000,10 +1007,10 @@
           infoString: this.forms.ipAddress.fields.ipAddress,
           allowSolicitation: this.forms.ipAddress.fields.allowSolicitation
         }).then(
-          result => {
+          () => {
             this.updateDataSet()
           },
-          error => {
+          () => {
             console.log('Error during contactMech creation')
           }
         )
@@ -1015,10 +1022,10 @@
           infoString: this.forms.domain.fields.domain,
           allowSolicitation: this.forms.domain.fields.allowSolicitation
         }).then(
-          result => {
+          () => {
             this.updateDataSet()
           },
-          error => {
+          () => {
             console.log('Error during contactMech creation')
           }
         )
@@ -1030,10 +1037,10 @@
           infoString: this.forms.webAddress.fields.webAddress,
           allowSolicitation: this.forms.webAddress.fields.allowSolicitation
         }).then(
-          result => {
+          () => {
             this.updateDataSet()
           },
-          error => {
+          () => {
             console.log('Error during contactMech creation')
           }
         )
@@ -1045,10 +1052,10 @@
           infoString: this.forms.internalNote.fields.internalNote,
           allowSolicitation: this.forms.internalNote.fields.allowSolicitation
         }).then(
-          result => {
+          () => {
             this.updateDataSet()
           },
-          error => {
+          () => {
             console.log('Error during internal note creation')
           }
         )
@@ -1068,10 +1075,10 @@
           defaultTimeout: this.forms.ftpAddress.fields.defaultTimeout,
           allowSolicitation: this.forms.ftpAddress.fields.allowSolicitation
         }).then(
-          result => {
+          () => {
             this.updateDataSet()
           },
-          error => {
+          () => {
             console.log('Error during FTP Address creation')
           }
         )
@@ -1083,10 +1090,10 @@
           infoString: this.forms.ldapAddress.fields.ldapAddress,
           allowSolicitation: this.forms.ldapAddress.fields.allowSolicitation
         }).then(
-          result => {
+          () => {
             this.updateDataSet()
           },
-          error => {
+          () => {
             console.log('Error during internal note creation')
           }
         )
@@ -1259,10 +1266,10 @@
                     city: contactMech.postalAddress.city,
                     postalCode: contactMech.postalAddress.postalCode
                   }).then(
-                    result => {
+                    () => {
                       resolve()
                     },
-                    error => {
+                    () => {
                       console.log('Error during contactMech update.')
                       reject()
                     }
@@ -1281,10 +1288,10 @@
                     countryCode: contactMech.telecomNumber.countryCode,
                     contactNumber: contactMech.telecomNumber.contactNumber
                   }).then(
-                    result => {
+                    () => {
                       resolve()
                     },
-                    error => {
+                    () => {
                       console.log('Error during contactMech update.')
                       reject()
                     }
@@ -1302,10 +1309,10 @@
                     partyId: this.partyId,
                     emailAddress: contactMech.contactMech.infoString
                   }).then(
-                    result => {
+                    () => {
                       resolve()
                     },
-                    error => {
+                    () => {
                       console.log('Error during contactMech update.')
                       reject()
                     }
@@ -1331,10 +1338,10 @@
                     zipFile: contactMech.ftpAddress.zipFile,
                     passiveMode: contactMech.ftpAddress.passiveMode,
                   }).then(
-                    result => {
+                    () => {
                       resolve()
                     },
-                    error => {
+                    () => {
                       console.log('Error during contactMech update.')
                       reject()
                     }
@@ -1352,10 +1359,10 @@
                     partyId: this.partyId,
                     infoString: contactMech.contactMech.infoString
                   }).then(
-                    result => {
+                    () => {
                       resolve()
                     },
-                    error => {
+                    () => {
                       console.log('Error during contactMech update.')
                       reject()
                     }
@@ -1381,10 +1388,10 @@
                     city: contactMech.postalAddress.city,
                     postalCode: contactMech.postalAddress.postalCode,
                   }).then(
-                    result => {
+                    () => {
                       resolve()
                     },
-                    error => {
+                    () => {
                       console.log('Error during postal address creation')
                       reject()
                     }
@@ -1402,10 +1409,10 @@
                     countryCode: contactMech.telecomNumber.countryCode,
                     contactNumber: contactMech.telecomNumber.contactNumber,
                   }).then(
-                    result => {
+                    () => {
                       resolve()
                     },
-                    error => {
+                    () => {
                       console.log('Error during telecom number creation')
                       reject()
                     }
@@ -1422,10 +1429,10 @@
                     partyId: this.partyId,
                     emailAddress: contactMech.contactMech.infoString,
                   }).then(
-                    result => {
+                    () => {
                       resolve()
                     },
-                    error => {
+                    () => {
                       console.log('Error during email address creation')
                       reject()
                     }
@@ -1450,10 +1457,10 @@
                     zipFile: contactMech.ftpAddress.zipFile,
                     passiveMode: contactMech.ftpAddress.passiveMode,
                   }).then(
-                    result => {
+                    () => {
                       resolve()
                     },
-                    error => {
+                    () => {
                       console.log('Error during FTP address creation')
                       reject()
                     }
@@ -1470,10 +1477,10 @@
                     partyId: this.partyId,
                     infoString: contactMech.contactMech.infoString,
                   }).then(
-                    result => {
+                    () => {
                       resolve()
                     },
-                    error => {
+                    () => {
                       console.log('Error during contactMech creation')
                       reject()
                     }
@@ -1490,10 +1497,10 @@
                 contactMechId: contactMechId,
                 partyId: this.partyId
               }).then(
-                result => {
+                () => {
                   resolve()
                 },
-                error => {
+                () => {
                   console.log('Error during contactMech deletion')
                   reject()
                 }
@@ -1515,11 +1522,12 @@
                         contactMechPurposeTypeId: purpose,
                         partyId: contactMech.partyContactMech.partyId,
                       }).then(
-                        success => {
+                        () => {
                           resolve()
                         },
                         error => {
-                          console.log(error), reject()
+                          console.log(error)
+                          reject()
                         }
                       )
                     }, 0)
@@ -1539,11 +1547,12 @@
                         fromDate: this.formatDate(purpose.fromDate),
                         contactMechPurposeTypeId: purpose.contactMechPurposeTypeId
                       }).then(
-                        success => {
+                        () => {
                           resolve()
                         },
                         error => {
-                          console.log(error), reject()
+                          console.log(error)
+                          reject()
                         }
                       )
                     }, 0)

@@ -15,9 +15,10 @@
 
 <script>
   import constantes from './../js/constantes'
-  import queryString from 'query-string'
   import {mapGetters} from 'vuex'
   import Vue from 'vue'
+
+  const queryString = require('query-string')
 
   export default {
     name: "Portal",
@@ -60,6 +61,8 @@
           ).then(
             response => {
               let portalPage = response.body
+              // PORTAL_PAGE_ID is defined out of the application scope
+              // eslint-disable-next-line
               this.$store.dispatch('ui/setPortalPage', {portalPageId: PORTAL_PAGE_ID, portalPage})
             },
             error => console.log(error.body)
@@ -67,12 +70,16 @@
         } else {
           this.$http.post(constantes.apiUrl + constantes.portalPageDetail.path,
             queryString.stringify({
+              // PORTAL_PAGE_ID is defined out of the application scope
+              // eslint-disable-next-line
               portalPageId: PORTAL_PAGE_ID
             }),
             {headers: {'Content-Type': 'application/x-www-form-urlencoded', 'locale': 'en_US'}}
           ).then(
             response => {
               let portalPage = response.body
+              // PORTAL_PAGE_ID is defined out of the application scope
+              // eslint-disable-next-line
               this.$store.dispatch('ui/setPortalPage', {portalPageId: PORTAL_PAGE_ID, portalPage})
             },
             error => console.log(error.body)

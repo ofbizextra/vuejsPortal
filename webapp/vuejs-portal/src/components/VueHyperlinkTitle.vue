@@ -18,15 +18,6 @@
         return data
       }
     },
-    params() {
-      let param = {};
-      if (this.data.uniqueItemName) {
-        param.presentation = 'layer'
-        if (this.data.targetParameters) {
-
-        }
-      }
-    },
     mounted() {
       console.log(this.data)
     }

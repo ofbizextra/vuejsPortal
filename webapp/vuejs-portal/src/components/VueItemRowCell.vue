@@ -11,7 +11,6 @@
 </template>
 
 <script>
-  import {mapGetters} from 'vuex'
   import cst from '../js/constantes'
 
   export default {

@@ -53,4 +53,4 @@ export default {
     VueJs: 'vue-platform-specific',
     test: 'test'
   }
-}
+};

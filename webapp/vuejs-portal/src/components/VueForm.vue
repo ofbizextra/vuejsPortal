@@ -11,7 +11,6 @@
 </template>
 
 <script>
-  import {mapGetters} from 'vuex'
   import cst from '../js/constantes'
 
   export default {
@@ -104,11 +103,7 @@
       if (this.props.attributes.defaultEntityName) {
         this.$store.dispatch('data/setEntity', {
           entityName: this.props.attributes.defaultEntityName,
-          list: {
-            data1: 'blablabla',
-            data2: 'blablablabla',
-            data3: 'blablablablabla',
-          },
+          list: {},
           primaryKey: this.props.attributes.primaryKey ? this.props.attributes.primaryKey : ''
         })
       }
