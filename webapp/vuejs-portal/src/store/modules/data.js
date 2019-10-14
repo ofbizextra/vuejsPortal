@@ -1,8 +1,5 @@
 import Vuex from 'vuex'
 import Vue from 'vue'
-import {enhancedGetters} from 'vuex-strong-cache'
-import queryString from 'query-string'
-import constantes from './../../js/constantes'
 
 Vue.use(Vuex)
 
@@ -93,7 +90,7 @@ const actions = {
     })
   },
   setEntityRow({commit}, data) {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       setTimeout(() => {
         commit('SET_ENTITY_ROW', data)
         resolve(data)

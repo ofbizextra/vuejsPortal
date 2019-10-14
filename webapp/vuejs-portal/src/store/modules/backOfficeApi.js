@@ -34,7 +34,7 @@ const getters = {
 }
 
 const actions = {
-  doPost({commit, dispatch, getters}, {uri, params}) {
+  doPost({commit}, {uri, params}) {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         // let postId = getters['postId']

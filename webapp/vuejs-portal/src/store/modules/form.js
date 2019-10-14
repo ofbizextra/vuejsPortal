@@ -1,7 +1,5 @@
 import Vuex from 'vuex'
 import Vue from 'vue'
-import queryString from 'query-string'
-import constantes from './../../js/constantes'
 
 Vue.use(Vuex)
 

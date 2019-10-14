@@ -2,8 +2,6 @@ import Vuex from 'vuex'
 import Vue from 'vue'
 import queryString from 'query-string'
 import constantes from './../../js/constantes'
-import VueWait from 'vue-wait'
-import response from 'vue-resource/src/http/response'
 
 Vue.use(Vuex)
 
@@ -271,7 +269,7 @@ const actions = {
   deleteErrorMessage({commit}, {errorMessage}) {
     commit('DELETE_ERROR_MESSAGE', {errorMessage})
   },
-  initialize({commit, dispatch}, location) {
+  initialize({dispatch}, location) {
     console.log('location : ', location)
     let origin = location.origin
     let pathname = location.pathname
@@ -279,6 +277,8 @@ const actions = {
     let search = location.search
     console.log('path : ', path)
     console.log('Params : ', search)
+    // PORTAL_PAGE_ID not defined in the scope but in the main application
+    // eslint-disable-next-line
     let params = {portalPageId: PORTAL_PAGE_ID}
     search.substr(1).split('&').forEach(param => {
       let tmp = param.split('=')

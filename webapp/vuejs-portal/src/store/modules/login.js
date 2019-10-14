@@ -34,7 +34,7 @@ const mutations = {
     state.credentials.username = params.username
     state.pending = false
   },
-  LOGIN_FAILURE: (state, error) => {
+  LOGIN_FAILURE: (state) => {
     state.isLoggedIn = false
     state.pending = false
   },
@@ -48,7 +48,7 @@ const mutations = {
   CHECK: (state) => {
     state.pending = true
   },
-  CHECK_SUCCESS: (state, params) => {
+  CHECK_SUCCESS: (state) => {
     state.isLoggedIn = true
     state.pending = false
   },
@@ -112,7 +112,7 @@ const actions = {
     })
   },
   logout({commit}) {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       setTimeout(() => {
         commit('LOGIN')
         localStorage.removeItem('token')
