@@ -134,6 +134,7 @@
             this.returnField = result.body.viewScreen[0].attributes.returnField === null ? '' : result.body.viewScreen[0].attributes.returnField
             this.displayFields = result.body.viewScreen[0].attributes.displayFields
             this.wordList = result.body.viewScreen[0].attributes.autocompleteOptions === null ? [] : result.body.viewScreen[0].attributes.autocompleteOptions
+            this.$store.dispatch('ui/incrementUpdateCpt')
             return result.body
           }, error => {
             return error.body
