@@ -3,13 +3,7 @@ import VueResource from 'vue-resource'
 import VueRouter from 'vue-router'
 
 import VueWait from 'vue-wait'
-import {
-  OrbitSpinner,
-  AtomSpinner,
-  IntersectingCirclesSpinner,
-  RadarSpinner,
-  BreedingRhombusSpinner
-} from 'epic-spinners'
+import {BreedingRhombusSpinner} from 'epic-spinners'
 import BlockUI from 'vue-blockui'
 import VueFlashMessage from 'vue-flash-message'
 import VModal from 'vue-js-modal'
