@@ -1,0 +1,53 @@
+{
+  "name": "vuejs-portal",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A Vue.js project",
+  "author": "bashark <j-bash@protonmail.com>",
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build-default": "vue-cli-service build",
+    "build-prod": "vue-cli-service build --mode production --target lib --name vuejs-portal --inline-vue 'src/main.js'",
+    "build-prod-watch": "vue-cli-service build --mode production --watch --target lib --name vuejs-portal --inline-vue 'src/main.js'",
+    "build-dev": "vue-cli-service build --mode development --target lib --name vuejs-portal --inline-vue 'src/main.js'",
+    "build-dev-watch": "vue-cli-service build --mode development --watch --target lib --name vuejs-portal --inline-vue 'src/main.js'",
+    "lint": "vue-cli-service lint"
+  },
+  "dependencies": {
+    "@babel/polyfill": "^7.6.0",
+    "core-js": "^2.6.5",
+    "epic-spinners": "^1.1.0",
+    "himalaya": "^1.1.0",
+    "lodash": "^4.17.15",
+    "query-string": "^6.8.3",
+    "stylus": "^0.54.7",
+    "stylus-loader": "^3.0.2",
+    "vue": "^2.6.10",
+    "vue-autosuggest": "^2.0.4",
+    "vue-blockui": "^1.1.7",
+    "vue-flash-message": "^0.7.2",
+    "vue-flatpickr-component": "^8.1.3",
+    "vue-js-modal": "^1.3.31",
+    "vue-resource": "^1.5.1",
+    "vue-router": "^3.1.3",
+    "vue-wait": "^1.4.6",
+    "vuetify": "^2.1.0",
+    "vuex": "^3.1.1",
+    "vuex-strong-cache": "^0.1.1",
+    "xml2js": "^0.4.22"
+  },
+  "devDependencies": {
+    "@mdi/font": "^4.4.95",
+    "@vue/cli-plugin-babel": "^3.11.0",
+    "@vue/cli-plugin-eslint": "^3.11.0",
+    "@vue/cli-service": "^3.11.0",
+    "babel-eslint": "^10.0.1",
+    "eslint": "^5.16.0",
+    "eslint-plugin-vue": "^5.0.0",
+    "sass": "^1.17.4",
+    "sass-loader": "^7.1.0",
+    "vue-cli-plugin-vuetify": "^0.6.3",
+    "vue-template-compiler": "^2.6.10",
+    "vuetify-loader": "^1.2.2"
+  }
+}

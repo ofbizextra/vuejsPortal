@@ -1,13 +1,9 @@
 package org.apache.ofbiz.widget.renderer.frontjs;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Stack;
-
 import org.apache.ofbiz.base.util.UtilGenerics;
 import org.apache.ofbiz.base.util.UtilMisc;
+
+import java.util.*;
 
 public class FrontJsOutput {
     public static final String module = FrontJsOutput.class.getName();

@@ -2,7 +2,7 @@ Index: framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelFormFie
 ===================================================================
 --- framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelFormFieldBuilder.java	(révision 1861341)
 +++ framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelFormFieldBuilder.java	(copie de travail)
-@@ -174,6 +174,13 @@
+@@ -174,6 +174,15 @@
                      onChangeUpdateAreas.add(updateArea);
                  } else if ("click".equals(updateArea.getEventType())) {
                      onClickUpdateAreas.add(updateArea);
@@ -11,6 +11,8 @@ Index: framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelFormFie
 +                        || "setWatcher".equals(updateArea.getEventType())
 +                        || "submit".equals(updateArea.getEventType())
 +                        || "setFieldInForm".equals(updateArea.getEventType())
++                        || "collapse".equals(updateArea.getEventType())
++                        || "closeModal".equals(updateArea.getEventType())
 +                        ) {
 +                    onClickUpdateAreas.add(updateArea);
                  }

@@ -1,30 +1,25 @@
 
 package org.apache.ofbiz.widget.renderer.frontjs;
 
-import java.io.IOException;
-import java.io.Writer;
-import java.util.Map;
+import org.apache.ofbiz.base.util.GeneralException;
+import org.apache.ofbiz.base.util.UtilCodec;
+import org.apache.ofbiz.base.util.UtilHttp;
+import org.apache.ofbiz.base.util.collections.MapStack;
+import org.apache.ofbiz.webapp.view.AbstractViewHandler;
+import org.apache.ofbiz.webapp.view.ViewHandlerException;
+import org.apache.ofbiz.widget.renderer.*;
+import org.json.simple.JSONObject;
+import org.xml.sax.SAXException;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
+import java.io.Writer;
+import java.util.Map;
 
-import org.apache.ofbiz.base.util.GeneralException;
-import org.apache.ofbiz.base.util.UtilCodec;
-import org.apache.ofbiz.base.util.UtilHttp;
-import org.apache.ofbiz.base.util.collections.MapStack;
 //import org.apache.ofbiz.entity.GenericEntity;
-import org.apache.ofbiz.webapp.view.AbstractViewHandler;
-import org.apache.ofbiz.webapp.view.ViewHandlerException;
-import org.apache.ofbiz.widget.renderer.FormStringRenderer;
-import org.apache.ofbiz.widget.renderer.MenuStringRenderer;
-import org.apache.ofbiz.widget.renderer.ScreenRenderer;
-import org.apache.ofbiz.widget.renderer.ScreenStringRenderer;
-import org.apache.ofbiz.widget.renderer.TreeStringRenderer;
-import org.apache.ofbiz.widget.renderer.VisualTheme;
-import org.json.simple.JSONObject;
-import org.xml.sax.SAXException;
 
 public class FrontJsScreenViewHandler extends AbstractViewHandler {
 
