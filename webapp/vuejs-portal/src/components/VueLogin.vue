@@ -39,7 +39,6 @@
 
   export default {
     name: "VueLogin",
-    components: {VueJsModal},
     data() {
       return {
         username: 'admin',

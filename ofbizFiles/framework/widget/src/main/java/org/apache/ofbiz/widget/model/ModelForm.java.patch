@@ -2,7 +2,7 @@ Index: framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelForm.ja
 ===================================================================
 --- framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelForm.java	(révision 1861341)
 +++ framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelForm.java	(copie de travail)
-@@ -432,7 +432,12 @@
+@@ -432,7 +432,13 @@
                  } else {
                      onPaginateUpdateAreas.add(updateArea);
                  }
@@ -12,11 +12,12 @@ Index: framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelForm.ja
 +                     ||"setArea".equals(updateArea.getEventType())
 +                     ||"setWatcher".equals(updateArea.getEventType())
 +                     ||"collapse".equals(updateArea.getEventType())
++                     ||"closeModal".equals(updateArea.getEventType())
 +                      ) {
                  int index = onSubmitUpdateAreas.indexOf(updateArea);
                  if (index != -1) {
                      onSubmitUpdateAreas.set(index, updateArea);
-@@ -1713,13 +1718,21 @@
+@@ -1713,13 +1719,21 @@
              this.defaultServiceName = defaultServiceName;
              this.defaultEntityName = defaultEntityName;
              List<? extends Element> parameterElementList = UtilXml.childElementList(updateAreaElement, "parameter");
@@ -40,7 +41,7 @@ Index: framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelForm.ja
                  this.parameterList = Collections.unmodifiableList(parameterList);
              }
              Element autoServiceParamsElement = UtilXml.firstChildElement(updateAreaElement, "auto-parameters-service");
-@@ -1760,6 +1773,10 @@
+@@ -1760,6 +1774,10 @@
              return areaId;
          }
  
@@ -51,7 +52,7 @@ Index: framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelForm.ja
          public String getAreaTarget(Map<String, ? extends Object> context) {
              return FlexibleStringExpander.expandString(areaTarget, context);
          }
-@@ -1811,5 +1828,14 @@
+@@ -1811,5 +1829,14 @@
          public List<CommonWidgetModels.Parameter> getParameterList() {
              return parameterList;
          }

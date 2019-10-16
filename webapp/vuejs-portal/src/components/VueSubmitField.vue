@@ -75,6 +75,14 @@
           case 'setArea':
             // do post then set area
             return this.setArea(updateArea)
+          case 'closeModal':
+            // do closeModal
+            this.$modal.hide(updateArea.areaId + '_modal')
+            return new Promise((resolve) => {
+              setTimeout(() => {
+                resolve()
+              },0)
+            })
           case 'collapse':
             switch (updateArea.areaTarget) {
               case 'collapse':
