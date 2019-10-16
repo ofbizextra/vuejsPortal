@@ -11,7 +11,7 @@
     <a href="#" :style="{display: 'inline-block'}" @click="showModal"></a>
     <span v-if="tooltip" :id="'0_lookupId_' + id" class="tooltip">{{tooltip}}</span>
     <p>{{modalResult}}</p>
-    <modal :name="id + '_modal'" :id="id + '_modal'" :adaptive="true" :resizable="true">
+    <modal :name="id + '_modal'" :id="id + '_modal'" :adaptive="true" :resizable="true" height="auto" :scrollable="true">
       <vue-container :props="{attributes: {id: id + '_modalContent'}}"
                      :auto-update-params="{targetUrl: getCurrentApi + '/' + fieldFormName, params: {presentation: 'layer'}}">
 
