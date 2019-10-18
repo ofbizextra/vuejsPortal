@@ -1,19 +1,20 @@
 <template>
   <div id="vue-screenlet">
-    <v-card :id="data.id" class="ma-1">
-      <v-toolbar v-if="data.showMore" dense>
-        <v-toolbar-title color="indigo" dark>{{data.title}}</v-toolbar-title>
-        <div class="flex-grow-1"></div>
+    <div :id="data.id" class="ma-1">
+      <v-toolbar v-if="data.showMore" dense color="primary" dark>
+        <v-toolbar-title class="title">{{data.title}}</v-toolbar-title>
+        <v-spacer></v-spacer>
         <v-btn-icon v-for="(headerItem, headerItemIndex) in headerChildren"
                     :key="headerItemIndex">
           <div v-bind:is="constantes.components[headerItem.name]"
                :props="headerItem"
                :updateStore="updateStore"></div>
         </v-btn-icon>
-        <v-btn-icon v-if="!collapsed" @click="toggle"><v-icon>mdi-arrow-collapse-up</v-icon></v-btn-icon>
-        <v-btn-icon v-if="collapsed" @click="toggle"><v-icon>mdi-arrow-expand-down</v-icon></v-btn-icon>
+        <v-btn icon v-if="collapsible" @click="toggle"><v-icon>{{ collapseIcon }}</v-icon></v-btn>
       </v-toolbar>
-      <v-card-content :id="collapsibleAreaId" v-show="!collapsed">
+      <v-expand-transition>
+      <v-card :id="collapsibleAreaId" v-show="!collapsed">
+        <v-card-content>
         <div
           v-for="(component, key) in bodyChildren"
           :key="key"
@@ -21,8 +22,10 @@
           :props="component"
           :updateStore="updateStore">
         </div>
-      </v-card-content>
-    </v-card>
+        </v-card-content>
+      </v-card>
+      </v-expand-transition>
+    </div>
   </div>
 </template>
 
@@ -82,6 +85,12 @@
       },
       id() {
         return `${this.data.id}-${this.data.name}`
+      },
+      collapseIcon() {
+        return this.collapsed ? 'mdi-arrow-expand-down' :  'mdi-arrow-collapse-up'
+      },
+      collapsible() {
+        return this.data.hasOwnProperty('collapsible') && this.data.collapsible
       }
     },
     methods: {

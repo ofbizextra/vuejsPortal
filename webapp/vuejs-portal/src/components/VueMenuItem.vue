@@ -1,27 +1,21 @@
 <template>
-  <li id="vue-menu-item" v-bind:class="style" v-bind:title="toolTip">
-    <ul v-if="containsNestedMenus">
-      <li
-        v-for="(component, index) in props.children"
-        :key="index"
-        v-bind:is="constantes.components[component.name]"
-        :props="component"
-        :updateStore="updateStore"
-      ></li>
-    </ul>
-    <div
-      v-else
-      v-for="(component, index) in props.children"
-      :key="index"
-      v-bind:is="constantes.components[component.name]"
-      :props="component"
-      :updateStore="updateStore"
-    ></div>
-  </li>
+    <v-list-item
+    >
+        <v-list-item-content>
+            <div
+                    v-for="(component, index) in props.children"
+                    :key="index"
+                    v-bind:is="constantes.components[component.name]"
+                    :props="component"
+                    :updateStore="updateStore"
+            ></div>
+        </v-list-item-content>
+    </v-list-item>
 </template>
 
 <script>
   import constantes from '../js/constantes'
+
   export default {
     name: "VueMenuItem",
     props: ['props', 'updateStore'],
@@ -49,8 +43,7 @@
         return this.data.hasOwnProperty('containsNestedMenus') ? this.data.containsNestedMenus : ''
       }
     },
-    methods: {
-    }
+    methods: {}
   }
 </script>
 

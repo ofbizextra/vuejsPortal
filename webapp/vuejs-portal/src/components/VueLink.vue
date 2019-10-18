@@ -31,7 +31,9 @@
       <!--v-on:click="redirect"-->
 
       <img :src="imgSrc" :title="imgTitle" alt="" v-if="hasImage"/>
-      {{text}}
+        <span class="subtitle-1">
+            {{text}}
+        </span>
     </a>
     <a
       v-else-if="linkType === 'auto'"
@@ -47,7 +49,9 @@
       <!--v-on:click="redirect"-->
 
       <img :src="imgSrc" :title="imgTitle" alt="" v-if="hasImage"/>
-      {{text}}
+        <span class="subtitle-1">
+            {{text}}
+        </span>
     </a>
     <a
       v-else-if="linkType === 'anchor'"
@@ -60,7 +64,9 @@
       v-on:click.prevent="redirect"
     >
       <img :src="imgSrc" :title="imgTitle" alt="" v-if="hasImage"/>
-      {{text}}
+        <span class="subtitle-1">
+            {{text}}
+        </span>
     </a>
     <a
       v-else-if="linkType === 'hidden-form' || linkUrl.length > 0"

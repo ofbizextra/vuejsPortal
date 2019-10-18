@@ -5,9 +5,6 @@
         <vue-column-portlet v-for="column in portalPageDetail.listColumnPortlet" :key="column.columnSeqId"
                             :props="{portalPageId: portalPage, columnSeqId: column.columnSeqId}">
         </vue-column-portlet>
-        <!--<find-example-layer />-->
-        <!--<list-example-layer />-->
-        <!--<edit-example-layer />-->
       </tr>
     </table>
   </div>
