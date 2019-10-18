@@ -1,6 +1,6 @@
 <template>
-  <v-row class="ma-0">
-    <v-select class="col-4 mt-0 mb-0" :items="items" v-if="data.opEquals" v-model="valueOp" hide-display>
+  <v-row class="ma-0 pa-0">
+    <v-select class="col-4 mt-0 mb-0" :items="items" v-if="data.opEquals" v-model="valueOp" hide-details dense>
     </v-select>
     <v-text-field class="col-6 mt-0 mb-0"
       :label="data.name"
@@ -9,10 +9,10 @@
       v-model="value"
       v-bind:maxlength="data.maxlength"
       v-bind:autocomplete="data.autocomplete"
-      v-bind:tabindex="data.tabindex" hide-display
+      v-bind:tabindex="data.tabindex" hide-details dense
     />
       <input v-if="data.hideIgnoreCase" type="hidden" :name="data.name + '_ic'" :value="data.ignCase ? 'Y' : ''"/>
-      <v-checkbox class="col-2 mt-0 mb-0" v-else type="checkbox" label="ignore case" :name="data.name + '_ic'" false-value="N" true-value="Y" v-model="valueIc" hide-display/>
+      <v-checkbox class="col-2 mt-0 mb-0" v-else type="checkbox" label="ignore case" :name="data.name + '_ic'" false-value="N" true-value="Y" v-model="valueIc" hide-details dense/>
   </v-row>
 </template>
 

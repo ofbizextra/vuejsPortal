@@ -1,7 +1,7 @@
 <template>
-  <div id="vue-submit-field">
-    <input type="submit" :value="data.title" v-bind="data" v-on:click.prevent="resolveEvents"/>
-  </div>
+  <v-flex text-center id="vue-submit-field">
+    <v-btn raised dark color="primary" type="submit" :label="data.title" :value="data.title" v-bind="data" v-on:click.prevent="resolveEvents">{{data.title}}</v-btn>
+  </v-flex>
 </template>
 
 <script>

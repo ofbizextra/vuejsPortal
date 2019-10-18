@@ -1,6 +1,6 @@
 <template>
   <div id="vue-drop-down-field">
-    <v-select :items="data.options" item-value="key" item-text="description" v-model="value">
+    <v-select :items="data.options" item-value="key" item-text="description" v-model="value" hide-details dense clearable>
 
     </v-select>
   </div>

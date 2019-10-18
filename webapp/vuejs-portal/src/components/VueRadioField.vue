@@ -1,5 +1,5 @@
 <template>
-  <v-radio-group id="vue-radio-field" v-model="value" row>
+  <v-radio-group id="vue-radio-field" v-model="value" row hide-details>
     <input v-if="data.conditionGroup" type="hidden" :name="data.name + '_grp'" v-bind:value="data.conditionGroup"/>
     <v-radio v-for="item in props.attributes.items" :label="item.description" :value="item.key">
     </v-radio>

@@ -1,6 +1,6 @@
 <template>
   <div id="vue-hyperlink-field">
-    <a
+    <v-btn outlined x-small color="primary"
       v-if="haveUpdateAreas"
       :title="title"
       :description="description"
@@ -9,8 +9,8 @@
     >
       <img :src="imgSrc" :title="imgTitle" alt="" v-if="hasImg">
       {{description}}
-    </a>
-    <a
+    </v-btn>
+    <v-btn outlined x-small color="primary"
       v-else
       :href="data.linkUrl"
       :title="title"
@@ -18,7 +18,7 @@
     >
       <img :src="imgSrc" :title="imgTitle" alt="" v-if="hasImg">
       {{description}}
-    </a>
+    </v-btn>
   </div>
 </template>
 

@@ -1,5 +1,5 @@
 <template>
-  <table id="vue-list-wrapper" v-bind="data" v-if="show">
+  <v-simple-table dense id="vue-list-wrapper" v-bind="data" v-if="show">
     <div
       v-for="(component, key) in props.children"
       :key="key"
@@ -7,7 +7,7 @@
       :props="component"
       :updateStore="updateStore">
     </div>
-  </table>
+  </v-simple-table>
 </template>
 
 <script>

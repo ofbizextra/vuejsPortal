@@ -1,6 +1,6 @@
 <template>
   <div id="vue-text-field">
-    <input v-model="value" v-bind="data"/>
+    <v-textField v-model="value" v-bind="data" dense/>
   </div>
 </template>
 

@@ -1,50 +1,59 @@
 <template>
   <div id="vue-next-prev" :class="paginateStyle" v-if="show">
-    <ul>
-      <li :class="paginateFirstStyle">
-        <a href="" v-on:click.prevent="first">{{paginateFirstLabel}}</a>
-      </li>
-      <li :class="paginatePreviousStyle">
-        <a href="" v-on:click.prevent="previous">{{paginatePreviousLabel}}</a>
-      </li>
-      <li>
-        {{pageLabel}}
-        <select v-model="viewIndex">
-          <option v-for="index in Array.from(Array(numberOfPages).keys())" :key="index" :value="index">
-            {{index + 1}}
-          </option>
-        </select>
-      </li>
-      <li :class="paginateNextStyle">
-        <a href="" v-on:click.prevent="next">{{paginateNextLabel}}</a>
-      </li>
-      <li :class="paginateLastStyle">
-        <a href="" v-on:click.prevent="last">{{paginateLastLabel}}</a>
-      </li>
-      <li class="nav-pagesize">
-        <select v-model="viewSize">
-          <option :value="20">
-            20
-          </option>
-          <option :value="30">
-            30
-          </option>
-          <option :value="50">
-            50
-          </option>
-          <option :value="100">
-            100
-          </option>
-          <option :value="200">
-            200
-          </option>
-        </select>
-        Items per Pages
-      </li>
-      <li class="nav-displaying">
-        {{commonDisplaying}}
-      </li>
-    </ul>
+    <v-toolbar dark color="blue darken-3" class="mb-1" dense text-center>
+      <v-btn-icon v-on:click.prevent="first" circle class="ms-1 col-1"><v-icon>mdi-arrow-collapse-left</v-icon></v-btn-icon>
+      <v-btn-icon v-on:click.prevent="previous" circle class="ms-1 col-1"><v-icon>mdi-arrow-left</v-icon></v-btn-icon>
+      <v-select v-model="viewIndex" :items="indexList" hide-details prefix="Page : " class="ms-1 col-2"></v-select>
+      <v-btn-icon v-on:click.prevent="next" circle class="ms-1 col-1"><v-icon>mdi-arrow-right</v-icon></v-btn-icon>
+      <v-btn-icon v-on:click.prevent="last" circle class="ms-1 col-1"><v-icon>mdi-arrow-collapse-right</v-icon></v-btn-icon>
+      <v-select v-model="viewSize" :items="viewSizeList" hide-details prefix="Items per page : " class="ms-1 col-3"></v-select>
+      <v-label class=" col-2">{{commonDisplaying}}</v-label>
+    </v-toolbar>
+<!--    <ul>-->
+<!--      <li :class="paginateFirstStyle">-->
+<!--        <a href="" v-on:click.prevent="first">{{paginateFirstLabel}}</a>-->
+<!--      </li>-->
+<!--      <li :class="paginatePreviousStyle">-->
+<!--        <a href="" v-on:click.prevent="previous">{{paginatePreviousLabel}}</a>-->
+<!--      </li>-->
+<!--      <li>-->
+<!--        {{pageLabel}}-->
+<!--        <select v-model="viewIndex">-->
+<!--          <option v-for="index in Array.from(Array(numberOfPages).keys())" :key="index" :value="index">-->
+<!--            {{index + 1}}-->
+<!--          </option>-->
+<!--        </select>-->
+<!--      </li>-->
+<!--      <li :class="paginateNextStyle">-->
+<!--        <a href="" v-on:click.prevent="next">{{paginateNextLabel}}</a>-->
+<!--      </li>-->
+<!--      <li :class="paginateLastStyle">-->
+<!--        <a href="" v-on:click.prevent="last">{{paginateLastLabel}}</a>-->
+<!--      </li>-->
+<!--      <li class="nav-pagesize">-->
+<!--        <select v-model="viewSize">-->
+<!--          <option :value="20">-->
+<!--            20-->
+<!--          </option>-->
+<!--          <option :value="30">-->
+<!--            30-->
+<!--          </option>-->
+<!--          <option :value="50">-->
+<!--            50-->
+<!--          </option>-->
+<!--          <option :value="100">-->
+<!--            100-->
+<!--          </option>-->
+<!--          <option :value="200">-->
+<!--            200-->
+<!--          </option>-->
+<!--        </select>-->
+<!--        Items per Pages-->
+<!--      </li>-->
+<!--      <li class="nav-displaying">-->
+<!--        {{commonDisplaying}}-->
+<!--      </li>-->
+<!--    </ul>-->
   </div>
 </template>
 
@@ -53,7 +62,9 @@
     name: "VueNextPrev",
     props: ['props', 'updateStore'],
     data() {
-      return {}
+      return {
+        viewSizeList: [20, 30, 50, 100, 200]
+      }
     },
     computed: {
       data() {
@@ -134,6 +145,13 @@
       },
       show() {
         return this.listSize > this.viewSize
+      },
+      indexList() {
+        let list = []
+        for (let i = 0; i < this.numberOfPages; i++) {
+          list.push({text: i + 1, value: i})
+        }
+        return list
       }
     },
     methods: {

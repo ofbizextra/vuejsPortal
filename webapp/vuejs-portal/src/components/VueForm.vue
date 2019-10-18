@@ -1,5 +1,5 @@
 <template>
-  <form v-bind:id="'vue-form_' + data.name" v-bind="data" :autocomplete="autocomplete">
+  <v-form v-bind:id="'vue-form_' + data.name" v-bind="data" :autocomplete="autocomplete">
     <div
       v-for="(component, key) in props.children"
       :key="key"
@@ -7,7 +7,7 @@
       :props="component"
       :updateStore="updateStore">
     </div>
-  </form>
+  </v-form>
 </template>
 
 <script>

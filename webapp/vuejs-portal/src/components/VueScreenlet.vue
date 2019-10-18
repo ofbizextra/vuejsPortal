@@ -1,7 +1,7 @@
 <template>
   <div id="vue-screenlet">
-    <v-card :id="data.id">
-      <v-toolbar v-if="data.showMore">
+    <v-card :id="data.id" class="ma-1">
+      <v-toolbar v-if="data.showMore" dense>
         <v-toolbar-title color="indigo" dark>{{data.title}}</v-toolbar-title>
         <div class="flex-grow-1"></div>
         <v-btn-icon v-for="(headerItem, headerItemIndex) in headerChildren"
@@ -10,8 +10,10 @@
                :props="headerItem"
                :updateStore="updateStore"></div>
         </v-btn-icon>
+        <v-btn-icon v-if="!collapsed" @click="toggle"><v-icon>mdi-arrow-collapse-up</v-icon></v-btn-icon>
+        <v-btn-icon v-if="collapsed" @click="toggle"><v-icon>mdi-arrow-expand-down</v-icon></v-btn-icon>
       </v-toolbar>
-      <v-card-content :id="collapsibleAreaId">
+      <v-card-content :id="collapsibleAreaId" v-show="!collapsed">
         <div
           v-for="(component, key) in bodyChildren"
           :key="key"
