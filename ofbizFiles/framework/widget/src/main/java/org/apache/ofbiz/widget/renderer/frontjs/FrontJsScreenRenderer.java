@@ -518,18 +518,33 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
         HttpServletResponse response = (HttpServletResponse) context.get("response");
         //VisualTheme visualTheme = UtilHttp.getVisualTheme(request);
         //ModelTheme modelTheme = visualTheme.getModelTheme();
-        boolean javaScriptEnabled = UtilHttp.isJavaScriptEnabled(request);
-        ModelScreenWidget.Menu tabMenu = screenlet.getTabMenu();
+        //boolean javaScriptEnabled = UtilHttp.isJavaScriptEnabled(request);
 
 
         String title = screenlet.getTitle(context);
         boolean collapsible = screenlet.collapsible();
+        ModelScreenWidget.Menu tabMenu = screenlet.getTabMenu();
         ModelScreenWidget.Menu navMenu = screenlet.getNavigationMenu();
         ModelScreenWidget.Form navForm = screenlet.getNavigationForm();
         String expandToolTip = "";
         String collapseToolTip = "";
         String fullUrlString = "";
 //        boolean showMore = false;
+        if (collapsible) {
+            Map<String, Object> uiLabelMap = UtilGenerics.cast(context.get("uiLabelMap"));
+            if (uiLabelMap != null) {
+                expandToolTip = (String) uiLabelMap.get("CommonExpand");
+                collapseToolTip = (String) uiLabelMap.get("CommonCollapse");
+            }
+//            this.getNextElementId();
+//            Map<String, Object> paramMap = UtilGenerics.cast(context.get("requestParameters"));
+//            Map<String, Object> requestParameters = new HashMap<>(paramMap);
+//            if (!javaScriptEnabled) {
+//                requestParameters.put(screenlet.getPreferenceKey(context) + "_collapsed", collapsed ? "false" : "true");
+//                String queryString = UtilHttp.urlEncodeArgs(requestParameters);
+//                fullUrlString = request.getRequestURI() + "?" + queryString;
+//            }
+        }
 
 
         Map<String, Object> parameters = new HashMap<>();
@@ -550,7 +565,7 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
         parameters.put("fullUrlString", fullUrlString);
         parameters.put("padded", screenlet.padded());
         parameters.put("collapsed", collapsed);
-        parameters.put("javaScriptEnabled", javaScriptEnabled);
+        //parameters.put("javaScriptEnabled", javaScriptEnabled);
         parameters.put("showMore", (Boolean) (UtilValidate.isNotEmpty(title) || navMenu != null || navForm != null || collapsible));
         this.output.pushScreen("ScreenletBegin", parameters);
 
@@ -569,31 +584,17 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
             }
             menuStringRenderer.renderFormatSimpleWrapperClose(writer, context, menu);
             menuStringRenderer.renderMenuClose(writer, context, menu);
+            parameters.put("tabMenu", this.output.getAndRemoveScreen());
 
         }
-        if (UtilValidate.isNotEmpty(title) || navMenu != null || navForm != null || collapsible) {
+        if (UtilValidate.isNotEmpty(title) || navMenu != null || navForm != null ) {
 //            showMore = true;
-            if (collapsible) {
-                this.getNextElementId();
-                Map<String, Object> uiLabelMap = UtilGenerics.cast(context.get("uiLabelMap"));
-                Map<String, Object> paramMap = UtilGenerics.cast(context.get("requestParameters"));
-                Map<String, Object> requestParameters = new HashMap<>(paramMap);
-                if (uiLabelMap != null) {
-                    expandToolTip = (String) uiLabelMap.get("CommonExpand");
-                    collapseToolTip = (String) uiLabelMap.get("CommonCollapse");
-                }
-                if (!javaScriptEnabled) {
-                    requestParameters.put(screenlet.getPreferenceKey(context) + "_collapsed", collapsed ? "false" : "true");
-                    String queryString = UtilHttp.urlEncodeArgs(requestParameters);
-                    fullUrlString = request.getRequestURI() + "?" + queryString;
-                }
-            }
             //StringWriter sb = new StringWriter();
             if (navMenu != null) {
-                MenuStringRenderer savedRenderer = (MenuStringRenderer) context.get("menuStringRenderer");
-                MenuStringRenderer renderer;
-                renderer = new FrontJsMenuRenderer(output, request, response);
-                context.put("menuStringRenderer", renderer);
+//                MenuStringRenderer savedRenderer = (MenuStringRenderer) context.get("menuStringRenderer");
+//                MenuStringRenderer renderer;
+//                renderer = new FrontJsMenuRenderer(output, request, response);
+//                context.put("menuStringRenderer", renderer);
                 ModelMenu menu = navMenu.getModelMenu(context);
                 MenuStringRenderer menuStringRenderer = (MenuStringRenderer)context.get("menuStringRenderer");
                 AbstractModelAction.runSubActions(menu.getActions(), context);
@@ -608,9 +609,10 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
                 }
                 menuStringRenderer.renderFormatSimpleWrapperClose(writer, context, menu);
                 menuStringRenderer.renderMenuClose(writer, context, menu);
-                context.put("menuStringRenderer", savedRenderer);
+                parameters.put("navMenu", this.output.getAndRemoveScreen());
+//                context.put("menuStringRenderer", savedRenderer);
             } else if (navForm != null) {
-                renderScreenletPaginateMenu(writer, context, navForm);
+                parameters.put("navForm",renderScreenletPaginateMenu(writer, context, navForm));
             }
         }
     }
@@ -650,7 +652,7 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
         this.output.popScreen("ScreenletEnd");
     }
 
-    protected void renderScreenletPaginateMenu(Appendable writer, Map<String, Object> context, ModelScreenWidget.Form form) throws IOException {
+    protected Map<String, Object> renderScreenletPaginateMenu(Appendable writer, Map<String, Object> context, ModelScreenWidget.Form form) throws IOException {
         HttpServletResponse response = (HttpServletResponse) context.get("response");
         HttpServletRequest request = (HttpServletRequest) context.get("request");
         ModelForm modelForm;
@@ -680,7 +682,7 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
 
         // if this is all there seems to be (if listSize < 0, then size is unknown)
         if (actualPageSize >= listSize && listSize >= 0) {
-            return;
+            return null;
         }
 
         // needed for the "Page" and "rows" labels
@@ -783,7 +785,8 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
         parameters.put("paginateFirstStyle", modelForm.getPaginateFirstStyle());
         parameters.put("paginateFirstLabel", modelForm.getPaginateFirstLabel(context));
         parameters.put("firstLinkUrl", firstLinkUrl);
-        this.output.putScreen("ScreenletPaginateMenu", parameters);
+        return parameters;
+        //this.output.putScreen("ScreenletPaginateMenu", parameters);
     }
 
     public void renderPortalPageBegin(Appendable writer, Map<String, Object> context, ModelScreenWidget.PortalPage portalPage) throws GeneralException, IOException {

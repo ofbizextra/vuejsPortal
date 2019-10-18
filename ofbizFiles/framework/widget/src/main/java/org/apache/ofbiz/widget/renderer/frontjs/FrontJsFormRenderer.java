@@ -28,7 +28,6 @@ import java.util.stream.Collectors;
 //import org.apache.ofbiz.entity.GenericValue;
 
 
-//@SuppressWarnings("WeakerAccess")
 public final class FrontJsFormRenderer implements FormStringRenderer {
     private static final String NOT_YET_SUPPORTED = "Not yet supported";
     //private static final Map<String, Object> NOT_YET_SUPPORTED_M = UtilMisc.toMap("userMessage", "Not yet supported");

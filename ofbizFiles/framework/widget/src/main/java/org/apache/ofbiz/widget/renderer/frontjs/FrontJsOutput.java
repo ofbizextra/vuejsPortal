@@ -83,6 +83,19 @@ public class FrontJsOutput {
     }
 
     /**
+     * Read and return the first screenElement from screensStack.peek and remove it from screensStack.peek.
+     * <br/>It's used for screenlet to be able to put tabMenu or navMenu as attribute and not as children.
+     *    For this use case there will be only 1 screen in list when this method will be call.
+     * <br/>If new use case appear, this method will work with last screen of the list
+     * @return the first screenElement from screensStack.peek and remove it from screensStack.peek
+     */
+    Map<String, Object> getAndRemoveScreen() {
+        Map<String, Object> screen = screensStack.peek().get(0);
+        screensStack.peek().remove(0);
+        return screen;
+    }
+
+    /**
      * Push a new screenElement into the children of the top screen of the stack. <br/>
      * Should be used only when element is not a field.
      *
