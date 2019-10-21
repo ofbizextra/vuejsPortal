@@ -1,8 +1,51 @@
+/*
+ Licensed to the Apache Software Foundation (ASF) under one
+ or more contributor license agreements.  See the NOTICE file
+ distributed with this work for additional information
+ regarding copyright ownership.  The ASF licenses this file
+ to you under the Apache License, Version 2.0 (the
+ "License"); you may not use this file except in compliance
+ with the License.  You may obtain a copy of the License at
+
+ http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing,
+ software distributed under the License is distributed on an
+ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ KIND, either express or implied.  See the License for the
+ specific language governing permissions and limitations
+ under the License.
+ */
 
 package org.apache.ofbiz.widget.renderer.frontjs;
 
-import com.ibm.icu.util.Calendar;
-import org.apache.ofbiz.base.util.*;
+import java.io.IOException;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.apache.ofbiz.base.util.Debug;
+import org.apache.ofbiz.base.util.StringUtil;
+import org.apache.ofbiz.base.util.UtilCodec;
+import org.apache.ofbiz.base.util.UtilFormatOut;
+import org.apache.ofbiz.base.util.UtilGenerics;
+import org.apache.ofbiz.base.util.UtilHttp;
+import org.apache.ofbiz.base.util.UtilMisc;
+import org.apache.ofbiz.base.util.UtilProperties;
+import org.apache.ofbiz.base.util.UtilValidate;
 import org.apache.ofbiz.base.util.string.FlexibleStringExpander;
 import org.apache.ofbiz.entity.Delegator;
 import org.apache.ofbiz.entity.GenericEntityException;
@@ -11,19 +54,46 @@ import org.apache.ofbiz.entity.model.ModelReader;
 import org.apache.ofbiz.webapp.control.RequestHandler;
 import org.apache.ofbiz.webapp.taglib.ContentUrlTag;
 import org.apache.ofbiz.widget.WidgetWorker;
-import org.apache.ofbiz.widget.model.*;
-import org.apache.ofbiz.widget.model.ModelFormField.*;
-import org.apache.ofbiz.widget.renderer.*;
+import org.apache.ofbiz.widget.model.CommonWidgetModels;
+import org.apache.ofbiz.widget.model.FieldInfo;
+import org.apache.ofbiz.widget.model.ModelForm;
+import org.apache.ofbiz.widget.model.ModelFormField;
+import org.apache.ofbiz.widget.model.ModelFormField.AutoComplete;
+import org.apache.ofbiz.widget.model.ModelFormField.CheckField;
+import org.apache.ofbiz.widget.model.ModelFormField.ContainerField;
+import org.apache.ofbiz.widget.model.ModelFormField.DateFindField;
+import org.apache.ofbiz.widget.model.ModelFormField.DateTimeField;
+import org.apache.ofbiz.widget.model.ModelFormField.DisplayField;
+import org.apache.ofbiz.widget.model.ModelFormField.DropDownField;
+import org.apache.ofbiz.widget.model.ModelFormField.FieldInfoWithOptions;
+import org.apache.ofbiz.widget.model.ModelFormField.FileField;
+import org.apache.ofbiz.widget.model.ModelFormField.HiddenField;
+import org.apache.ofbiz.widget.model.ModelFormField.HyperlinkField;
+import org.apache.ofbiz.widget.model.ModelFormField.IgnoredField;
+import org.apache.ofbiz.widget.model.ModelFormField.ImageField;
+import org.apache.ofbiz.widget.model.ModelFormField.LookupField;
+import org.apache.ofbiz.widget.model.ModelFormField.MenuField;
+import org.apache.ofbiz.widget.model.ModelFormField.OptionValue;
+import org.apache.ofbiz.widget.model.ModelFormField.PasswordField;
+import org.apache.ofbiz.widget.model.ModelFormField.RadioField;
+import org.apache.ofbiz.widget.model.ModelFormField.RangeFindField;
+import org.apache.ofbiz.widget.model.ModelFormField.ResetField;
+import org.apache.ofbiz.widget.model.ModelFormField.SubHyperlink;
+import org.apache.ofbiz.widget.model.ModelFormField.SubmitField;
+import org.apache.ofbiz.widget.model.ModelFormField.TextField;
+import org.apache.ofbiz.widget.model.ModelFormField.TextFindField;
+import org.apache.ofbiz.widget.model.ModelFormField.TextareaField;
+import org.apache.ofbiz.widget.model.ModelFormFieldBuilder;
+import org.apache.ofbiz.widget.model.ModelScreenWidget;
+import org.apache.ofbiz.widget.model.ThemeFactory;
+import org.apache.ofbiz.widget.renderer.FormRenderer;
+import org.apache.ofbiz.widget.renderer.FormStringRenderer;
+import org.apache.ofbiz.widget.renderer.Paginator;
+import org.apache.ofbiz.widget.renderer.UtilHelpText;
+import org.apache.ofbiz.widget.renderer.VisualTheme;
 import org.apache.ofbiz.widget.renderer.macro.MacroFormRenderer;
 
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import java.io.IOException;
-import java.sql.Timestamp;
-import java.util.*;
-import java.util.stream.Collectors;
+import com.ibm.icu.util.Calendar;
 
 //import org.apache.ofbiz.entity.GenericValue;
 
