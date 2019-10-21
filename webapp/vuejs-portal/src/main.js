@@ -67,6 +67,8 @@ import VueMessageList from './components/VueMessageList'
 import VueLogin from './components/VueLogin'
 import VueFormatEmptySpace from './components/VueFormatEmptySpace'
 import VuePlatformSpecific from './components/VuePlatformSpecific'
+import VueNavMenu from './components/VueNavMenu'
+import VueNavMenuItem from './components/VueNavMenuItem'
 
 // Platform Specific
 import ContactMech from './components/platformSpecific/ContactMech'
@@ -145,6 +147,8 @@ Vue.component('vue-message-list', VueMessageList)
 Vue.component( 'vue-login', VueLogin)
 Vue.component('vue-format-empty-space', VueFormatEmptySpace)
 Vue.component('vue-platform-specific', VuePlatformSpecific)
+Vue.component('vue-nav-menu', VueNavMenu)
+Vue.component('vue-nav-menu-item', VueNavMenuItem)
 
 // Platform Specific
 Vue.component('ContactMech', ContactMech)

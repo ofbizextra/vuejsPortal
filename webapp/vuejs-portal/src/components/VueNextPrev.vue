@@ -1,6 +1,6 @@
 <template>
   <div id="vue-next-prev" :class="paginateStyle" v-if="show">
-    <v-toolbar dark color="blue darken-3" class="mb-1" dense text-center>
+    <v-toolbar dark color="secondary" class="mb-1" dense text-center>
       <v-btn-icon v-on:click.prevent="first" circle class="ms-1 col-1"><v-icon>mdi-arrow-collapse-left</v-icon></v-btn-icon>
       <v-btn-icon v-on:click.prevent="previous" circle class="ms-1 col-1"><v-icon>mdi-arrow-left</v-icon></v-btn-icon>
       <v-select v-model="viewIndex" :items="indexList" hide-details prefix="Page : " class="ms-1 col-2"></v-select>

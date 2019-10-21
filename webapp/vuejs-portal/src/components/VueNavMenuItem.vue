@@ -1,5 +1,7 @@
 <template>
-    <v-btn text dark class="no-text-transform">
+    <v-list-item
+    >
+        <v-list-item-content>
             <div
                     v-for="(component, index) in props.children"
                     :key="index"
@@ -7,14 +9,15 @@
                     :props="component"
                     :updateStore="updateStore"
             ></div>
-    </v-btn>
+        </v-list-item-content>
+    </v-list-item>
 </template>
 
 <script>
   import constantes from '../js/constantes'
 
   export default {
-    name: "VueMenuItem",
+    name: "VueNavMenuItem",
     props: ['props', 'updateStore'],
     data() {
       return {
@@ -45,7 +48,5 @@
 </script>
 
 <style scoped>
-.no-text-transform {
-  text-transform: none;
-}
+
 </style>

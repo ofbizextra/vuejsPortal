@@ -1,8 +1,8 @@
 // todo compare size and description.size and tronque
 <template>
   <div id="vue-display-field">
-    <label v-if="pointer.entityName" v-bind="data">{{getPointer}}</label>
-    <label v-else v-bind="data">{{data.title ? data.title : data.description}}</label>
+    <label v-if="pointer.entityName" v-bind="data" class="ma-1">{{getPointer}}</label>
+    <label v-else v-bind="data" class="ma-1">{{data.title ? data.title : data.description}}</label>
   </div>
 </template>
 

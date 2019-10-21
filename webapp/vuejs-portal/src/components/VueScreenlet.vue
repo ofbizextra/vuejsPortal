@@ -4,25 +4,20 @@
       <v-toolbar v-if="data.showMore" dense color="primary" dark>
         <v-toolbar-title class="title">{{data.title}}</v-toolbar-title>
         <v-spacer></v-spacer>
-        <v-btn-icon v-for="(headerItem, headerItemIndex) in headerChildren"
-                    :key="headerItemIndex">
-          <div v-bind:is="constantes.components[headerItem.name]"
-               :props="headerItem"
-               :updateStore="updateStore"></div>
-        </v-btn-icon>
+        <vue-nav-menu v-if="navMenu" :props="navMenu" :updateStore="updateStore"></vue-nav-menu>
         <v-btn icon v-if="collapsible" @click="toggle"><v-icon>{{ collapseIcon }}</v-icon></v-btn>
       </v-toolbar>
       <v-expand-transition>
       <v-card :id="collapsibleAreaId" v-show="!collapsed">
-        <v-card-content>
+        <v-card-text class="pa-1">
         <div
-          v-for="(component, key) in bodyChildren"
+          v-for="(component, key) in props.children"
           :key="key"
           v-bind:is="constantes.components[component.name]"
           :props="component"
           :updateStore="updateStore">
         </div>
-        </v-card-content>
+        </v-card-text>
       </v-card>
       </v-expand-transition>
     </div>
@@ -91,6 +86,12 @@
       },
       collapsible() {
         return this.data.hasOwnProperty('collapsible') && this.data.collapsible
+      },
+      tabMenu() {
+        return this.data.hasOwnProperty('tabMenu') ? this.data.tabMenu : null
+      },
+      navMenu() {
+        return this.data.hasOwnProperty('navMenu') ? this.data.navMenu : null
       }
     },
     methods: {
