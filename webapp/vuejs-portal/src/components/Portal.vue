@@ -2,7 +2,7 @@
   <div id="portal">
     <table v-if="portalPageDetail">
       <tr>
-        <vue-column-portlet v-for="column in portalPageDetail.listColumnPortlet" :key="column.columnSeqId"
+        <vue-column-portlet v-for="column in portalPageDetail.listColumnPortlet" :key="column.portalPageId + '-' + column.columnSeqId"
                             :props="{portalPageId: portalPage, columnSeqId: column.columnSeqId}">
         </vue-column-portlet>
       </tr>

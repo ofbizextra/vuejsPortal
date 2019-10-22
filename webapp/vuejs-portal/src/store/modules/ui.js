@@ -8,6 +8,7 @@ Vue.use(Vuex)
 const state = {
   currentPortalPage: '',
   currentPortalPageParams: {},
+  currentPortalPageDetail: {},
   portalPages: {},
   portlets: {},
   portletTarget: {},
@@ -22,10 +23,11 @@ const state = {
 
 const mutations = {
   SET_CURRENT_PORTAL_PAGE: (state, portalPageId) => {
-    state.currentPortalPage = portalPageId
+    Vue.set(state, 'currentPortalPage', portalPageId)
   },
   SET_PORTAL_PAGE: (state, {portalPageId, portalPage}) => {
     Vue.set(state.portalPages, portalPageId, portalPage)
+    Vue.set(state, 'currentPortalPageDetail', portalPage)
   },
   REMOVE_PORTAL_PAGE: (state, id) => {
     state.portalPages.slice(id)
@@ -77,7 +79,7 @@ const mutations = {
 
 const getters = {
   currentPortalPage: state => state.currentPortalPage,
-  currentPortalPageDetail: state => state.portalPages[state.currentPortalPage],
+  currentPortalPageDetail: state => state.currentPortalPageDetail,
   currentPortalPageParams: state => state.currentPortalPageParams,
   portalPage: state => (id) => {
     return state.portalPages[id]
