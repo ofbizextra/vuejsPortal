@@ -1,7 +1,7 @@
 <template>
     <v-list-item
     >
-        <v-list-item-content>
+        <v-list-item-content class="text-right">
             <div
                     v-for="(component, index) in props.children"
                     :key="index"

@@ -9,7 +9,7 @@ export default {
   portalPageDetail: {path: '/portalPageDetail', tokenRequired: false},
   showPortlet: {path: '/showPortletFj', tokenRequired: false},
 
-  blockUi: true,
+  blockUi: false,
 
   components: {
     Form: 'vue-form',

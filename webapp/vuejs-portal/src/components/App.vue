@@ -20,6 +20,7 @@
     </v-navigation-drawer>
     <v-content>
       <input type="hidden" id="updateCpt" :value="updateCpt">
+      <input type="hidden" id="loader-wrapper" v-if="waitAny && !blockUi"/>
       <BlockUI v-if="waitAny && blockUi" message="Fetching datas...">
         <spinner
           id="loader-wrapper"
