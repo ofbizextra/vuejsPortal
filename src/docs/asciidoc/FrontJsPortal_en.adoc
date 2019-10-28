@@ -31,12 +31,15 @@ This documentation aim to,
 * Explain the current state of the component, how it work and what points had been choose or took away.
 * Prepare future documentation by explaining element meant for future users.
 
-The first goal of using a javascript framework for user interface is to increase interactive elements in screen, even if
-theses screens are based on standard modules :
+The two main goal of using a javascript framework for user interface is 
 
-* update some part of the screen by action or by data update;
-* modify forms field as function of other field values;
-* simpler screen configuration (portal page) without having to worry about portlets interaction.
+1. to have a "modern" look and feel
+  * using recent GUI library
+  * usable in multiple context (PC, tablet, smartphone) 
+1. to increase interactive elements in screen, even if theses screens are based on standard modules :
+  * update some part of the screen by action or by data update;
+  * modify forms field as function of other field values;
+  * simpler screen configuration (portal page) without having to worry about portlets interaction.
 
 include::_include/poc-vuejs_en.adoc[leveloffset=+1]
 
