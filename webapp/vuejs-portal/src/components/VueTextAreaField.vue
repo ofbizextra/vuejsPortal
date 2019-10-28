@@ -1,6 +1,6 @@
 <template>
   <div id="vue-text-area-field">
-    <v-textarea v-model="value" v-bind="data"></v-textarea>
+    <v-textarea v-model="value" v-bind="data" hide-details></v-textarea>
   </div>
 </template>
 

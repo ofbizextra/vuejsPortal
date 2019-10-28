@@ -1,7 +1,55 @@
 <template>
-  <div id="vue-date-time-field">
-    <flat-pickr v-model="valueStore" :config="config"></flat-pickr>
-  </div>
+  <v-row id="vue-date-time-field">
+    <v-menu
+        ref="dateMenu"
+        v-model="dateMenu"
+        :close-on-content-click="false"
+        :return-value.sync="date"
+        transition="scale-transition"
+        offset-overflow
+        offset-y
+        min-width="290px"
+    >
+      <template v-slot:activator="{ on }">
+        <v-text-field
+            v-model="date"
+            label="date"
+            prepend-icon="mdi-event"
+            v-on="on"
+        ></v-text-field>
+      </template>
+      <v-date-picker v-model="date" scrollable>
+        <v-spacer></v-spacer>
+        <v-btn text color="primary" @click="dateMenu = false">Cancel</v-btn>
+        <v-btn text color="primary" @click="$refs.dateMenu.save(date)">OK</v-btn>
+      </v-date-picker>
+    </v-menu>
+    <v-menu
+        ref="timeMenu"
+        v-model="timeMenu"
+        :close-on-content-click="false"
+        :return-value.sync="time"
+        transition="scale-transition"
+        offset-overflow
+        offset-y
+        min-width="290px"
+    >
+      <template v-slot:activator="{ on }">
+        <v-text-field
+            v-model="time"
+            label="time"
+            prepend-icon="mdi-event"
+            v-on="on"
+        ></v-text-field>
+      </template>
+      <v-time-picker v-model="time" :format="config.format" scrollable use-seconds>
+        <v-spacer></v-spacer>
+        <v-btn text color="primary" @click="timeMenu = false">Cancel</v-btn>
+        <v-btn text color="primary" @click="$refs.timeMenu.save(time)">OK</v-btn>
+      </v-time-picker>
+    </v-menu>
+<!--    <flat-pickr v-model="valueStore" :config="config"></flat-pickr>-->
+  </v-row>
 </template>
 
 <script>
@@ -14,7 +62,13 @@
     props: ['props', 'updateStore'],
     data() {
       return {
-        dateTime: ''
+        // dateTime: '',
+        date: '',
+        time: '',
+        onDate: false,
+        onTime: false,
+        dateMenu: false,
+        timeMenu: false
       }
     },
     computed: {
@@ -33,22 +87,21 @@
           value: this.props.attributes.value ? this.props.attributes.value : ''
         }
       },
-      valueStore: {
-        get() {
-          return this.getDataFromForm(this.storeForm)
-        },
-        set(value) {
-          this.$store.dispatch('form/setFieldToForm', {
-            formId: this.formName,
-            key: this.name,
-            value: value
-          })
-        }
-      },
+      // valueStore: {
+      //   get() {
+      //     return this.getDataFromForm(this.storeForm)
+      //   },
+      //   set(value) {
+      //
+      //   }
+      // },
       ...mapGetters({
         getForm: 'form/form',
         getDataFromForm: 'form/fieldInForm'
       }),
+      datetime() {
+        return this.date + ' ' + this.time
+      },
       action() {
         return this.data.hasOwnProperty('action') ? this.data.action : null
       },
@@ -154,11 +207,9 @@
       config() {
         return {
           allowInput: true,
-          dateFormat: 'Y-m-d H:i:S',
           enableTime: true,
           enableSeconds: true,
-          minuteIncrement: this.step,
-          'time_24hr': !this.isTwelveHour,
+          dateFormat: this.isTwelveHour ? '12hr' : '24hr'
         }
       }
     }
@@ -166,11 +217,24 @@
     watch: {
       data: function () {
         this.$store.dispatch('form/setFieldToForm', this.storeForm)
+      },
+      datetime: function (newValue) {
+        this.$store.dispatch('form/setFieldToForm', {
+          formId: this.formName,
+          key: this.name,
+          value: newValue
+        })
       }
     }
     ,
     created() {
       this.$store.dispatch('form/setFieldToForm', this.storeForm)
+    },
+    mounted() {
+      if (this.props.attributes.hasOwnProperty('value') && this.props.attributes.value !== '') {
+        this.date = this.props.attributes.value.split(' ')[0]
+        this.time = this.props.attributes.value.split(' ')[1].split('.')[0]
+      }
     }
   }
 </script>

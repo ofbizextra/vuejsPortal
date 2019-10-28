@@ -1,7 +1,7 @@
 <template>
-    <v-list-item
+    <v-list-item :id="props.children[0].attributes.text.split(' ').join('_')"
     >
-        <v-list-item-content class="text-right">
+        <v-list-item-content>
             <div
                     v-for="(component, index) in props.children"
                     :key="index"

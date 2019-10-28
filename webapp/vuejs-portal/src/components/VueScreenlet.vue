@@ -1,11 +1,11 @@
 <template>
   <div id="vue-screenlet">
-    <div :id="data.id" class="ma-1">
-      <v-toolbar v-if="data.showMore" dense color="primary" dark>
+    <div :id="data.id + '-' + data.name" class="ma-1">
+      <v-toolbar v-if="data.showMore" dense color="primary" dark class="screenlet-title-bar">
         <v-toolbar-title class="title">{{data.title}}</v-toolbar-title>
         <v-spacer></v-spacer>
         <vue-nav-menu v-if="navMenu" :props="navMenu" :updateStore="updateStore"></vue-nav-menu>
-        <v-btn icon v-if="collapsible" @click="toggle"><v-icon>{{ collapseIcon }}</v-icon></v-btn>
+        <v-btn id="toggleCollapse" icon v-if="collapsible" @click="toggle"><v-icon>{{ collapseIcon }}</v-icon></v-btn>
       </v-toolbar>
       <v-expand-transition>
       <v-card :id="collapsibleAreaId" v-show="!collapsed">
@@ -15,7 +15,8 @@
           :key="key"
           v-bind:is="constantes.components[component.name]"
           :props="component"
-          :updateStore="updateStore">
+          :updateStore="updateStore"
+          class="mt-2">
         </div>
         </v-card-text>
       </v-card>

@@ -3,7 +3,10 @@
       <vue-nav-menu-item v-for="(component, index) in props.children"
            :key="index"
            :props="component"
-           :updateStore="updateStore"></vue-nav-menu-item>
+           :updateStore="updateStore"
+           class="text-right">
+
+      </vue-nav-menu-item>
     </v-row>
     <v-menu bottom left v-else transition="scale-transition" origin="center center">
       <template v-slot:activator="{ on }">

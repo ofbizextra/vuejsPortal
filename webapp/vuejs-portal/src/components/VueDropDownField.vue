@@ -1,9 +1,14 @@
 <template>
-  <div id="vue-drop-down-field">
-    <v-select :items="data.options" item-value="key" item-text="description" v-model="value" hide-details dense clearable>
-
-    </v-select>
-  </div>
+    <div :id="id" :name="name">
+      <v-select :items="data.options" item-value="key" item-text="description" v-model="value"
+                hide-details dense clearable>
+        <template slot="item" slot-scope="data">
+        <span :id="data.item.key">
+          {{data.item.description}}
+        </span>
+        </template>
+      </v-select>
+    </div>
 </template>
 
 <script>
@@ -48,7 +53,13 @@
       ...mapGetters({
         getForm: 'form/form',
         getDataFromForm: 'form/fieldInForm'
-      })
+      }),
+      id() {
+        return this.data.hasOwnProperty('id') ? this.data.id : ''
+      },
+      name() {
+        return this.data.hasOwnProperty('name') ? this.data.name : ''
+      }
     },
     watch: {
       data: function () {

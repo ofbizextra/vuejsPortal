@@ -8,11 +8,11 @@
         </v-list-item-content>
       </v-list-item>
       <v-divider></v-divider>
-      <v-list dense nav>
+      <v-list dense nav id="app-navigation">
         <v-list-item v-for="(link, id) in menu.viewScreen[0].children" :key="id" link @click="loadPortalPage({...link.children[0].attributes.parameterMap})">
           <v-list-item-content>
             <v-list-item-title>
-              {{link.children[0].attributes.text}}
+                {{link.children[0].attributes.text}}
             </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
