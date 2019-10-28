@@ -19,7 +19,10 @@ under the License.
 = POC's use cases
 
 == Operational
+All example management by the two portal page ExampleMgmt et ExampleRecap. +
+On the find, the sub list are not yet manage. 
 
-== A mettre en oeuvre
+== Next step
+Party component will the next step whith most of its functions
 
 

@@ -17,6 +17,7 @@ specific language governing permissions and limitations
 under the License.
 ////
 = POC current situation
+Currently VueJs POC is only able to manage PortalPage, but it will be simple to manage all other screen types.
 
 The Objective here is to make different use cases portal page to work. +
 At the menu, there are different pages, actually the name of portal pages name are MgmtPageFrontJs and RecapPageFrontJs. +
@@ -33,7 +34,7 @@ image::PortalPageDetail-Example.svg[Imbrication des container]
 
 == ViewScreen and ViewEntities
 Actually FrontJsViewHandler send all information to component who need update.
-In a client side logic, ViewScreen would be send only the first time the portlet call information then would only care about
+In a client side logic, ViewScreen would be send only the first time while the portlet call information then would only care about
 ViewEntity which update the data set it work on.
 
 Actually "use-when" are handled by ofbiz in model model management whatever level they belong to (screen, form, field, menu),
