@@ -1,9 +1,31 @@
+/*
+ Licensed to the Apache Software Foundation (ASF) under one
+ or more contributor license agreements.  See the NOTICE file
+ distributed with this work for additional information
+ regarding copyright ownership.  The ASF licenses this file
+ to you under the Apache License, Version 2.0 (the
+ "License"); you may not use this file except in compliance
+ with the License.  You may obtain a copy of the License at
+
+ http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing,
+ software distributed under the License is distributed on an
+ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ KIND, either express or implied.  See the License for the
+ specific language governing permissions and limitations
+ under the License.
+ */
 package org.apache.ofbiz.widget.renderer.frontjs;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Stack;
 
 import org.apache.ofbiz.base.util.UtilGenerics;
 import org.apache.ofbiz.base.util.UtilMisc;
-
-import java.util.*;
 
 public class FrontJsOutput {
     public static final String module = FrontJsOutput.class.getName();
@@ -80,6 +102,19 @@ public class FrontJsOutput {
             // for debug purpose only, should be remove when the old code with PUT_RECORD will be removed
             screen.put("dataDebug", UtilMisc.toMap("action", "PUT_RECORD", "key", fieldName, "value", fieldValue));
         }
+    }
+
+    /**
+     * Read and return the first screenElement from screensStack.peek and remove it from screensStack.peek.
+     * <br/>It's used for screenlet to be able to put tabMenu or navMenu as attribute and not as children.
+     *    For this use case there will be only 1 screen in list when this method will be call.
+     * <br/>If new use case appear, this method will work with last screen of the list
+     * @return the first screenElement from screensStack.peek and remove it from screensStack.peek
+     */
+    Map<String, Object> getAndRemoveScreen() {
+        Map<String, Object> screen = screensStack.peek().get(0);
+        screensStack.peek().remove(0);
+        return screen;
     }
 
     /**

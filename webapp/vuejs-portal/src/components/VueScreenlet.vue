@@ -1,38 +1,26 @@
 <template>
   <div id="vue-screenlet">
-    <div :id="id" class="screenlet">
-      <div class="screenlet-title-bar" v-if="data.showMore">
-        <ul>
-          <li class="h3" v-if="data.hasOwnProperty('title')">
-            {{data.title}}
-          </li>
-          <li :class="collapsed ? 'collapsed' : 'expanded'" v-if="data.collapsible">
-            <a
-              v-bind:title="toolTip"
-              v-on:click.prevent="toggle"
-            >&nbsp;
-            </a>
-          </li>
-          <li
-            v-for="(headerItem, headerItemIndex) in headerChildren"
-            :key="headerItemIndex"
-            v-bind:is="constantes.components[headerItem.name]"
-            :props="headerItem"
-            :updateStore="updateStore"
-          >
-          </li>
-        </ul>
-        <br class="clear">
-      </div>
-      <div :id="collapsibleAreaId" class="screenlet-body" v-bind:style="style">
+    <div :id="data.id + '-' + data.name" class="ma-1">
+      <v-toolbar v-if="data.showMore" dense color="primary" dark class="screenlet-title-bar">
+        <v-toolbar-title class="title">{{data.title}}</v-toolbar-title>
+        <v-spacer></v-spacer>
+        <vue-nav-menu v-if="navMenu" :props="navMenu" :updateStore="updateStore"></vue-nav-menu>
+        <v-btn id="toggleCollapse" icon v-if="collapsible" @click="toggle"><v-icon>{{ collapseIcon }}</v-icon></v-btn>
+      </v-toolbar>
+      <v-expand-transition>
+      <v-card :id="collapsibleAreaId" v-show="!collapsed">
+        <v-card-text class="pa-1">
         <div
-          v-for="(component, key) in bodyChildren"
+          v-for="(component, key) in props.children"
           :key="key"
           v-bind:is="constantes.components[component.name]"
           :props="component"
-          :updateStore="updateStore">
+          :updateStore="updateStore"
+          class="mt-2">
         </div>
-      </div>
+        </v-card-text>
+      </v-card>
+      </v-expand-transition>
     </div>
   </div>
 </template>
@@ -93,6 +81,18 @@
       },
       id() {
         return `${this.data.id}-${this.data.name}`
+      },
+      collapseIcon() {
+        return this.collapsed ? 'mdi-arrow-expand-down' :  'mdi-arrow-collapse-up'
+      },
+      collapsible() {
+        return this.data.hasOwnProperty('collapsible') && this.data.collapsible
+      },
+      tabMenu() {
+        return this.data.hasOwnProperty('tabMenu') ? this.data.tabMenu : null
+      },
+      navMenu() {
+        return this.data.hasOwnProperty('navMenu') ? this.data.navMenu : null
       }
     },
     methods: {

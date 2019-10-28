@@ -1,23 +1,36 @@
 <template>
-  <div id="vue-menu" v-bind:class="style">
-    <h2 v-if="title.length > 0">
-      {{title}}
-    </h2>
-    <ul>
-      <li>
-        <ul>
-          <li
-            v-for="(component, index) in props.children"
-            :key="index"
-            v-bind:is="constantes.components[component.name]"
-            :props="component"
-            :updateStore="updateStore"
-          >
-          </li>
-        </ul>
-      </li>
-    </ul>
-  </div>
+  <v-toolbar id="vue-menu" color="secondary" dark class="ma-0 pa-0" height="35px">
+    <v-toolbar-items class="ma-0 pa-0">
+      <div v-for="(component, index) in props.children"
+           :key="index"
+           v-bind:is="constantes.components[component.name]"
+           :props="component"
+           :updateStore="updateStore">
+      </div>
+    </v-toolbar-items>
+  </v-toolbar>
+<!--  <v-row v-if="props.children.length < 2">-->
+<!--    <div v-for="(component, index) in props.children"-->
+<!--         :key="index"-->
+<!--         v-bind:is="constantes.components[component.name]"-->
+<!--         :props="component"-->
+<!--         :updateStore="updateStore"></div>-->
+<!--  </v-row>-->
+<!--  <v-menu bottom left v-else transition="scale-transition" origin="center center">-->
+<!--    <template v-slot:activator="{ on }">-->
+<!--      <v-btn icon v-on="on">-->
+<!--        <v-icon>mdi-dots-vertical</v-icon>-->
+<!--      </v-btn>-->
+<!--    </template>-->
+
+<!--    <v-list dense>-->
+<!--      <div v-for="(component, index) in props.children"-->
+<!--           :key="index"-->
+<!--           v-bind:is="constantes.components[component.name]"-->
+<!--           :props="component"-->
+<!--           :updateStore="updateStore"></div>-->
+<!--    </v-list>-->
+<!--  </v-menu>-->
 </template>
 
 <script>
@@ -28,7 +41,8 @@
     props: ['props', 'updateStore'],
     data() {
       return {
-        constantes: constantes
+        constantes: constantes,
+        on: false
       }
     },
     computed: {

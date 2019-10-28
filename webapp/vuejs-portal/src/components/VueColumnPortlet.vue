@@ -1,5 +1,5 @@
 <template>
-  <td id="vue-column-portlet" :style="'width: ' + width + ';vertical-align: top'">
+  <td id="vue-column-portlet" :style="'width: ' + width + ';vertical-align: top'" class="d-inline-block">
     <vue-portlet v-for="portlet in column.listPortlet" :key="portlet.portalPortletId + '-' + portlet.portletSeqId" v-bind:props="portlet">
 
     </vue-portlet>

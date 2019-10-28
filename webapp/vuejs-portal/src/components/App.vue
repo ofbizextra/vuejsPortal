@@ -1,7 +1,26 @@
 <template>
   <v-app id="app">
+    <v-navigation-drawer mini-variant expand-on-hover app>
+      <v-list-item>
+        <v-list-item-content>
+          <v-list-item-title class="title">Ofbiz</v-list-item-title>
+          <v-list-item-subtitle>application</v-list-item-subtitle>
+        </v-list-item-content>
+      </v-list-item>
+      <v-divider></v-divider>
+      <v-list dense nav id="app-navigation">
+        <v-list-item v-for="(link, id) in menu.viewScreen[0].children" :key="id" link @click="loadPortalPage({...link.children[0].attributes.parameterMap})">
+          <v-list-item-content>
+            <v-list-item-title>
+                {{link.children[0].attributes.text}}
+            </v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
+    </v-navigation-drawer>
     <v-content>
       <input type="hidden" id="updateCpt" :value="updateCpt">
+      <input type="hidden" id="loader-wrapper" v-if="waitAny && !blockUi"/>
       <BlockUI v-if="waitAny && blockUi" message="Fetching datas...">
         <spinner
           id="loader-wrapper"
@@ -25,11 +44,13 @@
     name: 'app',
     data() {
       return {
+        menu: {}
       }
     },
     computed: {
       ...mapGetters({
-        updateCpt: 'ui/updateCpt'
+        updateCpt: 'ui/updateCpt',
+        currentApi: 'backOfficeApi/currentApi'
       }),
       blockUi() {
         return constantes.blockUi
@@ -41,6 +62,10 @@
     methods: {
       increment() {
         this.$store.dispatch('data/incrementCpt1')
+      },
+      loadPortalPage(parameterMap) {
+        console.log('MENU_LINK parameterMap : ' , parameterMap)
+        this.$store.dispatch('ui/loadPortalPageDetail', {api: this.currentApi, params: parameterMap})
       }
     },
     mounted() {
@@ -54,10 +79,16 @@
       }, () => {
         this.$router.push('/login')
       })
+      this.$store.dispatch('backOfficeApi/doPost', {uri: 'applicationMenu', params: {}}).then(result => {
+        this.menu = result.body
+      }, error => {
+        console.log(error)
+      })
     },
 
   }
 </script>
 
 <style>
+  @import url('https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900');
 </style>

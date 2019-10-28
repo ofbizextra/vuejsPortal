@@ -1,17 +1,41 @@
 <template>
-  <div id="vue-message-list" style="position: fixed; top: 0; left: 0; right: 0; height: 0; text-align: center">
-    <flash-message style="display: inline-block ;text-align: left"></flash-message>
+  <div id="vue-message-list">
+    <v-snackbar v-if="firstMessage" value="true" :timeout="0" :color="color" top>
+      <div id="snackbarContent">
+        {{firstMessage.messageContent}}
+      </div>
+      <div id="dismissSnackbar">
+        <v-btn v-if="messageListSize === 1" @click="dismiss(firstMessage)" dark :color="color" class="darken-1">
+          Close
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
+        <v-btn v-else @click="dismiss(firstMessage)" dark :color="color" class="darken-1">Next ({{messageListSize - 1}}
+          more)
+          <v-icon>mdi-arrow-right</v-icon>
+        </v-btn>
+      </div>
+    </v-snackbar>
   </div>
 </template>
 
 <script>
   import {mapGetters} from 'vuex'
+
   export default {
     name: "VueMessageList",
     computed: {
       ...mapGetters({
         messageList: 'backOfficeApi/messageList'
-      })
+      }),
+      firstMessage() {
+        return this.messageList.length > 0 ? this.messageList[0] : null
+      },
+      messageListSize() {
+        return this.messageList.length
+      },
+      color() {
+        return this.firstMessage.messageType === 'error' ? 'error' : 'success'
+      }
     },
     methods: {
       dismiss(message) {
@@ -20,11 +44,22 @@
       click() {
         console.log('flash message')
         this.flash('hello world !!!', 'success', 2000)
+      },
+      timeout(message) {
+        return message.messageType === 'error' ? 0 : 10000
+      },
+    },
+    watch: {
+      firstMessage(message) {
+        if (message.messageType === 'event') {
+          setTimeout(() => {
+            this.dismiss(message)
+          }, 5000)
+        }
       }
     }
   }
 </script>
 
 <style scoped>
-
 </style>

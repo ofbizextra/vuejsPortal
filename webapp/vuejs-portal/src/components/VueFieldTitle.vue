@@ -1,7 +1,5 @@
 <template>
-  <div id="vue-field-title">
-    <label v-bind="data">{{data.title ? data.title : data.description}}</label>
-  </div>
+    <label class="font-weight-medium ma-2">{{data.title ? data.title : data.description}}</label>
 </template>
 
 <script>

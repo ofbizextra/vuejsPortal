@@ -1,14 +1,17 @@
 <template>
   <span class="field-lookup">
-    <div class="autosuggest-container" :style="{display: 'inline-block'}">
-      <vue-autosuggest v-model="valueStored" :name="data.name" :id="data.id" :size="data.size" @input="debounceUpdateWordList"
-                       :suggestions="[{data: [...wordList]}]"
-                       :input-props="{id: data.id, name: data.name, size: data.size}"
-                       @selected="onSelected" :get-suggestion-value="getSuggestionValue"
-                       :render-suggestion="renderSuggestion">
-      </vue-autosuggest>
-    </div>
-    <a href="#" :style="{display: 'inline-block'}" @click="showModal"></a>
+    <v-row class="autosuggest-container" :style="{display: 'inline-block'}">
+      <v-combobox
+              :id="id"
+              v-model="valueStored"
+              :items="items"
+              hide-no-data
+              hide-selected
+              no-filter
+              :return-object="false"
+              :search-input.sync="search"/>
+    </v-row>
+    <v-btn icon @click="showModal"><v-icon>mdi-arrow-expand</v-icon></v-btn>
     <span v-if="tooltip" :id="'0_lookupId_' + id" class="tooltip">{{tooltip}}</span>
     <p>{{modalResult}}</p>
     <modal :name="id + '_modal'" :id="id + '_modal'" :adaptive="true" :resizable="true" height="auto" :scrollable="true">
@@ -33,7 +36,8 @@
         wordList: [],
         displayFields: [],
         returnField: '',
-        modalResult: ''
+        modalResult: '',
+        search: ''
       }
     },
     computed: {
@@ -115,6 +119,17 @@
           }
         }
         return str
+      },
+      items() {
+        let items = []
+        for (let item of this.wordList) {
+          let text = ""
+          for (let displayField of this.displayFields) {
+            text += ' - ' + item[displayField]
+          }
+          items.push({text: text, value: item[this.returnField]})
+        }
+        return items
       }
     },
     methods: {
@@ -184,6 +199,10 @@
     watch: {
       data: function () {
         this.$store.dispatch('form/setFieldToForm', this.storeForm)
+      },
+      search: function (val) {
+        this.valueStored = val
+        this.debounceUpdateWordList()
       }
     },
     created() {

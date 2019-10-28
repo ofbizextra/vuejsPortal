@@ -1,18 +1,10 @@
 <template>
-  <div id="vue-radio-field">
+  <v-radio-group id="vue-radio-field" v-model="value" row hide-details>
     <input v-if="data.conditionGroup" type="hidden" :name="data.name + '_grp'" v-bind:value="data.conditionGroup"/>
-    <span v-for="(item, key) in props.attributes.items" :key="key">
-      <input type="radio"
-             :checked="!!((data.currentValue && data.currentValue === item.key) || (!data.currentValue && data.noCurrentSelectedKey && data.noCurrentSelectedKey === item.key))"
-             :tabIndex="data.currentValue && data.tabIndex ? data.tabIndex : false"
-             :name="data.name"
-             :value="item.key"
-             v-model="value"
-      />
-        {{item.description}}
-    </span>
+    <v-radio v-for="item in props.attributes.items" :label="item.description" :value="item.key">
+    </v-radio>
     <vue-error v-if="data.event" component="event"/>
-  </div>
+  </v-radio-group>
 </template>
 
 <script>

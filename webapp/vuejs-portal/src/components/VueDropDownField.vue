@@ -1,18 +1,14 @@
 <template>
-  <div id="vue-drop-down-field">
-    <select v-model="value" v-bind="data">
-      <option value="" v-if="data.allowEmpty || (data.allowEmpty && props.children.length === 0)"></option>
-      <option v-if="data.firstInList && value && !data.multiple" selected="selected" :value="value">
-        {{data.explicitDescription}}
-      </option>
-      <vue-option
-        v-for="option in data.options"
-        :key="option.key"
-        :props="option"
-        :selected="option.key === value">
-      </vue-option>
-    </select>
-  </div>
+    <div :id="id" :name="name">
+      <v-select :items="data.options" item-value="key" item-text="description" v-model="value"
+                hide-details dense clearable>
+        <template slot="item" slot-scope="data">
+        <span :id="data.item.key">
+          {{data.item.description}}
+        </span>
+        </template>
+      </v-select>
+    </div>
 </template>
 
 <script>
@@ -57,7 +53,13 @@
       ...mapGetters({
         getForm: 'form/form',
         getDataFromForm: 'form/fieldInForm'
-      })
+      }),
+      id() {
+        return this.data.hasOwnProperty('id') ? this.data.id : ''
+      },
+      name() {
+        return this.data.hasOwnProperty('name') ? this.data.name : ''
+      }
     },
     watch: {
       data: function () {

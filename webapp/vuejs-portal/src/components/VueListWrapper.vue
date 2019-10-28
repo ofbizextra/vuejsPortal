@@ -1,11 +1,11 @@
 <template>
-  <table id="vue-list-wrapper" v-bind="data" v-if="show">
+  <table dense id="vue-list-wrapper" v-bind="data" v-if="show">
     <div
-      v-for="(component, key) in props.children"
-      :key="key"
-      v-bind:is="constantes.components[component.name]"
-      :props="component"
-      :updateStore="updateStore">
+        v-for="(component, key) in props.children"
+        :key="key"
+        v-bind:is="constantes.components[component.name]"
+        :props="component"
+        :updateStore="updateStore">
     </div>
   </table>
 </template>
