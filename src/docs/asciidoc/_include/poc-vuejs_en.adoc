@@ -20,19 +20,26 @@ under the License.
 
 Actually the first javascript application enabling to use portlet system - portal Apache OFBiz is written with the Vue.js framework.
 
-Vue.js has been choose for its easy learning curve and its community driven development instead of a corporation.
+Vue.js has been choose for its easy learning curve and its community driven development instead of a corporation. +
+In Vue.js, library vuetify has been choosen, because it's base on material design and have e very active community, so seem 
+to be the most used vue.js GUI libraries. 
 
 == POC VuejsPortal installation
 
-. From a standard trunk ofbiz-framework with 1837232 version or superior (that can be downloaded at
+. From a standard trunk ofbiz-framework with 1868450 version or superior (that can be downloaded at
 https://ofbiz.apache.org/source-repositories.html[documentation standard  SourceRepository] using svn).
 . Create the 'plugins' repository at ofbiz-framework root folder.
-. In the plugins repository, download the 2 next repositories using git :
-.. vuejsportal plugin that can be downloaded at https://gitlab.ofbizextra.org/ofbizextra/ofbizplugins/vuejsPortal
-.. example plugin (by Apache OFBiz) which have been modified for the need of this POC, that can be downloaded at
-https://gitlab.ofbizextra.org/ofbizextra/ofbizplugins/example on the `vuejsPortal` branch.
-. After that you have to modify some files of ofbiz-framework. +
-  Being located in the 'plugins/VuejsPortal' : +
+. In the Apache OFBiz plugins repository, download the next repository using svn :
+.. *example plugin* at http://svn.apache.org/repos/asf/ofbiz/ofbiz-plugins/trunk/example
+. In the ofbizextra plugins repository, download the 3 next repositories using git :
+.. *vuejsportal plugin* that can be downloaded at https://gitlab.ofbizextra.org/ofbizextra/ofbizplugins/vuejsPortal
+   all vuejs components, a new ScreenViewHandler and 4 new renderers (screen, form, menu, tree)
+.. *examplefjs plugin* that can be downloaded at https://gitlab.ofbizextra.org/ofbizextra/ofbizplugins/examplefjs.git
+   specifics files for using vue.js with ofbiz example component 
+.. *flatgreyfjs plugin* that can be downloaded at https://gitlab.ofbizextra.org/ofbizextra/ofbizplugins/flatgreyfjs.git
+   dedicated theme for vue.js with vuetify library
+. After that you have to modify some files of ofbiz-framework (ex: model.java because some tag are added). +
+  For that, a (bash) script exist, it's located in the 'plugins/VuejsPortal' : +
   `./tools/applyOfbizFilesPatchs.sh` +
   And then copy some files +
   `rsync -a --exclude-from=./ofbizFiles/rsyncExcludes ./ofbizFiles/ ../../` +
@@ -44,11 +51,11 @@ https://gitlab.ofbizextra.org/ofbizextra/ofbizplugins/example on the `vuejsPorta
 .. Meanwhile an integrated gradle command
 ... Being located at 'plugins/vuejsPortal/webapp/vuejsPortal'
 * `npm i` <= to install the project dependencies
-* `npm run build` <= to build the project
+* `npm run build-prod` <= to build the project (it's possible to use build-dev to be able to use browser dev-tools)
 . You can now launch OFBiz as regular : +
 `./gradlew cleanAll loadAll ofbiz` +
 (being located at the *root of ofbiz-framework* )
-. You can now connect to the application portal at https://localhost:8443/exampleapi/control/main
+. You can now connect to the application portal at https://localhost:8443/examplefjs/control/main
 
 == POC choices
 
@@ -56,22 +63,22 @@ Apache OFBiz *trunk branch* usage.
 
 Principe and architecture of Apache OFBiz *Portal Page and Porlet* usage.
 
-The whole use cases are applied *to example component* and during the the POC some new files used to be located in common
-have been moved to example aiming to simplify the installation and update process.
+The whole use cases are applied *to example component* and during the POC some new files used which should to be located in common
+have been moved to examplefjs aiming to simplify the installation and update process.
 
-An *additional webapp (exampleapi)* had been created to centralize allowed URIs for vuejsPortal component, which are listed
-in constantes.js. +
+With examplefjs, there is an *additional webapp (examplefjs)*, it centralize allowed URIs for vuejsPortal component, 
+currently this applicationName is listed in constantes.js file. +
 vuejsPortal component is not bound to a component, it just need a base URI for send its requests.
 This uri is temporary set in constantes.js but it will be more flexible later aiming to use vuejsPortal with multiple components
 
-Portal component ( https://localhost:8443/exampleapi/control/login ) use *ofbiz standard login by cookies* mechanism, it will
+Portal component ( https://localhost:8443/examplefjs/control/login ) use *ofbiz standard login by cookies* mechanism, it will
 later use ofbiz login by token (cf. https://issues.apache.org/jira/browse/OFBIZ-9833).
 
 *screens, forms, menus* used for portlets are defined *with xml*, and dedicated files for better readability.
 
 There is *a component (vuejs) for each ofbiz screen element* ( SingleItemRow => vue.single-item-row ), which are defined by
 renderer for screen, form and menu ( and for html renderer that correspond globally to macro.ftl ). Actually, for the POC,
-to list them, you can search for `output.*Screen(` .
+to list them, you can search in vuejsportal existing file for `Vue*.vue` in webapp/vuejs-portal/src/component/ .
 
 === XML tags used
 During the POC, few new properties or XML tags had been added but some of existing tags and properties had been distorted
@@ -124,20 +131,21 @@ A new package had been created in org.apache.ofbiz.widget.renderer named frontJs
 In this package, there is a new FrontJsOutput class which allow to construct necessary elements whit the wished format.
 An object of this class is instantiate at the begin of viewHandler process, then is completed by rendered object call.
 
-Uri *showPortletFj* of component exampleApi use the new viewHandler to return screen render result, showPortlet.
+Uri *showPortletFj* of component examplefjs use the new viewHandler to return screen render result, showPortlet.
 
 This URI is used by Vue.Js application for display information gathering. +
 New viewHandle return a json which contain 2 maps ( viewScreen and viewEntities ). +
 viewScreen contain all information about display.
 viewEntities contain all information about data set.
 
-In future revision, it would be only necessary to gather data set.
+In future revision, it will probably be feasible to only receive the data map.
 
-=== ShowPortlet, ShowPortal
-*showPortlet* screen *is redefine* in this PAC ( in example/widget/example ) for simplification purpose, to only do what
-we want.
+=== ShowPortal, ShowPortlet
+there is a *showPortal* URI in examplefjs (CommonPortletScreen), which is the Start point of the VueJs application.
 
-there is a showPortal URI in FrontJs dedicated exampleApi.
+portalPageDetail is a new URI (temporary for the POC), used by the POC to received data about the portalPage : list of colunm, list of portlet
+
+*showPortlet* screen *is redefine* in this POC for simplification purpose, to only do what we want.
 
 === Added field
 A new field had been added to PortalPagePortlet entity : *watcherName* which is the name of the watcher that fire portlet update.
