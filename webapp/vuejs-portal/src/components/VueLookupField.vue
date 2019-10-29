@@ -130,7 +130,7 @@
             }
             text += item[displayField]
           }
-          text += ' - ' + item[this.returnField]
+          text += ' [' + item[this.returnField] + ']'
           items.push({text: text, value: item[this.returnField]})
         }
         return items
