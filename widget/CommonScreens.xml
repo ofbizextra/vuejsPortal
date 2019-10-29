@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://ofbiz.apache.org/Widget-Screen" xsi:schemaLocation="http://ofbiz.apache.org/Widget-Screen http://ofbiz.apache.org/dtds/widget-screen.xsd">
+
+    <!-- Global decorator for Lookup pop-up windows or layered CSS -->
+    <screen name="LookupDecorator">
+      <section>
+        <widgets>
+          <include-screen name="GlobalActions" location="component://common/widget/CommonScreens.xml"/>
+        <section>
+            <condition>
+                <not><if-compare operator="equals" value="Y" field="parameters.ajaxLookup"/></not>
+            </condition>
+            <widgets>
+                <section>
+                    <actions>
+                        <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                        <service service-name="getUserPreferenceGroup" result-map="prefResult">
+                            <field-map field-name="userPrefGroupTypeId" value="GLOBAL_PREFERENCES"/>
+                        </service>
+                        <set field="userPreferences" from-field="prefResult.userPrefMap" global="true"/>
+
+                        <property-map resource="general" map-name="generalProperties" global="true"/>
+                        <set field="defaultOrganizationPartyId" from-field="userPreferences.ORGANIZATION_PARTY" global="true"/>
+
+                        <set field="messagesTemplateLocation" from-field="layoutSettings.VT_MSG_TMPLT_LOC" default-value="component://common-theme/template/includes/Messages.ftl"/>
+                    </actions>
+                    <widgets>
+                        <section>
+                        <condition>
+                                <if-compare value="layer" operator="not-equals" field="parameters.presentation"/>
+                        </condition>
+                            <widgets>
+<!--                                 <platform-specific><html><html-template location="component://examplefjs/template/Lookup.ftl" /></html></platform-specific> -->
+                            </widgets>
+                        </section>
+<!--                         <platform-specific><html><html-template location="${messagesTemplateLocation}"/></html></platform-specific> -->
+                        <section>
+                            <condition>
+                                <not><if-empty-section section-name="body"/></not>
+                            </condition>
+                            <widgets>
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                            <fail-widgets>
+                                <screenlet title="${title}" id="findScreenlet" collapsible="true" padded="false">
+                                    <container id="search-options">
+                                        <decorator-section-include name="search-options"/>
+                                    </container>
+                                </screenlet>
+                                <screenlet>
+                                    <container id="search-results">
+                                        <decorator-section-include name="search-results"/>
+                                    </container>
+                                </screenlet>
+                            </fail-widgets>
+                        </section>
+                        <section>
+                        <condition>
+                            <if-compare value="layer" operator="not-equals" field="parameters.presentation"/>
+                        </condition>
+                            <widgets>
+<!--                                 <platform-specific><html><html-template location="component://examplefjs/template/LookupFooter.ftl"/></html></platform-specific> -->
+                            </widgets>
+                        </section>
+                    </widgets>
+                </section>
+            </widgets>
+            <fail-widgets>
+                <section>
+                    <actions>
+                        <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                        <set field="searchType" from-field="parameters.searchType" default-value="${searchType}"/>
+                        <set field="autocompleterViewSize" from-field="parameters.autocompleterViewSize"
+                             default-value="${groovy: modelTheme.getAutocompleterDefaultViewSize()}"/>
+                        <script location="component://common/groovyScripts/FindAutocompleteOptions.groovy"/>
+                        <set field="widgetVerbose" value="false"/>
+                    </actions>
+                    <widgets>
+                      <!--
+                      <platform-specific>
+                           <html><vuejs component-name="LookupResult">
+                             <parameter param-name="description" from-field="description"/>
+                             <parameter param-name="returnField" from-field="returnField"/>
+                             <parameter param-name="displayFields" value="${groovy: org.apache.ofbiz.base.util.StringUtil.toList(displayFields)}"/>
+                             <parameter param-name="autocompleteOptions" from-field="autocompleteOptions"/>
+                           </vuejs></html> 
+                      </platform-specific>
+                       -->
+                      <label id="lookup"/> <!-- Hack to avoid a new tag type<html-template location="component://examplefjs/template/AjaxAutocompleteOptions.ftl" /> -->
+                    </widgets>
+                </section>
+            </fail-widgets>
+        </section>
+        </widgets>
+      </section>
+    </screen>
+
+    <!-- Starting point for VueJs POC, call vueJs which will call mainfjs  -->
+    <screen name="VuejsStart">
+        <section>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                         <platform-specific><html><html-template location="component://vuejs-portal/template/vuejsStart.ftl"/></html></platform-specific>
+                    </decorator-section>
+               </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <!-- Starting point for VueJs POC, call vueJs with a portalPageId, in future include-portal-page will be used  -->
+    <screen name="ShowPortalPageFj">
+        <section>
+            <actions>
+                <set field="portalPageId" from-field="parameters.portalPageId"/>
+                <set field="confMode" from-field="parameters.confMode"/>
+                <set field="usePrivate" from-field="parameters.usePrivate"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                         <platform-specific><html><html-template location="component://vuejs-portal/template/vuejsPortalPageStart.ftl"/></html></platform-specific>
+                    </decorator-section>
+               </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="showPortlet">
+        <section>
+           <actions>
+                <entity-one value-field="portalPortlet" entity-name="PortalPortlet"/>
+                <set field="widgetVerbose" value="false" />
+                <set field="frontJs" value="true" type="Boolean"/>
+                <set field="currentAreaId" value="${parameters.portalPortletId}-${parameters.portletSeqId}"/>
+            </actions>
+            <widgets>
+                <include-screen name="${portalPortlet.screenName}" location="${portalPortlet.screenLocation}"/>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="successLogin">
+        <section>
+            <widgets>
+                <label> "login successful"</label>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="errorLogin">
+        <section>
+            <widgets>
+                <label> "login failed"</label>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="FindScreenDecorator">
+        <section>
+            <widgets>
+                <section>
+                    <condition>
+                        <if-empty field="titleProperty"/>
+                    </condition>
+                    <widgets>
+                        <container style="page-title"><label text="${title}"></label></container>
+                    </widgets>
+                    <fail-widgets>
+                        <container style="page-title"><label text="${uiLabelMap[titleProperty]}"></label></container>
+                    </fail-widgets>
+                </section>
+<!--                 <decorator-section-include name="menu-bar"/> -->
+<!--                 <container style="clear"/> -->
+                <screenlet id="searchOptions" name="findScreenlet" collapsible="true" title="${uiLabelMap.CommonSearchOptions}">
+<!--                     <container id="search-options"> -->
+                        <decorator-section-include name="search-options" />
+<!--                     </container> -->
+                </screenlet>
+                <screenlet padded="false">
+                    <label style="h3" text="${uiLabelMap.CommonSearchResults}"/>
+                    <container id="search-results">
+                        <decorator-section-include name="search-results"/>
+                    </container>
+                </screenlet>
+            </widgets>
+        </section>
+    </screen>
+</screens>
