@@ -46,15 +46,6 @@ under the License.
                     </actions>
                     <widgets>
                         <section>
-                        <condition>
-                                <if-compare value="layer" operator="not-equals" field="parameters.presentation"/>
-                        </condition>
-                            <widgets>
-<!--                                 <platform-specific><html><html-template location="component://examplefjs/template/Lookup.ftl" /></html></platform-specific> -->
-                            </widgets>
-                        </section>
-<!--                         <platform-specific><html><html-template location="${messagesTemplateLocation}"/></html></platform-specific> -->
-                        <section>
                             <condition>
                                 <not><if-empty-section section-name="body"/></not>
                             </condition>
@@ -62,25 +53,29 @@ under the License.
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <screenlet title="${title}" id="findScreenlet" collapsible="true" padded="false">
-                                    <container id="search-options">
-                                        <decorator-section-include name="search-options"/>
-                                    </container>
-                                </screenlet>
-                                <screenlet>
-                                    <container id="search-results">
-                                        <decorator-section-include name="search-results"/>
-                                    </container>
-                                </screenlet>
+                              <section>
+                                <condition>
+                                  <if-compare operator="not-equals" value="Y" field="parameters.lookupResult"/>
+                                </condition>
+                                <widgets>
+                                    <screenlet title="${title}" id="LookupFindScreenlet" collapsible="true" padded="false">
+                                            <decorator-section-include name="search-options"/>
+                                    </screenlet>
+                                    <screenlet id="lookupResultScreenlet">
+                                        <container id="lookup-results">
+                                            <decorator-section-include name="search-results"/>
+                                        </container>
+                                    </screenlet>
+                                </widgets>
+                                <fail-widgets>
+                                    <screenlet id="lookupResultScreenlet">
+                                        <container id="lookup-results">
+                                            <decorator-section-include name="search-results"/>
+                                        </container>
+                                    </screenlet>
+                                </fail-widgets>
+                              </section>
                             </fail-widgets>
-                        </section>
-                        <section>
-                        <condition>
-                            <if-compare value="layer" operator="not-equals" field="parameters.presentation"/>
-                        </condition>
-                            <widgets>
-<!--                                 <platform-specific><html><html-template location="component://examplefjs/template/LookupFooter.ftl"/></html></platform-specific> -->
-                            </widgets>
                         </section>
                     </widgets>
                 </section>
