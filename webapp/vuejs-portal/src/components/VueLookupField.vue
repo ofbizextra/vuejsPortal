@@ -124,9 +124,13 @@
         let items = []
         for (let item of this.wordList) {
           let text = ""
-          for (let displayField of this.displayFields) {
-            text += ' - ' + item[displayField]
+          for (const [index, displayField] of this.displayFields.entries()) {
+            if (index > 0) {
+              text += ' - '
+            }
+            text += item[displayField]
           }
+          text += ' - ' + item[this.returnField]
           items.push({text: text, value: item[this.returnField]})
         }
         return items
