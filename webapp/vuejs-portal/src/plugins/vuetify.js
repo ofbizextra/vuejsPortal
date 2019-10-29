@@ -9,12 +9,12 @@ export default new Vuetify({
     iconfont: 'mdi',
   },
   theme: {
-    dark: true,
+    dark: false,
     themes: {
       light: {
-        primary: '#507088',
-        secondary: '#588098',
-        accent: '#e05d30',
+        primary: '#cdcfd0',
+        secondary: '#999',
+        accent: '#020617',
         success: '#64dd17',
         error: '#f44336'
       },
