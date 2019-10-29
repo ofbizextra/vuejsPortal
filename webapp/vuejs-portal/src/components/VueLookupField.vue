@@ -1,6 +1,6 @@
 <template>
   <span class="field-lookup">
-    <v-row class="autosuggest-container" :style="{display: 'inline-block'}">
+    <div class="autosuggest-container" :style="{display: 'inline-block'}">
       <v-combobox
               :id="id"
               v-model="valueStored"
@@ -10,7 +10,7 @@
               no-filter
               :return-object="false"
               :search-input.sync="search"/>
-    </v-row>
+    </div>
     <v-btn icon @click="showModal"><v-icon>mdi-arrow-expand</v-icon></v-btn>
     <span v-if="tooltip" :id="'0_lookupId_' + id" class="tooltip">{{tooltip}}</span>
     <p>{{modalResult}}</p>
