@@ -19,11 +19,10 @@
 
 import java.nio.file.Files
 import java.nio.file.Paths
-apply plugin: 'java'
 
 
 dependencies {
-	pluginLibsCompile 'com.auth0:java-jwt:2.1.0'
+    // pluginLibsCompile 'com.auth0:java-jwt:2.1.0'
     // we must add dependencies to rbstvuejs the theme dedicated for vuejsportal
     // pluginLibsRuntime 'org.postgresql:postgresql:42.2.1'
 }
@@ -39,10 +38,10 @@ def replaceTextInFile(targetFileName, toReplace, replaceWith) {
 
 
 task install {
-	doLast { 
-		println 'copy files and applying patches for my plugin'
-		println 'copier manuellement toutes les images du répertoire image_example_fr dans doc/images/example_fr'
-		
+    doLast { 
+        println 'copy files and applying patches for my plugin'
+        println 'copier manuellement toutes les images du répertoire image_example_fr dans doc/images/example_fr'
+
 /*
          //copy selenium js to images's webapp
          java.nio.file.Path src = java.nio.file.Paths.get("${project.projectDir}/documents/selenium.js")
@@ -53,15 +52,15 @@ task install {
          def toReplace = '<set field="layoutSettings.javaScripts[+0]" value="/images/jquery/jquery-1.11.0.min.js" global="true"/>'
          def replaceWith = '<set field="layoutSettings.javaScripts[+0]" value="/images/jquery/jquery-1.11.0.min.js" global="true"/>\n                <set field="layoutSettings.javaScripts[]" value="/images/selenium.js" global="true" /><!-- added by selenium plugin-->'
          replaceTextInFile(file, toReplace, replaceWith) 
-		exec{ commandLine 'patch', '-d../..', '-p0', '-i', "${rootDir}/plugins/postgresPlugin/entityengine.xml.patch" }
+         exec{ commandLine 'patch', '-d../..', '-p0', '-i', "${rootDir}/plugins/postgresPlugin/entityengine.xml.patch" }
 */
-	}
+    }
 }
 
 task uninstall {
-	doLast { 
-		println 'copy back (and remove) files and revert patches for my plugin'
-		//exec{ commandLine 'patch', '-R', '-d../..', '-p0', '-i', "${rootDir}/plugins/postgresPlugin/entityengine.xml.patch" }
-	}
+    doLast { 
+        println 'copy back (and remove) files and revert patches for my plugin'
+        //exec{ commandLine 'patch', '-R', '-d../..', '-p0', '-i', "${rootDir}/plugins/postgresPlugin/entityengine.xml.patch" }
+    }
 }
 
