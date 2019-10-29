@@ -31,7 +31,7 @@
       <!--v-on:click="redirect"-->
 
       <img :src="imgSrc" :title="imgTitle" alt="" v-if="hasImage"/>
-        <span class="font-weight-regular white--text">
+        <span class="font-weight-regular">
             {{text}}
         </span>
     </a>
@@ -49,7 +49,7 @@
       <!--v-on:click="redirect"-->
 
       <img :src="imgSrc" :title="imgTitle" alt="" v-if="hasImage"/>
-        <span class="font-weight-regular white--text">
+        <span class="font-weight-regular">
             {{text}}
         </span>
     </a>
@@ -64,7 +64,7 @@
       v-on:click.prevent="redirect"
     >
       <img :src="imgSrc" :title="imgTitle" alt="" v-if="hasImage"/>
-        <span class="font-weight-regular white--text">
+        <span class="font-weight-regular">
             {{text}}
         </span>
     </a>
