@@ -64,7 +64,7 @@
       v-on:click.prevent="redirect"
     >
       <img :src="imgSrc" :title="imgTitle" alt="" v-if="hasImage"/>
-        <span class="font-weight-regular">
+        <span class="font-weight-regular secondary--text">
             {{text}}
         </span>
     </a>
