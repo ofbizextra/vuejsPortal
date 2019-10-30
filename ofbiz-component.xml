@@ -29,6 +29,7 @@ under the License.
     <!-- entity resources: model(s), eca(s), group, and data definitions -->
 
     <!-- service resources: model(s), eca(s) and group definitions -->
+    <service-resource type="model" loader="main" location="servicedef/common-servicesFjs.xml"/>
 
     <!-- web applications; will be mounted when using the embedded container -->
     <webapp name="vuejs-portal"

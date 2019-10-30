@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/services.xsd">
+    <description>Common API Services</description>
+    <vendor></vendor>
+    <version>1.0</version>
+
+    <!-- service call by vueJsPortal to know the detail of a portalPage -->
+    <service name="portalPageDetail" engine="java" location="org.apache.ofbiz.common.CommonFJSServices" invoke="portalPageDetail">
+        <attribute name="portalPageId" mode="IN" type="String"/>
+        <attribute name="listColumnPortlet" mode="OUT" type="java.util.List"/> 
+    </service>
+
+</services>
