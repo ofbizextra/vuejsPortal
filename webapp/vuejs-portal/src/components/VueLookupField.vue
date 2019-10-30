@@ -12,17 +12,15 @@
           no-filter
           :return-object="false"
           :search-input.sync="search"/>
-      <v-btn icon @click="showModal" class="d-inline-flex"><v-icon>mdi-arrow-expand</v-icon></v-btn>
-    <span v-if="tooltip" :id="'0_lookupId_' + id" class="tooltip d-block">{{tooltip}}</span>
+      <v-btn icon @click.stop="showModal" class="d-inline-flex"><v-icon>mdi-arrow-expand</v-icon></v-btn>
+      <v-dialog v-model="dialogStatus">
+        <vue-container :props="{attributes: {id: id + '_modalContent'}}"
+                       :auto-update-params="{targetUrl: getCurrentApi + '/' + fieldFormName, params: {presentation: 'layer'}}">
+        </vue-container>
+      </v-dialog>
+      <span v-if="tooltip" :id="'0_lookupId_' + id" class="tooltip d-block">{{tooltip}}</span>
       <p>{{modalResult}}</p>
     </div>
-    <modal :name="id + '_modal'" :id="id + '_modal'" :adaptive="true" :resizable="true" height="auto"
-           :scrollable="true">
-      <vue-container :props="{attributes: {id: id + '_modalContent'}}"
-                     :auto-update-params="{targetUrl: getCurrentApi + '/' + fieldFormName, params: {presentation: 'layer'}}">
-
-      </vue-container>
-    </modal>
   </span>
 </template>
 
@@ -40,7 +38,8 @@
         displayFields: [],
         returnField: '',
         modalResult: '',
-        search: ''
+        search: '',
+        displayModal: false
       }
     },
     computed: {
@@ -74,7 +73,8 @@
       ...mapGetters({
         getForm: 'form/form',
         getDataFromForm: 'form/fieldInForm',
-        getCurrentApi: 'backOfficeApi/currentApi'
+        getCurrentApi: 'backOfficeApi/currentApi',
+        getDialogStatus: 'ui/dialogStatus'
       }),
       id() {
         return this.data.hasOwnProperty('id') ? this.data.id : ''
@@ -137,7 +137,18 @@
           items.push({text: text, value: item[this.returnField]})
         }
         return items
-      }
+      },
+      dialogStatus: {
+        get() {
+          return this.getDialogStatus(this.id)
+        },
+        set(value) {
+          this.$store.dispatch('ui/setDialogStatus', {
+            dialogId: this.id,
+            dialogStatus: value
+          })
+        }
+      },
     },
     methods: {
       debounceUpdateWordList: _.debounce(function () {
@@ -190,7 +201,10 @@
           params: {presentation: 'layer'}
         }).then(
           () => {
-            this.$modal.show(this.id + '_modal')
+            this.$store.dispatch('ui/setDialogStatus', {
+              dialogId: this.id,
+              dialogStatus: true
+            })
           }, error => {
             console.log(error)
           })

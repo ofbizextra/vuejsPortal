@@ -18,7 +18,8 @@ const state = {
   watchers: {},
   updateCpt: 0,
   errorMessageList: [],
-  collapsibleStatus: {}
+  collapsibleStatus: {},
+  dialogStatus: {}
 }
 
 const mutations = {
@@ -74,6 +75,9 @@ const mutations = {
   },
   SET_COLLAPSIBLE_STATUS: (state, {areaId, areaTarget}) => {
     Vue.set(state.collapsibleStatus, areaId, areaTarget)
+  },
+  SET_DIALOG_STATUS: (state, {dialogId, dialogStatus}) => {
+    Vue.set(state.dialogStatus, dialogId, dialogStatus)
   }
 }
 
@@ -124,6 +128,11 @@ const getters = {
   collapsibleStatus(state) {
     return function (areaId) {
       return state.collapsibleStatus.hasOwnProperty(areaId) ? state.collapsibleStatus[areaId] : false
+    }
+  },
+  dialogStatus(state) {
+    return function (dialogId) {
+      return state.dialogStatus.hasOwnProperty(dialogId) ? state.dialogStatus[dialogId] : false
     }
   }
 }
@@ -305,6 +314,9 @@ const actions = {
   },
   setCollapsibleStatus({commit}, {areaId, areaTarget}) {
     commit('SET_COLLAPSIBLE_STATUS', {areaId, areaTarget})
+  },
+  setDialogStatus({commit}, {dialogId, dialogStatus}) {
+    commit('SET_DIALOG_STATUS', {dialogId, dialogStatus})
   }
 }
 

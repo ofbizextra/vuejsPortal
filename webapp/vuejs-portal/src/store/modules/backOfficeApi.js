@@ -34,7 +34,7 @@ const getters = {
 }
 
 const actions = {
-  doPost({commit}, {uri, params}) {
+  doPost({commit, dispatch}, {uri, params}) {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         // let postId = getters['postId']
@@ -50,6 +50,10 @@ const actions = {
           console.log('TypeOf response.body : ' + typeof response.body)
           if (typeof response.body === 'string' && response.body.includes('login failed')) {
             // todo: handle login popUp
+            dispatch('ui/setDialogStatus', {
+              dialogId: 'loginDialog',
+              dialogStatus: true
+            }, {root: true})
             this._vm.$modal.show('login')
             // setTimeout(() => {
             //   dispatch('wait/end', `post-${postId}`, {root: true})

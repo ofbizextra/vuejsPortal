@@ -1,40 +1,34 @@
 <template>
   <div id="vue-login">
-    <modal name="login" :reset="true" height="auto">
+    <v-dialog v-model="dialogStatus" name="login" :reset="true" height="auto" width="600px">
       <div class="screenlet login-screenlet">
-        <div class="screenlet-title-bar">
-          <h3>Registered User</h3>
-        </div>
         <div class="screenlet-body">
-          <form name="loginform">
-            <table class="basic-table">
-              <tbody>
-              <tr>
-                <td class="label">User Name</td>
-                <td><input name="USERNAME" v-model="username" size="20" type="text"></td>
-              </tr>
-              <tr>
-                <td class="label">Password</td>
-                <td><input name="PASSWORD" autocomplete="off" v-model="password" size="20" type="password"></td>
-              </tr>
-              <tr>
-                <td colspan="2">
-                  <input value="Login" type="button" @click.prevent="singIn">
-                </td>
-              </tr>
-              </tbody>
-            </table>
-            <!--<input name="JavaScriptEnabled" value="Y" type="hidden">-->
-            <br>
-            <a href="https://localhost:8443/exampleapi/control/forgotPassword_step1">Forgot Your Password?</a>
-          </form>
+          <v-card>
+            <v-card-title>
+              Sign in
+            </v-card-title>
+            <v-card-text>
+              <v-form name="loginform">
+                <v-text-field name="USERNAME" label="Username" v-model="username" size="20" type="text" />
+                <v-text-field name="PASSWORD" label="Password" autocomplete="off" v-model="password" size="20" type="password" />
+                  <v-row justify="center">
+                    <v-btn text @click.prevent="singIn">Sign in</v-btn>
+                  </v-row>
+                  <v-row>
+                    <v-spacer></v-spacer>
+                    <a href="https://localhost:8443/exampleapi/control/forgotPassword_step1">Forgot Your Password?</a>
+                  </v-row>
+              </v-form>
+            </v-card-text>
+          </v-card>
         </div>
       </div>
-    </modal>
+    </v-dialog>
   </div>
 </template>
 
 <script>
+  import {mapGetters} from 'vuex'
 
   export default {
     name: "VueLogin",
@@ -45,14 +39,25 @@
       }
     },
     computed: {
+      ...mapGetters({
+        getDialogStatus: 'ui/dialogStatus'
+      }),
       credential() {
         return {username: this.username, password: this.password}
+      },
+      dialogStatus: {
+        get() {
+          return this.getDialogStatus('loginDialog')
+        },
+        set(value) {
+          this.$store.dispatch('ui/setDialogStatus', {
+            dialogId: 'loginDialog',
+            dialogStatus: value
+          })
+        }
       }
     },
     methods: {
-      show() {
-        this.$modal.show('login')
-      },
       singIn() {
         this.$store.dispatch('login/login', this.credential)
           .then(() => {

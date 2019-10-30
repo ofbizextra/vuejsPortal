@@ -159,7 +159,10 @@
             })
           case 'closeModal':
             // do closeModal
-            this.$modal.hide(updateArea.areaId + '_modal')
+            this.$store.dispatch('ui/setDialogStatus', {
+              dialogId: updateArea.areaId,
+              dialogStatus: false
+            })
             return new Promise((resolve) => {
               setTimeout(() => {
                 resolve()
