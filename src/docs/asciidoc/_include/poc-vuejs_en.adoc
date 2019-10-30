@@ -86,8 +86,12 @@ for an exclusive Vue.Js use.
 
 * screen
   ** in `<container` tag
-    *** `auto-update-target` is used to bind a `watcher` to a container.
-    *** `id` is used to identify the container and enable to inject content into it with `setArea` later.
+    *** `auto-update-target` is used to bind a `watcher` to a container. +
+        To use it with setWatcher, watcherName is the containerId, and when this watcher changes a setArea is done with auto-update-target 
+        and watcher content as parameters. 
+    *** `id` is used to identify the container and enable to inject content into it with `setArea` later. +
+         When setArea is done for this id, its content will be replace by the content received from area-target. +
+         So, do not resend the container ! 
 * form
   ** in `<on-event-update-area` tag (there can be many of them and they will be executed in xml apparition order. It will wait
       current task is completed before starting the next one. If any of these events is set, the submit button will prevent
@@ -117,12 +121,22 @@ for an exclusive Vue.Js use.
       **** `portletSeqId`
       **** `currentAreaId`
   ** in `<hyperlink` tag
-    *** `link-type="anchor"` is used to make an internal call to FrontJs.
+    *** `link-type="anchor"` is used to make an internal call to FrontJs via `setArea`, `target-window` is used as
+         id to update and `target` as area-target, parameters as parameters.
     *** `target-window` is used to design the watcherName that have to be updated.
+* screenlet
+  ** collapsible, if collapsible = "true" then it's necessary to have a "unique" id to know what collapse when button is clicked.
+        choice is to *use screenlet name* as collapsible_id. Whith this choice it's possible to have multiple screenlet with
+        same name or each with a different one. +
+        So, it's important to give a name if collapsible ="true" otherwise collapse will collapse all screenlet without name !
+  ** id : currently not used, and not useable by a setArea
 * menu
   ** in `<link` tag
-    *** `link-type="anchor"` is used to make an internal call to FrontJs.
-    *** `target-window` is used to design the watcherName that have to be updated.
+    *** `link-type="anchor"` is used to make an internal call to FrontJs via `setArea`, `target-window` is used as
+         id to update and `target` as area-target, parameters as parameters.
+    *** `link-type="auto"` (default value) and `url-mode="intra-app"` call the portalPageDetail to print a new
+         portal page. portalPageId should be in parameters.
+
 
 === FrontJs Renderer
 A *new viewHandler* and a new set of *renderer* had been created. +
