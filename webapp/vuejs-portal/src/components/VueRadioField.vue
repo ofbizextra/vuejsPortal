@@ -1,7 +1,7 @@
 <template>
   <v-radio-group id="vue-radio-field" v-model="value" row hide-details>
     <input v-if="data.conditionGroup" type="hidden" :name="data.name + '_grp'" v-bind:value="data.conditionGroup"/>
-    <v-radio v-for="item in props.attributes.items" :label="item.description" :value="item.key">
+    <v-radio v-for="item in props.attributes.items" :key="item.key" :label="item.description" :value="item.key">
     </v-radio>
     <vue-error v-if="data.event" component="event"/>
   </v-radio-group>

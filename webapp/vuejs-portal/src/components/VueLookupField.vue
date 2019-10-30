@@ -1,20 +1,23 @@
 <template>
   <span class="field-lookup">
-    <div class="autosuggest-container" :style="{display: 'inline-block'}">
+    <div class="autosuggest-container d-block">
       <v-combobox
-              :id="id"
-              v-model="valueStored"
-              :items="items"
-              hide-no-data
-              hide-selected
-              no-filter
-              :return-object="false"
-              :search-input.sync="search"/>
+          :id="id"
+          v-model="valueStored"
+          class="d-inline-flex"
+          :items="items"
+          hide-no-data
+          hide-selected
+          hide-details
+          no-filter
+          :return-object="false"
+          :search-input.sync="search"/>
+      <v-btn icon @click="showModal" class="d-inline-flex"><v-icon>mdi-arrow-expand</v-icon></v-btn>
+    <span v-if="tooltip" :id="'0_lookupId_' + id" class="tooltip d-block">{{tooltip}}</span>
+      <p>{{modalResult}}</p>
     </div>
-    <v-btn icon @click="showModal"><v-icon>mdi-arrow-expand</v-icon></v-btn>
-    <span v-if="tooltip" :id="'0_lookupId_' + id" class="tooltip">{{tooltip}}</span>
-    <p>{{modalResult}}</p>
-    <modal :name="id + '_modal'" :id="id + '_modal'" :adaptive="true" :resizable="true" height="auto" :scrollable="true">
+    <modal :name="id + '_modal'" :id="id + '_modal'" :adaptive="true" :resizable="true" height="auto"
+           :scrollable="true">
       <vue-container :props="{attributes: {id: id + '_modalContent'}}"
                      :auto-update-params="{targetUrl: getCurrentApi + '/' + fieldFormName, params: {presentation: 'layer'}}">
 
@@ -137,25 +140,27 @@
       }
     },
     methods: {
-      debounceUpdateWordList: _.debounce(function () {this.updateWordList();}, 250),
+      debounceUpdateWordList: _.debounce(function () {
+        this.updateWordList()
+      }, 250),
       updateWordList() {
-          this.$store.dispatch('form/setFieldToForm', {
-            formId: this.props.attributes.formName,
-            key: this.props.attributes.name,
-            value: this.valueStored
-          })
-          this.$store.dispatch('backOfficeApi/doPost', {
-            uri: this.$store.getters['backOfficeApi/apiUrl'] + '/' + this.fieldFormName,
-            params: this.params
-          }).then(result => {
-            this.returnField = result.body.viewScreen[0].attributes.returnField === null ? '' : result.body.viewScreen[0].attributes.returnField
-            this.displayFields = result.body.viewScreen[0].attributes.displayFields
-            this.wordList = result.body.viewScreen[0].attributes.autocompleteOptions === null ? [] : result.body.viewScreen[0].attributes.autocompleteOptions
-            this.$store.dispatch('ui/incrementUpdateCpt')
-            return result.body
-          }, error => {
-            return error.body
-          })
+        this.$store.dispatch('form/setFieldToForm', {
+          formId: this.props.attributes.formName,
+          key: this.props.attributes.name,
+          value: this.valueStored
+        })
+        this.$store.dispatch('backOfficeApi/doPost', {
+          uri: this.$store.getters['backOfficeApi/apiUrl'] + '/' + this.fieldFormName,
+          params: this.params
+        }).then(result => {
+          this.returnField = result.body.viewScreen[0].attributes.returnField === null ? '' : result.body.viewScreen[0].attributes.returnField
+          this.displayFields = result.body.viewScreen[0].attributes.displayFields
+          this.wordList = result.body.viewScreen[0].attributes.autocompleteOptions === null ? [] : result.body.viewScreen[0].attributes.autocompleteOptions
+          this.$store.dispatch('ui/incrementUpdateCpt')
+          return result.body
+        }, error => {
+          return error.body
+        })
       },
       onSelected(item) {
         this.valueStored = item.item[this.name]

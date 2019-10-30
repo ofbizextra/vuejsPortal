@@ -54,11 +54,9 @@
 
 <script>
   import {mapGetters} from 'vuex'
-  import FlatPickr from 'vue-flatpickr-component/src/component'
 
   export default {
     name: "VueDateTimeField",
-    components: {FlatPickr},
     props: ['props', 'updateStore'],
     data() {
       return {

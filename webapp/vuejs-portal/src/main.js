@@ -32,7 +32,6 @@ import VueLookupField from './components/VueLookupField'
 import VueTextAreaField from './components/VueTextAreaField'
 import VueDateTimeField from './components/VueDateTimeField'
 import VueError from './components/VueError'
-import VueTooltip from './components/VueTooltip'
 import VueAsterisks from './components/VueAsterisks'
 import VueTable from './components/VueTable'
 import VueTr from './components/VueTr'
@@ -113,7 +112,6 @@ Vue.component('vue-text-area-field', VueTextAreaField)
 Vue.component('vue-date-time-field', VueDateTimeField)
 Vue.component('vue-field-title', VueFieldTitle)
 Vue.component('vue-error', VueError)
-Vue.component('vue-tooltip', VueTooltip)
 Vue.component('vue-asterisks', VueAsterisks)
 Vue.component('vue-table', VueTable)
 Vue.component('vue-tr', VueTr)
@@ -200,33 +198,33 @@ function requireAuth(to, from, next) {
   function proceed() {
     if (store.getters['login/isLoggedIn']) {
       if (to.path === '/login') {
-        console.log("Already logged in -> redirect to /home")
+        // console.log("Already logged in -> redirect to /home")
         next('/')
       } else {
-        console.log("Authorized")
+        // console.log("Authorized")
         next()
       }
     } else {
       if (to.path === '/login') {
         next()
       } else {
-        console.log("You are not logged in redirect to login")
+        // console.log("You are not logged in redirect to login")
         next('/login')
       }
     }
   }
 
-  console.log('Routing ...')
+  // console.log('Routing ...')
   if (store.getters['login/pending']()) {
-    console.log('Pending ...')
+    // console.log('Pending ...')
     store.watch(store.getters['login/pending'], () => {
       if (!store.getters['login/pending']()) {
-        console.log('Proceed ...')
+        // console.log('Proceed ...')
         proceed()
       }
     })
   } else {
-    console.log('Proceed ...')
+    // console.log('Proceed ...')
     proceed()
   }
 }

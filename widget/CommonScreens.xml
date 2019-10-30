@@ -58,7 +58,7 @@ under the License.
                                   <if-compare operator="not-equals" value="Y" field="parameters.lookupResult"/>
                                 </condition>
                                 <widgets>
-                                    <screenlet title="${title}" id="LookupFindScreenlet" collapsible="true" padded="false">
+                                    <screenlet title="${title}" id="LookupFindScreenlet" name="LookupFindScreenlet" collapsible="true" padded="false">
                                             <decorator-section-include name="search-options"/>
                                     </screenlet>
                                     <screenlet id="lookupResultScreenlet">
@@ -68,11 +68,7 @@ under the License.
                                     </screenlet>
                                 </widgets>
                                 <fail-widgets>
-                                    <screenlet id="lookupResultScreenlet">
-                                        <container id="lookup-results">
                                             <decorator-section-include name="search-results"/>
-                                        </container>
-                                    </screenlet>
                                 </fail-widgets>
                               </section>
                             </fail-widgets>

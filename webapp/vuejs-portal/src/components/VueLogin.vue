@@ -35,7 +35,6 @@
 </template>
 
 <script>
-  import VueJsModal from 'vue-js-modal/src/Modal'
 
   export default {
     name: "VueLogin",

@@ -1,5 +1,5 @@
 <template>
-  <div id="vue-container">
+  <div :id="id">
     <div v-if="area">
       <div
         v-for="(component, key) in area.viewScreen"
