@@ -1,6 +1,6 @@
 Index: framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelForm.java
 ===================================================================
---- framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelForm.java	(révision 1861341)
+--- framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelForm.java	(révision 1869070)
 +++ framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelForm.java	(copie de travail)
 @@ -432,7 +432,13 @@
                  } else {

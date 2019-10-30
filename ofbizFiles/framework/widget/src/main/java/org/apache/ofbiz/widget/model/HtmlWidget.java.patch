@@ -1,6 +1,6 @@
 Index: framework/widget/src/main/java/org/apache/ofbiz/widget/model/HtmlWidget.java
 ===================================================================
---- framework/widget/src/main/java/org/apache/ofbiz/widget/model/HtmlWidget.java	(révision 1861341)
+--- framework/widget/src/main/java/org/apache/ofbiz/widget/model/HtmlWidget.java	(révision 1869070)
 +++ framework/widget/src/main/java/org/apache/ofbiz/widget/model/HtmlWidget.java	(copie de travail)
 @@ -36,6 +36,7 @@
  import org.apache.ofbiz.base.util.collections.MapStack;

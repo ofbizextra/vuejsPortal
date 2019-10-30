@@ -1,8 +1,8 @@
 Index: framework/widget/src/main/java/org/apache/ofbiz/widget/renderer/macro/MacroScreenRenderer.java
 ===================================================================
---- framework/widget/src/main/java/org/apache/ofbiz/widget/renderer/macro/MacroScreenRenderer.java	(révision 1861341)
+--- framework/widget/src/main/java/org/apache/ofbiz/widget/renderer/macro/MacroScreenRenderer.java	(révision 1869070)
 +++ framework/widget/src/main/java/org/apache/ofbiz/widget/renderer/macro/MacroScreenRenderer.java	(copie de travail)
-@@ -225,6 +225,10 @@
+@@ -223,6 +223,10 @@
          parameters.put("style", label.getStyle(context));
          executeMacro(writer, "renderLabel", parameters);
      }
