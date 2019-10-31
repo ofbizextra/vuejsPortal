@@ -190,14 +190,17 @@ under the License.
                         <screenlet id="searchOptions" name="findScreenlet" collapsible="true" title="${uiLabelMap.CommonSearchOptions}">
                             <decorator-section-include name="search-options" />
                         </screenlet>
+                        <screenlet padded="false">
+                          <label style="h3" text="${uiLabelMap.CommonSearchResults}"/>
+                          <container id="search-results">
+                             <decorator-section-include name="search-results"/>
+                          </container>
+                        </screenlet>
                     </widgets>
+                    <fail-widgets>
+                             <decorator-section-include name="search-results"/>
+                    </fail-widgets>
                 </section>
-                <screenlet padded="false">
-                    <label style="h3" text="${uiLabelMap.CommonSearchResults}"/>
-                    <container id="search-results">
-                        <decorator-section-include name="search-results"/>
-                    </container>
-                </screenlet>
             </widgets>
         </section>
     </screen>

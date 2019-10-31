@@ -103,7 +103,7 @@ for an exclusive Vue.Js use.
     *** `vuejs` is to call a specifics vuejs component named `component-name`. +
          it's possible to give to it some parameters with sub tag `parameters`
 * form
-  ** property `entity-name` for grid form, vuejs use it to build entity store
+  ** property `entity-name` is mandatory for grid form, vuejs use it to build entity store
   ** in `<on-event-update-area` tag (there can be many of them and they will be executed in xml apparition order. It will wait
       current task is completed before starting the next one. If any of these events is set, the submit button will prevent
       the form default behaviour, so if you need to post in addition to vuejsPortal feature you have to add an event-type `submit`)
