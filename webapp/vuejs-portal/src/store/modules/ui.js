@@ -134,7 +134,8 @@ const getters = {
     return function (dialogId) {
       return state.dialogStatus.hasOwnProperty(dialogId) ? state.dialogStatus[dialogId] : false
     }
-  }
+  },
+  dialogs: state => state.dialogStatus
 }
 
 const actions = {
@@ -317,6 +318,11 @@ const actions = {
   },
   setDialogStatus({commit}, {dialogId, dialogStatus}) {
     commit('SET_DIALOG_STATUS', {dialogId, dialogStatus})
+  },
+  closeAllDialogs({commit, getters}) {
+    for (let dialogId of Object.keys(getters.dialogs)) {
+      commit('SET_DIALOG_STATUS', {dialogId, dialogStatus: false})
+    }
   }
 }
 

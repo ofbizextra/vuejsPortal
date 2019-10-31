@@ -159,10 +159,14 @@
             })
           case 'closeModal':
             // do closeModal
-            this.$store.dispatch('ui/setDialogStatus', {
-              dialogId: updateArea.areaId,
-              dialogStatus: false
-            })
+            if (updateArea.hasOwnProperty('areaId') && updateArea.areaId !== '') {
+              this.$store.dispatch('ui/setDialogStatus', {
+                dialogId: updateArea.areaId,
+                dialogStatus: false
+              })
+            } else {
+              this.$store.dispatch('ui/closeAllDialogs')
+            }
             return new Promise((resolve) => {
               setTimeout(() => {
                 resolve()
