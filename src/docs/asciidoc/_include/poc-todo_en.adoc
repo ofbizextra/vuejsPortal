@@ -25,6 +25,7 @@ Most of time, each new use case (or portlet) give new task (ex: new field type n
 
 * review and change field-find to include title in the field to remove the "title" coloumn in find form
 * Manage the ConfMod in the showPortalPage, to show (and manage) the portlet parameters page.
+* do a uri to send label for login screen, to be able to have translation in login screen
 * Include header and footer in the VueJs application to have a full page manage by VueJs, and so have a complete Vue.Js look.
 * Include all Common and Commonext part, like systemInfoNote
 
