@@ -33,7 +33,8 @@ https://ofbiz.apache.org/source-repositories.html[documentation standard  Source
 .. *example plugin* at http://svn.apache.org/repos/asf/ofbiz/ofbiz-plugins/trunk/example
 . In the ofbizextra plugins repository, download the 3 next repositories using git :
 .. *vuejsportal plugin* that can be downloaded at https://gitlab.ofbizextra.org/ofbizextra/ofbizplugins/vuejsPortal
-   all vuejs components, a new ScreenViewHandler and 4 new renderers (screen, form, menu, tree)
+   all vuejs components, a new ScreenViewHandler and 4 new renderers (screen, form, menu, tree) and all common files to all
+   fjs component.
 .. *examplefjs plugin* that can be downloaded at https://gitlab.ofbizextra.org/ofbizextra/ofbizplugins/examplefjs.git
    specifics files for using vue.js with ofbiz example component 
 .. *flatgreyfjs plugin* that can be downloaded at https://gitlab.ofbizextra.org/ofbizextra/ofbizplugins/flatgreyfjs.git
@@ -91,18 +92,33 @@ for an exclusive Vue.Js use.
         and watcher content as parameters. 
     *** `id` is used to identify the container and enable to inject content into it with `setArea` later. +
          When setArea is done for this id, its content will be replace by the content received from area-target. +
-         So, do not resend the container ! 
+         So, do not resend the container !
+  ** screenlet
+    *** collapsible, if collapsible = "true" then it's necessary to have a "unique" id to know what collapse when button is clicked.
+        choice is to *use screenlet name* as collapsible_id. Whith this choice it's possible to have multiple screenlet with
+        same name or each with a different one. +
+        So, it's important to give a name if collapsible ="true" otherwise collapse will collapse all screenlet without name !
+    *** id : currently not used, and not useable by a setArea
+  ** in `platform-specific`-`html` tag a new tag
+    *** `vuejs` is to call a specifics vuejs component named `component-name`. +
+         it's possible to give to it some parameters with sub tag `parameters`
 * form
+  ** property `entity-name` for grid form, vuejs use it to build entity store
   ** in `<on-event-update-area` tag (there can be many of them and they will be executed in xml apparition order. It will wait
       current task is completed before starting the next one. If any of these events is set, the submit button will prevent
       the form default behaviour, so if you need to post in addition to vuejsPortal feature you have to add an event-type `submit`)
     *** `event-type` +
       Define the action to be executed during the form submitting (click on submit button). It can take one of three next values :
+      **** `submit` will submit the form to `area-target` with provided `parameter` elements. Like `setArea` if no `parameter`
+            are defined it will use the whole form. Error and success messages will be displayed.
       **** `setArea` update area with id `areaId` with the post result at URI `area-target` with included `parameter` elements.
       **** `setWatcher` update watcher `areaId` with included `parameter`. In case no parameter was passed to `setWatcher`
             it will use all form fields.
-      **** `submit` will submit the form to `area-target` with provided `parameter` elements. Like `setArea` if no `parameter`
-            are defined it will use the whole form. Error and success messages will be displayed.
+      **** `collapse` do an action on collapse/expand screenlet. +
+           `area-target` is the action to do : *collapse* or *expand* or *toggle*; +
+           `area-id` is the `screenlet name` to change. 
+      **** `closeModal` close the current modal, currently `area-id` is necessary, when modal is open for a lookup areaId is
+            {formName}_{fieldName};  area-target is not used, so can be left empty.
   ** in `<on-field-event-update-area` tag (there can be many of them and they will be executed in xml apparition order. It will wait
       current task is completed before starting the next one.)
     *** `event-type` +
@@ -113,8 +129,15 @@ for an exclusive Vue.Js use.
         elements. If no parameters was passed it will use the whole form.
       **** `setWatcher` update watcher with watcherName `area-id` with included `parameter` elements. If no parameters was
         passed it will use the whole form
-      **** `setFieldInForm` will set the value of property `area-target` from form `area-id` to the actual field value.
-  ** in `...-event-update-area` tag
+      **** `setFieldInForm` will set the value of property `area-target` from form `area-id` from the actual field value.
+      **** `collapse` do an action on collapse/expand screenlet. +
+           `area-target` is the action to do : *collapse* or *expand* or *toggle*; +
+           `area-id` is the `screenlet name` to change. 
+      **** `closeModal` close the current modal, `area-id` is to know which modal close, when modal is open for a lookup areaId is
+            {formName}_{fieldName}; +
+            if area-id is empty all modal are closed; +
+            area-target is not used, so can be left empty.
+  ** in `parameters` tag
     *** `auto-parameters-portlet` allow to automatically fill necessary portlet parameters :
       **** `portalPageId`
       **** `portalPortletId`
@@ -124,12 +147,6 @@ for an exclusive Vue.Js use.
     *** `link-type="anchor"` is used to make an internal call to FrontJs via `setArea`, `target-window` is used as
          id to update and `target` as area-target, parameters as parameters.
     *** `target-window` is used to design the watcherName that have to be updated.
-* screenlet
-  ** collapsible, if collapsible = "true" then it's necessary to have a "unique" id to know what collapse when button is clicked.
-        choice is to *use screenlet name* as collapsible_id. Whith this choice it's possible to have multiple screenlet with
-        same name or each with a different one. +
-        So, it's important to give a name if collapsible ="true" otherwise collapse will collapse all screenlet without name !
-  ** id : currently not used, and not useable by a setArea
 * menu
   ** in `<link` tag
     *** `link-type="anchor"` is used to make an internal call to FrontJs via `setArea`, `target-window` is used as
@@ -137,6 +154,48 @@ for an exclusive Vue.Js use.
     *** `link-type="auto"` (default value) and `url-mode="intra-app"` call the portalPageDetail to print a new
          portal page. portalPageId should be in parameters.
 
+=== decorator, lookup
+Currently vuejs app is call in a ftl included in the classic mainDecorator, without application menu (which are directly 
+manage by vuejsApp cf <<_specifics_uri>>).
+
+Currently a specifics theme has created, to be able to remove most of css to avoid "conflict" with vuetify lib. This theme
+is forced in the main decorator of the application.
+
+*Lookup*
+
+1. `LookupDecorator` is a specifics one for VueJs, but its usage is same as the standard one. It contain 2 main specificity
+  * for autocomplete return, all data are in viewData
+  * for search - result, when lookup receive parameters.lookupResult = "Y" only result form is sent to be injected in area lookup-results
+2. `LookupForm - find` : 
+  * it's necessary to add a hidden field
+[source,XML]
+   <field name="lookupResult"><hidden value="Y"/></field>
+   
+  * it's necessary to add 2 on-event-update-are, +
+    first one to send result in the area lookup-result
+    second one to collapse Find screenlet (if you want collapse it
+[source,XML]
+       <on-event-update-area event-type="setArea" area-id="lookup-results" area-target="LookupExample"/>
+       <on-event-update-area event-type="collapse" area-id="LookupFindScreenlet" area-target="collapse"/>
+3. `LookupForm - list` :
+  * for the link return field, 2 on-field-event-update-area must be added +
+     first one to set Field which call the lookup with the correct value +
+     second one to close the modal
+[source,XML]
+            <on-field-event-update-area event-type="setFieldInForm" area-id="SelectExample" area-target="exampleId" />
+            <on-field-event-update-area event-type="closeModal" area-id="SelectExample_exampleId" area-target="" />
+4. `FindScreenDecorator`, is a specifics one for VueJs, but its usage is same as the standard one. Its specificity is about
+    ListResult update. Some modifications should be done in the find form
+  * add a hidden field onlyList
+[source,XML]
+            <field name="onlyList"><hidden value="Y"/><!-- used by FindScreenDecorator to only send list result --></field>
+  * add a on-event-update-area to update List result area
+[source,XML]
+         <on-event-update-area area-target="findExample" event-type="setArea" area-id="search-results"/><!-- When parameters-map is empty all form field are sent  -->
+  * add a on-event-update-area to collapse find screenlet (optional)
+[source,XML]
+       <on-event-update-area event-type="collapse" area-id="findScreenlet" area-target="collapse"/>
+ 
 
 === FrontJs Renderer
 A *new viewHandler* and a new set of *renderer* had been created. +
@@ -154,15 +213,23 @@ viewEntities contain all information about data set.
 
 In future revision, it will probably be feasible to only receive the data map.
 
-=== ShowPortal, ShowPortlet
-there is a *showPortal* URI in examplefjs (CommonPortletScreen), which is the Start point of the VueJs application.
+=== Specifics URI
+there is a *showPortal* URI in vuejsPortal (CommonScreen), which is the Start point of the VueJs application.
 
-portalPageDetail is a new URI (temporary for the POC), used by the POC to received data about the portalPage : list of colunm, list of portlet
+*portalPageDetail* is a new URI (temporary for the POC), used by the POC to received data about the portalPage : list of colunm, list of portlet
 
-*showPortlet* screen *is redefine* in this POC for simplification purpose, to only do what we want.
+*showPortlet* screen is redefine in this POC for simplification purpose, to only do what we want.
+
+*applicationMenu* is a new uri which return with the FrontJsScreenViewHandler the data (ViewScreen & ViewData) from application xml menu. +
+In each fjs component, it's necessary to define a view-map entry applicationMenu pointing to a screen.xml with only the correct menu.
+
 
 === Added field
 A new field had been added to PortalPagePortlet entity : *watcherName* which is the name of the watcher that fire portlet update.
+
+=== ftl
+ftl file can be mixed with Vue.js app, so it's necessary to create a dedicated component by ftl migrated. Look at 
+<<_xml_tags_used, XML tags used>> on point `platform-specific`-`html` - `vuejs`.
 
 include::poc-situation_en.adoc[leveloffset=+1]
 
