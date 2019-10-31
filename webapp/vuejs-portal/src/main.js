@@ -68,6 +68,7 @@ import VueFormatEmptySpace from './components/VueFormatEmptySpace'
 import VuePlatformSpecific from './components/VuePlatformSpecific'
 import VueNavMenu from './components/VueNavMenu'
 import VueNavMenuItem from './components/VueNavMenuItem'
+import Screen from './components/Screen'
 
 // Platform Specific
 import ContactMech from './components/platformSpecific/ContactMech'
@@ -93,6 +94,7 @@ Vue.use(VueFlatPickr)
 
 Vue.component('login', Login)
 Vue.component('portal', Portal)
+Vue.component('screen', Screen)
 Vue.component('search', Search)
 Vue.component('vue-form', VueForm)
 Vue.component('vue-field', VueField)
@@ -188,9 +190,10 @@ Vue.mixin({
 const router = new VueRouter({
   mode: 'hash',
   routes: [
-    {path: '/', component: Portal, beforeEnter: requireAuth},
     {path: '/login', component: Login, beforeEnter: requireAuth},
-    {path: '/exampleapi/control/:params', component: Portal, beforeEnter: requireAuth}
+    {path: '/portalPage/:portalPageId', component: Portal, beforeEnter: requireAuth},
+    {path: '/screen/:screenId', component: Screen, beforeEnter: requireAuth},
+    {path: '/', component: Portal, beforeEnter: requireAuth},
   ]
 })
 

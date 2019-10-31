@@ -291,8 +291,8 @@ const actions = {
     console.log('Params : ', search)
     // PORTAL_PAGE_ID not defined in the scope but in the main application
     // eslint-disable-next-line
-    let params = {portalPageId: PORTAL_PAGE_ID}
-    search.substr(1).split('&').forEach(param => {
+    let params = {portalPageId: this._vm.$route.params.portalPageId}
+    search.substr(1).split('&amp;').forEach(param => {
       let tmp = param.split('=')
       params[tmp[0]] = tmp[1]
     })

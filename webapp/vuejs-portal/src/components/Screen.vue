@@ -1,12 +1,7 @@
 <template>
-  <div id="portal">
-    <table v-if="portalPageDetail" class="d-block">
-      <tr class="d-block">
-        <vue-column-portlet v-for="column in portalPageDetail.listColumnPortlet" :key="column.portalPageId + '-' + column.columnSeqId"
-                            :props="{portalPageId: portalPage, columnSeqId: column.columnSeqId}">
-        </vue-column-portlet>
-      </tr>
-    </table>
+  <div id="screen">
+    <div v-for="(component, id) in screen.viewScreen" :key="id" v-bind:is="constantes.components[component.name]" :props="component" :updateStore="updateStore">
+    </div>
   </div>
 </template>
 
@@ -18,16 +13,16 @@
   const queryString = require('query-string')
 
   export default {
-    name: "Portal",
+    name: "Screen",
     data() {
       return {
-        params: {}
+        params: {},
+        screen: {},
+        constantes: constantes
       }
     },
     computed: {
       ...mapGetters({
-        portalPage: 'ui/currentPortalPage',
-        portalPageDetail: 'ui/currentPortalPageDetail',
         currentApi: 'backOfficeApi/currentApi'
       })
     },
@@ -86,25 +81,35 @@
       }
     },
     mounted() {
-      let search = window.location.search
-      let params = {}
-      search.substr(1).split('&').forEach(param => {
-        let tmp = param.split('=')
-        params[tmp[0]] = tmp[1]
-      })
-      params.portalPageId = this.$route.params.portalPageId
-      this.$store.dispatch('ui/loadPortalPageDetail', {api: this.currentApi, params})
+      let screenId = this.$route.params.screenId
+      if (screenId === 'main') {
+        screenId = 'mainfjs'
+      }
+      this.$http.post(constantes.apiUrl + '/' + screenId,
+        queryString.stringify(this.params),
+        {headers: {'Content-Type': 'application/x-www-form-urlencoded', 'locale': 'en_US'}}
+      ).then(
+        response => {
+          this.screen = response.body
+        },
+        error => console.log(error.body)
+      )
     },
     watch: {
       '$route': function () {
-        let search = window.location.search
-        let params = {}
-        search.substr(1).split('&').forEach(param => {
-          let tmp = param.split('=')
-          params[tmp[0]] = tmp[1]
-        })
-        params.portalPageId = this.$route.params.portalPageId
-        this.$store.dispatch('ui/loadPortalPageDetail', {api: this.currentApi, params})
+        let screenId = this.$route.params.screenId
+        if (screenId === 'main') {
+          screenId = 'mainfjs'
+        }
+        this.$http.post(constantes.apiUrl + '/' + screenId,
+          queryString.stringify(this.params),
+          {headers: {'Content-Type': 'application/x-www-form-urlencoded', 'locale': 'en_US'}}
+        ).then(
+          response => {
+            this.screen = response.body
+          },
+          error => console.log(error.body)
+        )
       }
     }
   }
