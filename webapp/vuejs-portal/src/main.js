@@ -191,8 +191,8 @@ const router = new VueRouter({
   mode: 'hash',
   routes: [
     {path: '/login', component: Login, beforeEnter: requireAuth},
-    {path: '/portalPage/:portalPageId', component: Portal, beforeEnter: requireAuth},
-    {path: '/screen/:screenId', component: Screen, beforeEnter: requireAuth},
+    {path: '/portalPage/:portalPageId', props: true, component: Portal, beforeEnter: requireAuth},
+    {path: '/screen/:screenId', props: true, component: Screen, beforeEnter: requireAuth},
     {path: '/', component: Portal, beforeEnter: requireAuth},
   ]
 })

@@ -87,7 +87,7 @@
     },
     mounted() {
       let search = window.location.search
-      let params = {}
+      let params = this.$route.query
       search.substr(1).split('&').forEach(param => {
         let tmp = param.split('=')
         params[tmp[0]] = tmp[1]
@@ -98,7 +98,7 @@
     watch: {
       '$route': function () {
         let search = window.location.search
-        let params = {}
+        let params = this.$route.query
         search.substr(1).split('&').forEach(param => {
           let tmp = param.split('=')
           params[tmp[0]] = tmp[1]

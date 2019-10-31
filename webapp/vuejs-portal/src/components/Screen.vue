@@ -86,7 +86,7 @@
         screenId = 'mainfjs'
       }
       this.$http.post(constantes.apiUrl + '/' + screenId,
-        queryString.stringify(this.params),
+        queryString.stringify(this.$route.query),
         {headers: {'Content-Type': 'application/x-www-form-urlencoded', 'locale': 'en_US'}}
       ).then(
         response => {
@@ -102,7 +102,7 @@
           screenId = 'mainfjs'
         }
         this.$http.post(constantes.apiUrl + '/' + screenId,
-          queryString.stringify(this.params),
+          queryString.stringify(this.$route.query),
           {headers: {'Content-Type': 'application/x-www-form-urlencoded', 'locale': 'en_US'}}
         ).then(
           response => {

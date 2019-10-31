@@ -17,7 +17,7 @@
       />
     </form>
     <!--:data-dialog-url="linkUrl"-->
-    <a
+    <router-link
       v-if="linkType === 'auto' && urlMode === 'intra-app'"
       v-bind:id="id + '_link'"
       :data-dialog-params="params"
@@ -25,7 +25,7 @@
       :data-dialog-height="height"
       :data-dialog-title="text"
       :class="style"
-      @click="loadPortalPage"
+      :to="{path: routerLink, query: parameterMap}"
     >
 <!--      v-bind:href="`${href}#${href}`"-->
       <!--v-on:click="redirect"-->
@@ -34,7 +34,7 @@
         <span class="font-weight-regular">
             {{text}}
         </span>
-    </a>
+    </router-link>
     <a
       v-else-if="linkType === 'auto'"
       v-bind:id="id + '_link'"
@@ -197,6 +197,23 @@
       },
       api() {
         return this.target.split('?')[0].substring(0, this.linkUrl.indexOf('/', 1)) + '/control'
+      },
+      routerLink() {
+        let pathname = this.linkUrl.split('?')[0]
+        let webapp = pathname.substring(pathname.lastIndexOf('/') + 1, pathname.length)
+        let search = this.linkUrl.split('?')[1]
+        let params = {}
+        if (search) {
+          search.split('&amp;').forEach(param => {
+            let tmp = param.split('=')
+            params[tmp[0]] = tmp[1]
+          })
+        }
+        if (webapp === 'showPortalPage') {
+          return `/portalPage/${params.portalPageId}`
+        } else {
+          return `/screen/${webapp}`
+        }
       }
     },
     methods: {
