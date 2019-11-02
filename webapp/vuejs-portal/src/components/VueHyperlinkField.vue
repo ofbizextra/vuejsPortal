@@ -10,9 +10,22 @@
       <img :src="imgSrc" :title="imgTitle" alt="" v-if="hasImg">
       {{description}}
     </v-btn>
+    <router-link
+      v-else-if="linkType === 'auto' && urlMode === 'intra-app'"
+      v-bind:id="description + '_link'"
+      :data-dialog-title="description"
+      :class="className"
+      :to="{path: routerLink, query: parameterMap}"
+    >
+
+      <img :src="imgSrc" :title="imgTitle" alt="" v-if="hasImage"/>
+        <span class="font-weight-regular">
+            {{description}}
+        </span>
+    </router-link>
     <v-btn outlined x-small color="primary"
       v-else
-      :href="data.linkUrl"
+      :href="target"
       :title="title"
       :class="className"
     >
@@ -58,6 +71,12 @@
         getForm: 'form/form',
         currentApi: 'backOfficeApi/currentApi'
       }),
+      linkType() {
+        return this.data.hasOwnProperty('linkType') ? this.data.linkType : ''
+      },
+      urlMode() {
+        return this.attributes.hasOwnProperty('urlMode') ? this.attributes.urlMode : 'intra-app'
+      },
       target() {
         return this.attributes.hasOwnProperty('target') ? this.attributes.target : null
       },
@@ -96,6 +115,13 @@
       },
       imgTitle() {
         return this.attributes.hasOwnProperty('imgTitle') ? this.attributes.imgTitle : ''
+      },
+      routerLink() {
+        if (this.attributes.target === 'showPortalPage') {
+          return `/portalPage/${this.parameterMap.portalPageId}`
+        } else {
+          return `/screen/${this.target}`
+        }
       },
       className() {
         let data = this.attributes
