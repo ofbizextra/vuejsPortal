@@ -54,7 +54,7 @@
         if (message.messageType === 'event') {
           setTimeout(() => {
             this.dismiss(message)
-          }, 5000)
+          }, 9000)
         }
       }
     }
