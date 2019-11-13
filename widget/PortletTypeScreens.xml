@@ -24,15 +24,15 @@ under the License.
 
   <screen name="Screenlet">
     <section>
-      <actions>
-          <set field="initiallyCollapsed" from-field="initiallyCollapsed" default-value="false"/>
-          <script location="${__scriptName__}"/>
-      </actions>
+        <condition>
+          <not><if-empty field="parameters.${__pkIdName__}"/></not>
+        </condition>
       <widgets>
         <section>
-          <condition>
-            <not><if-empty field="parameters.${__pkIdName__}"/></not>
-          </condition>
+          <actions>
+              <set field="initiallyCollapsed" from-field="initiallyCollapsed" default-value="false"/>
+              <script location="${__scriptName__}"/>
+          </actions>
           <widgets>
             <section>
               <condition>
@@ -55,7 +55,7 @@ under the License.
                     <decorator-screen name="portletUiLabelDecorator" location="${parameters.mainDecoratorLocation}">
                         <decorator-section name="body">
                           <screenlet title="${uiLabelMap.${__titleLabel__}} ${parameters.idDescription}" collapsible="true" initially-collapsed="${initiallyCollapsed}" 
-                                     navigation-menu-name="${__menuName__}" name="${__portletName__}>
+                                     navigation-menu-name="${__menuName__}" name="${__portletName__}">
                             <include-menu name="${__menuName__}" location="${__menuLocation__}"/>
                             <container id="${__editAreaDivId__}_editArea"/> <!-- for portlet with an editArea like ExampleItems -->
                             <container id="${__subAreaDivId__}">            <!-- for portlet like ShowExample -->
