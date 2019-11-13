@@ -438,31 +438,26 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         String tabindex = modelFormField.getTabindex();
         String value = modelFormField.getEntry(context, textareaField.getDefaultValue(context));
         String formName = modelFormField.getModelForm().getName();
-        Map<String, Object> cb = new HashMap<>();
-        cb.put("name", name);
-        cb.put("className", className);
-        cb.put("alert", alert);
-        cb.put("value", value);
-        cb.put("cols", cols);
-        cb.put("rows", rows);
-        cb.put("maxlength", maxlength > -1 ? maxlength : "");
-        cb.put("id", id);
-        cb.put("readonly", readonly);
-        cb.put("visualEditorEnable", visualEditorEnable);
-        cb.put("language", language);
-        cb.put("buttons", buttons);
-        cb.put("tabindex", tabindex);
-        cb.put("formName", formName);
-        fieldName = name;
-        fieldValue = value;
-        HashMap<String, Object> data = new HashMap<>();
-        Map<String, Object> pointer = output.getRecordPointer(context);
-        pointer.put("field", name);
-        data.put("recordPointer", pointer);
-        cb.put("data", data);
-        this.appendTooltip(cb, context, modelFormField);
-        this.addAsterisks(cb, context, modelFormField);
-        this.output.putScreen("TextAreaField", cb, fieldName, fieldValue);
+        Map<String, Object> attributes = new HashMap<>();
+
+
+        attributes.put("formName", formName);
+        attributes.put("name", name);
+        attributes.put("value", value);
+        if (UtilValidate.isNotEmpty(className))          attributes.put("className", className);
+        if (UtilValidate.isNotEmpty(alert))              attributes.put("alert", alert);
+        if (UtilValidate.isNotEmpty(cols))               attributes.put("cols", cols);
+        if (UtilValidate.isNotEmpty(rows))               attributes.put("rows", rows);
+        if (maxlength > -1)                              attributes.put("maxlength", maxlength);
+        if (UtilValidate.isNotEmpty(id))                 attributes.put("id", id);
+        if (UtilValidate.isNotEmpty(readonly))           attributes.put("readonly", readonly);
+        if (UtilValidate.isNotEmpty(visualEditorEnable)) attributes.put("visualEditorEnable", visualEditorEnable);
+        if (UtilValidate.isNotEmpty(language))             attributes.put("language", language);
+        if (UtilValidate.isNotEmpty(buttons))           attributes.put("disabled", buttons);
+        if (UtilValidate.isNotEmpty(tabindex))           attributes.put("tabindex", tabindex);
+        this.appendTooltip(attributes, context, modelFormField);
+        this.addAsterisks(attributes, context, modelFormField);
+        this.output.putScreen("TextAreaField", attributes, name, value);
     }
 
     public void renderDateTimeField(Appendable writer, Map<String, Object> context, DateTimeField dateTimeField) {
