@@ -14,9 +14,17 @@
           :search-input.sync="search"/>
       <v-btn icon @click.stop="showModal" class="d-inline-flex"><v-icon>mdi-arrow-expand</v-icon></v-btn>
       <v-dialog v-model="dialogStatus">
-        <vue-container :props="{attributes: {id: id + '_modalContent'}}"
-                       :auto-update-params="{targetUrl: getCurrentApi + '/' + fieldFormName, params: {presentation: 'layer'}}">
-        </vue-container>
+        <v-btn fab fixed top right @click.stop="closeModal"><v-icon>mdi-close</v-icon></v-btn>
+        <v-card class="pa-1">
+          <v-card-text class="pa-0">
+            <vue-container :props="{attributes: {id: id + '_modalContent'}}"
+                           :auto-update-params="{targetUrl: getCurrentApi + '/' + fieldFormName, params: {presentation: 'layer'}}">
+            </vue-container>
+          </v-card-text>
+<!--          <v-card-actions class="justify-space-around pa-0">-->
+<!--            <v-btn class="ma-1" @click.stop="closeModal">Close dialog</v-btn>-->
+<!--          </v-card-actions>-->
+        </v-card>
       </v-dialog>
       <span v-if="tooltip" :id="'0_lookupId_' + id" class="tooltip d-block">{{tooltip}}</span>
       <p>{{modalResult}}</p>
@@ -217,6 +225,12 @@
         //     console.log(error)
         //     this.modalResult = error
         //   })
+      },
+      closeModal() {
+        this.$store.dispatch('ui/setDialogStatus', {
+          dialogId: this.id,
+          dialogStatus: false
+        })
       }
     },
     watch: {

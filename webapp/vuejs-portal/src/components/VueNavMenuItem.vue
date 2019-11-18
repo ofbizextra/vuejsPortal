@@ -1,16 +1,15 @@
 <template>
-    <v-list-item :id="props.children[0].attributes.text.split(' ').join('_')"
-    >
-        <v-list-item-content>
-            <div
-                    v-for="(component, index) in props.children"
-                    :key="index"
-                    v-bind:is="constantes.components[component.name]"
-                    :props="component"
-                    :updateStore="updateStore"
-            ></div>
-        </v-list-item-content>
-    </v-list-item>
+  <v-list-item :id="props.children[0].attributes.text.split(' ').join('_')" link>
+    <v-list-item-content>
+    <div
+        v-for="(component, index) in props.children"
+        :key="index"
+        v-bind:is="constantes.components[component.name]"
+        :props="component"
+        :updateStore="updateStore"
+    ></div>
+    </v-list-item-content>
+  </v-list-item>
 </template>
 
 <script>
