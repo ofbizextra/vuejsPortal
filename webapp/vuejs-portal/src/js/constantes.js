@@ -9,7 +9,7 @@ export default {
   portalPageDetail: {path: '/portalPageDetail', tokenRequired: false},
   showPortlet: {path: '/showPortletFj', tokenRequired: false},
 
-  blockUi: true,
+  blockUi: false,
 
   components: {
     Form: 'vue-form',
@@ -51,6 +51,7 @@ export default {
     FormatEmptySpace: 'vue-format-empty-space',
     Label: 'vue-label',
     VueJs: 'vue-platform-specific',
-    test: 'test'
+    test: 'test',
+    PasswordField: 'vue-password-field'
   }
 };

@@ -2215,6 +2215,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         String maxlength = "";
         String id = modelFormField.getCurrentContainerId(context);
         String autocomplete = "";
+        String formName = passwordField.getModelFormField().getModelForm().getName();
         if (UtilValidate.isNotEmpty(modelFormField.getWidgetStyle())) {
             className = modelFormField.getWidgetStyle();
             if (modelFormField.shouldBeRed(context)) {
@@ -2260,6 +2261,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         cb.put("id", id);
         cb.put("autocomplete", autocomplete);
         cb.put("tabindex", tabindex);
+        cb.put("formName", formName);
         this.addAsterisks(cb, context, modelFormField);
         this.makeHyperlinkString(cb, passwordField.getSubHyperlink(), context);
         this.appendTooltip(cb, context, modelFormField);
