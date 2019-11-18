@@ -47,7 +47,7 @@
       'props'
     ],
     created() {
-      this.$store.dispatch('form/setFieldToForm', this.storeForm)
+      // this.$store.dispatch('form/setFieldToForm', this.storeForm)
     },
     watch: {
       props: function () {
@@ -56,7 +56,7 @@
           id: this.getNestedObject(this.props, ['stPointer', 'id']),
           attribute: this.getNestedObject(this.props, ['stPointer', 'field'])
         }
-        this.$store.dispatch('form/setFieldToForm', this.storeForm)
+        // this.$store.dispatch('form/setFieldToForm', this.storeForm)
       }
     }
   }
