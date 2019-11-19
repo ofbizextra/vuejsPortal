@@ -271,23 +271,11 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
             }
             cb.put("updateAreas", updateAreasList);
         }
-        if (hyperlinkField.getDescription().toString().contains("${") && !hyperlinkField.getDescription().toString().contains("uiLabel")) {
-//            HashMap<String, Object> data = new HashMap<>();
-//            data.put("action", "PUT_RECORD");
-//            HashMap<String, Object> record = new HashMap<>();
+        String value = modelFormField.getEntry(context);
+//        if (hyperlinkField.getDescription().toString().contains("${") && !hyperlinkField.getDescription().toString().contains("uiLabel")) {
+        if (hyperlinkField.getDescription(context).equals(value)) {
             String key = modelFormField.getName();
-            String value = hyperlinkField.getDescription(context);
-//            record.put("key", key);
-//            record.put("value", value);
-//            ArrayList<Map<String, Object>> records = new ArrayList<>();
-//            records.add(record);
-//            data.put("records", records);
-//            Map<String, Object> pointer = output.getRecordPointer(context);
-//            pointer.put("field", key);
-//            data.put("recordPointer", pointer);
-//            cb.put("data", data);
-//            cb.put("title", key);
-//            cb.put("value", value);
+//            String value = hyperlinkField.getDescription(context);
             this.output.putScreen("HyperlinkField", cb, key, value);
         } else {
             cb.put("description", hyperlinkField.getDescription(context));
