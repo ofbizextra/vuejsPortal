@@ -70,6 +70,7 @@ import VueNavMenu from './components/VueNavMenu'
 import VueNavMenuItem from './components/VueNavMenuItem'
 import Screen from './components/Screen'
 import VuePasswordField from './components/VuePasswordField'
+import VueNavMenuItemInline from './components/VueNavMenuItemInline'
 
 // Platform Specific
 import ContactMech from './components/platformSpecific/ContactMech'
@@ -151,6 +152,7 @@ Vue.component('vue-platform-specific', VuePlatformSpecific)
 Vue.component('vue-nav-menu', VueNavMenu)
 Vue.component('vue-nav-menu-item', VueNavMenuItem)
 Vue.component('vue-password-field', VuePasswordField)
+Vue.component('vue-nav-menu-item-inline', VueNavMenuItemInline)
 
 // Platform Specific
 Vue.component('ContactMech', ContactMech)

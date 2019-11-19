@@ -1,13 +1,12 @@
 <template>
-    <v-row v-if="props.children.length < 2">
-      <vue-nav-menu-item v-for="(component, index) in props.children"
-           :key="index"
-           :props="component"
-           :updateStore="updateStore"
-           class="text-right">
-
-      </vue-nav-menu-item>
-    </v-row>
+    <div class="d-flex flex-row-reverse" v-if="props.children.length < 3">
+      <vue-nav-menu-item-inline v-for="(component, index) in props.children"
+                         :key="index"
+                         :props="component"
+                         :updateStore="updateStore"
+                         class="text-right d-flex ma-2">
+      </vue-nav-menu-item-inline>
+    </div>
     <v-menu bottom left v-else transition="scale-transition" origin="center center">
       <template v-slot:activator="{ on }">
         <v-btn icon v-on="on">
