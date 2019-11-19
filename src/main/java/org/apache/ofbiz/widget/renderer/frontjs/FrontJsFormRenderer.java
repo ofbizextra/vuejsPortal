@@ -212,6 +212,17 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         attributes.put("description", encodeDoubleQuotes(description));
         attributes.put("name", name);
 
+        ModelFormField.InPlaceEditor inPlaceEditor = displayField.getInPlaceEditor();
+        if (inPlaceEditor != null) {
+            attributes.put("inPlaceEditor", true);
+            String url = inPlaceEditor.getUrl(context);
+            attributes.put("url", url);
+            String savingText = inPlaceEditor.getSavingText();
+            attributes.put("savingText", savingText);
+            Map<String, Object> fieldMap = inPlaceEditor.getFieldMap(context);
+            attributes.put("fieldMap", fieldMap);
+        }
+
         if (UtilValidate.isNotEmpty(type)) attributes.put("type", type);
         if (UtilValidate.isNotEmpty(size)) attributes.put("size", size);
         if (UtilValidate.isNotEmpty(imageLocation)) attributes.put("imageLocation", imageLocation);
