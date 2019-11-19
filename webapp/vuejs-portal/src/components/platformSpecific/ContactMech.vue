@@ -1592,10 +1592,4 @@
 </script>
 
 <style scoped>
-
-  div.row {
-    background-color: white !important;
-    text-align: left !important;
-    margin: auto !important;
-  }
 </style>
