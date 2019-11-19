@@ -564,7 +564,7 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
 
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("title", title);
-        parameters.put("name", screenlet.getName());
+        //parameters.put("name", screenlet.getName()); temporary comment
         parameters.put("collapsible", collapsible);
         parameters.put("saveCollapsed", screenlet.saveCollapsed());
         if (UtilValidate.isNotEmpty (screenlet.getId(context))) {
@@ -575,6 +575,7 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
             parameters.put("collapsibleAreaId","screenlet_" + screenLetsIdCounter + "_col");
             screenLetsIdCounter++;
         }
+        parameters.put("name", parameters.get("id")); // temporary, to test if with id it works !
         parameters.put("expandToolTip", expandToolTip);
         parameters.put("collapseToolTip", collapseToolTip);
         parameters.put("fullUrlString", fullUrlString);
