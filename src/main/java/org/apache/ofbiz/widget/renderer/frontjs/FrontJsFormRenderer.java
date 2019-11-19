@@ -1108,7 +1108,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         String conditionGroup = modelFormField.getConditionGroup();
         String event = modelFormField.getEvent();
         String id = modelFormField.getCurrentContainerId(context);
-        String formName = modelFormField.getModelForm().getName();
+        String formName = FormRenderer.getCurrentFormName(modelFormField.getModelForm(), context);
         Map<String, Object> cb = new HashMap<>();
         cb.put("name", name);
         cb.put("conditionGroup", conditionGroup);
