@@ -215,6 +215,10 @@
     watch: {
       data: function () {
         this.$store.dispatch('form/setFieldToForm', this.storeForm)
+        if (this.props.attributes.hasOwnProperty('value') && this.props.attributes.value !== '') {
+          this.date = this.props.attributes.value.split(' ')[0]
+          this.time = this.props.attributes.value.split(' ')[1].split('.')[0]
+        }
       },
       datetime: function (newValue) {
         this.$store.dispatch('form/setFieldToForm', {
