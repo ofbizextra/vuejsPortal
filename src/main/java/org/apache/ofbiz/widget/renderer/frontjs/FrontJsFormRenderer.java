@@ -271,6 +271,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
             }
             cb.put("updateAreas", updateAreasList);
         }
+        cb.put("description", hyperlinkField.getDescription(context));
         String value = modelFormField.getEntry(context);
 //        if (hyperlinkField.getDescription().toString().contains("${") && !hyperlinkField.getDescription().toString().contains("uiLabel")) {
         if (hyperlinkField.getDescription(context).equals(value)) {
@@ -278,7 +279,6 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
 //            String value = hyperlinkField.getDescription(context);
             this.output.putScreen("HyperlinkField", cb, key, value);
         } else {
-            cb.put("description", hyperlinkField.getDescription(context));
             this.output.putScreen("HyperlinkField", cb);
         }
         // hyperlinkField.getTarget(context)  //=> get target portlet
