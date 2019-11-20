@@ -170,6 +170,7 @@ under the License.
         <section>
             <actions>
                 <set field="idFind" from-field="idFind" default-value=""/><!-- use to be able to have multiple screen with this decorator on a same page -->
+                <set field="findTitle" from-field="findTitle" default-value="CommonSearchOptions" />
             </actions>
             <widgets>
                 <section>
@@ -183,18 +184,17 @@ under the License.
                         <container style="page-title"><label text="${uiLabelMap[titleProperty]}"></label></container>
                     </fail-widgets>
                 </section>
-<!--                 <decorator-section-include name="menu-bar"/> -->
-<!--                 <container style="clear"/> -->
+                <decorator-section-include name="menu-bar"/>
+                <container style="clear"/>
                 <section>
                     <condition>
                         <if-empty field="parameters.onlyList"/>
                     </condition>
                     <widgets>
-                        <screenlet id="findScreenlet_${idFind}" collapsible="true" title="${uiLabelMap.CommonSearchOptions}">
+                        <screenlet id="findScreenlet_${idFind}" collapsible="true" title="${uiLabelMap.${findTitle}}">
                             <decorator-section-include name="search-options" />
                         </screenlet>
-                        <screenlet padded="false">
-                          <label style="h3" text="${uiLabelMap.CommonSearchResults}"/>
+                        <screenlet padded="false" title="${uiLabelMap.CommonSearchResults}">
                           <container id="searchResults_${idFind}">
                              <decorator-section-include name="search-results"/>
                           </container>
