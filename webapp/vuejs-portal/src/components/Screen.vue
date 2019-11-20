@@ -85,7 +85,7 @@
       if (screenId === 'main') {
         screenId = 'mainfjs'
       }
-      this.$http.post(constantes.apiUrl + '/' + screenId,
+      this.$http.post(this.currentApi + '/' + screenId,
         queryString.stringify(this.$route.query),
         {headers: {'Content-Type': 'application/x-www-form-urlencoded', 'locale': 'en_US'}}
       ).then(
@@ -101,7 +101,7 @@
         if (screenId === 'main') {
           screenId = 'mainfjs'
         }
-        this.$http.post(constantes.apiUrl + '/' + screenId,
+        this.$http.post(this.currentApi + '/' + screenId,
           queryString.stringify(this.$route.query),
           {headers: {'Content-Type': 'application/x-www-form-urlencoded', 'locale': 'en_US'}}
         ).then(
