@@ -18,7 +18,7 @@
       :to="{path: routerLink, query: parameterMap}"
     >
 
-      <img :src="imgSrc" :title="imgTitle" alt="" v-if="hasImage"/>
+      <img :src="imgSrc" :title="imgTitle" alt="" v-if="hasImg"/>
         <span class="font-weight-regular">
             {{description}}
         </span>
