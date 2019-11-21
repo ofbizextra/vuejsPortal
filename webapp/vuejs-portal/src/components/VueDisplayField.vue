@@ -15,7 +15,9 @@
       </div>
     </div>
     <div v-else>
-        <label v-bind="data" class="ma-1">{{value}}</label>
+        <label v-if="pointer.entityName" v-bind="data" class="ma-1">{{getPointer}}</label>
+        <label v-else v-bind="data" class="ma-1">{{data.title ? data.title : data.description}}</label>
+        <!-- <label v-bind="data" class="ma-1">{{value}}</label> -->
     </div>
   </div>
 </template>
