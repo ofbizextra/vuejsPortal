@@ -184,13 +184,13 @@ under the License.
                         <container style="page-title"><label text="${uiLabelMap[titleProperty]}"></label></container>
                     </fail-widgets>
                 </section>
-                <decorator-section-include name="menu-bar"/>
-                <container style="clear"/>
                 <section>
                     <condition>
                         <if-empty field="parameters.onlyList"/>
                     </condition>
                     <widgets>
+                        <decorator-section-include name="menu-bar"/>
+                        <container style="clear"/>
                         <screenlet id="findScreenlet_${idFind}" collapsible="true" title="${uiLabelMap.${findTitle}}">
                             <decorator-section-include name="search-options" />
                         </screenlet>
