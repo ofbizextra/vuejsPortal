@@ -39,10 +39,10 @@ under the License.
                   <if-compare field="showScreenletMenu" operator="equals" value="N"/>
               </condition>
               <widgets>
-                <decorator-screen name="portletUiLabelDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="frontJsUiLabelDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                       <screenlet title="${uiLabelMap.${__titleLabel__}} ${parameters.idDescription}" collapsible="true" initially-collapsed="${initiallyCollapsed}"
-                                 name="${__portletName__}" >
+                                 id="${__portletName__}" >
                         <include-screen name="__FormOrScreen__"/>
                       </screenlet>
                     </decorator-section>
@@ -52,10 +52,10 @@ under the License.
                 <!-- menuLocation is defined so call it -->
                 <section>
                   <widgets>
-                    <decorator-screen name="portletUiLabelDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-screen name="frontJsUiLabelDecorator" location="${parameters.mainDecoratorLocation}">
                         <decorator-section name="body">
                           <screenlet title="${uiLabelMap.${__titleLabel__}} ${parameters.idDescription}" collapsible="true" initially-collapsed="${initiallyCollapsed}" 
-                                     navigation-menu-name="${__menuName__}" name="${__portletName__}">
+                                     navigation-menu-name="${__menuName__}" id="${__portletName__}">
                             <include-menu name="${__menuName__}" location="${__menuLocation__}"/>
                             <container id="${__editAreaDivId__}_editArea"/> <!-- for portlet with an editArea like ExampleItems -->
                             <container id="${__subAreaDivId__}">            <!-- for portlet like ShowExample -->
