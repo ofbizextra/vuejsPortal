@@ -4,7 +4,7 @@
                          :key="index"
                          :props="component"
                          :updateStore="updateStore"
-                         class="text-right d-flex ma-2">
+                         class="text-right d-flex">
       </vue-nav-menu-item-inline>
     </div>
     <v-menu bottom left v-else transition="scale-transition" origin="center center">

@@ -1,12 +1,15 @@
 <template>
-  <v-list-item :id="props.children[0].attributes.text.split(' ').join('_')" link>
+  <v-list-item :id="props.children[0].attributes.text.split(' ').join('_')" link @click="propagate">
     <v-list-item-content>
     <div
+        :ref="props.children[0].attributes.text.split(' ').join('_') + '_link'"
         v-for="(component, index) in props.children"
         :key="index"
         v-bind:is="constantes.components[component.name]"
         :props="component"
         :updateStore="updateStore"
+        :inline="false"
+        :clickDisabled="true"
     ></div>
     </v-list-item-content>
   </v-list-item>
@@ -42,7 +45,12 @@
         return this.data.hasOwnProperty('containsNestedMenus') ? this.data.containsNestedMenus : ''
       }
     },
-    methods: {}
+    methods: {
+      propagate() {
+        console.log(this.$refs[this.props.children[0].attributes.text.split(' ').join('_') + '_link'])
+        this.$refs[this.props.children[0].attributes.text.split(' ').join('_') + '_link'][0].redirect()
+      }
+    }
   }
 </script>
 

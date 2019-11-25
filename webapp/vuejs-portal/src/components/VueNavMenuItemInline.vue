@@ -6,6 +6,7 @@
         v-bind:is="constantes.components[component.name]"
         :props="component"
         :updateStore="updateStore"
+        :inline="true"
     ></div>
   </div>
 </template>

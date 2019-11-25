@@ -53,8 +53,8 @@
             {{text}}
         </span>
     </a>
-    <a
-      v-else-if="linkType === 'anchor'"
+    <v-btn
+      v-else-if="linkType === 'anchor' && inline"
       v-bind:id="id + '_link'"
       :data-dialog-params="params"
       :data-dialog-width="width"
@@ -62,9 +62,25 @@
       :data-dialog-title="text"
       :class="style"
       v-on:click.prevent="redirect"
+      icon
     >
       <img :src="imgSrc" :title="imgTitle" alt="" v-if="hasImage"/>
         <span class="font-weight-regular secondary--text">
+            {{text}}
+        </span>
+    </v-btn>
+    <a
+        v-else-if="linkType === 'anchor'"
+        v-bind:id="id + '_link'"
+        :data-dialog-params="params"
+        :data-dialog-width="width"
+        :data-dialog-height="height"
+        :data-dialog-title="text"
+        :class="style"
+        v-on:click.prevent="clickDisabled ? null : redirect"
+    >
+      <img :src="imgSrc" :title="imgTitle" alt="" v-if="hasImage"/>
+      <span class="font-weight-regular secondary--text">
             {{text}}
         </span>
     </a>
@@ -75,7 +91,7 @@
       v-bind:name="name"
       v-bind:target="targetWindow"
       v-bind:href="`${href}#${href}`"
-      v-on:click.prevent="redirect"
+      v-on:click.prevent="clickDisabled ? null : redirect"
     >
       <img :src="imgSrc" :title="imgTitle" alt="" v-if="hasImage">
     {{' ' + text}}
@@ -89,7 +105,7 @@
 
   export default {
     name: "VueLink",
-    props: ['props', 'updateStore'],
+    props: ['props', 'updateStore', 'inline', 'clickDisabled'],
     data() {
       return {
         constantes
