@@ -29,11 +29,16 @@
     >
 <!--      v-bind:href="`${href}#${href}`"-->
       <!--v-on:click="redirect"-->
-
-      <img :src="imgSrc" :title="imgTitle" alt="" v-if="hasImage"/>
-        <span class="font-weight-regular">
-            {{text}}
-        </span>
+      <v-tooltip bottom>
+        <template v-slot:activator="{ on }">
+          <v-icon v-if="haveIcon" v-on="on">{{src}}</v-icon>
+        </template>
+        <span>{{imgTitle}}</span>
+      </v-tooltip>
+      <img :src="src" :title="imgTitle" alt="" v-if="haveImage"/>
+      <span class="font-weight-regular">
+          {{text}}
+      </span>
     </router-link>
     <a
       v-else-if="linkType === 'auto'"
@@ -47,8 +52,13 @@
     >
       <!--      v-bind:href="`${href}#${href}`"-->
       <!--v-on:click="redirect"-->
-
-      <img :src="imgSrc" :title="imgTitle" alt="" v-if="hasImage"/>
+      <v-tooltip bottom>
+        <template v-slot:activator="{ on }">
+          <v-icon v-if="haveIcon" v-on="on">{{src}}</v-icon>
+        </template>
+        <span>{{imgTitle}}</span>
+      </v-tooltip>
+      <img :src="src" :title="imgTitle" alt="" v-if="haveImage"/>
         <span class="font-weight-regular">
             {{text}}
         </span>
@@ -64,7 +74,13 @@
       v-on:click.prevent="redirect"
       icon
     >
-      <img :src="imgSrc" :title="imgTitle" alt="" v-if="hasImage"/>
+      <v-tooltip bottom>
+        <template v-slot:activator="{ on }">
+          <v-icon v-if="haveIcon" v-on="on">{{src}}</v-icon>
+        </template>
+        <span>{{imgTitle}}</span>
+      </v-tooltip>
+      <img :src="src" :title="imgTitle" alt="" v-if="haveImage"/>
         <span class="font-weight-regular secondary--text">
             {{text}}
         </span>
@@ -79,7 +95,13 @@
         :class="style"
         v-on:click.prevent="clickDisabled ? null : redirect"
     >
-      <img :src="imgSrc" :title="imgTitle" alt="" v-if="hasImage"/>
+      <v-tooltip bottom>
+        <template v-slot:activator="{ on }">
+          <v-icon v-if="haveIcon" v-on="on">{{src}}</v-icon>
+        </template>
+        <span>{{imgTitle}}</span>
+      </v-tooltip>
+      <img :src="src" :title="imgTitle" alt="" v-if="haveImage"/>
       <span class="font-weight-regular secondary--text">
             {{text}}
         </span>
@@ -93,7 +115,13 @@
       v-bind:href="`${href}#${href}`"
       v-on:click.prevent="clickDisabled ? null : redirect"
     >
-      <img :src="imgSrc" :title="imgTitle" alt="" v-if="hasImage">
+      <v-tooltip bottom>
+        <template v-slot:activator="{ on }">
+          <v-icon v-if="haveIcon" v-on="on">{{src}}</v-icon>
+        </template>
+        <span>{{imgTitle}}</span>
+      </v-tooltip>
+      <img :src="src" :title="imgTitle" alt="" v-if="haveImage">
     {{' ' + text}}
     </a>
   </div>
@@ -159,10 +187,13 @@
       text() {
         return this.data.hasOwnProperty('text') ? this.data.text : ''
       },
-      hasImage() {
-        return this.data.hasOwnProperty('img')
+      haveImage() {
+        return this.data.hasOwnProperty('img') && this.data.img.hasOwnProperty('src') && !this.data.img.src.startsWith('mdi-')
       },
-      imgSrc() {
+      haveIcon() {
+        return this.data.hasOwnProperty('img') && this.data.img.hasOwnProperty('src') && this.data.img.src.startsWith('mdi-')
+      },
+      src() {
         return this.data.img.hasOwnProperty('src') ? this.data.img.src : ''
       },
       imgTitle() {

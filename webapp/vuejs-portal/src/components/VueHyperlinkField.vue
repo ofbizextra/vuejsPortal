@@ -1,35 +1,56 @@
 <template>
   <div id="vue-hyperlink-field">
-    <v-btn outlined x-small color="primary"
-      v-if="haveUpdateAreas"
-      :title="title"
-      :description="description"
-      :class="className"
-      v-on:click.prevent="submit"
+    <v-btn outlined
+           :x-small="!haveIcon"
+           :small="haveIcon"
+           color="primary"
+           v-if="haveUpdateAreas"
+           :class="className"
+           v-on:click.prevent="submit"
+           :icon="haveIcon"
     >
-      <img :src="imgSrc" :title="imgTitle" alt="" v-if="hasImg">
+      <v-tooltip bottom>
+        <template v-slot:activator="{ on }">
+          <v-icon v-if="haveIcon" v-on="on">{{src}}</v-icon>
+        </template>
+        <span>{{imgTitle}}</span>
+      </v-tooltip>
+      <img :src="src" :title="imgTitle" alt="" v-if="haveImg">
       {{description}}
     </v-btn>
     <router-link
-      v-else-if="linkType === 'auto' && urlMode === 'intra-app'"
-      v-bind:id="description + '_link'"
-      :data-dialog-title="description"
-      :class="className"
-      :to="{path: routerLink, query: parameterMap}"
+        v-else-if="linkType === 'auto' && urlMode === 'intra-app'"
+        v-bind:id="description + '_link'"
+        :class="className"
+        :to="{path: routerLink, query: parameterMap}"
     >
-
-      <img :src="imgSrc" :title="imgTitle" alt="" v-if="hasImg"/>
-        <span class="font-weight-regular">
+      <v-tooltip bottom>
+        <template v-slot:activator="{ on }">
+          <v-icon v-if="haveIcon" v-on="on">{{src}}</v-icon>
+        </template>
+        <span>{{imgTitle}}</span>
+      </v-tooltip>
+      <img :src="src" :title="imgTitle" alt="" v-if="haveImg"/>
+      <span class="font-weight-regular">
             {{description}}
         </span>
     </router-link>
-    <v-btn outlined x-small color="primary"
-      v-else
-      :href="target"
-      :title="title"
-      :class="className"
+    <v-btn outlined
+           :x-small="!haveIcon"
+           :small="haveIcon"
+           color="primary"
+           v-else
+           :href="target"
+           :class="className"
+           :icon="haveIcon"
     >
-      <img :src="imgSrc" :title="imgTitle" alt="" v-if="hasImg">
+      <v-tooltip bottom>
+        <template v-slot:activator="{ on }">
+          <v-icon v-if="haveIcon" v-on="on">{{src}}</v-icon>
+        </template>
+        <span>{{imgTitle}}</span>
+      </v-tooltip>
+      <img :src="src" :title="imgTitle" alt="" v-if="haveImg">
       {{description}}
     </v-btn>
   </div>
@@ -37,6 +58,7 @@
 
 <script>
   import {mapGetters} from 'vuex'
+
   export default {
     name: "VueHyperlinkField",
     props: ['props'],
@@ -64,7 +86,7 @@
         return this.props.hasOwnProperty('attributes') ? this.props.attributes : {}
       },
       getPointer() {
-        return this.getData(this.pointer);
+        return this.getData(this.pointer)
       },
       ...mapGetters({
         getData: 'data/entityRowAttribute',
@@ -107,11 +129,14 @@
       confirmationMessage() {
         return this.attributes.hasOwnProperty('confirmationMessage') ? this.attributes.confirmationMessage : ''
       },
-      hasImg() {
-        return this.attributes.hasOwnProperty('imgSrc') && this.attributes.imgSrc !== ''
+      haveImage() {
+        return this.data.hasOwnProperty('imgSrc') && !this.data.imgSrc.startsWith('mdi-')
       },
-      imgSrc() {
-        return this.hasImg ? this.attributes.imgSrc : ''
+      haveIcon() {
+        return this.data.hasOwnProperty('imgSrc') && this.data.imgSrc.startsWith('mdi-')
+      },
+      src() {
+        return this.data.hasOwnProperty('imgSrc') ? this.data.imgSrc : ''
       },
       imgTitle() {
         return this.attributes.hasOwnProperty('imgTitle') ? this.attributes.imgTitle : ''
@@ -160,7 +185,7 @@
             return new Promise((resolve) => {
               setTimeout(() => {
                 resolve()
-              },0)
+              }, 0)
             })
           case 'submit':
             // submit
@@ -169,7 +194,7 @@
             return new Promise((resolve) => {
               setTimeout(() => {
                 resolve()
-              },0)
+              }, 0)
             })
           case 'setFieldInForm':
             // do setFieldInForm
@@ -181,7 +206,7 @@
             return new Promise((resolve) => {
               setTimeout(() => {
                 resolve()
-              },0)
+              }, 0)
             })
           case 'closeModal':
             // do closeModal
@@ -196,7 +221,7 @@
             return new Promise((resolve) => {
               setTimeout(() => {
                 resolve()
-              },0)
+              }, 0)
             })
           case 'collapse':
             switch (updateArea.areaTarget) {
@@ -232,14 +257,14 @@
             return new Promise((resolve) => {
               setTimeout(() => {
                 resolve()
-              },0)
+              }, 0)
             })
           default:
             // do nothing
             return new Promise((resolve) => {
               setTimeout(() => {
                 resolve()
-              },0)
+              }, 0)
             })
         }
       },
