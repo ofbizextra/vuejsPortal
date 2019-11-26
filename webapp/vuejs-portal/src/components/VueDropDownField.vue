@@ -1,7 +1,7 @@
 <template>
     <div :id="id" :name="name">
       <v-select :items="data.options" item-value="key" item-text="description" v-model="value"
-                hide-details dense clearable>
+                :hide-details="noRules" dense clearable :rules="rules">
         <template slot="item" slot-scope="data">
         <span :id="data.item.key">
           {{data.item.description}}
@@ -59,6 +59,21 @@
       },
       name() {
         return this.data.hasOwnProperty('name') ? this.data.name : ''
+      },
+      controls() {
+        return {
+          required: this.data.hasOwnProperty('requiredField') && this.data.requiredField === true
+        }
+      },
+      noRules() {
+        return this.controls.required === false
+      },
+      rules() {
+        let rules = []
+        if (this.controls.required) {
+          rules.push((v) => !!v || 'This field is required')
+        }
+        return rules
       }
     },
     watch: {

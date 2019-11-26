@@ -691,6 +691,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         AutoComplete autoComplete = dropDownField.getAutoComplete();
         String event = modelFormField.getEvent();
         String action = modelFormField.getAction(context);
+        Boolean requiredField = modelFormField.getRequiredField();
         Integer textSize = 0;
         if (UtilValidate.isNotEmpty(dropDownField.getTextSize())) {
             try {
@@ -873,6 +874,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         cb.put("fullSearch", fullSearch);
         cb.put("conditionGroup", conditionGroup);
         cb.put("tabindex", tabindex);
+        cb.put("requiredField", requiredField);
         Map<String, Object> data = new HashMap<>();
         fieldName = name;
         fieldValue = explicitDescription;
@@ -958,6 +960,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         String name = modelFormField.getName();
         String event = modelFormField.getEvent();
         String action = modelFormField.getAction(context);
+        Boolean requiredField = modelFormField.getRequiredField();
         List<Map<String, String>> items = new ArrayList<>();
         if (UtilValidate.isNotEmpty(modelFormField.getWidgetStyle())) {
             className = modelFormField.getWidgetStyle();
@@ -992,6 +995,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         cb.put("conditionGroup", conditionGroup);
         cb.put("tabindex", tabindex);
         cb.put("formName", formName);
+        cb.put("requiredField", requiredField);
         Map<String, Object> data = new HashMap<>();
         fieldName = name;
         fieldValue = currentValue;

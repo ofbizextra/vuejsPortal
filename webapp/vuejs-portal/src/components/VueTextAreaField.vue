@@ -1,6 +1,6 @@
 <template>
   <div id="vue-text-area-field">
-    <v-textarea v-model="value" v-bind="data" hide-details></v-textarea>
+    <v-textarea v-model="value" v-bind="data" :hide-details="noRules" :rules="rules"></v-textarea>
   </div>
 </template>
 
@@ -14,6 +14,10 @@
       return {}
     },
     computed: {
+      ...mapGetters({
+        getForm: 'form/form',
+        getDataFromForm: 'form/fieldInForm'
+      }),
       data() {
         let data = this.props.attributes
         //delete data['value']
@@ -41,10 +45,25 @@
           })
         }
       },
-      ...mapGetters({
-        getForm: 'form/form',
-        getDataFromForm: 'form/fieldInForm'
-      })
+      controls() {
+        return {
+          required: this.data.hasOwnProperty('required') && this.data.required.hasOwnProperty('requiredField') && this.data.required.requiredField === "true",
+          maxLength: this.data.hasOwnProperty('maxLength') ? this.data.maxLength : null,
+        }
+      },
+      noRules() {
+        return this.controls.required === false && this.controls.maxLength === null && this.controls.mask === null
+      },
+      rules() {
+        let rules = []
+        if (this.controls.required) {
+          rules.push((v) => !!v || 'This field is required')
+        }
+        if (this.controls.maxLength !== null) {
+          rules.push((v) => v.length > this.controls.maxLength || `This field must be less than ${this.controls.maxLength} characters` )
+        }
+        return rules
+      }
     },
     watch: {
       data: function () {

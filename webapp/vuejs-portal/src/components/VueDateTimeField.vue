@@ -15,6 +15,8 @@
             v-model="date"
             label="date"
             prepend-icon="mdi-event"
+            :rules="rules"
+            :hide-details="noRules"
             v-on="on"
         ></v-text-field>
       </template>
@@ -39,6 +41,8 @@
             v-model="time"
             label="time"
             prepend-icon="mdi-event"
+            :rules="rules"
+            :hide-details="noRules"
             v-on="on"
         ></v-text-field>
       </template>
@@ -209,6 +213,21 @@
           enableSeconds: true,
           dateFormat: this.isTwelveHour ? '12hr' : '24hr'
         }
+      },
+      controls() {
+        return {
+          required: this.data.hasOwnProperty('required') && this.data.required.hasOwnProperty('requiredField') && this.data.required.requiredField === "true"
+        }
+      },
+      noRules() {
+        return this.controls.required === false
+      },
+      rules() {
+        let rules = []
+        if (this.controls.required) {
+          rules.push((v) => !!v || 'This field is required')
+        }
+        return rules
       }
     }
     ,

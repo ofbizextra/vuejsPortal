@@ -1,8 +1,14 @@
 <template>
-  <v-radio-group id="vue-radio-field" v-model="value" row hide-details>
+  <v-radio-group id="vue-radio-field" v-model="value" row :hide-details="noRules" :rules="rules">
     <input v-if="data.conditionGroup" type="hidden" :name="data.name + '_grp'" v-bind:value="data.conditionGroup"/>
     <v-radio v-for="item in props.attributes.items" :key="item.key" :label="item.description" :value="item.key">
     </v-radio>
+    <v-tooltip bottom v-if="value">
+      <template v-slot:activator="{ on }">
+        <v-btn icon small v-on="on" v-on:click="clear"><v-icon>mdi-close</v-icon></v-btn>
+      </template>
+      <span>Clear</span>
+    </v-tooltip>
     <vue-error v-if="data.event" component="event"/>
   </v-radio-group>
 </template>
@@ -17,6 +23,10 @@
       return {}
     },
     computed: {
+      ...mapGetters({
+        getDataFromForm: 'form/fieldInForm',
+        getForm: 'form/form'
+      }),
       data() {
         let data = this.props.attributes
         //delete data['currentValue']
@@ -44,10 +54,26 @@
           })
         }
       },
-      ...mapGetters({
-        getDataFromForm: 'form/fieldInForm',
-        getForm: 'form/form'
-      })
+      controls() {
+        return {
+          required: this.data.hasOwnProperty('requiredField') &&  this.data.requiredField === true
+        }
+      },
+      noRules() {
+        return this.controls.required === false && this.controls.maxLength === null && this.controls.mask === null
+      },
+      rules() {
+        let rules = []
+        if (this.controls.required) {
+          rules.push((v) => !!v || 'This field is required')
+        }
+        return rules
+      }
+    },
+    methods: {
+      clear() {
+        this.value = ''
+      }
     },
     watch: {
       data: function () {

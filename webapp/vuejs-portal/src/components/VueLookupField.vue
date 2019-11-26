@@ -8,7 +8,8 @@
           :items="items"
           hide-no-data
           hide-selected
-          hide-details
+          :hide-details="noRules"
+          :rules="rules"
           no-filter
           :return-object="false"
           :search-input.sync="search"/>
@@ -157,6 +158,25 @@
           })
         }
       },
+      controls() {
+        return {
+          required: this.data.hasOwnProperty('required') && this.data.required.hasOwnProperty('requiredField') && this.data.required.requiredField === "true",
+          maxLength: this.data.hasOwnProperty('maxLength') ? this.data.maxLength : null,
+        }
+      },
+      noRules() {
+        return this.controls.required === false && this.controls.maxLength === null && this.controls.mask === null
+      },
+      rules() {
+        let rules = []
+        if (this.controls.required) {
+          rules.push((v) => !!v || 'This field is required')
+        }
+        if (this.controls.maxLength !== null) {
+          rules.push((v) => v.length > this.controls.maxLength || `This field must be less than ${this.controls.maxLength} characters` )
+        }
+        return rules
+      }
     },
     methods: {
       debounceUpdateWordList: _.debounce(function () {
