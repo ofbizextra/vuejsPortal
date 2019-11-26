@@ -1,6 +1,8 @@
 <template>
   <v-flex text-center id="vue-submit-field">
-    <v-btn raised dark color="primary" type="submit" :label="data.title" :value="data.title" v-bind="data" v-on:click.prevent="resolveEvents">{{data.title}}</v-btn>
+    <v-btn raised dark color="primary" type="submit" :label="data.title" :value="data.title" v-bind="data"
+           v-on:click.prevent="resolveEvents">{{data.title}}
+    </v-btn>
   </v-flex>
 </template>
 
@@ -17,6 +19,7 @@
       ...mapGetters({
         getForm: 'form/form',
         getDataFromForm: 'form/fieldInForm',
+        formValidate: 'form/formValidate'
       }),
       data() {
         let data = this.props.attributes
@@ -70,7 +73,7 @@
             return new Promise((resolve) => {
               setTimeout(() => {
                 resolve()
-              },0)
+              }, 0)
             })
           case 'setArea':
             // do post then set area
@@ -88,7 +91,7 @@
             return new Promise((resolve) => {
               setTimeout(() => {
                 resolve()
-              },0)
+              }, 0)
             })
           case 'collapse':
             switch (updateArea.areaTarget) {
@@ -124,26 +127,28 @@
             return new Promise((resolve) => {
               setTimeout(() => {
                 resolve()
-              },0)
+              }, 0)
             })
           default:
             // do nothing
             return new Promise((resolve) => {
               setTimeout(() => {
                 resolve()
-              },0)
+              }, 0)
             })
         }
       },
       resolveEvents() {
-        if (this.haveUpdateAreas) {
-          this.updateAreas.reduce((accumulatorPromise, nextUpdateArea) => {
-            return accumulatorPromise.then(() => {
-              return this.resolveEvent(nextUpdateArea)
-            })
-          }, Promise.resolve())
-        } else {
-          this.submit()
+        if (this.formValidate(this.data.formName)()) {
+          if (this.haveUpdateAreas) {
+            this.updateAreas.reduce((accumulatorPromise, nextUpdateArea) => {
+              return accumulatorPromise.then(() => {
+                return this.resolveEvent(nextUpdateArea)
+              })
+            }, Promise.resolve())
+          } else {
+            this.submit()
+          }
         }
       }
     }

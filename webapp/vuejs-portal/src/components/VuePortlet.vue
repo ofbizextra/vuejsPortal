@@ -102,6 +102,16 @@
           params: {...val, portalPortletId: this.portalPortletId, portalPageId: this.portalPageId, portletSeqId: this.portletSeqId}
         })
       },
+      currentPortalPageParams: function (val) {
+        console.log('portlet params updated: ', val)
+        console.log(this.$store.getters['backOfficeApi/apiUrl'] + cst.showPortlet.path + ' : => ' + this.portalPortletId + '-' + this.portletSeqId)
+        this.$store.dispatch('ui/setArea', {
+          areaId: this.portletId,
+          targetUrl: this.$store.getters['backOfficeApi/currentApi'] + cst.showPortlet.path,
+          wait: this.$wait,
+          params: {...val, portalPortletId: this.portalPortletId, portalPageId: this.portalPageId, portletSeqId: this.portletSeqId}
+        })
+      },
       props: function () {
         this.$store.dispatch('ui/deleteArea', {areaId: this.portletId})
       }

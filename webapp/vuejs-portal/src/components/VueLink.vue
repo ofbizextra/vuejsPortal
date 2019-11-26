@@ -4,51 +4,28 @@
     <!--:action="actionUrl"-->
     <!--:target="targetWindow"-->
     <form
-      v-if="linkType === 'hidden-form'"
-      v-on:click.prevent=""
-      :name="uniqueItemName"
+        v-if="linkType === 'hidden-form'"
+        v-on:click.prevent=""
+        :name="uniqueItemName"
     >
       <input
-        v-for="(parameter, id) in parameterMap"
-        :key="id"
-        :name="parameter.name"
-        :value="parameter.value"
-        type="hidden"
+          v-for="(parameter, id) in parameterMap"
+          :key="id"
+          :name="parameter.name"
+          :value="parameter.value"
+          type="hidden"
       />
     </form>
     <!--:data-dialog-url="linkUrl"-->
     <router-link
-      v-if="linkType === 'auto' && urlMode === 'intra-app'"
-      v-bind:id="id + '_link'"
-      :data-dialog-params="params"
-      :data-dialog-width="width"
-      :data-dialog-height="height"
-      :data-dialog-title="text"
-      :class="style"
-      :to="{path: routerLink, query: parameterMap}"
-    >
-<!--      v-bind:href="`${href}#${href}`"-->
-      <!--v-on:click="redirect"-->
-      <v-tooltip bottom>
-        <template v-slot:activator="{ on }">
-          <v-icon v-if="haveIcon" v-on="on">{{src}}</v-icon>
-        </template>
-        <span>{{imgTitle}}</span>
-      </v-tooltip>
-      <img :src="src" :title="imgTitle" alt="" v-if="haveImage"/>
-      <span class="font-weight-regular">
-          {{text}}
-      </span>
-    </router-link>
-    <a
-      v-else-if="linkType === 'auto'"
-      v-bind:id="id + '_link'"
-      :data-dialog-params="params"
-      :data-dialog-width="width"
-      :data-dialog-height="height"
-      :data-dialog-title="text"
-      :class="style"
-      :href="href"
+        v-if="linkType === 'auto' && urlMode === 'intra-app'"
+        v-bind:id="id + '_link'"
+        :data-dialog-params="params"
+        :data-dialog-width="width"
+        :data-dialog-height="height"
+        :data-dialog-title="text"
+        :class="style"
+        :to="{path: routerLink, query: parameterMap}"
     >
       <!--      v-bind:href="`${href}#${href}`"-->
       <!--v-on:click="redirect"-->
@@ -59,20 +36,43 @@
         <span>{{imgTitle}}</span>
       </v-tooltip>
       <img :src="src" :title="imgTitle" alt="" v-if="haveImage"/>
-        <span class="font-weight-regular">
-            {{text}}
-        </span>
+      <span class="font-weight-regular">
+        {{text}}
+      </span>
+    </router-link>
+    <a
+        v-else-if="linkType === 'auto'"
+        v-bind:id="id + '_link'"
+        :data-dialog-params="params"
+        :data-dialog-width="width"
+        :data-dialog-height="height"
+        :data-dialog-title="text"
+        :class="style"
+        :href="href"
+    >
+      <!--      v-bind:href="`${href}#${href}`"-->
+      <!--v-on:click="redirect"-->
+      <v-tooltip bottom>
+        <template v-slot:activator="{ on }">
+          <v-icon v-if="haveIcon" v-on="on">{{src}}</v-icon>
+        </template>
+        <span>{{imgTitle}}</span>
+      </v-tooltip>
+      <img :src="src" :title="imgTitle" alt="" v-if="haveImage"/>
+      <span class="font-weight-regular">
+        {{text}}
+      </span>
     </a>
     <v-btn
-      v-else-if="linkType === 'anchor' && inline"
-      v-bind:id="id + '_link'"
-      :data-dialog-params="params"
-      :data-dialog-width="width"
-      :data-dialog-height="height"
-      :data-dialog-title="text"
-      :class="style"
-      v-on:click.prevent="redirect"
-      icon
+        v-else-if="linkType === 'anchor' && inline"
+        v-bind:id="id + '_link'"
+        :data-dialog-params="params"
+        :data-dialog-width="width"
+        :data-dialog-height="height"
+        :data-dialog-title="text"
+        :class="style"
+        v-on:click.prevent="redirect"
+        icon
     >
       <v-tooltip bottom>
         <template v-slot:activator="{ on }">
@@ -81,7 +81,7 @@
         <span>{{imgTitle}}</span>
       </v-tooltip>
       <img :src="src" :title="imgTitle" alt="" v-if="haveImage"/>
-        <span class="font-weight-regular secondary--text">
+      <span class="font-weight-regular secondary--text">
             {{text}}
         </span>
     </v-btn>
@@ -107,13 +107,13 @@
         </span>
     </a>
     <a
-      v-else-if="linkType === 'hidden-form' || linkUrl.length > 0"
-      v-bind:id="id"
-      v-bind:class="style"
-      v-bind:name="name"
-      v-bind:target="targetWindow"
-      v-bind:href="`${href}#${href}`"
-      v-on:click.prevent="clickDisabled ? null : redirect"
+        v-else-if="linkType === 'hidden-form' || linkUrl.length > 0"
+        v-bind:id="id"
+        v-bind:class="style"
+        v-bind:name="name"
+        v-bind:target="targetWindow"
+        v-bind:href="`${href}#${href}`"
+        v-on:click.prevent="clickDisabled ? null : redirect"
     >
       <v-tooltip bottom>
         <template v-slot:activator="{ on }">
@@ -122,7 +122,7 @@
         <span>{{imgTitle}}</span>
       </v-tooltip>
       <img :src="src" :title="imgTitle" alt="" v-if="haveImage">
-    {{' ' + text}}
+      {{' ' + text}}
     </a>
   </div>
 </template>
@@ -194,10 +194,10 @@
         return this.data.hasOwnProperty('img') && this.data.img.hasOwnProperty('src') && this.data.img.src.startsWith('mdi-')
       },
       src() {
-        return this.data.img.hasOwnProperty('src') ? this.data.img.src : ''
+        return this.data.hasOwnProperty('img') && this.data.img.hasOwnProperty('src') ? this.data.img.src : ''
       },
       imgTitle() {
-        return this.data.img.hasOwnProperty('title') ? this.data.img.title : ''
+        return this.data.hasOwnProperty('img') && this.data.img.hasOwnProperty('title') ? this.data.img.title : ''
       },
       target() {
         return this.data.hasOwnProperty('target') ? this.data.target : ''

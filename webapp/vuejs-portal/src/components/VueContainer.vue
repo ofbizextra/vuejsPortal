@@ -1,5 +1,5 @@
 <template>
-  <div :id="id">
+  <div :id="areaId">
     <div v-if="area">
       <div
         v-for="(component, key) in area.viewScreen"
@@ -44,7 +44,7 @@
         return this.props.attributes.hasOwnProperty('id') ? this.props.attributes.id : null
       },
       updateParams() {
-        return this.autoUpdateParams ? this.autoUpdateParams : {}
+        return this.autoUpdateParams ? this.autoUpdateParams : false
       },
       targetUrl() {
         return this.updateParams.hasOwnProperty('targetUrl') ? this.updateParams.targetUrl : ''
@@ -67,7 +67,7 @@
     methods: {},
     created() {
       if (this.updateParams) {
-        this.$store.dispatch('data/setWatcher', {watcherName: this.id, params: {}})
+        this.$store.dispatch('data/setWatcher', {watcherName: this.props.attributes.id, params: {}})
       }
       if (this.areaId.includes('_modalContent')) {return}
       this.$store.dispatch('ui/deleteArea', {areaId: this.props.attributes.id})

@@ -306,9 +306,9 @@ const actions = {
     dispatch('backOfficeApi/doPost', {uri: constantes.hostUrl + api + constantes.portalPageDetail.path, params}, {root: true}).then(response => {
       let portalPage = response.body
       console.log('PortalPage : ', portalPage)
+      commit('SET_CURRENT_PORTAL_PAGE_PARAMS', params)
       commit('SET_PORTAL_PAGE', {portalPageId: params.portalPageId, portalPage})
       commit('SET_CURRENT_PORTAL_PAGE', params.portalPageId)
-      commit('SET_CURRENT_PORTAL_PAGE_PARAMS', params)
     }, error => {
       console.log('Error during portalPage acquisition : ', error)
     })

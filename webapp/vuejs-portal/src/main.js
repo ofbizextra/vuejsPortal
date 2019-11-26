@@ -11,6 +11,7 @@ import VueAutosuggest from 'vue-autosuggest'
 import VueFlatPickr from 'vue-flatpickr-component';
 import 'flatpickr/dist/flatpickr.css';
 import _ from 'lodash'
+import VueTheMask from 'vue-the-mask'
 
 import App from './components/App'
 import Search from './components/Search'
@@ -93,6 +94,7 @@ require('vue-flash-message/dist/vue-flash-message.min.css')
 Vue.use(VModal)
 Vue.use(VueAutosuggest)
 Vue.use(VueFlatPickr)
+Vue.use(VueTheMask)
 
 Vue.component('login', Login)
 Vue.component('portal', Portal)

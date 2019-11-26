@@ -1,5 +1,5 @@
 <template>
-  <v-form v-bind:id="'vue-form_' + data.name" v-bind="data" :autocomplete="autocomplete">
+  <v-form :ref="data.name" v-bind:id="'vue-form_' + data.name" v-bind="data" :autocomplete="autocomplete" v-model="valid" lazy-validation>
     <div
       v-for="(component, key) in props.children"
       :key="key"
@@ -18,7 +18,8 @@
     props: ['props', 'updateStore'],
     data() {
       return {
-        constantes: cst
+        constantes: cst,
+        valid: false
       }
     },
     computed: {
@@ -107,6 +108,9 @@
           primaryKey: this.props.attributes.primaryKey ? this.props.attributes.primaryKey : ''
         })
       }
+    },
+    mounted() {
+      this.$store.dispatch('form/addFormValidate', {formName: this.data.name, validate: this.$refs[this.data.name].validate})
     }
   }
 </script>

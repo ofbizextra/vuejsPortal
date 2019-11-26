@@ -28,7 +28,8 @@
       ...mapGetters({
         portalPage: 'ui/currentPortalPage',
         portalPageDetail: 'ui/currentPortalPageDetail',
-        currentApi: 'backOfficeApi/currentApi'
+        currentApi: 'backOfficeApi/currentApi',
+        currentPortalPageParams: 'ui/currentPortalPageParams'
       })
     },
     methods: {
@@ -85,7 +86,7 @@
         }
       }
     },
-    mounted() {
+    created() {
       let search = window.location.search
       let params = this.$route.query
       search.substr(1).split('&').forEach(param => {
