@@ -52,6 +52,7 @@ export default {
     Label: 'vue-label',
     VueJs: 'vue-platform-specific',
     test: 'test',
-    PasswordField: 'vue-password-field'
+    PasswordField: 'vue-password-field',
+    HorizontalSeparator: 'vue-horizontal-separator'
   }
 };
