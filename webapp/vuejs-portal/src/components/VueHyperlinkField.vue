@@ -15,7 +15,7 @@
         </template>
         <span>{{imgTitle}}</span>
       </v-tooltip>
-      <img :src="src" :title="imgTitle" alt="" v-if="haveImg">
+      <img :src="src" :title="imgTitle" alt="" v-if="haveImage">
       {{description}}
     </v-btn>
     <router-link
@@ -30,7 +30,7 @@
         </template>
         <span>{{imgTitle}}</span>
       </v-tooltip>
-      <img :src="src" :title="imgTitle" alt="" v-if="haveImg"/>
+      <img :src="src" :title="imgTitle" alt="" v-if="haveImage"/>
       <span class="font-weight-regular">
             {{description}}
         </span>
@@ -50,7 +50,7 @@
         </template>
         <span>{{imgTitle}}</span>
       </v-tooltip>
-      <img :src="src" :title="imgTitle" alt="" v-if="haveImg">
+      <img :src="src" :title="imgTitle" alt="" v-if="haveImage">
       {{description}}
     </v-btn>
   </div>
