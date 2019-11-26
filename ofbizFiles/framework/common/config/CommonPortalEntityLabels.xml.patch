@@ -1,6 +1,6 @@
 Index: framework/common/config/CommonPortalEntityLabels.xml
 ===================================================================
---- framework/common/config/CommonPortalEntityLabels.xml	(révision 1867513)
+--- framework/common/config/CommonPortalEntityLabels.xml	(révision 1870471)
 +++ framework/common/config/CommonPortalEntityLabels.xml	(copie de travail)
 @@ -123,4 +123,24 @@
          <value xml:lang="zh-CN">仓储设施</value>

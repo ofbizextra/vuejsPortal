@@ -1,6 +1,6 @@
 Index: framework/widget/dtd/widget-common.xsd
 ===================================================================
---- framework/widget/dtd/widget-common.xsd	(révision 1869070)
+--- framework/widget/dtd/widget-common.xsd	(révision 1870471)
 +++ framework/widget/dtd/widget-common.xsd	(copie de travail)
 @@ -515,6 +515,13 @@
              <xs:attribute name="send-if-empty" type="xs:boolean" default="true"/>

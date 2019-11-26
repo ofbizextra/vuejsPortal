@@ -143,6 +143,7 @@ under the License.
                 <set field="widgetVerbose" value="false" />
                 <set field="frontJs" value="true" type="Boolean"/>
                 <set field="currentAreaId" value="${parameters.portalPortletId}-${parameters.portletSeqId}"/>
+                <script location="component://vuejs-portal/groovyScripts/GetPortletAttributes.groovy"/>
             </actions>
             <widgets>
                 <include-screen name="${portalPortlet.screenName}" location="${portalPortlet.screenLocation}"/>

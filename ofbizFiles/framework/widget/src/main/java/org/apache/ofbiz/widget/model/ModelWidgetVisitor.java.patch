@@ -1,6 +1,6 @@
 Index: framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelWidgetVisitor.java
 ===================================================================
---- framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelWidgetVisitor.java	(révision 1869070)
+--- framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelWidgetVisitor.java	(révision 1870471)
 +++ framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelWidgetVisitor.java	(copie de travail)
 @@ -68,6 +68,8 @@
  

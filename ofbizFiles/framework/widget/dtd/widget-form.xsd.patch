@@ -1,6 +1,6 @@
 Index: framework/widget/dtd/widget-form.xsd
 ===================================================================
---- framework/widget/dtd/widget-form.xsd	(révision 1869070)
+--- framework/widget/dtd/widget-form.xsd	(révision 1870471)
 +++ framework/widget/dtd/widget-form.xsd	(copie de travail)
 @@ -587,13 +587,23 @@
                  <xs:element minOccurs="0" ref="auto-parameters-service"/>

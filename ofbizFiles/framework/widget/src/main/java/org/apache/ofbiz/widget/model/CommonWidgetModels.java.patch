@@ -1,6 +1,6 @@
 Index: framework/widget/src/main/java/org/apache/ofbiz/widget/model/CommonWidgetModels.java
 ===================================================================
---- framework/widget/src/main/java/org/apache/ofbiz/widget/model/CommonWidgetModels.java	(révision 1869070)
+--- framework/widget/src/main/java/org/apache/ofbiz/widget/model/CommonWidgetModels.java	(révision 1870471)
 +++ framework/widget/src/main/java/org/apache/ofbiz/widget/model/CommonWidgetModels.java	(copie de travail)
 @@ -364,14 +364,22 @@
                  this.linkType = linkElement.getAttribute("link-type");
