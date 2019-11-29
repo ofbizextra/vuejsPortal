@@ -28,6 +28,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.apache.ofbiz.base.lang.JSON;
 import org.apache.ofbiz.base.util.GeneralException;
 import org.apache.ofbiz.base.util.UtilCodec;
 import org.apache.ofbiz.base.util.UtilHttp;
@@ -40,7 +41,6 @@ import org.apache.ofbiz.widget.renderer.ScreenRenderer;
 import org.apache.ofbiz.widget.renderer.ScreenStringRenderer;
 import org.apache.ofbiz.widget.renderer.TreeStringRenderer;
 import org.apache.ofbiz.widget.renderer.VisualTheme;
-import org.json.simple.JSONObject;
 import org.xml.sax.SAXException;
 
 //import org.apache.ofbiz.entity.GenericEntity;
@@ -166,7 +166,7 @@ public class FrontJsScreenViewHandler extends AbstractViewHandler {
             screens.render(page);
             screenStringRenderer.renderScreenEnd(writer, context);
 
-            JSONObject json = new JSONObject(frontJsOutput.output());
+            JSON json = JSON.from(frontJsOutput.output());
             String jsonStr = json.toString();
 
             // set the JSON content type
