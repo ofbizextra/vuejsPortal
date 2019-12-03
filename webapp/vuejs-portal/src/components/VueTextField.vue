@@ -17,8 +17,7 @@
     computed: {
       ...mapGetters({
         getForm: 'form/form',
-        getDataFromForm: 'form/fieldInForm',
-        formControlField: 'form/formControlField'
+        getDataFromForm: 'form/fieldInForm'
       }),
       data() {
         let data = this.props.attributes

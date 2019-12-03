@@ -2179,6 +2179,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         Integer size = textField.getSize();
         String maxlength = "";
         String autocomplete = "";
+        String formName = textField.getModelFormField().getModelForm().getName();
         if (UtilValidate.isNotEmpty(modelFormField.getWidgetStyle())) {
             className = modelFormField.getWidgetStyle();
             if (modelFormField.shouldBeRed(context)) {
@@ -2204,6 +2205,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         cb.put("maxlength", maxlength);
         cb.put("autocomplete", autocomplete);
         cb.put("tabindex", tabindex);
+        cb.put("formName", formName);
         this.makeHyperlinkString(cb, textField.getSubHyperlink(), context);
         this.appendTooltip(cb, context, modelFormField);
         this.output.putScreen("FileField", cb);

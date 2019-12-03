@@ -70,7 +70,6 @@
           key: 'viewSizeField',
           value: this.props.attributes.viewSizeField
         })
-
       }
     },
     created() {
@@ -110,7 +109,10 @@
       }
     },
     mounted() {
-      this.$store.dispatch('form/addFormValidate', {formName: this.data.name, validate: this.$refs[this.data.name].validate})
+      this.$store.dispatch('form/addFormValidate', {formName: this.props.attributes.name, validate: this.$refs[this.props.attributes.name].validate})
+    },
+    updated() {
+      this.$store.dispatch('form/addFormValidate', {formName: this.props.attributes.name, validate: this.$refs[this.props.attributes.name].validate})
     }
   }
 </script>

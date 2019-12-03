@@ -1,5 +1,5 @@
 <template>
-  <v-flex text-center id="vue-submit-field">
+  <v-flex text-center id="vue-submit-field" class="ma-2">
     <v-btn raised dark color="primary" type="submit" :label="data.title" :value="data.title" v-bind="data"
            v-on:click.prevent="resolveEvents">{{data.title}}
     </v-btn>
