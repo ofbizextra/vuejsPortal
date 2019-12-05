@@ -32,8 +32,8 @@ and done.
 
 == Preliminary remarks :
 .  In this document, the term "application" corresponding to
-   "specialpurpose/component" in the ofbiz terminology which is not same as
-   a "applications/component" in ofbiz terminology. An application is
+   "plugin component" in the ofbiz terminology which is not same as
+   a "applications/trunk component" in ofbiz terminology. An application is
    dedicated for a business purpose for a user type, it's build by
    assembling piece of ofbiz components, sometimes without any specifics
    entities, services and screen (ex: CRM-B2C, CRM-B2B, SFA are 3

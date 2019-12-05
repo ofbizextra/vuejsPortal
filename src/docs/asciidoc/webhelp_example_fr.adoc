@@ -676,7 +676,7 @@ Pour la migration d'écran standard ofbiz en portlet, l'objectif est d'utiliser 
 
 
 
-. en cas de doute, regarder comment sont paramétrés les portlet dans l'exemple (/ofbiz/specialpurpose/example/data/ExamplePortletData.xml),  cela correspond aux bonnes pratiques (une bonne pratique qui n'est pas dans exemple n'est pas une bonne pratique)
+. en cas de doute, regarder comment sont paramétrés les portlet dans l'exemple (/ofbiz/plugins/example/data/ExamplePortletData.xml),  cela correspond aux bonnes pratiques (une bonne pratique qui n'est pas dans exemple n'est pas une bonne pratique)
 . sauf cas très particulier, le nom et la location des fichiers (form, menu, script, screen) doivent utiliser les valeurs par défaut
 . sauf cas très particulier, une portlet doit avoir un type (Screenlet, ScreenletList, Decorator ou Empty)
 . les champs composant, sous-composant et webapp doivent être correctement renseignés (webapp vide ou non)

@@ -28,7 +28,8 @@ ofbizhelp:: ou
 webhelp::.
 Il détaille aussi les base du format 
 docbook:: et donne des exemples  d'usage de chacune des balises DocBook utilisé couramment.
-Si nécessaire, ou pour plus de détail, vous pouvez regarder les  fichiers sources pour l'aide du composant Exemple, selon la nature de l'information, ils se trouvent dans le répertoire  ofbiz/specialpurpose/example/data/helpdata pour ofbizHelp ou dans le sous-répertoire docbookhelp pour le webhelp. 
+Si nécessaire, ou pour plus de détail, vous pouvez regarder les  fichiers sources pour l'aide du composant Exemple, selon la nature de l'information, ils se trouvent dans le répertoire  
+ofbiz/plugins/example/data/helpdata pour ofbizHelp ou dans le sous-répertoire docbookhelp pour le webhelp. 
 
 [[_file_organisation]]
 == Organisation des fichiers d'aide
@@ -69,7 +70,7 @@ Ainsi pour le composant Exemple, on trouve le fichier d'aide que vous êtes en t
 [source]
 ----
 
-  /ofbiz/specialpurpose/example/data/helpdata/HELP_EXAMPLE_helpfile.xml
+  /ofbiz/plugins/example/data/helpdata/HELP_EXAMPLE_helpfile.xml
 ----
 
 La configuration de l'usage de ces fichiers se fait avec un fichier xml (nomé nomDuComposantHelpData.xml) qui  se trouve dans le répertoire /data/helpdata/ de chacun des composant.
@@ -79,7 +80,7 @@ Pour le composant exemple le fichier se trouve :
 [source]
 ----
 
-  /ofbiz/specialpurpose/example/data/ExampleHelpData.xml
+  /ofbiz/plugins/example/data/ExampleHelpData.xml
 ----
 
 ==== Le contenu d'un fichier docbook d'aide
@@ -97,13 +98,13 @@ Les fichiers docBook du composant exemple contienne au moins un exemple de chacu
 Pour chaque composant, il y a un fichier de configuration.
 Dans celui-ci on définit : 
 
-* pour chaque fichier d'aide, un contenu (Content) et une ressource (DataResource). Voici un  exemple de définition pour le fichier d'aide specialpurpose/example/data/helpdata/HELP_EXAMPLE_main.xml : 
+* pour chaque fichier d'aide, un contenu (Content) et une ressource (DataResource). Voici un  exemple de définition pour le fichier d'aide plugins/example/data/helpdata/HELP_EXAMPLE_main.xml : 
 +
 [source]
 ----
 
 <DataResource dataResourceId="EXAMPLE_main" localeString="en" dataResourceTypeId="OFBIZ_FILE" 
-    objectInfo="specialpurpose/example/data/helpdata/HELP_EXAMPLE_main.xml" dataTemplateTypeId="NONE" statusId="CTNT_IN_PROGRESS" dataResourceName="Main page" mimeTypeId="text/xml" isPublic="Y" />
+    objectInfo="plugins/example/data/helpdata/HELP_EXAMPLE_main.xml" dataTemplateTypeId="NONE" statusId="CTNT_IN_PROGRESS" dataResourceName="Main page" mimeTypeId="text/xml" isPublic="Y" />
 <Content contentId="EXAMPLE_main" contentTypeId="DOCUMENT" contentName="Main menu." templateDataResourceId="HELP_TEMPL" dataResourceId="EXAMPLE_main" statusId="CTNT_IN_PROGRESS" mimeTypeId="text/html"/>
 ----
 
@@ -131,7 +132,7 @@ Le champ mapKey permet de faire le lien entre "NOMduCOMPOSANT_URI" et l'élémen
 ----
 
 <DataResource dataResourceId="EXAMPLE_main_FR" localeString="fr" dataResourceTypeId="OFBIZ_FILE" 
-    objectInfo="specialpurpose/example/data/helpdata/HELP_EXAMPLE_main_FR.xml" dataTemplateTypeId="NONE" statusId="CTNT_IN_PROGRESS" dataResourceName="Accueil" mimeTypeId="text/xml" isPublic="Y" />
+    objectInfo="plugins/example/data/helpdata/HELP_EXAMPLE_main_FR.xml" dataTemplateTypeId="NONE" statusId="CTNT_IN_PROGRESS" dataResourceName="Accueil" mimeTypeId="text/xml" isPublic="Y" />
 <Content contentId="EXAMPLE_main_FR" contentTypeId="DOCUMENT" contentName="Accueil" templateDataResourceId="HELP_TEMPL" localeString="fr" dataResourceId="EXAMPLE_main_FR" statusId="CTNT_IN_PROGRESS" mimeTypeId="text/html"/>
 <ContentAssoc contentId="EXAMPLE_main" contentIdTo="EXAMPLE_main_FR" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2006-01-12 01:01:01"/>
 ----
@@ -156,8 +157,8 @@ Pour le composant exemple en français cela donne
 [source]
 ----
 
-  /ofbiz/specialpurpose/example/data/helpdata/docbookhelp/webhelp_exemple_fr.xml
-  /ofbiz/specialpurpose/example/data/helpdata/docbookhelp/webhelp_exemple_fr_image/
+  /ofbiz/plugins/example/data/helpdata/docbookhelp/webhelp_exemple_fr.xml
+  /ofbiz/plugins/example/data/helpdata/docbookhelp/webhelp_exemple_fr_image/
 ----
 A partir de ce fichier, un ensemble de fichier html sont généré via la commande ant webhelp à la racine de ofbiz ou à la racine d'un composant.
 Ce processus de transformation utilise les outils du projet 

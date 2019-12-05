@@ -300,7 +300,7 @@ The help files are contained in the corresponding component (directory /data/hel
 [source]
 ----
 
-                /ofbiz/specialpurpose/example/data/helpdata/HELP_EXAMPLE_helpfile.xml
+                /ofbiz/plugins/example/data/helpdata/HELP_EXAMPLE_helpfile.xml
 ----
 
 The configuration of the use of these files in the various help menus is done in the component Content (directory /data/helpdata/) with one file per component.
@@ -313,17 +313,17 @@ There, you can find the definition of the Contents and DataResource correspondin
 
 ==== The drafting of the help file
 
-See the help page about docBook and its syntax, as well as the various help files that exists in the component Example (/ofbiz/specialpurpose/example/data/helpdata). 
+See the help page about docBook and its syntax, as well as the various help files that exists in the component Example (/ofbiz/plugins/example/data/helpdata). 
 
 ==== The help page configuration
 
 In these configuration files, one content (Content) and one resource (DataResource) are defined for each help file.
-Here is an example of a definition for the help file specialpurpose/example/data/helpdata/HELP_EXAMPLE_main.xml: 
+Here is an example of a definition for the help file plugins/example/data/helpdata/HELP_EXAMPLE_main.xml: 
 [source]
 ----
 
                 <DataResource dataResourceId="EXAMPLE_main" localeString="en" dataResourceTypeId="OFBIZ_FILE" 
-                    objectInfo="specialpurpose/example/data/helpdata/HELP_EXAMPLE_main.xml" dataTemplateTypeId="NONE" statusId="CTNT_IN_PROGRESS" dataResourceName="Main page" mimeTypeId="text/xml" isPublic="Y" />
+                    objectInfo="plugins/example/data/helpdata/HELP_EXAMPLE_main.xml" dataTemplateTypeId="NONE" statusId="CTNT_IN_PROGRESS" dataResourceName="Main page" mimeTypeId="text/xml" isPublic="Y" />
                 <Content contentId="EXAMPLE_main" contentTypeId="DOCUMENT" contentName="Main menu." templateDataResourceId="HELP_TEMPL" dataResourceId="EXAMPLE_main" statusId="CTNT_IN_PROGRESS" mimeTypeId="text/html"/>
 ----
 
@@ -344,7 +344,7 @@ The pages for each language can be associated by using ContentAssoc of the kind 
 ----
 
                 <DataResource dataResourceId="EXAMPLE_main_FR" localeString="fr" dataResourceTypeId="OFBIZ_FILE" 
-                    objectInfo="specialpurpose/example/data/helpdata/HELP_EXAMPLE_main_FR.xml" dataTemplateTypeId="NONE" statusId="CTNT_IN_PROGRESS" dataResourceName="Accueil" mimeTypeId="text/xml" isPublic="Y" />
+                    objectInfo="plugins/example/data/helpdata/HELP_EXAMPLE_main_FR.xml" dataTemplateTypeId="NONE" statusId="CTNT_IN_PROGRESS" dataResourceName="Accueil" mimeTypeId="text/xml" isPublic="Y" />
                 <Content contentId="EXAMPLE_main_FR" contentTypeId="DOCUMENT" contentName="Accueil" templateDataResourceId="HELP_TEMPL" localeString="fr" dataResourceId="EXAMPLE_main_FR" statusId="CTNT_IN_PROGRESS" mimeTypeId="text/html"/>
                 <ContentAssoc contentId="EXAMPLE_main" contentIdTo="EXAMPLE_main_FR" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2006-01-12 01:01:01"/>
 ----
