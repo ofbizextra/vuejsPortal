@@ -12,7 +12,7 @@
       v-bind:tabindex="data.tabindex" hide-details dense
     />
       <input v-if="data.hideIgnoreCase" type="hidden" :name="data.name + '_ic'" :value="data.ignCase ? 'Y' : ''"/>
-      <v-checkbox class="col-2 mt-0 mb-0" v-else type="checkbox" label="ignore case" :name="data.name + '_ic'" false-value="N" true-value="Y" v-model="valueIc" hide-details dense/>
+      <v-checkbox class="col-2 mt-0 mb-0" v-else type="checkbox" label="ignore case" :name="data.name + '_ic'" v-model="valueIc" hide-details dense/>
   </v-row>
 </template>
 
@@ -89,7 +89,7 @@
       },
       valueIc: {
         get() {
-          return this.getDataFromForm(this.storeFormIc)
+          return this.getDataFromForm(this.storeFormIc) === 'Y'
         },
         set(value) {
           this.$store.dispatch('form/setFieldToForm', {
