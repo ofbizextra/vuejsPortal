@@ -938,8 +938,13 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
 
     public void renderPortalPagePortletBody(Appendable writer, Map<String, Object> context, ModelScreenWidget.PortalPage portalPage, GenericValue portalPortlet) throws GeneralException, IOException {
         String portalPortletId = portalPortlet.getString("portalPortletId");
+        String portletSeqId = portalPortlet.getString("portletSeqId");
         String screenName = portalPortlet.getString("screenName");
         String screenLocation = portalPortlet.getString("screenLocation");
+//  in showPortlet Screen      <set field="currentAreaId" value="${parameters.portalPortletId}-${parameters.portletSeqId}"/>
+//    so do the same thing
+        context.put("currentAreaId", portalPortletId + "-" + portletSeqId);
+
 
         ModelScreen modelScreen = null;
         if (UtilValidate.isNotEmpty(screenName) && UtilValidate.isNotEmpty(screenLocation)) {
