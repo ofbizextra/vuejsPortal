@@ -140,8 +140,9 @@ under the License.
         <section>
            <actions>
                 <entity-one value-field="portalPortlet" entity-name="PortalPortlet"/>
-                <set field="widgetVerbose" value="false" />
-                <set field="frontJs" value="true" type="Boolean"/>
+<!-- remove after 31.12.2019 -->
+<!--                 <set field="widgetVerbose" value="false" /> -->
+<!--                 <set field="frontJs" value="true" type="Boolean"/> -->
                 <set field="currentAreaId" value="${parameters.portalPortletId}-${parameters.portletSeqId}"/>
                 <script location="component://vuejs-portal/groovyScripts/GetPortletAttributes.groovy"/>
             </actions>
