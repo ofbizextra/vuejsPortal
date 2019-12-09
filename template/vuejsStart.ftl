@@ -1,3 +1,3 @@
   <div id="app">
-    <script type="text/javascript" src="<@ofbizContentUrl>/portal/vuejs-portal.umd.js</@ofbizContentUrl>"></script>
+    <script type="text/javascript" src="<@ofbizContentUrl>/portal/dist/vuejs-portal.umd.js</@ofbizContentUrl>"></script>
   </div>

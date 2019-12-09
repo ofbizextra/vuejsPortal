@@ -37,7 +37,7 @@ under the License.
     <webapp name="vuejs-portal"
         title="vuejs-portal"
         server="default-server"
-	    location="webapp/vuejs-portal/dist"
+	    location="webapp/vuejs-portal"
         mount-point="/portal"
         app-bar-display="false"/>
 
