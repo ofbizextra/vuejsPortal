@@ -89,7 +89,8 @@ for an exclusive Vue.Js use.
   ** in `<container` tag
     *** `auto-update-target` is used to bind a `watcher` to a container. +
         To use it with setWatcher, watcherName is the containerId, and when this watcher changes a setArea is done with auto-update-target 
-        and watcher content as parameters. 
+        and watcher content as parameters. +
+        /!\ currently, this is not yet implemented, waiting a real use case, but all is in place to do it ;-) 
     *** `id` is used to identify the container and enable to inject content into it with `setArea` later. +
          When setArea is done for this id, its content will be replace by the content received from area-target. +
          So, do not resend the container !
