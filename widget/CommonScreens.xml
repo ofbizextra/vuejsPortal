@@ -180,10 +180,10 @@ under the License.
                         <if-empty field="titleProperty"/>
                     </condition>
                     <widgets>
-                        <container style="page-title"><label text="${title}"></label></container>
+                        <label text="${title}" style="H1"></label>
                     </widgets>
                     <fail-widgets>
-                        <container style="page-title"><label text="${uiLabelMap[titleProperty]}"></label></container>
+                        <label text="${uiLabelMap[titleProperty]}" style="H1"></label>
                     </fail-widgets>
                 </section>
                 <section>
@@ -192,7 +192,6 @@ under the License.
                     </condition>
                     <widgets>
                         <decorator-section-include name="menu-bar"/>
-                        <container style="clear"/>
                         <screenlet id="findScreenlet_${idFind}" collapsible="true" title="${uiLabelMap.${findTitle}}">
                             <decorator-section-include name="search-options" />
                         </screenlet>

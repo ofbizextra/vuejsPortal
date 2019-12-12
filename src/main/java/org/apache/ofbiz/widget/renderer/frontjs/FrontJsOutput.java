@@ -140,6 +140,7 @@ public class FrontJsOutput {
      */
     void pushScreen(String name, Map<String, Object> attributes, String action, Map<String, Object> context) {
         Map<String, Object> screen = new HashMap<>();
+        // there is no Open/Begin or Close  screenElement only screenElement with (or without) children
         screen.put("name", name.replace("Open", "").replace("Begin", ""));
         screen.put("attributes", attributes);
 

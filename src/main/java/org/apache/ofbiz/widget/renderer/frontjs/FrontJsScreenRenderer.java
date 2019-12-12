@@ -59,9 +59,7 @@ import org.apache.ofbiz.widget.renderer.VisualTheme;
 import org.xml.sax.SAXException;
 
 public class FrontJsScreenRenderer implements ScreenStringRenderer {
-//    private static final String NOT_YET_SUPPORTED = "Not yet supported";
     public static final String module = FrontJsScreenRenderer.class.getName();
-    private int elementId = 999;
     private FrontJsOutput output;
     private String rendererName;
     private int screenLetsIdCounter = 1;
@@ -70,57 +68,39 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
         this.output = output;
         rendererName = name;
     }
-    private String getNextElementId() {
-        elementId++;
-        return "hsr" + elementId;
-    }
-    /*
-    private void executeMacro(Appendable writer, String macro) throws IOException {
-        executeMacro(output, macro, null);
-    }
-    private void executeMacro(Appendable writer, String macro, Map<String, Object> parameters) throws IOException {
-        this.output.add(macro, NOT_YET_SUPPORTED);
-    }
-    */
     public String getRendererName() {
         return rendererName;
     }
 
     public void renderScreenBegin(Appendable writer, Map<String, Object> context) throws IOException {
-        // this.output.add("ScreenBegin", new HashMap<>());
+        // nothing to do, it's only a human logic readable element 
     }
 
     public void renderScreenEnd(Appendable writer, Map<String, Object> context) throws IOException {
-        // this.output.add("ScreenEnd", new HashMap<>());
+        // nothing to do, it's only a human logic readable element 
     }
 
     public void renderSectionBegin(Appendable writer, Map<String, Object> context, ModelScreenWidget.Section section) throws IOException {
-        // this.output.add("SectionBegin", new HashMap<>());
+        // nothing to do, it's only a human logic readable element 
     }
     public void renderSectionEnd(Appendable writer, Map<String, Object> context, ModelScreenWidget.Section section) throws IOException {
-        // this.output.add("SectionEnd", new HashMap<>());
+        // nothing to do, it's only a human logic readable element 
     }
 
     public void renderContainerBegin(Appendable writer, Map<String, Object> context, ModelScreenWidget.Container container) throws IOException {
         String containerId = container.getId(context);
         String autoUpdateTarget = container.getAutoUpdateTargetExdr(context);
-        HttpServletRequest request = (HttpServletRequest) context.get("request");
-        String autoUpdateLink = "";
-        if (UtilValidate.isNotEmpty(autoUpdateTarget) && UtilHttp.isJavaScriptEnabled(request)) {
-            if (UtilValidate.isEmpty(containerId)) {
-                containerId = getNextElementId();
-            }
-            HttpServletResponse response = (HttpServletResponse) context.get("response");
-            ServletContext ctx = (ServletContext) request.getAttribute("servletContext");
-            RequestHandler rh = (RequestHandler) ctx.getAttribute("_REQUEST_HANDLER_");
-            autoUpdateLink = rh.makeLink(request, response, autoUpdateTarget);
+        if (UtilValidate.isNotEmpty(autoUpdateTarget)) {
+            throw new IOException("FrontJsRender: auto-update-target in container tag, not yet implemented in container"
+                               + ((containerId!=null)? "with id="+containerId : ""));
         }
         Map<String, Object> parameters = new HashMap<>();
-        parameters.put("id", containerId); // watcherName
-        parameters.put("style", container.getStyle(context));
-        parameters.put("autoUpdateLink", autoUpdateLink);
-        parameters.put("autoUpdateTarget", autoUpdateTarget); // watcherTarget
-        parameters.put("autoUpdateInterval", container.getAutoUpdateInterval(context));
+        parameters.put("id", containerId); // used as areaId
+        if (UtilValidate.isNotEmpty(container.getStyle(context))) {
+            Debug.logWarning("style property is used (="+container.getStyle(context)+
+                             ") in container with id="+containerId+" it's not manage by FrontFjRenderer", module);
+            parameters.put("style", container.getStyle(context));
+        }
         this.output.pushScreen("ContainerOpen", parameters);
     }
 
