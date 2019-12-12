@@ -69,7 +69,7 @@ public class FrontJsOutput {
 
     /**
      * Add a new screenElement into the children of the top screen of the stack. <br/>
-     * Should be used only when element is a field.
+     * Should be used when element is not a field otherwise used {@link FrontJsOutput#putScreen(String, Map, String, String)}.
      *
      * @param name       : the element Name (see list of renderer method (screen, form, menu,..), each one is a element)
      * @param attributes : a map with all the attributes elements
@@ -80,12 +80,13 @@ public class FrontJsOutput {
 
     /**
      * Add a new screenElement into the children of the top screen of the stack. <br/>
-     * Should be used only when element is a field.
+     * Should be used with fieldName!=null only when element is a field.<br/>
+     * Add (fieldName : value) in the recordStack.
      *
      * @param name       : the element Name (see list of renderer method (screen, form, menu,..), each one is a element)
      * @param attributes : a map with all the attributes elements
-     * @param fieldName  : if element is a field, its name
-     * @param fieldValue      : if element is a field, its value
+     * @param fieldName  : if element is a field, its name otherwise should be null
+     * @param fieldValue : if element is a field, its value otherwise should be null
      */
     void putScreen(String name, Map<String, Object> attributes, String fieldName, String fieldValue) {
         Map<String, Object> screen = new HashMap<>();
@@ -134,7 +135,7 @@ public class FrontJsOutput {
      *
      * @param name       : the element Name (see list of renderer method (screen, form, menu,..), each one is a element)
      * @param attributes : a map with all the attributes elements
-     * @param action  : a string determining action to perform on data (can be one of [null, "PUSH_ENTITY", "NEW_RECORD"])
+     * @param action     : a string determining action to perform on data (entityStack) can be one of [null, "PUSH_ENTITY", "NEW_RECORD"]
      * @param context    : a map with the data relative to the action to perform
      */
     void pushScreen(String name, Map<String, Object> attributes, String action, Map<String, Object> context) {
@@ -168,8 +169,8 @@ public class FrontJsOutput {
      * Pop the top screenElement the current screen stack and perform some data actions. <br/>
      * Should be used only when element is not a field.
      *
-     * @param name       : the element Name (see list of renderer method (screen, form, menu,..), each one is a element)
-     * @param action : a string with the action to perform on data
+     * @param name   : the element Name (see list of renderer method (screen, form, menu,..), each one is a element)
+     * @param action : a string with the action to perform on data (entityStack) can be one of [null, "POP_ENTITY", "STORE_RECORD"]
      */
     void popScreen(String name, String action) {
         screensStack.pop();
@@ -187,7 +188,7 @@ public class FrontJsOutput {
      * Push entity on the stack (all record will be relative to this entity until another one was push or this one was pop). <br/>
      * Should be called by pushScreen only.
      *
-     * @param entityName       : the name of the entity to push
+     * @param entityName  : the name of the entity to push
      * @param primaryKeys : the list of entity's primary key
      */
     private void pushEntity(String entityName, List<String> primaryKeys) {
@@ -243,7 +244,6 @@ public class FrontJsOutput {
     private void putRecord(String fieldName, String value) {
         if (!recordsStack.empty()) {
             recordsStack.peek().put(fieldName, value);
-            //recordsStack.peek().put(record.get("key"), record.get("value"));
         }
     }
 
@@ -251,10 +251,7 @@ public class FrontJsOutput {
         return this.output;
     }
 
-//    public Map<String, String> getRecordPointer() {
-//    	return this.storePointer;
-//    }
-
+    // TODO check if this method is used, seem not because "recordPointer" is not used in *.vue files
     public Map<String, Object> getRecordPointer(Map<String, Object> context) {
         if (!this.entitiesStack.empty()) {
             Map<String, Object> data = new HashMap<>();

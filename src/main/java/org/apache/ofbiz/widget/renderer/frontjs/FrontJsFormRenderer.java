@@ -878,6 +878,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         Map<String, Object> data = new HashMap<>();
         fieldName = name;
         fieldValue = explicitDescription;
+        // TODO check if recordPointer is used, after reading VueDropDownField.vue, it seem not. Waiting Julien validation
         Map<String, Object> pointer = output.getRecordPointer(context);
         if (pointer != null) {
             pointer.put("field", name);
@@ -999,6 +1000,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         Map<String, Object> data = new HashMap<>();
         fieldName = name;
         fieldValue = currentValue;
+        // TODO check if recordPointer is used, should read VueRadioField.vue to check.
         Map<String, Object> pointer = output.getRecordPointer(context);
         if (pointer != null) {
             pointer.put("field", name);
@@ -1612,6 +1614,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         Map<String, Object> data = new HashMap<>();
         fieldName = name;
         fieldValue = value;
+        // TODO check if recordPointer is used, should read VueTextFindField.vue to check.
         Map<String, Object> pointer = output.getRecordPointer(context);
         if (pointer != null) {
             pointer.put("field", name);
