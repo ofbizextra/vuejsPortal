@@ -29,12 +29,15 @@ import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.ofbiz.base.lang.JSON;
+import org.apache.ofbiz.base.util.Debug;
 import org.apache.ofbiz.base.util.GeneralException;
 import org.apache.ofbiz.base.util.UtilCodec;
 import org.apache.ofbiz.base.util.UtilHttp;
+import org.apache.ofbiz.base.util.UtilValidate;
 import org.apache.ofbiz.base.util.collections.MapStack;
 import org.apache.ofbiz.webapp.view.AbstractViewHandler;
 import org.apache.ofbiz.webapp.view.ViewHandlerException;
+import org.apache.ofbiz.widget.model.ModelTheme;
 import org.apache.ofbiz.widget.renderer.FormStringRenderer;
 import org.apache.ofbiz.widget.renderer.MenuStringRenderer;
 import org.apache.ofbiz.widget.renderer.ScreenRenderer;
@@ -43,7 +46,9 @@ import org.apache.ofbiz.widget.renderer.TreeStringRenderer;
 import org.apache.ofbiz.widget.renderer.VisualTheme;
 import org.xml.sax.SAXException;
 
-//import org.apache.ofbiz.entity.GenericEntity;
+import freemarker.template.TemplateException;
+import freemarker.template.utility.StandardCompress;
+
 
 public class FrontJsScreenViewHandler extends AbstractViewHandler {
 
@@ -51,6 +56,7 @@ public class FrontJsScreenViewHandler extends AbstractViewHandler {
 
     protected ServletContext servletContext = null;
 
+    @Override
     public void init(ServletContext context) {
         this.servletContext = context;
     }
@@ -68,115 +74,54 @@ public class FrontJsScreenViewHandler extends AbstractViewHandler {
         context.put("menuStringRenderer", menuStringRenderer);
         return screenStringRenderer;
     }
-/*
-    private ArrayList<Map<String, Object>> parseViewScreen(ArrayList<Map<String, Object>> arrayListMap) {
-        ArrayList<Map<String, Object>> result = new ArrayList<>();
-        HashMap<String, Object> temp;
-        Iterator iterator = arrayListMap.iterator();
-        while (iterator.hasNext()) {
-            Map it = (Map) iterator.next();
-            Map.Entry entry = (Map.Entry) it.entrySet().toArray()[0];
-            temp = new HashMap<>();
-            if (entry.getKey().toString().contains("Open")) {
-                temp.put("fieldType", entry.getKey().toString().replace("Open", ""));
-                temp.put("attributes", entry.getValue());
-                temp.put("children", this.parseViewScreenRecursive(iterator, entry));
-                result.add(temp);
-            } else {
-                temp.put("fieldType", entry.getKey());
-                temp.put("attributes", entry.getValue());
-                temp.put("children", new ArrayList<>());
-                result.add(temp);
-            }
-        }
-        return result;
-    }
 
-    private ArrayList<Map<String, Object>> parseViewScreenRecursive(Iterator iterator, Map.Entry parent) {
-        ArrayList<Map<String, Object>> arrayListMap = new ArrayList<>();
-        HashMap<String, Object> temp;
-        String parentName = (String) parent.getKey().toString().replace("Open", "");
-        while (iterator.hasNext()) {
-            temp = new HashMap<>();
-            Map currentMap = (Map) iterator.next();
-            Map.Entry current = (Map.Entry) currentMap.entrySet().toArray()[0];
-            if (current.getKey().toString().contains(parentName.concat("Close"))) {
-                return arrayListMap;
-            }
-            if (current.getKey().toString().contains("Open")) {
-                temp.put("fieldType", current.getKey().toString().replace("Open", ""));
-                temp.put("attributes", current.getValue());
-                temp.put("children", this.parseViewScreenRecursive(iterator, current));
-            } else {
-                temp.put("fieldType", current.getKey());
-                temp.put("attributes", current.getValue());
-                temp.put("children", new ArrayList<>());
-            }
-            arrayListMap.add(temp);
-        }
-        return arrayListMap;
-    }
-
-    private Map<String, Object> parseData(ArrayList<Map<String, Object>> arrayListMap) {
-        Map<String, Object> data = new HashMap<>();
-        Map<String, Object> currentEntity = new HashMap<>();
-        for (Map<String, Object> current : arrayListMap) {
-            if (((Map<String, Object>) current.get("attributes")).get("entityName") != null) {
-                currentEntity = new HashMap<>();
-                currentEntity.put("entityName", ((Map<String, Object>) current.get("attributes")).get("entityName").toString());
-                data.put(((Map<String, Object>) current.get("attributes")).get("entityName").toString(), currentEntity);
-            }
-            for (Map<String, Object> child : (ArrayList<Map<String, Object>>) current.get("children")) {
-                this.parseDataRecursive(child, currentEntity, data);
-            }
-        }
-        return data;
-    }
-
-    private void parseDataRecursive(Map<String, Object> current, Map<String, Object> currentEntity, Map<String, Object> data) {
-        if (current.get("attributes") != null && ((Map<String, Object>) current.get("attributes")).get("entityName") != null) {
-            currentEntity = new HashMap<>();
-            currentEntity.put("entityName", ((Map<String, Object>) current.get("attributes")).get("entityName").toString());
-            data.put(((Map<String, Object>) current.get("attributes")).get("entityName").toString(), currentEntity);
-        }
-        if (current.get("attributes") != null && ((Map<String, Object>) current.get("attributes")).get("data") != null) {
-            currentEntity.putAll((Map<String, Object>) ((Map<String, Object>) current.get("attributes")).get("data"));
-        }
-        for (Map<String, Object> child : (ArrayList<Map<String, Object>>) current.get("children")) {
-            this.parseDataRecursive(child, currentEntity, data);
-        }
-        return;
-    }
-*/
+    @Override
     public void render(String name, String page, String info, String contentType, String encoding, HttpServletRequest request, HttpServletResponse response) throws ViewHandlerException {
         try {
             Writer writer = response.getWriter();
             VisualTheme visualTheme = UtilHttp.getVisualTheme(request);
+            ModelTheme modelTheme = visualTheme.getModelTheme();
+            // compress output if configured to do so
+            if (UtilValidate.isEmpty(encoding)) {
+                encoding = modelTheme.getEncoding(getName());
+            }
+            boolean compressOutput = "compressed".equals(encoding);
+            if (!compressOutput) {
+                compressOutput = "true".equals(modelTheme.getCompress(getName()));
+            }
+            if (!compressOutput && this.servletContext != null) {
+                compressOutput = "true".equals(this.servletContext.getAttribute("compressHTML"));
+            }
+            if (compressOutput) {
+                // StandardCompress defaults to a 2k buffer. That could be increased
+                // to speed up output.
+                writer = new StandardCompress().getWriter(writer, null);
+            }
+            // writer will be not used during renderer, but only at the end of this method to send json result (the frontJsOutput)
+            //   during all renderer process it's frontJsOutput which will be completed.
             FrontJsOutput frontJsOutput = new FrontJsOutput(name);
             MapStack<String> context = MapStack.create();
-            //output.put("data", context);
             ScreenRenderer.populateContextForRequest(context, null, request, response, servletContext);
             ScreenStringRenderer screenStringRenderer = loadRenderers(frontJsOutput, request, response, context);
             ScreenRenderer screens = new ScreenRenderer(writer, context, screenStringRenderer);
             context.put("screens", screens);
-
             context.put("simpleEncoder", UtilCodec.getEncoder(visualTheme.getModelTheme().getEncoder(getName())));
-
             screenStringRenderer.renderScreenBegin(writer, context);
             screens.render(page);
             screenStringRenderer.renderScreenEnd(writer, context);
 
             JSON json = JSON.from(frontJsOutput.output());
             String jsonStr = json.toString();
-
             // set the JSON content type
             response.setContentType("application/json");
             // jsonStr.length is not reliable for unicode characters
             response.setContentLength(jsonStr.getBytes("UTF8").length);
-
             writer.write(jsonStr);
 
             writer.flush();
+        } catch (TemplateException e) {
+            Debug.logError(e, "Error initializing screen renderer", module);
+            throw new ViewHandlerException(e.getMessage());
         } catch (IOException e) {
             throw new ViewHandlerException("Error in the response writer/output stream: " + e.toString(), e);
         } catch (SAXException | ParserConfigurationException e) {
