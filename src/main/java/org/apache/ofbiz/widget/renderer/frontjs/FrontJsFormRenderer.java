@@ -1355,7 +1355,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
                 columnStyleList.stream().map(str -> "'" + str + "'").collect(Collectors.joining(", "));
         Map<String, Object> cb = new HashMap<>();
         if (modelForm.getDefaultEntityName().equals("")) {
-            cb.put("errorMessage", "ListWrapper have no defaultEntityName");
+            throw new IllegalArgumentException("FrontJsRenderer: list/grid Form Error because without a default entityName");
         }
         cb.put("formName", modelForm.getName());
         cb.put("style", FlexibleStringExpander.expandString(modelForm.getDefaultTableStyle(), context));
