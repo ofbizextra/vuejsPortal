@@ -18,8 +18,8 @@
         <v-btn fab fixed top right @click.stop="closeModal"><v-icon>mdi-close</v-icon></v-btn>
         <v-card class="pa-1">
           <v-card-text class="pa-0">
-            <vue-container :props="{attributes: {id: id + '_modalContent'}}"
-                           :auto-update-params="{targetUrl: getCurrentApi + '/' + fieldFormName, params: {presentation: 'layer'}}">
+            <vue-container :props="{attributes: {id: name + '_lookup_modalContent'}}"
+                           :auto-update-params="{targetUrl: getCurrentApi + '/' + fieldFormName, params: {presentation: 'layer',lookupFieldForm: formName, lookupField: name}}">
             </vue-container>
           </v-card-text>
 <!--          <v-card-actions class="justify-space-around pa-0">-->
@@ -223,7 +223,7 @@
       },
       showModal() {
         this.$store.dispatch('ui/setArea', {
-          areaId: this.id + '_modalContent',
+          areaId: this.name + '_lookup_modalContent',
           targetUrl: `${this.$store.getters['backOfficeApi/currentApi']}/${this.fieldFormName}`,
           wait: this.$wait,
           params: {presentation: 'layer'}
