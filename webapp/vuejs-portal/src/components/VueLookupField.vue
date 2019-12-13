@@ -19,7 +19,7 @@
         <v-card class="pa-1">
           <v-card-text class="pa-0">
             <vue-container :props="{attributes: {id: name + '_lookup_modalContent'}}"
-                           :auto-update-params="{targetUrl: getCurrentApi + '/' + fieldFormName, params: {presentation: 'layer',lookupFieldForm: formName, lookupField: name}}">
+                           :auto-update-params="{targetUrl: getCurrentApi + '/' + fieldFormName, params: modalParams}">
             </vue-container>
           </v-card-text>
 <!--          <v-card-actions class="justify-space-around pa-0">-->
@@ -108,6 +108,20 @@
       },
       searchValueFieldName() {
         return this.data.hasOwnProperty('fieldFormName') ? this.data.fieldFormName : ''
+      },
+      targetParameter() {
+        return this.data.hasOwnProperty('targetParameters') ? this.data.targetParameters[0] : ''
+      },
+      modalParams() {
+        let modalParams = {
+            presentation: 'layer',
+            lookupFieldForm: this.formName, 
+            lookupField: this.name
+        }
+        if (this.targetParameter) {
+            modalParams.param0 = this.targetParameter
+        }
+        return modalParams
       },
       params() {
         return {
