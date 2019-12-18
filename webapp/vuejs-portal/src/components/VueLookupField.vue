@@ -110,7 +110,10 @@
         return this.data.hasOwnProperty('fieldFormName') ? this.data.fieldFormName : ''
       },
       targetParameter() {
-        return this.data.hasOwnProperty('targetParameters') ? this.data.targetParameters[0] : ''
+        return this.data.hasOwnProperty('targetParameters') ? this.getDataFromForm({formId: this.data.formName, key: this.data.targetParameters[0]}) : ''
+      },
+      targetParameters() {
+        return this.data.hasOwnProperty('targetParameters') ? this.data.targetParameters.map( val => this.getDataFromForm({formId: this.data.formName, key: val})) : []
       },
       modalParams() {
         let modalParams = {
@@ -118,19 +121,23 @@
             lookupFieldForm: this.formName, 
             lookupField: this.name
         }
-        if (this.targetParameter) {
-            modalParams.param0 = this.targetParameter
-        }
+        this.targetParameters.forEach((val, id) => {
+          modalParams['param' + id] = val
+        })
         return modalParams
       },
       params() {
-        return {
+        let params = {
           ajaxLookup: 'Y',//this.ajaxLookup,
           searchValueFieldName: this.name, //this.name
           term: this.valueStored,
           autocompleterViewSize: "50",
           displayFields: []
         }
+        this.targetParameters.forEach((val, id) => {
+          params['param' + id] = val
+        })
+        return params
       },
       tooltip() {
         let selectedItem = this.wordList.find(item => item[this.name] === this.valueStored)
