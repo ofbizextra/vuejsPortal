@@ -1,5 +1,6 @@
 <template>
     <div :id="id" :name="name">
+      <input type="hidden" :name="data.name" :value="value" :formname="data.formName"/>
       <v-select :items="data.options" item-value="key" item-text="description" v-model="value"
                 :hide-details="noRules" dense clearable :rules="rules">
         <template slot="item" slot-scope="data">
