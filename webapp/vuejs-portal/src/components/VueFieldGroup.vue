@@ -1,22 +1,20 @@
 <template>
-  <div :id="id" class="fieldgroup">
-    <div class="fieldgroup-title-bar">
-      <ul v-if="title">
-        <li :class="iconClass" :tooltip="tooltip" v-on:click="toggleCollapse">
-          {{' ' + title}}
-        </li>
-      </ul>
-    </div>
-    <div :id="collapsibleAreaId" class="fieldgroup-body" :style="style" v-if="!collapsed">
-      <div
-        v-for="(component, key) in props.children"
-        :key="key"
-        v-bind:is="constantes.components[component.name]"
-        :props="component"
-        :updateStore="updateStore">
-      </div>
-    </div>
-  </div>
+  <v-expansion-panels :id="id" class="ma-1" v-model="panels">
+    <v-expansion-panel :disabled="!collapsible">
+      <v-expansion-panel-header v-if="title !== ''">
+            {{title}}
+      </v-expansion-panel-header>
+      <v-expansion-panel-content :id="collapsibleAreaId">
+        <div
+            v-for="(component, key) in props.children"
+            :key="key"
+            v-bind:is="constantes.components[component.name]"
+            :props="component"
+            :updateStore="updateStore">
+        </div>
+      </v-expansion-panel-content>
+    </v-expansion-panel>
+  </v-expansion-panels>
 </template>
 
 <script>
@@ -27,7 +25,8 @@
     props: ['props', 'updateStore'],
     data() {
       return {
-        constantes: constantes
+        constantes: constantes,
+        panels: []
       }
     },
     computed: {
@@ -44,6 +43,9 @@
       },
       collapsed() {
         return this.data.hasOwnProperty('collapsed') ? this.data.collapsed : false
+      },
+      expanded() {
+        return !this.collapsed
       },
       collapsible() {
         return this.data.hasOwnProperty('collapsible') ? this.data.collapsible : false
@@ -73,6 +75,11 @@
     methods: {
       toggleCollapse() {
         this.data.collapsed = !this.data.collapsed
+      }
+    },
+    created() {
+      if (!this.data.collapsed) {
+        this.panels = 0
       }
     }
   }
