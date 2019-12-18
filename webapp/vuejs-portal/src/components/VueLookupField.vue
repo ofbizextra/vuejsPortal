@@ -109,9 +109,6 @@
       searchValueFieldName() {
         return this.data.hasOwnProperty('fieldFormName') ? this.data.fieldFormName : ''
       },
-      targetParameter() {
-        return this.data.hasOwnProperty('targetParameters') ? this.getDataFromForm({formId: this.data.formName, key: this.data.targetParameters[0]}) : ''
-      },
       targetParameters() {
         return this.data.hasOwnProperty('targetParameters') ? this.data.targetParameters.map( val => this.getDataFromForm({formId: this.data.formName, key: val})) : []
       },
