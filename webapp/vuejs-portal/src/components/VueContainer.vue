@@ -27,7 +27,7 @@
 
   export default {
     name: "VueContainer",
-    props: ['props', 'updateStore', 'autoUpdateParams'],
+    props: ['props', 'updateStore'],
     data() {
       return {
         constantes: constantes
@@ -43,30 +43,25 @@
       areaId() {
         return this.props.attributes.hasOwnProperty('id') ? this.props.attributes.id : null
       },
-      updateParams() {
-        return this.autoUpdateParams ? this.autoUpdateParams : false
-      },
-      targetUrl() {
-        return this.updateParams.hasOwnProperty('targetUrl') ? this.updateParams.targetUrl : ''
-      },
-      params() {
-        return this.updateParams.hasOwnProperty('params') ? {...this.updateParams.params, ...this.watcher} : this.watcher
+      autoUpdatetarget() {
+        return this.props.attributes.hasOwnProperty('autoUpdateTarget') ? this.props.attributes.autoUpdateTarget : ''
       },
       setArea() {
         return {
           areaId: this.areaId,
-          targetUrl: this.targetUrl,
+          targetUrl: this.autoUpdatetarget,
           wait: this.$wait,
-          params: this.params
+          params: this.watcher
         }
       },
       watcher() {
         return this.$store.getters['data/watcher'](this.areaId)
+        //return this.getWatcher(this.areaId) // waiting question to julien
       }
     },
     methods: {},
     created() {
-      if (this.updateParams) {
+      if (this.props.attributes.autoUpdateTarget) {
         this.$store.dispatch('data/setWatcher', {watcherName: this.props.attributes.id, params: {}})
       }
       if (this.areaId.includes('_modalContent')) {return}
@@ -81,7 +76,7 @@
         this.$store.dispatch('ui/deleteArea', {areaId: val.attributes.id})
       },
       watcher: function () {
-        if (this.updateParams) {
+        if (this.autoUpdatetarget) {
           this.$store.dispatch('ui/setArea', this.setArea)
         }
       }
