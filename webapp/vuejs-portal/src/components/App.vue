@@ -314,9 +314,6 @@
       this.$store.dispatch('backOfficeApi/setApi', api)
       // Vue.http.setRequestHeader('Content-Security-Policy', "default-src 'self'")
       this.$store.dispatch('login/check').then(() => {
-        if (webapp === 'main') {
-          this.$router.push(`/screen/main`)
-        }
         if (webapp === 'showPortalPage') {
           let search = window.location.search.split('?').join('')
           let parametersList = search.split('&amp;')
@@ -326,6 +323,8 @@
             }
           }
           this.$router.push(`/portalPage/${webapp}`)
+        } else {
+          this.$router.push(`/screen/${webapp}`)
         }
       }, () => {
         this.$router.push('/login')
