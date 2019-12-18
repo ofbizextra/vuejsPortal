@@ -20,10 +20,7 @@
             v-on="on"
         ></v-text-field>
       </template>
-      <v-date-picker v-model="date" scrollable>
-        <v-spacer></v-spacer>
-        <v-btn text color="primary" @click="dateMenu = false">Cancel</v-btn>
-        <v-btn text color="primary" @click="$refs.dateMenu.save(date)">OK</v-btn>
+      <v-date-picker v-model="date" scrollable @change="$refs.dateMenu.save(date)">
       </v-date-picker>
     </v-menu>
     <v-menu
@@ -46,13 +43,9 @@
             v-on="on"
         ></v-text-field>
       </template>
-      <v-time-picker v-model="time" :format="config.format" scrollable use-seconds>
-        <v-spacer></v-spacer>
-        <v-btn text color="primary" @click="timeMenu = false">Cancel</v-btn>
-        <v-btn text color="primary" @click="$refs.timeMenu.save(time)">OK</v-btn>
+      <v-time-picker v-model="time" :format="config.timeFormat" scrollable use-seconds @change="$refs.timeMenu.save(time)" >
       </v-time-picker>
     </v-menu>
-<!--    <flat-pickr v-model="valueStore" :config="config"></flat-pickr>-->
   </v-row>
 </template>
 
@@ -150,7 +143,7 @@
         return this.data.hasOwnProperty('id') ? this.data.id : ''
       },
       isTwelveHour() {
-        return this.data.hasOwnProperty('isTwelveHour') ? this.data.isTwelveHour : false
+        return this.data.hasOwnProperty('isTwelveHour') && this.data.isTwelveHour === 'Y' ? this.data.isTwelveHour : false
       },
       localizedIconTitle() {
         return this.data.hasOwnProperty('localizedIconTitle') ? this.data.localizedIconTitle : ''
@@ -211,7 +204,7 @@
           allowInput: true,
           enableTime: true,
           enableSeconds: true,
-          dateFormat: this.isTwelveHour ? '12hr' : '24hr'
+          timeFormat: this.isTwelveHour ? 'ampm' : '24hr'
         }
       },
       controls() {
