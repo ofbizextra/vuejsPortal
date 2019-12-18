@@ -46,7 +46,7 @@
         this.flash('hello world !!!', 'success', 2000)
       },
       timeout(message) {
-        return message.messageType === 'error' ? 0 : 10000
+        return message.messageType === 'error' ? 0 : 6000
       },
     },
     watch: {
@@ -54,7 +54,7 @@
         if (message.messageType === 'event') {
           setTimeout(() => {
             this.dismiss(message)
-          }, 9000)
+          }, 6000)
         }
       }
     }
