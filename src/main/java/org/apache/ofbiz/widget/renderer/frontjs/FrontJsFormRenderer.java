@@ -1867,10 +1867,11 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         if (UtilValidate.isEmpty(formName)) {
             formName = FormRenderer.getCurrentFormName(modelForm, context);
         }
-        StringBuilder targetParameterIter = new StringBuilder();
         String imgSrc = "";
-        // FIXME: refactor using the StringUtils methods
         List<String> targetParameterList = lookupField.getTargetParameterList();
+        /* OH 13.12.2019 simplification for targetParameter
+        // FIXME: refactor using the StringUtils methods
+        StringBuilder targetParameterIter = new StringBuilder();
         targetParameterIter.append("[");
         for (String targetParameter : targetParameterList) {
             if (targetParameterIter.length() > 1) {
@@ -1881,6 +1882,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
             targetParameterIter.append("'");
         }
         targetParameterIter.append("]");
+        */
         imgSrc = this.appendContentUrl("/images/fieldlookup.gif");
         String ajaxUrl = "";
         if (ajaxEnabled) {
@@ -1937,7 +1939,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         cb.put("descriptionFieldName", descriptionFieldName);
         cb.put("formName", formName);
         cb.put("fieldFormName", lookupFieldFormName);
-        cb.put("targetParameterIter", targetParameterIter.toString());
+        cb.put("targetParameters", targetParameterList);
         cb.put("imgSrc", imgSrc);
         cb.put("ajaxUrl", ajaxUrl);
         cb.put("ajaxEnabled", ajaxEnabled);
