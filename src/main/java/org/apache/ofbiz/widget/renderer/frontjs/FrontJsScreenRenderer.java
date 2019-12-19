@@ -89,13 +89,22 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
 
     public void renderContainerBegin(Appendable writer, Map<String, Object> context, ModelScreenWidget.Container container) throws IOException {
         String containerId = container.getId(context);
-        String autoUpdateTarget = container.getAutoUpdateTargetExdr(context);
-        if (UtilValidate.isNotEmpty(autoUpdateTarget)) {
-            throw new IOException("FrontJsRender: auto-update-target in container tag, not yet implemented in container"
+        String type = container.getType(context);
+        if (UtilValidate.isNotEmpty(type)) {
+            throw new IOException("FrontJsRender: type property in container tag, not yet implemented in container"
                                + ((containerId!=null)? "with id="+containerId : ""));
         }
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("id", containerId); // used as areaId
+        String autoUpdateTarget = container.getAutoUpdateTargetExdr(context);
+        if (UtilValidate.isNotEmpty(autoUpdateTarget)) {
+            parameters.put("autoUpdateTarget", autoUpdateTarget);
+        }
+        if (! "2".equals(container.getAutoUpdateInterval(context))) { // 2 is the default value, if empty
+            Debug.logWarning("auto-update-interval property is used (="+container.getAutoUpdateInterval(context)+
+                             ") in container with id="+containerId+" it's not manage by FrontFjRenderer", module);
+            parameters.put("autoUpdateIntervale", container.getAutoUpdateInterval(context));
+        }
         if (UtilValidate.isNotEmpty(container.getStyle(context))) {
             Debug.logWarning("style property is used (="+container.getStyle(context)+
                              ") in container with id="+containerId+" it's not manage by FrontFjRenderer", module);
