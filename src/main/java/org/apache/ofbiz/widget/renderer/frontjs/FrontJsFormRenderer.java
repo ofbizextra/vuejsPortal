@@ -1354,9 +1354,6 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         String columnStyleListString =
                 columnStyleList.stream().map(str -> "'" + str + "'").collect(Collectors.joining(", "));
         Map<String, Object> cb = new HashMap<>();
-        if (modelForm.getDefaultEntityName().equals("")) {
-            throw new IllegalArgumentException("FrontJsRenderer: list/grid Form Error because without a default entityName");
-        }
         cb.put("formName", modelForm.getName());
         cb.put("style", FlexibleStringExpander.expandString(modelForm.getDefaultTableStyle(), context));
         if (UtilValidate.isNotEmpty(columnStyleListString)) {
@@ -1371,9 +1368,10 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
             action = "PUSH_ENTITY";
             data.put("entityName", defaultEntityName);
             data.put("primaryKeys", getPkList(defaultEntityName, ((Delegator)context.get("delegator")).getModelReader()));
+        } else {
+          //TODO add a log info to explain that store.entity will be not used. Logical when data will not be update by other portlet
         }
         cb.put("listSize", Paginator.getListSize(context));
-        //TODO ajouter soit un Alert concernant le fait que la list n'est pas lié au store
         // End data
         this.output.pushScreen("ListWrapperOpen", cb, action, data);
     }
@@ -1383,7 +1381,11 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         this.output.putScreen("EmptyFormDataMessage", cb);
     }
     public void renderFormatListWrapperClose(Appendable writer, Map<String, Object> context, ModelForm modelForm) {
-        this.output.popScreen("ListWrapperClose", "POP_ENTITY");
+        if (UtilValidate.isNotEmpty(modelForm.getDefaultEntityName())) {
+            this.output.popScreen("ListWrapperClose", "POP_ENTITY");
+        } else {
+            this.output.popScreen("ListWrapperClose");
+        }
         if (this.renderPagination) {
             this.renderNextPrev(writer, context, modelForm);
         }
