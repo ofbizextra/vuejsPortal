@@ -119,7 +119,7 @@
             lookupField: this.name
         }
         this.targetParameters.forEach((val, id) => {
-          modalParams['param' + id] = val
+          modalParams['parm' + id] = val
         })
         return modalParams
       },
@@ -132,7 +132,7 @@
           displayFields: []
         }
         this.targetParameters.forEach((val, id) => {
-          params['param' + id] = val
+          params['parm' + id] = val
         })
         return params
       },
