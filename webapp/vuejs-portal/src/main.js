@@ -73,10 +73,13 @@ import Screen from './components/Screen'
 import VuePasswordField from './components/VuePasswordField'
 import VueNavMenuItemInline from './components/VueNavMenuItemInline'
 import VueHorizontalSeparator from './components/VueHorizontalSeparator'
+import AppMenu from './components/AppMenu'
+import AppWait from './components/AppWait'
+import AppCpt from './components/AppCpt'
 
 // Platform Specific
-import ContactMech from './components/platformSpecific/ContactMech'
 
+import ContactMech from './components/platformSpecific/ContactMech'
 import store from './store'
 import vuetify from './plugins/vuetify';
 
@@ -157,6 +160,9 @@ Vue.component('vue-nav-menu-item', VueNavMenuItem)
 Vue.component('vue-password-field', VuePasswordField)
 Vue.component('vue-nav-menu-item-inline', VueNavMenuItemInline)
 Vue.component('vue-horizontal-separator', VueHorizontalSeparator)
+Vue.component('app-menu', AppMenu)
+Vue.component('app-wait', AppWait)
+Vue.component('app-cpt', AppCpt)
 
 // Platform Specific
 Vue.component('ContactMech', ContactMech)
