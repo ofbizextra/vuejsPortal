@@ -1,5 +1,5 @@
 <template>
-  <span id="vue-asterisks" v-if="data.requiredField && !data.requiredStyle">*</span>
+  <span id="vue-asterisks" v-if="show">*</span>
 </template>
 
 <script>
@@ -11,13 +11,14 @@
       }
     },
     computed: {
-      data() {
-        let data = this.props.attributes
-        delete data['value']
-        if (data.className || (data.alert && data.alert === true)) {
-          data.class = data.className ? data.className : '' + ' ' + data.alert === true ? 'alert' : ''
-        }
-        return data
+      requiredField() {
+        return this.props.attributes.hasOwnProperty('requiredField') ? this.props.attributes.requiredField : false
+      },
+      requiredStyle() {
+        return this.props.attributes.hasOwnProperty('requiredStyle') ? this.props.attributes.requiredStyle : false
+      },
+      show() {
+        return this.requiredField && !this.requiredStyle
       }
     }
   }

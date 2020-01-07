@@ -14,19 +14,14 @@
 <script>
   export default {
     name: 'app',
-    computed: {
-      debug() {
-        return process.env.NODE_ENV !== 'production'
-      }
-    },
     mounted() {
-      if (this.debug) {
+      if (this.$debug) {
         console.log(this.$route.path)
       }
       let pathname = window.location.pathname
       let api = pathname.substring(0, pathname.indexOf('/', 1)) + '/control'
       let webapp = pathname.substring(pathname.lastIndexOf('/') + 1, pathname.length)
-      if (this.debug) {
+      if (this.$debug) {
         console.log('WebApp : ', webapp)
       }
       this.$store.dispatch('backOfficeApi/setApi', api)

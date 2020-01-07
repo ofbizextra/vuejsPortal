@@ -1,7 +1,6 @@
 <template>
   <td id="vue-column-portlet" :style="'width: ' + width + ';vertical-align: top'" class="d-inline-block">
-    <vue-portlet v-for="portlet in column.listPortlet" :key="portlet.portalPortletId + '-' + portlet.portletSeqId" v-bind:props="portlet">
-
+    <vue-portlet v-for="portlet in portletList" :key="portlet.portalPortletId + '-' + portlet.portletSeqId" v-bind:props="portlet">
     </vue-portlet>
   </td>
 </template>
@@ -11,30 +10,37 @@
   export default {
     name: "VueColumnPortlet",
     props: ['props'],
-    data() {
-      return {
-        column: {},
-      }
-    },
     computed: {
-      components() {
-        return this.column.listPorlet ? this.column.listPortlet : [] // this.column.listPorlet.map(portlet => {return portlet.replace( /([a-z])([A-Z])/g, '$1-$2' ).toLowerCase() + '-layer'}) : []
-      },
-      width() {
-        return this.column.columnWidthPercentage ? this.column.columnWidthPercentage + '%' : this.column.columnWidthPixels ? this.column.columnWidthPixels : ''
-      },
       ...mapGetters({
         getColumn: 'ui/column',
         portalPages: 'ui/portalPages'
-      })
-    },
-    mounted() {
-      console.log(this.props)
-      this.column = this.getColumn({portalPageId: this.props.portalPageId, columnSeqId: this.props.columnSeqId})
-    },
-    watch: {
-      portalPages() {
-        this.column = this.getColumn({portalPageId: this.props.portalPageId, columnSeqId: this.props.columnSeqId})
+      }),
+      portalPageId() {
+        return this.props.portalPageId
+      },
+      columnSeqId() {
+        return this.props.columnSeqId
+      },
+      portletList() {
+        return this.column.hasOwnProperty('listPortlet') ? this.column.listPortlet : []
+      },
+      columnWidthPercentage() {
+        return this.column.hasOwnProperty('columnWidthPercentage') ? this.column.columnWidthPercentage : null
+      },
+      columnWidthPixels() {
+        return this.column.hasOwnProperty('columnWidthPixels') ? this.column.columnWidthPixels : null
+      },
+      width() {
+        if (this.columnWidthPercentage) {
+          return this.columnWidthPercentage + '%'
+        }
+        if (this.columnWidthPixels) {
+          return this.columnWidthPixels
+        }
+        return ''
+      },
+      column() {
+        return this.getColumn({portalPageId: this.portalPageId, columnSeqId: this.columnSeqId})
       }
     }
   }

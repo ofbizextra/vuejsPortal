@@ -98,11 +98,15 @@ const actions = {
     })
   },
   setWatcher({commit}, data) {
-    console.log('data/setWatcher : ', data)
+    if (this.$debug) {
+      console.log('data/setWatcher : ', data)
+    }
     commit('SET_WATCHER', data)
   },
   setWatcherAttributes({commit}, data) {
-    console.log('data/setWatcherAttributes : ', data)
+    if (this.$debug) {
+      console.log('data/setWatcherAttributes : ', data)
+    }
     commit('SET_WATCHER_ATTRIBUTES', data)
   }
 }

@@ -160,7 +160,9 @@ const actions = {
           // this.$wait.end(portalPortletId + '-' + portletSeqId)
           resolve(portalPortletId)
         }, error => {
-          console.log(error)
+          if (this.$debug) {
+            console.log(error)
+          }
           // this._vm.$wait.end(portalPortletId + '-' + portletSeqId)
           // this.$wait.end(portalPortletId + '-' + portletSeqId)
           reject()
@@ -184,7 +186,9 @@ const actions = {
           commit('SET_CONTAINER', {containerName, content: response.body})
           resolve(containerName)
         }, error => {
-          console.log(error)
+          if (this.$debug) {
+            console.log(error)
+          }
           reject()
         })
       }, 0)
@@ -200,7 +204,9 @@ const actions = {
         dispatch('incrementUpdateCpt')
         dispatch('backOfficeApi/doPost', {uri: constantes.hostUrl + targetUrl.replace('amp;', ''), params: params}, {root: true}
         ).then(response => {
-          console.log({...response.body})
+          if (this.$debug) {
+            console.log({...response.body})
+          }
           if (response.body.hasOwnProperty('_ERROR_MESSAGE_')) {
             dispatch('addErrorMessage', {errorMessage: response.body['_ERROR_MESSAGE_']})
             reject()
@@ -216,7 +222,9 @@ const actions = {
             let entities = []
             let records = []
             Object.keys(response.body.viewEntities).forEach((key) => {
-              console.log('setEntity => ' + key)
+              if (this.$debug) {
+                console.log('setEntity => ' + key)
+              }
               entities.push(dispatch('data/setEntity', {
                 entityName: key,
                 primaryKey: response.body.viewEntities[key].primaryKeys.join('-')
@@ -225,11 +233,17 @@ const actions = {
               }))
             })
             Promise.all(entities).then(all => {
-              console.log('all entity have been created')
+              if (this.$debug) {
+                console.log('all entity have been created')
+              }
               all.forEach((entity => {
-                console.log('creating record for entity: ' + entity.entityName)
+                if (this.$debug) {
+                  console.log('creating record for entity: ' + entity.entityName)
+                }
                 response.body.viewEntities[entity.entityName].list.forEach((record, index) => {
-                  console.log(entity.entityName + ': creating record number ' + index + ': ', record)
+                  if (this.$debug) {
+                    console.log(entity.entityName + ': creating record number ' + index + ': ', record)
+                  }
                   if (record.stId !== null) {
                     let data = {
                       entityName: entity.entityName,
@@ -254,7 +268,9 @@ const actions = {
             resolve(areaId)
           }
         }, error => {
-          console.log(error)
+          if (this.$debug) {
+            console.log(error)
+          }
           setTimeout(() => {
             wait.end(areaId)
           }, 0)
@@ -282,13 +298,19 @@ const actions = {
     commit('DELETE_ERROR_MESSAGE', {errorMessage})
   },
   initialize({dispatch}, location) {
-    console.log('location : ', location)
+    if (this.$debug) {
+      console.log('location : ', location)
+    }
     let origin = location.origin
     let pathname = location.pathname
     let path = origin + pathname
     let search = location.search
-    console.log('path : ', path)
-    console.log('Params : ', search)
+    if (this.$debug) {
+      console.log('path : ', path)
+    }
+    if (this.$debug) {
+      console.log('Params : ', search)
+    }
     // PORTAL_PAGE_ID not defined in the scope but in the main application
     // eslint-disable-next-line
     let params = {portalPageId: this._vm.$route.params.portalPageId}
@@ -296,21 +318,29 @@ const actions = {
       let tmp = param.split('=')
       params[tmp[0]] = tmp[1]
     })
-    console.log('params : ', params)
+    if (this.$debug) {
+      console.log('params : ', params)
+    }
     let api = pathname.substring(0, pathname.indexOf('/', 1)) + '/control'
-    console.log('API ===> ' + api)
+    if (this.$debug) {
+      console.log('API ===> ' + api)
+    }
     dispatch('loadPortalPageDetail', {api: api, params: params})
   },
   loadPortalPageDetail({commit, dispatch}, {api, params}) {
     dispatch('backOfficeApi/setApi', api, {root: true})
     dispatch('backOfficeApi/doPost', {uri: constantes.hostUrl + api + constantes.portalPageDetail.path, params}, {root: true}).then(response => {
       let portalPage = response.body
-      console.log('PortalPage : ', portalPage)
+      if (this.$debug) {
+        console.log('PortalPage : ', portalPage)
+      }
       commit('SET_CURRENT_PORTAL_PAGE_PARAMS', params)
       commit('SET_PORTAL_PAGE', {portalPageId: params.portalPageId, portalPage})
       commit('SET_CURRENT_PORTAL_PAGE', params.portalPageId)
     }, error => {
-      console.log('Error during portalPage acquisition : ', error)
+      if (this.$debug) {
+        console.log('Error during portalPage acquisition : ', error)
+      }
     })
   },
   setCollapsibleStatus({commit}, {areaId, areaTarget}) {

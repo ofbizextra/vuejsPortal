@@ -83,15 +83,21 @@
     computed: mapGetters('login', { token: 'token' } ),
     methods: {
       submit() {
-        console.log("Connecting ...",this.credentials)
+        if (this.$debug) {
+          console.log("Connecting ...",this.credentials)
+        }
         this.$store.dispatch('login/login', this.credentials).then(() => {
           this.$router.push('/')
         }, () => {
-          console.log('Echec de la connexion')
+          if (this.$debug) {
+            console.log('Echec de la connexion')
+          }
         })
       },
       add() {
-        console.log(this.dataTest.toString())
+        if (this.$debug) {
+          console.log(this.dataTest.toString())
+        }
         this.$store.dispatch(
           'ui/addComponent',
           this.dataTest)

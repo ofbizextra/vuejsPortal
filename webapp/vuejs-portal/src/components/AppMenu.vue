@@ -7,7 +7,7 @@
       </v-list-item-content>
     </v-list-item>
     <v-divider></v-divider>
-    <v-list dense nav id="app-navigation" height="auto">
+    <v-list dense nav id="app-navigation" height="auto" v-if="menu.hasOwnProperty('viewScreen')">
       <v-list-item v-for="(link, id) in menu.viewScreen[0].children" :key="id" link
                    :to="generateRouterLink(link.children[0].attributes.linkUrl)">
         <v-list-item-content>
@@ -251,9 +251,6 @@
               userPrefGroupTypeId: 'FRONTJS_PREFERENCES'
             }})
         }
-      },
-      debug() {
-        return process.env.NODE_ENV !== 'production'
       }
     },
     methods: {
@@ -269,12 +266,12 @@
           })
         }
         if (webapp === 'showPortalPage') {
-          if (this.debug) {
+          if (this.$debug) {
             console.log('Generating MenuLink => url : ', url, 'Final router-link : ', `/portalPage/${params.portalPageId}`)
           }
           return `/portalPage/${params.portalPageId}`
         } else {
-          if (this.debug) {
+          if (this.$debug) {
             console.log('Generating MenuLink => url : ', url, 'Final router-link : ', `/screen/${webapp}`)
           }
           return `/screen/${webapp}`
@@ -285,7 +282,7 @@
       this.$store.dispatch('backOfficeApi/doPost', {uri: 'applicationMenu', params: {}}).then(result => {
         this.menu = result.body
       }, error => {
-        if (this.debug) {
+        if (this.$debug) {
           console.log(error)
         }
       })

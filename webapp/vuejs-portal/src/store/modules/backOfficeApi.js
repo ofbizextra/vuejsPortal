@@ -43,8 +43,12 @@ const actions = {
           }),
           {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}
         ).then(response => {
-          console.log({...response.body})
-          console.log('TypeOf response.body : ' + typeof response.body)
+          if (this.$debug) {
+            console.log({...response.body})
+          }
+          if (this.$debug) {
+            console.log('TypeOf response.body : ' + typeof response.body)
+          }
           if (typeof response.body === 'string' && response.body.includes('login failed')) {
             dispatch('ui/setDialogStatus', {
               dialogId: 'loginDialog',
@@ -77,7 +81,9 @@ const actions = {
           }
           resolve(response)
         }, error => {
-          console.log(error)
+          if (this.$debug) {
+            console.log(error)
+          }
           reject(error)
         })
       }, 0)

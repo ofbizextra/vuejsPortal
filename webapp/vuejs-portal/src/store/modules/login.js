@@ -81,29 +81,41 @@ const actions = {
           }),
           {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}
         ).then(response => {
-          console.log(response)
+          if (this.$debug) {
+            console.log(response)
+          }
           if ((typeof response.body === 'string' && response.body.includes('login successful')
             && !response.body._ERROR_MESSAGE_
             && !response.body._ERROR_MESSAGES_LIST_) || typeof response.body === 'object') {
-            console.log('login success')
+            if (this.$debug) {
+              console.log('login success')
+            }
             commit('LOGIN_SUCCESS', credentials)
             resolve()
           } else {
             if (response.body._ERROR_MESSAGE_) {
-              console.log(response.body._ERROR_MESSAGE_)
+              if (this.$debug) {
+                console.log(response.body._ERROR_MESSAGE_)
+              }
             }
             if (response.body._ERROR_MESSAGES_LIST_) {
-              console.log(response.body._ERROR_MESSAGES_LIST_)
+              if (this.$debug) {
+                console.log(response.body._ERROR_MESSAGES_LIST_)
+              }
             }
             commit('LOGIN_FAILURE')
             reject(response)
           }
         }, error => {
           if (error.body._ERROR_MESSAGE_) {
-            console.log(error.body._ERROR_MESSAGE_)
+            if (this.$debug) {
+              console.log(error.body._ERROR_MESSAGE_)
+            }
           }
           if (error.body._ERROR_MESSAGES_LIST_) {
-            console.log(error.body._ERROR_MESSAGES_LIST_)
+            if (this.$debug) {
+              console.log(error.body._ERROR_MESSAGES_LIST_)
+            }
           }
           commit('LOGIN_FAILURE')
           reject(error)
@@ -132,16 +144,22 @@ const actions = {
           if (response.body.includes('login successful')
             && !response.body._ERROR_MESSAGE_
             && !response.body._ERROR_MESSAGES_LIST_) {
-            console.log('login success')
+            if (this.$debug) {
+              console.log('login success')
+            }
             commit('CHECK_SUCCESS')
             resolve()
           } else {
-            console.log(response.body._ERROR_MESSAGE_)
+            if (this.$debug) {
+              console.log(response.body._ERROR_MESSAGE_)
+            }
             commit('CHECK_FAILURE')
             reject()
           }
         }, error => {
-          console.log('error : ', error)
+          if (this.$debug) {
+            console.log('error : ', error)
+          }
           commit('CHECK_FAILURE')
           reject()
         })

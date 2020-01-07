@@ -1,10 +1,10 @@
 // todo compare size and description.size and tronque
 <template>
   <div id="vue-display-field">
-    <div v-if="editable">
+    <div v-if="inPlaceEditor">
       <div v-if="editing">
-        <v-text-field class="d-inline-flex ma-1" v-model="editValue" @keyup.enter="save"></v-text-field><span>
-        <v-btn class="d-inline-flex ma-1 primary dark" @click="save">Save</v-btn>
+        <v-text-field class="d-inline-flex ma-1" v-model="editValue" @keyup.enter.prevent="save"></v-text-field><span>
+        <v-btn class="d-inline-flex ma-1 primary dark" @click.prevent="save">Save</v-btn>
         <v-btn class="d-inline-flex ma-1" @click="toggleEdit">Cancel</v-btn>
       </span>
       </div>
@@ -46,12 +46,14 @@
         getData: 'data/entityRowAttribute',
         getDataFromForm: 'form/fieldInForm'
       }),
-      data() {
-        let data = this.props.attributes
-        if (data.className || (data.alert && data.alert === true)) {
-          data.class = data.className ? data.className : '' + ' ' + data.alert === true ? 'alert' : ''
-        }
-        return data
+      title() {
+        return this.props.attributes.hasOwnProperty('title') ? this.props.attributes.title : ''
+      },
+      description() {
+        return this.props.attributes.hasOwnProperty('description') ? this.props.attributes.description : ''
+      },
+      name() {
+        return this.props.attributes.hasOwnProperty('name') ? this.props.attributes.name : ''
       },
       havePointer() {
         return this.pointer.entityName !== '' && this.pointer.entityName !== undefined
@@ -59,28 +61,37 @@
       getPointer() {
         return this.$store.getters['data/entityRowAttribute'](this.pointer);
       },
+      formName() {
+        return this.props.attributes.hasOwnProperty('formName') ? this.props.attributes.formName : ''
+      },
+      hasEntity() {
+        return this.pointer.hasOwnProperty('entityName')
+      },
       storeForm() {
         return {
-          formId: this.props.attributes.formName,
-          key: this.props.attributes.name,
-          value: this.pointer.entityName ? this.getPointer : this.data.description
+          formId: this.formName,
+          key: this.name,
+          value: this.hasEntity ? this.getPointer : this.description
         }
       },
-      editable() {
-        return this.data.hasOwnProperty('inPlaceEditor') ? this.data.inPlaceEditor : false
+      inPlaceEditor() {
+        return this.props.attributes.hasOwnProperty('inPlaceEditor') ? this.props.attributes.inPlaceEditor : false
       },
       url() {
-        return this.data.hasOwnProperty('url') ? this.data.url : ''
+        return this.props.attributes.hasOwnProperty('url') ? this.props.attributes.url : ''
+      },
+      fieldMap() {
+        return this.props.attributes.hasOwnProperty('fieldMap') ? this.props.attributes.fieldMap : {}
       },
       params() {
-        return this.data.hasOwnProperty('fieldMap') ? {...this.data.fieldMap, ...{[this.data.name]: this.editValue}} : {[this.data.name]: this.editValue}
+        return {...this.fieldMap, ...{[this.name]: this.editValue}}
       },
       value() {
         if (this.havePointer) {
           return this.getPointer
         } else {
           if (!this.edited) {
-            return this.data.title ? this.data.title : this.data.description
+            return this.title !== '' ? this.title : this.description
           } else {
             return this.newValue
           }
@@ -110,9 +121,6 @@
         })
       }
     },
-    created() {
-      // this.$store.dispatch('form/setFieldToForm', this.storeForm)
-    },
     watch: {
       props: function () {
         this.pointer = {
@@ -120,7 +128,6 @@
           id: this.getNestedObject(this.props, ['stPointer', 'id']),
           attribute: this.getNestedObject(this.props, ['stPointer', 'field'])
         }
-        // this.$store.dispatch('form/setFieldToForm', this.storeForm)
       }
     }
   }

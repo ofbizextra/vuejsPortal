@@ -169,6 +169,9 @@ Vue.component('ContactMech', ContactMech)
 
 Object.defineProperty(Vue.prototype, '$_', {value: _})
 
+const showDebug = false
+Object.defineProperty(Vue.prototype, '$debug', {value: (process.env.NODE_ENV !== 'production') && showDebug})
+
 Vue.mixin({
   methods: {
     parseProps() {
