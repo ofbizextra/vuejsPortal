@@ -10,12 +10,12 @@
       </div>
       <div v-else>
         <v-hover v-slot:default="{ hover }">
-          <label :class="hover ? 'font-weight-bold' : ''" v-bind="data" class="ma-1" @click="toggleEdit">{{value}}</label>
+          <label :class="hover ? 'font-weight-bold' : ''" :idname="idName" class="ma-1" @click="toggleEdit">{{value}}</label>
         </v-hover>
       </div>
     </div>
     <div v-else>
-         <label v-bind="data" class="ma-1">{{value}}</label>
+         <label :idname="idName" class="ma-1">{{value}}</label>
     </div>
   </div>
 </template>
@@ -63,6 +63,9 @@
       },
       formName() {
         return this.props.attributes.hasOwnProperty('formName') ? this.props.attributes.formName : ''
+      },
+      idName() {
+        return this.props.attributes.hasOwnProperty('idName') ? this.props.attributes.idName : ''
       },
       hasEntity() {
         return this.pointer.hasOwnProperty('entityName')
