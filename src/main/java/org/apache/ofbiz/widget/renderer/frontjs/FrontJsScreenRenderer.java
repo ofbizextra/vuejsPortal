@@ -119,28 +119,13 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
 
     public void renderLabel(Appendable writer, Map<String, Object> context, ModelScreenWidget.Label label) throws IOException {
         Map<String, Object> attributes = new HashMap<>();
-        // Temporary Hack to manage lookup return value
-        if ("lookup".equals(label.getId(context))) {
-            attributes.put("description", context.get("description"));
-            attributes.put("returnField", context.get("returnField"));
-            attributes.put("displayFields", StringUtil.toList((String) context.get("displayFields")));
-            attributes.put("autocompleteOptions", context.get("autocompleteOptions"));
-            this.output.putScreen("LookupResult", attributes);
-        } else { // normal label management
-            attributes.put("text", label.getText(context));
-            attributes.put("id", label.getId(context));
-            attributes.put("style", label.getStyle(context));
-            this.output.putScreen("Label", attributes);
-        }
+        attributes.put("text", label.getText(context));
+        attributes.put("id", label.getId(context));
+        attributes.put("style", label.getStyle(context));
+        this.output.putScreen("Label", attributes);
     }
     public void renderVueJs(Appendable writer, Map<String, Object> context, ModelScreenWidget.VueJs vuejs) throws IOException {
-        Map<String, Object> attributes = new HashMap<>();
-        Map<String, String> parameterMap = vuejs.getParameterMap(context);
-        if (!parameterMap.isEmpty()) {
-            for (String key : parameterMap.keySet()) {
-                attributes.put(key, parameterMap.get(key));
-            }
-        }
+        Map<String, Object> attributes = vuejs.getParameterMap(context);
         attributes.put("componentName", vuejs.getComponentName(context));
         this.output.putScreen("VueJs", attributes);
     }

@@ -47,10 +47,18 @@ index 58ec24ff5d..d14a52bffb 100644
 +            }
 +        }
 +
-+        public Map<String, String> getParameterMap(Map<String, Object> context) {
-+            Map<String, String> fullParameterMap = new HashMap<>();
++        public Map<String, Object> getParameterMap(Map<String, Object> context) {
++            Map<String, Object> fullParameterMap = new HashMap<>();
 +            for (Parameter parameter : this.parameterList) {
-+                fullParameterMap.put(parameter.getName(), parameter.getValue(context));
++                Object retVal = null;
++                if (parameter.value != null) {
++                    retVal = parameter.value.expandString(context);
++                } else if (parameter.fromField != null && parameter.fromField.get(context) != null) {
++                    retVal = parameter.fromField.get(context);
++                } else {
++                    retVal = context.get(parameter.name);
++                }
++                fullParameterMap.put(parameter.getName(), retVal);
 +            }
 +            return fullParameterMap;
 +        }

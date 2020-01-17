@@ -84,20 +84,18 @@ under the License.
                         <set field="autocompleterViewSize" from-field="parameters.autocompleterViewSize"
                              default-value="${groovy: modelTheme.getAutocompleterDefaultViewSize()}"/>
                         <script location="component://common/groovyScripts/FindAutocompleteOptions.groovy"/>
+                        <set field="displayFields" value="${groovy: org.apache.ofbiz.base.util.StringUtil.toList(displayFields)}" type="List"/>
                         <set field="widgetVerbose" value="false"/>
                     </actions>
                     <widgets>
-                      <!--
-                      <platform-specific>
-                           <html><vuejs component-name="LookupResult">
-                             <parameter param-name="description" from-field="description"/>
-                             <parameter param-name="returnField" from-field="returnField"/>
-                             <parameter param-name="displayFields" value="${groovy: org.apache.ofbiz.base.util.StringUtil.toList(displayFields)}"/>
-                             <parameter param-name="autocompleteOptions" from-field="autocompleteOptions"/>
+                       <platform-specific>
+                           <html><vuejs component-name="LookupResult"> <!-- component-name is not used by VueJs only parameters are used -->
+                             <parameter param-name="description" />
+                             <parameter param-name="returnField" />
+                             <parameter param-name="displayFields" />
+                             <parameter param-name="autocompleteOptions" />
                            </vuejs></html> 
-                      </platform-specific>
-                       -->
-                      <label id="lookup"/> <!-- Hack to avoid a new tag type<html-template location="component://examplefjs/template/AjaxAutocompleteOptions.ftl" /> -->
+                       </platform-specific>
                     </widgets>
                 </section>
             </fail-widgets>
