@@ -8,6 +8,6 @@ pwd
 echo "$file"
 tmp="${file%.patch*}"
 tmp2="${tmp#*ofbizFiles/}"
-svn revert "$tmp2"
-patch -p0 --verbose < "$file"
+git checkout -- "$tmp2"
+git apply < "$file"
 done

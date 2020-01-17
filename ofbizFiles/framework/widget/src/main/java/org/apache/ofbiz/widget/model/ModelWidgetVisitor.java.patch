@@ -1,8 +1,8 @@
-Index: framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelWidgetVisitor.java
-===================================================================
---- framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelWidgetVisitor.java	(révision 1870471)
-+++ framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelWidgetVisitor.java	(copie de travail)
-@@ -68,6 +68,8 @@
+diff --git a/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelWidgetVisitor.java b/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelWidgetVisitor.java
+index f081f98314..d42b52efef 100644
+--- a/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelWidgetVisitor.java
++++ b/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelWidgetVisitor.java
+@@ -68,6 +68,8 @@ public interface ModelWidgetVisitor {
  
      void visit(ModelScreenWidget.Label label) throws Exception;
  

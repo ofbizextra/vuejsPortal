@@ -1,8 +1,8 @@
-Index: framework/widget/dtd/widget-common.xsd
-===================================================================
---- framework/widget/dtd/widget-common.xsd	(révision 1870471)
-+++ framework/widget/dtd/widget-common.xsd	(copie de travail)
-@@ -515,6 +515,13 @@
+diff --git a/framework/widget/dtd/widget-common.xsd b/framework/widget/dtd/widget-common.xsd
+index bd23e32046..0eb2e5e6e3 100644
+--- a/framework/widget/dtd/widget-common.xsd
++++ b/framework/widget/dtd/widget-common.xsd
+@@ -515,6 +515,13 @@ under the License.
              <xs:attribute name="send-if-empty" type="xs:boolean" default="true"/>
          </xs:complexType>
      </xs:element>
@@ -16,7 +16,7 @@ Index: framework/widget/dtd/widget-common.xsd
      <xs:element name="exclude">
          <xs:complexType>
              <xs:attribute name="field-name" type="xs:string" use="required" />
-@@ -525,6 +532,7 @@
+@@ -525,6 +532,7 @@ under the License.
              <xs:element minOccurs="0" ref="auto-parameters-service"/>
              <xs:element minOccurs="0" ref="auto-parameters-entity"/>
              <xs:element minOccurs="0" maxOccurs="unbounded" ref="parameter" />
@@ -24,7 +24,7 @@ Index: framework/widget/dtd/widget-common.xsd
              <xs:element minOccurs="0" name="image" type="image" />
          </xs:sequence>
          <xs:attribute type="xs:string" name="text" />
-@@ -559,6 +567,20 @@
+@@ -559,6 +567,20 @@ under the License.
                      <xs:enumeration value="anchor" />
                      <xs:enumeration value="hidden-form" />
                      <xs:enumeration value="layered-modal" />

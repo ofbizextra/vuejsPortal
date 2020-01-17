@@ -1,8 +1,8 @@
-Index: framework/widget/src/main/java/org/apache/ofbiz/widget/model/HtmlWidget.java
-===================================================================
---- framework/widget/src/main/java/org/apache/ofbiz/widget/model/HtmlWidget.java	(révision 1870471)
-+++ framework/widget/src/main/java/org/apache/ofbiz/widget/model/HtmlWidget.java	(copie de travail)
-@@ -36,6 +36,7 @@
+diff --git a/framework/widget/src/main/java/org/apache/ofbiz/widget/model/HtmlWidget.java b/framework/widget/src/main/java/org/apache/ofbiz/widget/model/HtmlWidget.java
+index dda71e2cb8..4526d0b646 100644
+--- a/framework/widget/src/main/java/org/apache/ofbiz/widget/model/HtmlWidget.java
++++ b/framework/widget/src/main/java/org/apache/ofbiz/widget/model/HtmlWidget.java
+@@ -36,6 +36,7 @@ import org.apache.ofbiz.base.util.cache.UtilCache;
  import org.apache.ofbiz.base.util.collections.MapStack;
  import org.apache.ofbiz.base.util.string.FlexibleStringExpander;
  import org.apache.ofbiz.base.util.template.FreeMarkerWorker;
@@ -10,12 +10,7 @@ Index: framework/widget/src/main/java/org/apache/ofbiz/widget/model/HtmlWidget.j
  import org.apache.ofbiz.widget.renderer.ScreenRenderer;
  import org.apache.ofbiz.widget.renderer.ScreenStringRenderer;
  import org.apache.ofbiz.widget.renderer.html.HtmlWidgetRenderer;
-@@ -116,10 +117,12 @@
-         } else {
-             List<ModelScreenWidget> subWidgets = new ArrayList<>(childElementList.size());
-             for (Element childElement : childElementList) {
--                if ("html-template".equals(childElement.getNodeName())) {
-+                if ("html-template".equals(childElement.getNodeName())) { 
+@@ -120,6 +121,8 @@ public class HtmlWidget extends ModelScreenWidget {
                      subWidgets.add(new HtmlTemplate(modelScreen, childElement));
                  } else if ("html-template-decorator".equals(childElement.getNodeName())) {
                      subWidgets.add(new HtmlTemplateDecorator(modelScreen, childElement));

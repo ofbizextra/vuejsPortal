@@ -7,6 +7,6 @@ do
 tmp="${file%.patch*}"
 tmp2="${tmp#*ofbizFiles/}"
 echo "$tmp2"
-svn diff "./$tmp2" > "./plugins/vuejsPortal/ofbizFiles/$tmp2.patch"
+git diff "./$tmp2" > "./plugins/vuejsPortal/ofbizFiles/$tmp2.patch"
 cat "./plugins/vuejsPortal/ofbizFiles/$tmp2.patch"
 done

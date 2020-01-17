@@ -1,8 +1,8 @@
-Index: framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelFormFieldBuilder.java
-===================================================================
---- framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelFormFieldBuilder.java	(révision 1870471)
-+++ framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelFormFieldBuilder.java	(copie de travail)
-@@ -174,6 +174,15 @@
+diff --git a/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelFormFieldBuilder.java b/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelFormFieldBuilder.java
+index 18fad7bf74..e17a4f616d 100644
+--- a/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelFormFieldBuilder.java
++++ b/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelFormFieldBuilder.java
+@@ -213,6 +213,15 @@ public class ModelFormFieldBuilder {
                      onChangeUpdateAreas.add(updateArea);
                  } else if ("click".equals(updateArea.getEventType())) {
                      onClickUpdateAreas.add(updateArea);

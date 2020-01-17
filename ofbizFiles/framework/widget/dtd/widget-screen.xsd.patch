@@ -1,8 +1,8 @@
-Index: framework/widget/dtd/widget-screen.xsd
-===================================================================
---- framework/widget/dtd/widget-screen.xsd	(révision 1870471)
-+++ framework/widget/dtd/widget-screen.xsd	(copie de travail)
-@@ -411,6 +411,8 @@
+diff --git a/framework/widget/dtd/widget-screen.xsd b/framework/widget/dtd/widget-screen.xsd
+index 7165f416be..4f70063815 100644
+--- a/framework/widget/dtd/widget-screen.xsd
++++ b/framework/widget/dtd/widget-screen.xsd
+@@ -411,6 +411,8 @@ under the License.
      <xs:element name="include-portal-page" substitutionGroup="AllWidgets">
          <xs:complexType>
              <xs:attribute type="xs:string" name="id" />
@@ -11,7 +11,7 @@ Index: framework/widget/dtd/widget-screen.xsd
              <xs:attribute name="conf-mode" type="xs:boolean" default="false">
                  <xs:annotation>
                      <xs:documentation>Show the portal in configuration mode.</xs:documentation>
-@@ -520,6 +522,15 @@
+@@ -520,6 +522,15 @@ under the License.
      <xs:attributeGroup name="attlist.html-template">
          <xs:attribute type="xs:string" name="location" use="required" />
      </xs:attributeGroup>

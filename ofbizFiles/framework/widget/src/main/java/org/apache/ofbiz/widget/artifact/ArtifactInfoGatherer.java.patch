@@ -1,8 +1,8 @@
-Index: framework/widget/src/main/java/org/apache/ofbiz/widget/artifact/ArtifactInfoGatherer.java
-===================================================================
---- framework/widget/src/main/java/org/apache/ofbiz/widget/artifact/ArtifactInfoGatherer.java	(révision 1870471)
-+++ framework/widget/src/main/java/org/apache/ofbiz/widget/artifact/ArtifactInfoGatherer.java	(copie de travail)
-@@ -101,6 +101,7 @@
+diff --git a/framework/widget/src/main/java/org/apache/ofbiz/widget/artifact/ArtifactInfoGatherer.java b/framework/widget/src/main/java/org/apache/ofbiz/widget/artifact/ArtifactInfoGatherer.java
+index 0ea33934fd..44657bf1a1 100644
+--- a/framework/widget/src/main/java/org/apache/ofbiz/widget/artifact/ArtifactInfoGatherer.java
++++ b/framework/widget/src/main/java/org/apache/ofbiz/widget/artifact/ArtifactInfoGatherer.java
+@@ -101,6 +101,7 @@ import org.apache.ofbiz.widget.model.ModelScreenWidget.ScreenLink;
  import org.apache.ofbiz.widget.model.ModelScreenWidget.Screenlet;
  import org.apache.ofbiz.widget.model.ModelScreenWidget.Section;
  import org.apache.ofbiz.widget.model.ModelScreenWidget.Tree;
@@ -10,7 +10,7 @@ Index: framework/widget/src/main/java/org/apache/ofbiz/widget/artifact/ArtifactI
  import org.apache.ofbiz.widget.model.ModelSingleForm;
  import org.apache.ofbiz.widget.model.ModelTree;
  import org.apache.ofbiz.widget.model.ModelTree.ModelNode;
-@@ -242,6 +243,10 @@
+@@ -242,6 +243,10 @@ public final class ArtifactInfoGatherer implements ModelWidgetVisitor, ModelActi
      }
  
      @Override

@@ -1,8 +1,8 @@
-Index: framework/widget/src/main/java/org/apache/ofbiz/widget/model/CommonWidgetModels.java
-===================================================================
---- framework/widget/src/main/java/org/apache/ofbiz/widget/model/CommonWidgetModels.java	(révision 1870471)
-+++ framework/widget/src/main/java/org/apache/ofbiz/widget/model/CommonWidgetModels.java	(copie de travail)
-@@ -364,14 +364,22 @@
+diff --git a/framework/widget/src/main/java/org/apache/ofbiz/widget/model/CommonWidgetModels.java b/framework/widget/src/main/java/org/apache/ofbiz/widget/model/CommonWidgetModels.java
+index 6960db7266..a7335fb58c 100644
+--- a/framework/widget/src/main/java/org/apache/ofbiz/widget/model/CommonWidgetModels.java
++++ b/framework/widget/src/main/java/org/apache/ofbiz/widget/model/CommonWidgetModels.java
+@@ -364,14 +364,22 @@ public final class CommonWidgetModels {
                  this.linkType = linkElement.getAttribute("link-type");
              }
              List<? extends Element> parameterElementList = UtilXml.childElementList(linkElement, "parameter");

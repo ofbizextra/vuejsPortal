@@ -1,8 +1,8 @@
-Index: framework/widget/src/main/java/org/apache/ofbiz/widget/model/XmlWidgetVisitor.java
-===================================================================
---- framework/widget/src/main/java/org/apache/ofbiz/widget/model/XmlWidgetVisitor.java	(révision 1870471)
-+++ framework/widget/src/main/java/org/apache/ofbiz/widget/model/XmlWidgetVisitor.java	(copie de travail)
-@@ -44,6 +44,7 @@
+diff --git a/framework/widget/src/main/java/org/apache/ofbiz/widget/model/XmlWidgetVisitor.java b/framework/widget/src/main/java/org/apache/ofbiz/widget/model/XmlWidgetVisitor.java
+index 193a45a8b1..6e2d3793e4 100644
+--- a/framework/widget/src/main/java/org/apache/ofbiz/widget/model/XmlWidgetVisitor.java
++++ b/framework/widget/src/main/java/org/apache/ofbiz/widget/model/XmlWidgetVisitor.java
+@@ -44,6 +44,7 @@ import org.apache.ofbiz.widget.model.ModelScreenWidget.ScreenLink;
  import org.apache.ofbiz.widget.model.ModelScreenWidget.Screenlet;
  import org.apache.ofbiz.widget.model.ModelScreenWidget.Section;
  import org.apache.ofbiz.widget.model.ModelScreenWidget.Tree;
@@ -10,7 +10,7 @@ Index: framework/widget/src/main/java/org/apache/ofbiz/widget/model/XmlWidgetVis
  import org.apache.ofbiz.widget.model.ModelTree.ModelNode;
  import org.apache.ofbiz.widget.model.ModelTree.ModelNode.ModelSubNode;
  
-@@ -229,6 +230,16 @@
+@@ -229,6 +230,16 @@ public class XmlWidgetVisitor extends XmlAbstractWidgetVisitor implements ModelW
      }
  
      @Override
