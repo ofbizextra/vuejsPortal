@@ -15,7 +15,7 @@
           type="hidden"
       />
     </form>
-    <!--:data-dialog-url="linkUrl"-->
+    <!--:data-dialog-url="linkUrl"  // linkUrl does'nt exist but but (OH) I not know by what replace in this comment ! --> 
     <router-link
         v-if="linkType === 'auto' && urlMode === 'intra-app'"
         v-bind:id="id + '_link'"
@@ -106,7 +106,7 @@
         </span>
     </a>
     <a
-        v-else-if="linkType === 'hidden-form' || linkUrl.length > 0"
+        v-else-if="linkType === 'hidden-form' || target.length > 0"
         v-bind:id="id"
         v-bind:class="style"
         v-bind:name="name"
@@ -157,7 +157,7 @@
         return this.data.hasOwnProperty('targetWindow') ? this.data.targetWindow : ''
       },
       uniqueItemName() {
-        return this.data.hasOwnProperty('uniqueItemName') ? this.data.uniqueItemName : ''
+        return this.data.uniqueItemName
       },
       linkType() {
         return this.data.hasOwnProperty('linkType') ? this.data.linkType : ''
@@ -171,11 +171,11 @@
       name() {
         return this.data.hasOwnProperty('name') ? this.data.name : ''
       },
-      height() {
-        return this.data.hasOwnProperty('height') ? this.data.height : ''
+      height() { // what is usage except for modal, there is always a value the default theme value or specifics to this link
+        return this.data.height 
       },
-      width() {
-        return this.data.hasOwnProperty('width') ? this.data.width : ''
+      width() { // what is usage except for modal, there is always a value the default theme value or specifics to this link
+        return this.data.width
       },
       text() {
         return this.data.hasOwnProperty('text') ? this.data.text : ''
@@ -214,13 +214,13 @@
         let href
         switch (this.urlMode) {
           case 'intra-app':
-            href = this.constantes.hostUrl + this.linkUrl.split('?')[0]
+            href = this.constantes.hostUrl + this.target
             break
           case 'inter-app':
-            href = this.constantes.hostUrl + this.linkUrl.split('?')[0]
+            href = this.constantes.hostUrl + this.target // it should be necessary to add externalLoginKey as parameters
             break
           case 'plain':
-            href = this.linkUrl()
+            href = this.target
             break
           default:
             href = ''
@@ -235,25 +235,11 @@
           return 'intra-app'
         }
       },
-      api() {   // TODO seem no more used, should be remove
-        return this.target.split('?')[0].substring(0, this.linkUrl.indexOf('/', 1)) + '/control'
-      },
       routerLink() {
-      // TODO review without using linkurl
-        let pathname = this.linkUrl.split('?')[0]
-        let webapp = pathname.substring(pathname.lastIndexOf('/') + 1, pathname.length)
-        let search = this.linkUrl.split('?')[1]
-        let params = {}
-        if (search) {
-          search.split('&amp;').forEach(param => {
-            let tmp = param.split('=')
-            params[tmp[0]] = tmp[1]
-          })
-        }
-        if (webapp === 'showPortalPage') {
-          return `/portalPage/${params.portalPageId}`
+        if (this.target === 'showPortalPage') {
+          return `/portalPage/${this.parameterMap.portalPageId}`
         } else {
-          return `/screen/${webapp}`
+          return `/screen/${this.target}`
         }
       }
     },

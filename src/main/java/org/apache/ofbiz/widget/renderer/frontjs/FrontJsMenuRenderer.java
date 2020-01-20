@@ -135,6 +135,11 @@ public class FrontJsMenuRenderer implements MenuStringRenderer {
 
     @Override
     public void renderLink(Appendable writer, Map<String, Object> context, MenuLink link) throws IOException {
+        if (link.getLink().getRequestConfirmation()) {
+            throw new IOException("Render (Macro and FrontJs): requestConfirmation is used in a menuLink and it's not yet implemented"
+                               + "for link with target="+ link.getTarget(context));
+        }
+
         Map<String, Object> parameters = new HashMap<>();
         VisualTheme visualTheme = UtilHttp.getVisualTheme(request);
         ModelTheme modelTheme = visualTheme.getModelTheme();
@@ -143,10 +148,10 @@ public class FrontJsMenuRenderer implements MenuStringRenderer {
         if (isDisableIfEmpty(menuItem, context)) {
             target = null;
         }
-        parameters.put("id", link.getId(context));
-        parameters.put("style", link.getStyle(context));
-        parameters.put("name", link.getName(context));
-        parameters.put("text", link.getText(context));
+        if (UtilValidate.isNotEmpty(link.getId(context)))    parameters.put("id",    link.getId(context));
+        if (UtilValidate.isNotEmpty(link.getStyle(context))) parameters.put("style", link.getStyle(context));
+        if (UtilValidate.isNotEmpty(link.getName(context)))  parameters.put("name",  link.getName(context));
+        if (UtilValidate.isNotEmpty(link.getText(context)))  parameters.put("text",  link.getText(context));
         String height = link.getHeight();
         if (UtilValidate.isEmpty(height)) {
             height = String.valueOf(modelTheme.getLinkDefaultLayeredModalHeight());
@@ -157,8 +162,10 @@ public class FrontJsMenuRenderer implements MenuStringRenderer {
             width = String.valueOf(modelTheme.getLinkDefaultLayeredModalWidth());
         }
         parameters.put("width", width);
-        parameters.put("targetWindow", link.getTargetWindow(context));
-        parameters.put("urlMode", link.getUrlMode());
+        // targetWindow is used for setArea, if link-type="anchor"
+        if (UtilValidate.isNotEmpty(link.getTargetWindow(context))) parameters.put("targetWindow", link.getTargetWindow(context));
+        if (UtilValidate.isNotEmpty(link.getUrlMode())) parameters.put("urlMode", link.getUrlMode());
+        // uniqueItemName is used for link-type='hidden-form' but this link-type is not currently supported by vuejs
         StringBuilder uniqueItemName = new StringBuilder(menuItem.getModelMenu().getName());
         uniqueItemName.append("_").append(menuItem.getName()).append("_LF_").append(UtilMisc.addToBigDecimalInMap(context, "menuUniqueItemIndex", BigDecimal.ONE));
         if (menuItem.getModelMenu().getExtraIndex(context) != null) {
@@ -177,20 +184,12 @@ public class FrontJsMenuRenderer implements MenuStringRenderer {
             linkType = WidgetWorker.determineAutoLinkType(link.getLinkType(), target, link.getUrlMode(), request);
         }
         // Workaround OH 2019-03-04 currently in VueLink hidden-form is not correctly manage, so use "auto" as link-type not hidden-form
-//        parameters.put("linkType", linkType);
+        //   should be study when hidden-form will be manage
+        parameters.put("linkType", linkType);
         parameters.put("linkType", link.getLinkType());
         // End of workaround
-        String linkUrl = "";
-        if (UtilValidate.isNotEmpty(target)) {
-            if (!"hidden-form".equals(linkType)) {
-                StringBuilder sb = new StringBuilder();
-                WidgetWorker.buildHyperlinkUrl(sb, target, link.getUrlMode(), "layered-modal".equals(linkType)?null:link.getParameterMap(context), link.getPrefix(context),
-                        link.getFullPath(), link.getSecure(), link.getEncode(), request, response, context);
-                linkUrl = sb.toString();
-            }
-        }
+        // linkUrl is no more sent but if link-type=inter-app it's needed to have String externalLoginKey = (String) request.getAttribute("externalLoginKey"); (cf WidgetWorker.buildHyperlinkUrl)
         parameters.put("target", target);
-        parameters.put("linkUrl", linkUrl);
         parameters.put("parameterMap", link.getParameterMap(context));
         Image img = link.getImage();
         if (img != null) {
