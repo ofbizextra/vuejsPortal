@@ -21,7 +21,6 @@ package org.apache.ofbiz.widget.renderer.frontjs;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +31,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.ofbiz.base.util.StringUtil;
 import org.apache.ofbiz.base.util.UtilCodec;
+import org.apache.ofbiz.base.util.UtilHttp;
 import org.apache.ofbiz.base.util.UtilMisc;
 import org.apache.ofbiz.base.util.UtilValidate;
 import org.apache.ofbiz.webapp.control.RequestHandler;
@@ -41,7 +41,9 @@ import org.apache.ofbiz.widget.model.CommonWidgetModels.Image;
 import org.apache.ofbiz.widget.model.ModelMenu;
 import org.apache.ofbiz.widget.model.ModelMenuItem;
 import org.apache.ofbiz.widget.model.ModelMenuItem.MenuLink;
+import org.apache.ofbiz.widget.model.ModelTheme;
 import org.apache.ofbiz.widget.renderer.MenuStringRenderer;
+import org.apache.ofbiz.widget.renderer.VisualTheme;
 
 public class FrontJsMenuRenderer implements MenuStringRenderer {
 
@@ -134,6 +136,8 @@ public class FrontJsMenuRenderer implements MenuStringRenderer {
     @Override
     public void renderLink(Appendable writer, Map<String, Object> context, MenuLink link) throws IOException {
         Map<String, Object> parameters = new HashMap<>();
+        VisualTheme visualTheme = UtilHttp.getVisualTheme(request);
+        ModelTheme modelTheme = visualTheme.getModelTheme();
         String target = link.getTarget(context);
         ModelMenuItem menuItem = link.getLinkMenuItem();
         if (isDisableIfEmpty(menuItem, context)) {
@@ -143,10 +147,17 @@ public class FrontJsMenuRenderer implements MenuStringRenderer {
         parameters.put("style", link.getStyle(context));
         parameters.put("name", link.getName(context));
         parameters.put("text", link.getText(context));
-        parameters.put("height", link.getHeight());
-        parameters.put("width", link.getWidth());
+        String height = link.getHeight();
+        if (UtilValidate.isEmpty(height)) {
+            height = String.valueOf(modelTheme.getLinkDefaultLayeredModalHeight());
+        }
+        parameters.put("height", height);
+        String width = link.getWidth();
+        if (UtilValidate.isEmpty(width)) {
+            width = String.valueOf(modelTheme.getLinkDefaultLayeredModalWidth());
+        }
+        parameters.put("width", width);
         parameters.put("targetWindow", link.getTargetWindow(context));
-        parameters.put("targetPortlet", link.getParameterMap(context).get("target-portlet"));
         parameters.put("urlMode", link.getUrlMode());
         StringBuilder uniqueItemName = new StringBuilder(menuItem.getModelMenu().getName());
         uniqueItemName.append("_").append(menuItem.getName()).append("_LF_").append(UtilMisc.addToBigDecimalInMap(context, "menuUniqueItemIndex", BigDecimal.ONE));
@@ -165,39 +176,24 @@ public class FrontJsMenuRenderer implements MenuStringRenderer {
         if (UtilValidate.isNotEmpty(target)) {
             linkType = WidgetWorker.determineAutoLinkType(link.getLinkType(), target, link.getUrlMode(), request);
         }
-        parameters.put("linkType", linkType);
         // Workaround OH 2019-03-04 currently in VueLink hidden-form is not correctly manage, so use "auto" as link-type not hidden-form
+//        parameters.put("linkType", linkType);
         parameters.put("linkType", link.getLinkType());
         // End of workaround
         String linkUrl = "";
-        String actionUrl = "";
-        if ("hidden-form".equals(linkType) || "layered-modal".equals(linkType)) {
-            StringBuilder sb = new StringBuilder();
-            WidgetWorker.buildHyperlinkUrl(sb, target, link.getUrlMode(), null, link.getPrefix(context), link.getFullPath(), link.getSecure(), link.getEncode(), request, response, context);
-            actionUrl = sb.toString();
-        }
         if (UtilValidate.isNotEmpty(target)) {
             if (!"hidden-form".equals(linkType)) {
                 StringBuilder sb = new StringBuilder();
-                WidgetWorker.buildHyperlinkUrl(sb, target, link.getUrlMode(), "layered-modal".equals(linkType)?null:link.getParameterMap(context), link.getPrefix(context), link.getFullPath(), link.getSecure(), link.getEncode(), request, response, context);
+                WidgetWorker.buildHyperlinkUrl(sb, target, link.getUrlMode(), "layered-modal".equals(linkType)?null:link.getParameterMap(context), link.getPrefix(context),
+                        link.getFullPath(), link.getSecure(), link.getEncode(), request, response, context);
                 linkUrl = sb.toString();
             }
         }
-        ArrayList<HashMap<String, String>> parameterList = new ArrayList<>();
-        for (Map.Entry<String, String> parameter : link.getParameterMap(context).entrySet()) {
-            HashMap<String, String> param = new HashMap<>();
-            param.put(parameter.getKey(), parameter.getValue());
-            parameterList.add(param);
-        }
         parameters.put("target", target);
         parameters.put("linkUrl", linkUrl);
-        parameters.put("actionUrl", actionUrl);
-        parameters.put("parameterList", parameterList);
         parameters.put("parameterMap", link.getParameterMap(context));
-        //String imgStr = "";
         Image img = link.getImage();
         if (img != null) {
-            //renderImage(writer, context, img);
             parameters.put("img", createImageParameters(context, img));
         }
         this.output.putScreen("Link", parameters);

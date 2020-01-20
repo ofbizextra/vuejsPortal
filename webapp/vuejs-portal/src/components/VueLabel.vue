@@ -1,5 +1,5 @@
 <template>
-  <div id="vue-label">
+  <div component="vue-label">
     <div v-if="hasStyle">
       <h1 :id="id" v-if="style === 'h1'">{{text}}</h1>
       <h2 :id="id" v-else-if="style === 'h2'">{{text}}</h2>

@@ -1,7 +1,6 @@
 <template>
   <div id="vue-link">
     <!--method="post"-->
-    <!--:action="actionUrl"-->
     <!--:target="targetWindow"-->
     <form
         v-if="linkType === 'hidden-form'"
@@ -133,7 +132,7 @@
 
   export default {
     name: "VueLink",
-    props: ['props', 'updateStore', 'inline', 'clickDisabled'],
+    props: ['props', 'updateStore', 'inline', 'clickDisabled'],  // <== TODO-TRAING OH what is the rule of inline ?
     data() {
       return {
         constantes
@@ -142,7 +141,7 @@
     computed: {
       data() {
         let data = this.props.attributes
-        delete data['value']
+        delete data['value']  // <== why, no 'value' exist as attribute ?
         return data
       },
       ...mapGetters({
@@ -150,9 +149,6 @@
       }),
       linkUrl() {
         return this.data.hasOwnProperty('linkUrl') ? this.data.linkUrl : ''
-      },
-      parameterList() {
-        return this.data.hasOwnProperty('parameterList') ? this.data.parameterList : ''
       },
       parameterMap() {
         return this.data.hasOwnProperty('parameterMap') ? this.data.parameterMap : {}
@@ -162,9 +158,6 @@
       },
       uniqueItemName() {
         return this.data.hasOwnProperty('uniqueItemName') ? this.data.uniqueItemName : ''
-      },
-      actionUrl() {
-        return this.data.hasOwnProperty('actionUrl') ? this.data.actionUrl : ''
       },
       linkType() {
         return this.data.hasOwnProperty('linkType') ? this.data.linkType : ''
@@ -202,7 +195,7 @@
       target() {
         return this.data.hasOwnProperty('target') ? this.data.target : ''
       },
-      params() {
+      params() {  // TODO-TRAINING OH why using a string for Map, or why not using parameterMap
         if (this.uniqueItemName.length > 0) {
           return ""
         }
@@ -242,10 +235,11 @@
           return 'intra-app'
         }
       },
-      api() {
+      api() {   // TODO seem no more used, should be remove
         return this.target.split('?')[0].substring(0, this.linkUrl.indexOf('/', 1)) + '/control'
       },
       routerLink() {
+      // TODO review without using linkurl
         let pathname = this.linkUrl.split('?')[0]
         let webapp = pathname.substring(pathname.lastIndexOf('/') + 1, pathname.length)
         let search = this.linkUrl.split('?')[1]

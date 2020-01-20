@@ -19,7 +19,6 @@
 package org.apache.ofbiz.widget.renderer.frontjs;
 
 import java.io.IOException;
-import java.io.StringWriter;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -33,7 +32,6 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.ofbiz.base.util.Debug;
 import org.apache.ofbiz.base.util.GeneralException;
-import org.apache.ofbiz.base.util.StringUtil;
 import org.apache.ofbiz.base.util.UtilGenerics;
 import org.apache.ofbiz.base.util.UtilHttp;
 import org.apache.ofbiz.base.util.UtilMisc;
@@ -50,6 +48,7 @@ import org.apache.ofbiz.widget.model.ModelMenuItem;
 import org.apache.ofbiz.widget.model.ModelScreen;
 import org.apache.ofbiz.widget.model.ModelScreenWidget;
 import org.apache.ofbiz.widget.model.ModelScreenWidget.ColumnContainer;
+import org.apache.ofbiz.widget.model.ModelScreenWidget.ScreenImage;
 import org.apache.ofbiz.widget.model.ModelTheme;
 import org.apache.ofbiz.widget.model.ScreenFactory;
 import org.apache.ofbiz.widget.renderer.MenuStringRenderer;
@@ -120,10 +119,11 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
     public void renderLabel(Appendable writer, Map<String, Object> context, ModelScreenWidget.Label label) throws IOException {
         Map<String, Object> attributes = new HashMap<>();
         attributes.put("text", label.getText(context));
-        attributes.put("id", label.getId(context));
-        attributes.put("style", label.getStyle(context));
+        if (UtilValidate.isNotEmpty(label.getId(context))) attributes.put("id", label.getId(context));
+        if (UtilValidate.isNotEmpty(label.getStyle(context))) attributes.put("style", label.getStyle(context));
         this.output.putScreen("Label", attributes);
     }
+
     public void renderVueJs(Appendable writer, Map<String, Object> context, ModelScreenWidget.VueJs vuejs) throws IOException {
         Map<String, Object> attributes = vuejs.getParameterMap(context);
         attributes.put("componentName", vuejs.getComponentName(context));
@@ -131,92 +131,129 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
     }
 
     public void renderHorizontalSeparator(Appendable writer, Map<String, Object> context, ModelScreenWidget.HorizontalSeparator separator) throws IOException {
-        Map<String, Object> parameters = new HashMap<>();
-        parameters.put("id", separator.getId(context));
-        parameters.put("style", separator.getStyle(context));
-        this.output.putScreen("HorizontalSeparator", parameters);
+        Map<String, Object> attributes = new HashMap<>();
+        if (UtilValidate.isNotEmpty(separator.getId(context))) {
+            Debug.logWarning("separator id is used (="+separator.getId(context)+
+                             ")  it's not manage by FrontFjRenderer", module);
+            attributes.put("id", separator.getId(context));
+        }
+        if (UtilValidate.isNotEmpty(separator.getName())) {
+            Debug.logWarning("separator name is used (="+separator.getName()+
+                             ")  it's not manage by FrontFjRenderer", module);
+            attributes.put("name", separator.getName());
+        }
+        if (UtilValidate.isNotEmpty(separator.getStyle(context))) {
+            Debug.logWarning("separator style is used (="+separator.getStyle(context)+
+                             ")  it's not manage by FrontFjRenderer", module);
+            attributes.put("style", separator.getStyle(context));
+        }
+        this.output.putScreen("HorizontalSeparator", attributes);
     }
 
+    // not yet tested, it's very similar to MenuRenderer.renderLink which is tested
+
+    // linkUrl
+    // linkType
+    // urlMode
+    // parameterMap
+
+    // targetWindow => used for setArea, if link-type="anchor"
+    // uniqueItemName => used for link-type='hidden-form' but this link-type is not currently supported by vuejs
+
+    // id
+
+    // height
+    // width
+    // style
+    // text
+    // img (with or without mdi- ) src and title
+
+    // name
+    // target <= currently only used for setArea (if link-type="anchor")
+
+    // requestConfirmation not manage (manage only in hyperlink)
+    // confirmationMessage not manage (manage only in hyperlink)
     public void renderLink(Appendable writer, Map<String, Object> context, ModelScreenWidget.ScreenLink link) throws IOException {
         HttpServletResponse response = (HttpServletResponse) context.get("response");
         HttpServletRequest request = (HttpServletRequest) context.get("request");
         VisualTheme visualTheme = UtilHttp.getVisualTheme(request);
         ModelTheme modelTheme = visualTheme.getModelTheme();
-        String targetWindow = link.getTargetWindow(context);
+
+        Map<String, Object> parameters = new HashMap<>();
         String target = link.getTarget(context);
-
-        String uniqueItemName = link.getModelScreen().getName() + "_LF_" + UtilMisc.<String>addToBigDecimalInMap(context, "screenUniqueItemIndex", BigDecimal.ONE);
-
-        String linkType = WidgetWorker.determineAutoLinkType(link.getLinkType(), target, link.getUrlMode(), request);
-        String linkUrl = "";
-        String actionUrl = "";
-        StringBuilder parameters = new StringBuilder();
-        String width = link.getWidth();
-        if (UtilValidate.isEmpty(width)) {
-            width = String.valueOf(modelTheme.getLinkDefaultLayeredModalWidth());
-        }
+        parameters.put("id", link.getId(context));
+        parameters.put("style", link.getStyle(context));
+        parameters.put("name", link.getName(context));
+        parameters.put("text", link.getText(context));
         String height = link.getHeight();
         if (UtilValidate.isEmpty(height)) {
             height = String.valueOf(modelTheme.getLinkDefaultLayeredModalHeight());
         }
-        if ("hidden-form".equals(linkType) || "layered-modal".equals(linkType)) {
-            StringBuilder sb = new StringBuilder();
-            WidgetWorker.buildHyperlinkUrl(sb, target, link.getUrlMode(), null, link.getPrefix(context),
-                    link.getFullPath(), link.getSecure(), link.getEncode(), request, response, context);
-            actionUrl = sb.toString();
-            parameters.append("[");
-            for (Map.Entry<String, String> parameter: link.getParameterMap(context).entrySet()) {
-                if (parameters.length() >1) {
-                    parameters.append(",");
-                }
-                parameters.append("{'name':'");
-                parameters.append(parameter.getKey());
-                parameters.append("'");
-                parameters.append(",'value':'");
-                parameters.append(parameter.getValue());
-                parameters.append("'}");
-            }
-            parameters.append("]");
+        parameters.put("height", height);
+        String width = link.getWidth();
+        if (UtilValidate.isEmpty(width)) {
+            width = String.valueOf(modelTheme.getLinkDefaultLayeredModalWidth());
         }
-        String id = link.getId(context);
-        String style = link.getStyle(context);
-        String name = link.getName(context);
-        String text = link.getText(context);
+        parameters.put("width", width);
+        parameters.put("targetWindow", link.getTargetWindow(context));
+        parameters.put("urlMode", link.getUrlMode());
+
+        String uniqueItemName = link.getModelScreen().getName() + "_LF_" + UtilMisc.<String>addToBigDecimalInMap(context, "screenUniqueItemIndex", BigDecimal.ONE);
+        parameters.put("uniqueItemName", uniqueItemName);
+        String linkType = "";
+        if (UtilValidate.isNotEmpty(target)) {
+            linkType = WidgetWorker.determineAutoLinkType(link.getLinkType(), target, link.getUrlMode(), request);
+        }
+        // Workaround OH 2019-03-04 currently in VueLink hidden-form is not correctly manage, so use "auto" as link-type not hidden-form
+//        parameters.put("linkType", linkType);
+        parameters.put("linkType", link.getLinkType());
+        // End of workaround
+        String linkUrl = "";
         if (UtilValidate.isNotEmpty(target)) {
             if (!"hidden-form".equals(linkType)) {
                 StringBuilder sb = new StringBuilder();
-                WidgetWorker.buildHyperlinkUrl(sb, target, link.getUrlMode(), link.getParameterMap(context), link.getPrefix(context),
+                WidgetWorker.buildHyperlinkUrl(sb, target, link.getUrlMode(), "layered-modal".equals(linkType)?null:link.getParameterMap(context), link.getPrefix(context),
                         link.getFullPath(), link.getSecure(), link.getEncode(), request, response, context);
                 linkUrl = sb.toString();
             }
         }
-        String imgStr = "";
-        ModelScreenWidget.ScreenImage img = link.getImage();
+        parameters.put("target", target);
+        parameters.put("linkUrl", linkUrl);
+        parameters.put("parameterMap", link.getParameterMap(context));
+        ScreenImage img = link.getImage();
         if (img != null) {
-            StringWriter sw = new StringWriter();
-            renderImage(writer, context, img);
-            imgStr = sw.toString();
+            parameters.put("img", createImageParameters(context, img));
         }
-        Map<String, Object> cb = new HashMap<>();
-        cb.put("parameterList", parameters.length()==0? "\"\"" : parameters.toString());
-        cb.put("targetWindow", targetWindow);
-        cb.put("target", target);
-        cb.put("uniqueItemName", uniqueItemName);
-        cb.put("linkType", linkType);
-        cb.put("actionUrl", actionUrl);
-        cb.put("id", id);
-        cb.put("style", style);
-        cb.put("name", name);
-        if (UtilValidate.isNotEmpty(width)) {
-            cb.put("width", width);
+        this.output.putScreen("Link", parameters);
+    }
+    // Made this a separate method so it can be externalized and reused.
+    // copy from MenuRenderer
+    private Map<String, Object> createImageParameters(Map<String, Object> context, ScreenImage image) {
+        HttpServletResponse response = (HttpServletResponse) context.get("response");
+        HttpServletRequest request = (HttpServletRequest) context.get("request");
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("id", image.getId(context));
+        parameters.put("style", image.getStyle(context));
+        parameters.put("width", image.getWidth(context));
+        parameters.put("height", image.getHeight(context));
+        parameters.put("border", image.getBorder(context));
+        //parameters.put("title", image.getTitleExdr().expandString(context));
+        String src = image.getSrc(context);
+        if (UtilValidate.isNotEmpty(src) && request != null && response != null) {
+            String urlMode = image.getUrlMode();
+            if ("ofbiz".equalsIgnoreCase(urlMode)) {
+                ServletContext ctx = (ServletContext) request.getAttribute("servletContext");
+                RequestHandler rh = (RequestHandler) ctx.getAttribute("_REQUEST_HANDLER_");
+                src = rh.makeLink(request, response, src, false, false, false);
+            } else if ("content".equalsIgnoreCase(urlMode)) {
+                StringBuilder newURL = new StringBuilder();
+                ContentUrlTag.appendContentPrefix(request, newURL);
+                newURL.append(src);
+                src = newURL.toString();
+            }
         }
-        if (UtilValidate.isNotEmpty(height)) {
-            cb.put("height", height);
-        }
-        cb.put("linkUrl", linkUrl);
-        cb.put("text", text);
-        cb.put("imgStr", imgStr.replaceAll("\"", "\\\\\""));
-        this.output.putScreen("Link", cb);
+        parameters.put("src", src);
+        return parameters;
     }
 
     public void renderImage(Appendable writer, Map<String, Object> context, ModelScreenWidget.ScreenImage image) throws IOException {
