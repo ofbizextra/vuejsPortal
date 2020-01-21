@@ -189,7 +189,17 @@ public class FrontJsMenuRenderer implements MenuStringRenderer {
         parameters.put("linkType", link.getLinkType());
         // End of workaround
         // linkUrl is no more sent but if link-type=inter-app it's needed to have String externalLoginKey = (String) request.getAttribute("externalLoginKey"); (cf WidgetWorker.buildHyperlinkUrl)
+        String linkUrl = "";
+        if (UtilValidate.isNotEmpty(target)) {
+            if (!"hidden-form".equals(linkType)) {
+                StringBuilder sb = new StringBuilder();
+                WidgetWorker.buildHyperlinkUrl(sb, target, link.getUrlMode(), "layered-modal".equals(linkType)?null:link.getParameterMap(context), link.getPrefix(context),
+                        link.getFullPath(), link.getSecure(), link.getEncode(), request, response, context);
+                linkUrl = sb.toString();
+            }
+        }
         parameters.put("target", target);
+        parameters.put("linkUrl", linkUrl);
         parameters.put("parameterMap", link.getParameterMap(context));
         Image img = link.getImage();
         if (img != null) {
