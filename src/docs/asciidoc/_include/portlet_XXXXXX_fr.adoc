@@ -1,5 +1,5 @@
 
-[[_portlet_category_example]]
+[[_portlet_categorie_example]]
 = Catégorie Example
 
 Cette catégorie de portlet regroupe toutes les portlets du composant Example, qui peuvent servir d'exemple.

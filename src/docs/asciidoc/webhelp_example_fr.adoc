@@ -706,7 +706,7 @@ include::_include/portlet_EXAMPLE_PORTLET_TYPE_fr.adoc[leveloffset=+1]
 
 include::_include/portlet_XXXXXX_fr.adoc[leveloffset=+1]
 
-[[_portlet_iconslist]]
+[[_portlet_iconsliste]]
 == Liste des icônes utilisable dans OFBiz
 
 Les icônes sont utiles pour rendre l'interface utilisateur plus agréable.
