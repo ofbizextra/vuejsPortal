@@ -47,12 +47,18 @@
         return this.autoUpdateParams ? this.autoUpdateParams : false
       },
       targetUrl() {
-        return this.updateParams.hasOwnProperty('targetUrl') ? this.updateParams.targetUrl : ''
+        if (this.updateParams.hasOwnProperty('targetUrl')) {
+          return this.updateParams.targetUrl
+        }
+        if (this.autoUpdateTarget) {
+          return this.autoUpdateTarget
+        }
+        return ''
       },
       params() {
         return this.updateParams.hasOwnProperty('params') ? {...this.updateParams.params, ...this.watcher} : this.watcher
       },
-      autoUpdatetarget() {
+      autoUpdateTarget() {
         return this.props.attributes.hasOwnProperty('autoUpdateTarget') ? this.props.attributes.autoUpdateTarget : ''
       },
       setArea() {
@@ -65,12 +71,11 @@
       },
       watcher() {
         return this.$store.getters['data/watcher'](this.areaId)
-        //return this.getWatcher(this.areaId) // waiting question to julien
       }
     },
     methods: {},
     created() {
-      if (this.updateParams) {
+      if (this.updateParams || this.autoUpdateTarget) {
         this.$store.dispatch('data/setWatcher', {watcherName: this.props.attributes.id, params: {}})
       }
       if (this.areaId.includes('_modalContent')) {return}
