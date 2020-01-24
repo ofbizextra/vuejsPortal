@@ -100,9 +100,8 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
             parameters.put("autoUpdateTarget", autoUpdateTarget);
         }
         if (! "2".equals(container.getAutoUpdateInterval(context))) { // 2 is the default value, if empty
-            Debug.logWarning("auto-update-interval property is used (="+container.getAutoUpdateInterval(context)+
-                             ") in container with id="+containerId+" it's not manage by FrontFjRenderer", module);
-            parameters.put("autoUpdateIntervale", container.getAutoUpdateInterval(context));
+            throw new IOException("FrontJsRender: auto-update-interval property in container tag, not yet implemented in container"
+                    + ((containerId!=null)? "with id="+containerId : ""));
         }
         if (UtilValidate.isNotEmpty(container.getStyle(context))) {
             Debug.logWarning("style property is used (="+container.getStyle(context)+
