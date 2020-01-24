@@ -3,7 +3,7 @@
   <div id="vue-display-field">
     <div v-if="inPlaceEditor">
       <div v-if="editing">
-        <v-text-field class="d-inline-flex ma-1" v-model="editValue" @keyup.enter.prevent="save"></v-text-field><span>
+        <v-text-field class="d-inline-flex ma-1" v-model="editValue" v-on:keydown.enter.prevent="save"></v-text-field><span>
         <v-btn class="d-inline-flex ma-1 primary dark" @click.prevent="save">Save</v-btn>
         <v-btn class="d-inline-flex ma-1" @click="toggleEdit">Cancel</v-btn>
       </span>
