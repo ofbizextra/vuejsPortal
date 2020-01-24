@@ -90,8 +90,6 @@
         return {...this.fieldMap, ...{[this.name]: this.editValue}}
       },
       value() {
-        if (this.edited) return this.editValue // workarround OH 2020-01-17
-        else {
         if (this.havePointer) {
           return this.getPointer
         } else {
@@ -100,7 +98,6 @@
           } else {
             return this.newValue
           }
-        }
         }
       }
     },
@@ -111,12 +108,11 @@
       },
       save() {
         this.$store.dispatch('backOfficeApi/doPost', {uri: this.url, params: this.params}).then(() => {
-          this.edited = true  // workarround OH 2020-01-17
           if (this.havePointer) {
             this.$store.dispatch('data/setEntityRow', {
               entityName: this.getNestedObject(this.props, ['stPointer', 'stEntityName']),
               primaryKey: this.getNestedObject(this.props, ['stPointer', 'id']),
-              data: {[this.data.name]: this.editValue}
+              data: {[this.name]: this.editValue}
             })
           } else {
             this.newValue = this.editValue
