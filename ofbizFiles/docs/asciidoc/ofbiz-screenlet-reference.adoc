@@ -55,7 +55,9 @@ functionality.
 Each core business application contain a group of screenlet, this documentation will help you
 to find and understand which one do what
 
-All screenlet are organize by Category, so there is one chapter by category. 
+All screenlet are organize by Category, so there is one chapter by category.
 
-include::../../plugins/partymgrfjs/src/docs/asciidoc/screenlet-party-profile.adoc[leveloffset=+1]
+include::../../plugins/partymgrfjs/src/docs/asciidoc/screenlet-party.adoc[leveloffset=+1]
+
+include::../../plugins/examplefjs/src/docs/asciidoc/screenlet-example.adoc[leveloffset=+1]
 
