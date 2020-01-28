@@ -286,12 +286,12 @@ pour le hotswap, il faut importer (menu file project structure libraries clicker
 ==== Database
 
 //doc coming from Webhelp Example
-include::../../plugins/examplefjs/src/docs/asciidoc/dev_by_example_fr.adoc[leveloffset=+2]
+include::../../plugins/vuejsPortal/src/docs/asciidoc/webhelp_example_fr.adoc[leveloffset=+2]
 
 
 === Web tools
 
-include::../../plugins/examplefjs/src/docs/asciidoc/example_fr.adoc[leveloffset=+2]
+include::../../plugins/example/src/docs/asciidoc/example_fr.adoc[leveloffset=+2]
 
 == Testing
 
