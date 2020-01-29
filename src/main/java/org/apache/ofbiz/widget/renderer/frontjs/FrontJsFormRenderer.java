@@ -310,6 +310,26 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         */
     }
 
+    private void addTitle(Map<String, Object> attributes, ModelFormField modelFormField, Map<String, Object> context) {
+        attributes.put("fieldTitle", modelFormField.getTitle(context));
+        if (UtilValidate.isNotEmpty(modelFormField.getTitleStyle())) attributes.put("titlestyle", modelFormField.getTitleStyle());
+        if ( modelFormField.getRequiredField()) {
+            String requiredStyle = modelFormField.getRequiredFieldStyle();
+            if (UtilValidate.isNotEmpty(requiredStyle)) {
+                attributes.put("titlestyle", requiredStyle);
+            }
+        }
+        String displayHelpText = UtilProperties.getPropertyValue("widget", "widget.form.displayhelpText");
+        if ("Y".equals(displayHelpText)) {
+            Delegator delegator = WidgetWorker.getDelegator(context);
+            Locale locale = (Locale) context.get("locale");
+            String entityName = modelFormField.getEntityName();
+            String fieldName = modelFormField.getFieldName();
+            String helpText = UtilHelpText.getEntityFieldDescription(entityName, fieldName, delegator, locale);
+            attributes.put("fieldHelpText", encodeDoubleQuotes(helpText));
+        }
+    }
+
     public void renderTextField(Appendable writer, Map<String, Object> context, TextField textField) {
         ModelFormField modelFormField = textField.getModelFormField();
         String name = modelFormField.getParameterName(context);
@@ -358,8 +378,9 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         boolean readonly = textField.getReadonly();
         String tabindex = modelFormField.getTabindex();
         String formName = textField.getModelFormField().getModelForm().getName();
-        Map<String, Object> attributes = new HashMap<>();
 
+        Map<String, Object> attributes = new HashMap<>();
+        if ("single".equals(modelFormField.getModelForm().getType())) this.addTitle(attributes, modelFormField, context);
         attributes.put("formName", formName);
         attributes.put("name", name);
         attributes.put("value", value);
@@ -438,7 +459,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         String value = modelFormField.getEntry(context, textareaField.getDefaultValue(context));
         String formName = modelFormField.getModelForm().getName();
         Map<String, Object> attributes = new HashMap<>();
-
+        if ("single".equals(modelFormField.getModelForm().getType())) this.addTitle(attributes, modelFormField, context);
 
         attributes.put("formName", formName);
         attributes.put("name", name);
@@ -636,6 +657,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         }
         String tabindex = modelFormField.getTabindex();
         Map<String, Object> cb = new HashMap<>();
+        if ("single".equals(modelFormField.getModelForm().getType())) this.addTitle(cb, modelFormField, context);
         cb.put("name", name);
         cb.put("className", className);
         cb.put("alert", alert);
@@ -837,6 +859,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         }
         String tabindex = modelFormField.getTabindex();
         Map<String, Object> cb = new HashMap<>();
+        if ("single".equals(modelFormField.getModelForm().getType())) this.addTitle(cb, modelFormField, context);
         cb.put("name", name);
         cb.put("className", className);
         cb.put("alert", alert);
@@ -929,6 +952,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         }
         items.append("]");
         Map<String, Object> cb = new HashMap<>();
+        if ("single".equals(modelFormField.getModelForm().getType())) this.addTitle(cb, modelFormField, context);
         cb.put("items", items.toString());
         cb.put("className", className);
         cb.put("alert", alert);
@@ -981,6 +1005,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
             items.add(item);
         }
         Map<String, Object> cb = new HashMap<>();
+        if ("single".equals(modelFormField.getModelForm().getType())) this.addTitle(cb, modelFormField, context);
         cb.put("items", items);
         cb.put("className", className);
         cb.put("alert", alert);
@@ -1048,6 +1073,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         }
         String tabindex = modelFormField.getTabindex();
         Map<String, Object> cb = new HashMap<>();
+        if ("single".equals(modelFormField.getModelForm().getType())) this.addTitle(cb, modelFormField, context);
         cb.put("buttonType", buttonType);
         cb.put("className", className);
         cb.put("alert", alert);
@@ -1093,6 +1119,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         }
         String title = modelFormField.getTitle(context);
         Map<String, Object> cb = new HashMap<>();
+        if ("single".equals(modelFormField.getModelForm().getType())) this.addTitle(cb, modelFormField, context);
         cb.put("className", className);
         cb.put("alert", alert);
         cb.put("name", name);
@@ -1199,6 +1226,8 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
                 cb.put("id", id);
                 cb.put("for", id);
             }
+            if ("single".equals(modelFormField.getModelForm().getType())) cb.put("single", true); // to be able to not use it in vuejs (all attributes are in field)
+                                                                                                  //   it's temporary, waiting all is ok without fieldTitle in single
             this.output.putScreen("FieldTitle", cb);
         }
     }
