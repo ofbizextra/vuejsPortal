@@ -1545,11 +1545,11 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         String style = modelFormField.getTitleAreaStyle();
         Map<String, Object> cb = new HashMap<>();
         if (!style.isEmpty()) cb.put("style", style);
-        this.output.pushScreen("FieldRowTitleCellOpen", cb);
+        //this.output.pushScreen("FieldRowTitleCellOpen", cb);
     }
 
     public void renderFormatFieldRowTitleCellClose(Appendable writer, Map<String, Object> context, ModelFormField modelFormField) {
-        this.output.popScreen("FieldRowTitleCellClose");
+        //this.output.popScreen("FieldRowTitleCellClose");
     }
 
     public void renderFormatFieldRowSpacerCell(Appendable writer, Map<String, Object> context, ModelFormField modelFormField) {
@@ -1560,11 +1560,11 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         Map<String, Object> cb = new HashMap<>();
         cb.put("positionSpan", positionSpan);
         cb.put("style", areaStyle);
-        this.output.pushScreen("FieldRowWidgetCellOpen", cb);
+        //this.output.pushScreen("FieldRowWidgetCellOpen", cb);
     }
 
     public void renderFormatFieldRowWidgetCellClose(Appendable writer, Map<String, Object> context, ModelFormField modelFormField, int positions, int positionSpan, Integer nextPositionInRow) {
-        this.output.popScreen("FieldRowWidgetCellClose");
+        //this.output.popScreen("FieldRowWidgetCellClose");
     }
 
     public void renderFormatEmptySpace(Appendable writer, Map<String, Object> context, ModelForm modelForm) {

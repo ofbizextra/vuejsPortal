@@ -1,12 +1,14 @@
 <template>
   <tr id="vue-field-row" v-bind="data">
-    <td
+   <td>
+    <div
       v-for="(component, key) in props.children"
       :key="key"
       v-bind:is="constantes.components[component.name]"
       :props="component"
       :updateStore="updateStore">
-    </td>
+    </div>
+   </td>
   </tr>
 </template>
 
