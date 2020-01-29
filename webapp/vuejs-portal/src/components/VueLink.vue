@@ -1,7 +1,6 @@
 <template>
   <div id="vue-link">
     <!--method="post"-->
-    <!--:target="targetWindow"-->
     <form
         v-if="linkType === 'hidden-form'"
         v-on:click.prevent=""
@@ -15,7 +14,6 @@
           type="hidden"
       />
     </form>
-    <!--:data-dialog-url="linkUrl"  // linkUrl does'nt exist but but (OH) I not know by what replace in this comment ! --> 
     <router-link
         v-if="linkType === 'auto' && urlMode === 'intra-app'"
         v-bind:id="id + '_link'"
@@ -26,8 +24,6 @@
         :class="style"
         :to="{path: routerLink, query: parameterMap}"
     >
-      <!--      v-bind:href="`${href}#${href}`"-->
-      <!--v-on:click="redirect"-->
       <v-tooltip bottom>
         <template v-slot:activator="{ on }">
           <v-icon v-if="haveIcon" v-on="on">{{src}}</v-icon>
@@ -49,8 +45,6 @@
         :class="style"
         :href="href"
     >
-      <!--      v-bind:href="`${href}#${href}`"-->
-      <!--v-on:click="redirect"-->
       <v-tooltip bottom>
         <template v-slot:activator="{ on }">
           <v-icon v-if="haveIcon" v-on="on">{{src}}</v-icon>
@@ -147,9 +141,6 @@
       ...mapGetters({
         currentApi: 'backOfficeApi/currentApi'
       }),
-      linkUrl() {
-        return this.data.hasOwnProperty('linkUrl') ? this.data.linkUrl : ''
-      },
       parameterMap() {
         return this.data.hasOwnProperty('parameterMap') ? this.data.parameterMap : {}
       },
