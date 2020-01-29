@@ -44,16 +44,15 @@
       click() {
         console.log('flash message')
         this.flash('hello world !!!', 'success', 2000)
-      },
-      timeout(message) {
-        return message.messageType === 'error' ? 0 : 9000
-      },
+      }
     },
     watch: {
       firstMessage(message) {
-        if (message.messageType === 'event') {
+        if (message && message.messageType === 'event') {
           setTimeout(() => {
-            this.dismiss(message)
+            if (message === this.firstMessage) {
+              this.dismiss(message)
+            }
           }, 9000)
         }
       }
