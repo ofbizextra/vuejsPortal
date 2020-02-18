@@ -121,7 +121,7 @@
 </template>
 
 <script>
-  import constantes from '../js/constantes'
+  import constants from '../js/constants'
   import {mapGetters} from 'vuex'
 
   export default {
@@ -129,7 +129,7 @@
     props: ['props', 'updateStore', 'inline', 'clickDisabled'],  // <== TODO-TRAING OH what is the rule of inline ?
     data() {
       return {
-        constantes
+        constants
       }
     },
     computed: {
@@ -163,7 +163,7 @@
         return this.data.hasOwnProperty('name') ? this.data.name : ''
       },
       height() { // what is usage except for modal, there is always a value the default theme value or specifics to this link
-        return this.data.height 
+        return this.data.height
       },
       width() { // what is usage except for modal, there is always a value the default theme value or specifics to this link
         return this.data.width
@@ -205,10 +205,10 @@
         let href
         switch (this.urlMode) {
           case 'intra-app':
-            href = this.constantes.hostUrl + this.target
+            href = this.constants.hostUrl + this.target
             break
           case 'inter-app':
-            href = this.constantes.hostUrl + this.target // it should be necessary to add externalLoginKey as parameters
+            href = this.constants.hostUrl + this.target // it should be necessary to add externalLoginKey as parameters
             break
           case 'plain':
             href = this.target

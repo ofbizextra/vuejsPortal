@@ -13,13 +13,13 @@
 </template>
 
 <script>
-  import constantes from '../js/constantes'
+  import constants from '../js/constants'
 
   export default {
     name: "AppWait",
     computed: {
       blockUi() {
-        return constantes.blockUi
+        return constants.blockUi
       },
       waitAny() {
         return this.$wait.any

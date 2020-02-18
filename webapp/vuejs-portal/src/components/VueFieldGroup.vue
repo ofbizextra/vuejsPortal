@@ -8,7 +8,7 @@
         <div
             v-for="(component, key) in props.children"
             :key="key"
-            v-bind:is="constantes.components[component.name]"
+            v-bind:is="constants.components[component.name]"
             :props="component"
             :updateStore="updateStore">
         </div>
@@ -18,14 +18,14 @@
 </template>
 
 <script>
-  import constantes from '../js/constantes'
+  import constants from '../js/constants'
 
   export default {
     name: "VueFieldGroup",
     props: ['props', 'updateStore'],
     data() {
       return {
-        constantes: constantes,
+        constants: constants,
         panels: []
       }
     },

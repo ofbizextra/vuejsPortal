@@ -122,7 +122,7 @@
 
 <script>
   import {mapGetters} from 'vuex'
-  import constantes from '../js/constantes'
+  import constants from '../js/constants'
 
   export default {
     name: "AppMenu",
@@ -148,7 +148,7 @@
         set(value) {
           this.$vuetify.theme.dark = value
           this.$store.dispatch('backOfficeApi/doPost', {
-            uri: constantes.hostUrl + this.currentApi + '/ajaxSetUserPreference',
+            uri: constants.hostUrl + this.currentApi + '/ajaxSetUserPreference',
             params : {
               userPrefTypeId: 'DARK_MODE',
               userPrefValue: value,
@@ -164,7 +164,7 @@
           this.$vuetify.theme.themes.dark.primary = value
           this.$vuetify.theme.themes.light.primary = value
           this.$store.dispatch('backOfficeApi/doPost', {
-            uri: constantes.hostUrl + this.currentApi + '/ajaxSetUserPreference',
+            uri: constants.hostUrl + this.currentApi + '/ajaxSetUserPreference',
             params : {
               userPrefTypeId: 'PRIMARY_COLOR',
               userPrefValue: value,
@@ -180,7 +180,7 @@
           this.$vuetify.theme.themes.dark.secondary = value
           this.$vuetify.theme.themes.light.secondary = value
           this.$store.dispatch('backOfficeApi/doPost', {
-            uri: constantes.hostUrl + this.currentApi + '/ajaxSetUserPreference',
+            uri: constants.hostUrl + this.currentApi + '/ajaxSetUserPreference',
             params : {
               userPrefTypeId: 'SECONDARY_COLOR',
               userPrefValue: value,
@@ -196,7 +196,7 @@
           this.$vuetify.theme.themes.dark.accent = value
           this.$vuetify.theme.themes.light.accent = value
           this.$store.dispatch('backOfficeApi/doPost', {
-            uri: constantes.hostUrl + this.currentApi + '/ajaxSetUserPreference',
+            uri: constants.hostUrl + this.currentApi + '/ajaxSetUserPreference',
             params : {
               userPrefTypeId: 'ACCENT_COLOR',
               userPrefValue: value,
@@ -212,7 +212,7 @@
           this.$vuetify.theme.themes.dark.success = value
           this.$vuetify.theme.themes.light.success = value
           this.$store.dispatch('backOfficeApi/doPost', {
-            uri: constantes.hostUrl + this.currentApi + '/ajaxSetUserPreference',
+            uri: constants.hostUrl + this.currentApi + '/ajaxSetUserPreference',
             params : {
               userPrefTypeId: 'SUCCESS_COLOR',
               userPrefValue: value,
@@ -228,7 +228,7 @@
           this.$vuetify.theme.themes.dark.error = value
           this.$vuetify.theme.themes.light.error = value
           this.$store.dispatch('backOfficeApi/doPost', {
-            uri: constantes.hostUrl + this.currentApi + '/ajaxSetUserPreference',
+            uri: constants.hostUrl + this.currentApi + '/ajaxSetUserPreference',
             params : {
               userPrefTypeId: 'ERROR_COLOR',
               userPrefValue: value,
@@ -244,7 +244,7 @@
           this.$vuetify.theme.themes.dark.warning = value
           this.$vuetify.theme.themes.light.warning = value
           this.$store.dispatch('backOfficeApi/doPost', {
-            uri: constantes.hostUrl + this.currentApi + '/ajaxSetUserPreference',
+            uri: constants.hostUrl + this.currentApi + '/ajaxSetUserPreference',
             params : {
               userPrefTypeId: 'WARNING_COLOR',
               userPrefValue: value,

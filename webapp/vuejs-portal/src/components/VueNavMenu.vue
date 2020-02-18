@@ -24,14 +24,14 @@
 </template>
 
 <script>
-  import constantes from '../js/constantes'
+  import constants from '../js/constants'
 
   export default {
     name: "VueNavMenu",
     props: ['props', 'updateStore'],
     data() {
       return {
-        constantes: constantes,
+        constants: constants,
         on: false
       }
     },

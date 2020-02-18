@@ -13,7 +13,7 @@
         <div
           v-for="(component, key) in props.children"
           :key="key"
-          v-bind:is="constantes.components[component.name]"
+          v-bind:is="constants.components[component.name]"
           :props="component"
           :updateStore="updateStore"
           class="mt-2">
@@ -26,7 +26,7 @@
 </template>
 
 <script>
-  import constantes from '../js/constantes'
+  import constants from '../js/constants'
   import {mapGetters} from 'vuex'
 
   export default {
@@ -34,7 +34,7 @@
     props: ['props', 'updateStore'],
     data() {
       return {
-        constantes: constantes
+        constants: constants
       }
     },
     computed: {

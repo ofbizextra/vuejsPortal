@@ -1,6 +1,6 @@
 import Vuex from 'vuex'
 import Vue from 'vue'
-import constantes from '../../js/constantes'
+import constants from '../../js/constants'
 import queryString from 'query-string'
 
 Vue.use(Vuex)
@@ -29,7 +29,7 @@ const mutations = {
 const getters = {
   messageList: state => state.messageList,
   currentApi: state => state.currentApi,
-  apiUrl: state => constantes.hostUrl + state.currentApi,
+  apiUrl: state => constants.hostUrl + state.currentApi,
   postId: state => state.postId
 }
 

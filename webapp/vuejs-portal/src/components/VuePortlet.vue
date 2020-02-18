@@ -5,7 +5,7 @@
         <div
           v-for="(component, key) in portlet.viewScreen"
           :key="key"
-          v-bind:is="constantes.components[component.name]"
+          v-bind:is="constants.components[component.name]"
           :props="component">
         </div>
       </div>
@@ -13,7 +13,7 @@
         <div
           v-for="(component, key) in children"
           :key="key"
-          v-bind:is="constantes.components[component.name]"
+          v-bind:is="constants.components[component.name]"
           :props="component">
         </div>
       </div>
@@ -23,14 +23,14 @@
 
 <script>
   import {mapGetters} from 'vuex'
-  import cst from '../js/constantes'
+  import cst from '../js/constants'
 
   export default {
     name: "VuePortlet",
     props: ['props'],
     data() {
       return {
-        constantes: cst,
+        constants: cst,
       }
     },
     computed: {

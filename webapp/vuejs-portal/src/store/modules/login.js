@@ -1,7 +1,7 @@
 import Vuex from 'vuex'
 import Vue from 'vue'
 import queryString from 'query-string'
-import constantes from './../../js/constantes'
+import constants from './../../js/constants'
 
 Vue.use(Vuex)
 
@@ -73,7 +73,7 @@ const actions = {
       setTimeout(() => {
         commit('LOGIN')
         Vue.http.post(
-          constantes.hostUrl + rootGetters['backOfficeApi/currentApi'] + constantes.login.path,
+          constants.hostUrl + rootGetters['backOfficeApi/currentApi'] + constants.login.path,
           queryString.stringify({
             JavaScriptEnabled: 'Y',
             USERNAME: credentials.username,
@@ -137,7 +137,7 @@ const actions = {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         Vue.http.post(
-          constantes.hostUrl + rootGetters['backOfficeApi/currentApi'] + constantes.ajaxCheckLogin.path,
+          constants.hostUrl + rootGetters['backOfficeApi/currentApi'] + constants.ajaxCheckLogin.path,
           queryString.stringify({
           }),
           {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}).then(response => {

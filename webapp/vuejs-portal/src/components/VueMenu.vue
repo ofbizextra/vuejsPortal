@@ -3,7 +3,7 @@
     <v-toolbar-items class="ma-0 pa-0">
       <div v-for="(component, index) in props.children"
            :key="index"
-           v-bind:is="constantes.components[component.name]"
+           v-bind:is="constants.components[component.name]"
            :props="component"
            :updateStore="updateStore">
       </div>
@@ -12,7 +12,7 @@
 <!--  <v-row v-if="props.children.length < 2">-->
 <!--    <div v-for="(component, index) in props.children"-->
 <!--         :key="index"-->
-<!--         v-bind:is="constantes.components[component.name]"-->
+<!--         v-bind:is="constants.components[component.name]"-->
 <!--         :props="component"-->
 <!--         :updateStore="updateStore"></div>-->
 <!--  </v-row>-->
@@ -26,7 +26,7 @@
 <!--    <v-list dense>-->
 <!--      <div v-for="(component, index) in props.children"-->
 <!--           :key="index"-->
-<!--           v-bind:is="constantes.components[component.name]"-->
+<!--           v-bind:is="constants.components[component.name]"-->
 <!--           :props="component"-->
 <!--           :updateStore="updateStore"></div>-->
 <!--    </v-list>-->
@@ -34,14 +34,14 @@
 </template>
 
 <script>
-  import constantes from '../js/constantes'
+  import constants from '../js/constants'
 
   export default {
     name: "VueMenu",
     props: ['props', 'updateStore'],
     data() {
       return {
-        constantes: constantes,
+        constants: constants,
         on: false
       }
     },

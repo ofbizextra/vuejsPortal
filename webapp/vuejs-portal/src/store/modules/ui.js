@@ -1,7 +1,7 @@
 import Vuex from 'vuex'
 import Vue from 'vue'
 import queryString from 'query-string'
-import constantes from './../../js/constantes'
+import constants from './../../js/constants'
 
 Vue.use(Vuex)
 
@@ -148,7 +148,7 @@ const actions = {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         // this._vm.$wait.start(portalPortletId + '-' + portletSeqId)
-        Vue.http.post(getters['backOfficeApi/apiUrl'] + getters['backOfficeApi/currentApi'] + constantes.showPortlet.path,
+        Vue.http.post(getters['backOfficeApi/apiUrl'] + getters['backOfficeApi/currentApi'] + constants.showPortlet.path,
           queryString.stringify({
             portalPortletId: portalPortletId,
             ...params
@@ -176,7 +176,7 @@ const actions = {
   setContainer({commit, getters}, {containerName, containerTarget, params = {}}) {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
-        Vue.http.post(getters['backOfficeApi/apiUrl'] + getters['backOfficeApi/currentApi'] + constantes.showPortlet.path,
+        Vue.http.post(getters['backOfficeApi/apiUrl'] + getters['backOfficeApi/currentApi'] + constants.showPortlet.path,
           queryString.stringify({
             portalPortletId: containerTarget,
             ...params
@@ -202,7 +202,7 @@ const actions = {
       setTimeout(() => {
         wait.start(areaId)
         dispatch('incrementUpdateCpt')
-        dispatch('backOfficeApi/doPost', {uri: constantes.hostUrl + targetUrl.replace('amp;', ''), params: params}, {root: true}
+        dispatch('backOfficeApi/doPost', {uri: constants.hostUrl + targetUrl.replace('amp;', ''), params: params}, {root: true}
         ).then(response => {
           if (this.$debug) {
             console.log({...response.body})
@@ -329,7 +329,7 @@ const actions = {
   },
   loadPortalPageDetail({commit, dispatch}, {api, params}) {
     dispatch('backOfficeApi/setApi', api, {root: true})
-    dispatch('backOfficeApi/doPost', {uri: constantes.hostUrl + api + constantes.portalPageDetail.path, params}, {root: true}).then(response => {
+    dispatch('backOfficeApi/doPost', {uri: constants.hostUrl + api + constants.portalPageDetail.path, params}, {root: true}).then(response => {
       let portalPage = response.body
       if (this.$debug) {
         console.log('PortalPage : ', portalPage)

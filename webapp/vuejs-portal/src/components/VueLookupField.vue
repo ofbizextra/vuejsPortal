@@ -115,7 +115,7 @@
       modalParams() {
         let modalParams = {
             presentation: 'layer',
-            lookupFieldForm: this.formName, 
+            lookupFieldForm: this.formName,
             lookupField: this.name
         }
         this.targetParameters.forEach((val, id) => {
@@ -254,7 +254,7 @@
           }, error => {
             console.log(error)
           })
-        // this.$store.dispatch('backOfficeApi/doPost', {uri: constantes.apiUrl + '/' + this.fieldFormName, params: {presentation: 'layer'}}).then(
+        // this.$store.dispatch('backOfficeApi/doPost', {uri: constants.apiUrl + '/' + this.fieldFormName, params: {presentation: 'layer'}}).then(
         //   result => {
         //     console.log('Modal result : ', result)
         //     this.modalResult = result.body

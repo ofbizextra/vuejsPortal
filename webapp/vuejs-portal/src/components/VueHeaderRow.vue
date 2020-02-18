@@ -3,7 +3,7 @@
     <td
       v-for="(component, key) in props.children"
       :key="key"
-      v-bind:is="constantes.components[component.name]"
+      v-bind:is="constants.components[component.name]"
       :props="component"
       :updateStore="updateStore">
     </td>
@@ -11,14 +11,14 @@
 </template>
 
 <script>
-  import cst from '../js/constantes'
+  import cst from '../js/constants'
 
   export default {
     name: "VueHeaderRow",
     props: ['props', 'updateStore'],
     data() {
       return {
-        constantes: cst
+        constants: cst
       }
     },
     computed: {

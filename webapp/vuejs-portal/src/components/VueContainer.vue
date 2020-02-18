@@ -4,7 +4,7 @@
       <div
         v-for="(component, key) in area.viewScreen"
         :key="key"
-        v-bind:is="constantes.components[component.name]"
+        v-bind:is="constants.components[component.name]"
         :props="component"
         :updateStore="updateStore">
       </div>
@@ -13,7 +13,7 @@
       <div
         v-for="(component, key) in props.children"
         :key="key"
-        v-bind:is="constantes.components[component.name]"
+        v-bind:is="constants.components[component.name]"
         :props="component"
         :updateStore="updateStore">
       </div>
@@ -23,14 +23,14 @@
 
 <script>
   import {mapGetters} from 'vuex'
-  import constantes from '../js/constantes'
+  import constants from '../js/constants'
 
   export default {
     name: "VueContainer",
     props: ['props', 'updateStore', 'autoUpdateParams'],
     data() {
       return {
-        constantes: constantes
+        constants: constants
       }
     },
     computed: {

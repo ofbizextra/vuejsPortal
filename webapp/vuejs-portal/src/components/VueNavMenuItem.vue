@@ -5,7 +5,7 @@
         :ref="props.children[0].attributes.text.split(' ').join('_') + '_link'"
         v-for="(component, index) in props.children"
         :key="index"
-        v-bind:is="constantes.components[component.name]"
+        v-bind:is="constants.components[component.name]"
         :props="component"
         :updateStore="updateStore"
         :inline="false"
@@ -16,14 +16,14 @@
 </template>
 
 <script>
-  import constantes from '../js/constantes'
+  import constants from '../js/constants'
 
   export default {
     name: "VueNavMenuItem",
     props: ['props', 'updateStore'],
     data() {
       return {
-        constantes: constantes
+        constants: constants
       }
     },
     computed: {

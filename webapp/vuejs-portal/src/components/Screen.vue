@@ -1,12 +1,12 @@
 <template>
   <div id="screen">
-    <div v-for="(component, id) in screen.viewScreen" :key="id" v-bind:is="constantes.components[component.name]" :props="component">
+    <div v-for="(component, id) in screen.viewScreen" :key="id" v-bind:is="constants.components[component.name]" :props="component">
     </div>
   </div>
 </template>
 
 <script>
-  import constantes from './../js/constantes'
+  import constants from './../js/constants'
   import {mapGetters} from 'vuex'
 
   const queryString = require('query-string')
@@ -17,7 +17,7 @@
       return {
         params: {},
         screen: {},
-        constantes: constantes
+        constants: constants
       }
     },
     computed: {
