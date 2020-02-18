@@ -31,6 +31,7 @@ export default {
     HorizontalSeparator: 'vue-horizontal-separator',
     HyperlinkField: 'vue-hyperlink-field',
     HyperlinkTitle: 'vue-hyperlink-title',
+    Image: 'vue-error', // not yet implementetd
     ItemRow: 'vue-item-row',
     ItemRowCell: 'vue-item-row-cell',
     ItemRowFormCell: 'vue-item-row-form-cell',
