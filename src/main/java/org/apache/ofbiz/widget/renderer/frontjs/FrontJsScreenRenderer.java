@@ -73,18 +73,18 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
     }
 
     public void renderScreenBegin(Appendable writer, Map<String, Object> context) throws IOException {
-        // nothing to do, it's only a human logic readable element 
+        // nothing to do, it's only a human logic readable element
     }
 
     public void renderScreenEnd(Appendable writer, Map<String, Object> context) throws IOException {
-        // nothing to do, it's only a human logic readable element 
+        // nothing to do, it's only a human logic readable element
     }
 
     public void renderSectionBegin(Appendable writer, Map<String, Object> context, ModelScreenWidget.Section section) throws IOException {
-        // nothing to do, it's only a human logic readable element 
+        // nothing to do, it's only a human logic readable element
     }
     public void renderSectionEnd(Appendable writer, Map<String, Object> context, ModelScreenWidget.Section section) throws IOException {
-        // nothing to do, it's only a human logic readable element 
+        // nothing to do, it's only a human logic readable element
     }
 
     public void renderContainerBegin(Appendable writer, Map<String, Object> context, ModelScreenWidget.Container container) throws IOException {
@@ -203,6 +203,7 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
         this.output.putScreen("Link", parameters);
     }
     // Made this a separate method so it can be externalized and reused.
+    // used by renderLink method
     // copy from MenuRenderer
     private Map<String, Object> createImageParameters(Map<String, Object> context, ScreenImage image) {
         HttpServletResponse response = (HttpServletResponse) context.get("response");
@@ -213,6 +214,7 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
         parameters.put("width", image.getWidth(context));
         parameters.put("height", image.getHeight(context));
         parameters.put("border", image.getBorder(context));
+        // title attribute not exist for image in link in screen but exist in menu
         //parameters.put("title", image.getTitleExdr().expandString(context));
         String src = image.getSrc(context);
         if (UtilValidate.isNotEmpty(src) && request != null && response != null) {
@@ -232,6 +234,8 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
         return parameters;
     }
 
+    // not yet used, (no use case in screens.xml using FrontJsRenderer)
+    //  currently Images is associated to vue-error to generate the Warning message in screen.
     public void renderImage(Appendable writer, Map<String, Object> context, ModelScreenWidget.ScreenImage image) throws IOException {
         if (image == null) {
             return ;
@@ -275,6 +279,8 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
         this.output.putScreen("Image", parameters);
     }
 
+    // not yet used, (no use case in screens.xml using FrontJsRenderer)
+    //  currently ContentBegin is associated to vue-error to generate the Warning message in screen.
     public void renderContentBegin(Appendable writer, Map<String, Object> context, ModelScreenWidget.Content content) throws IOException {
         String editRequest = content.getEditRequest(context);
         String enableEditName = content.getEnableEditName(context);
@@ -291,237 +297,58 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
         this.output.putScreen("ContentBegin", parameters);
     }
 
+    // not yet used, (no use case in screens.xml using FrontJsRenderer)
     public void renderContentBody(Appendable writer, Map<String, Object> context, ModelScreenWidget.Content content) throws IOException {
-        /*
-        Locale locale = UtilMisc.ensureLocale(context.get("locale"));
-        String mimeTypeId = "text/html";
-        String expandedContentId = content.getContentId(context);
-        String expandedDataResourceId = content.getDataResourceId(context);
-        String renderedContent = null;
-        LocalDispatcher dispatcher = (LocalDispatcher) context.get("dispatcher");
-        Delegator delegator = (Delegator) context.get("delegator");
+        /* when it will be used, code should be copied from MacroScreenRenderer and at minimal
 
-        // make a new map for content rendering; so our current map does not get clobbered
-        Map<String, Object> contentContext = new HashMap<>();
-        contentContext.putAll(context);
-        String dataResourceId = (String)contentContext.get("dataResourceId");
-        if (Debug.verboseOn()) {
-            Debug.logVerbose("expandedContentId:" + expandedContentId, module);
-        }
-
-        try {
-            if (UtilValidate.isNotEmpty(dataResourceId)) {
-                if (WidgetDataResourceWorker.getDataresourceWorker() != null) {
-                    renderedContent = WidgetDataResourceWorker.getDataresourceWorker().renderDataResourceAsTextExt(delegator, dataResourceId, contentContext, locale, mimeTypeId, false);
-                } else {
-                    Debug.logError("Not rendering content, WidgetDataResourceWorker.dataresourceWorker not found.", module);
-                }
-            } else if (UtilValidate.isNotEmpty(expandedContentId)) {
-                if (WidgetContentWorker.getContentWorker() != null) {
-                    renderedContent = WidgetContentWorker.getContentWorker().renderContentAsTextExt(dispatcher, expandedContentId, contentContext, locale, mimeTypeId, true);
-                } else {
-                    Debug.logError("Not rendering content, WidgetContentWorker.contentWorker not found.", module);
-                }
-            } else if (UtilValidate.isNotEmpty(expandedDataResourceId)) {
-                if (WidgetDataResourceWorker.getDataresourceWorker() != null) {
-                    renderedContent = WidgetDataResourceWorker.getDataresourceWorker().renderDataResourceAsTextExt(delegator, expandedDataResourceId, contentContext, locale, mimeTypeId, false);
-                } else {
-                    Debug.logError("Not rendering content, WidgetDataResourceWorker.dataresourceWorker not found.", module);
-                }
-            }
-            if (UtilValidate.isEmpty(renderedContent)) {
-                String editRequest = content.getEditRequest(context);
-                if (UtilValidate.isNotEmpty(editRequest)) {
-                    if (WidgetContentWorker.getContentWorker() != null) {
-                        // FIXME : what to do ????
-                        // WidgetContentWorker.getContentWorker().renderContentAsTextExt(dispatcher, "NOCONTENTFOUND", writer, contentContext, locale, mimeTypeId, true);
-                    } else {
-                        Debug.logError("Not rendering content, WidgetContentWorker.contentWorker not found.", module);
-                    }
-                }
-            } else {
-                if (content.xmlEscape()) {
-                    renderedContent = UtilFormatOut.encodeXmlValue(renderedContent);
-                }
+                writer.append(renderedContent);
+           should be replace by
                 Map<String, Object> cb = new HashMap<>();
                 cb.put("content", renderedContent);
                 this.output.add("ContentBody", cb);
-            }
-
-        } catch (GeneralException |IOException e) {
-            String errMsg = "Error rendering included content with id [" + expandedContentId + "] : " + e.toString();
-            Debug.logError(e, errMsg, module);
-        }
         */
     }
 
+    // not yet used, (no use case in screens.xml using FrontJsRenderer)
     public void renderContentEnd(Appendable writer, Map<String, Object> context, ModelScreenWidget.Content content) throws IOException {
-        /*
-        String expandedContentId = content.getContentId(context);
-        String editMode = "Edit";
-        String editRequest = content.getEditRequest(context);
-        String enableEditName = content.getEnableEditName(context);
-        String enableEditValue = (String)context.get(enableEditName);
-        String urlString = "";
-        if (editRequest != null && editRequest.toUpperCase(Locale.getDefault()).indexOf("IMAGE") < 0) {
-            editMode += " Image";
-        }
-
-        if (UtilValidate.isNotEmpty(editRequest) && "true".equals(enableEditValue)) {
-            HttpServletResponse response = (HttpServletResponse) context.get("response");
-            HttpServletRequest request = (HttpServletRequest) context.get("request");
-            if (request != null && response != null) {
-                if (editRequest.indexOf('?') < 0) {
-                    editRequest += "?";
-                } else {
-                    editRequest += "&amp;";
-                }
-                editRequest += "contentId=" + expandedContentId;
-                ServletContext ctx = (ServletContext) request.getAttribute("servletContext");
-                RequestHandler rh = (RequestHandler) ctx.getAttribute("_REQUEST_HANDLER_");
-                urlString = rh.makeLink(request, response, editRequest, false, false, false);
-            }
-
-            Map<String, Object> parameters = new HashMap<>();
-            parameters.put("urlString", urlString);
-            parameters.put("editMode", editMode);
-            parameters.put("editContainerStyle", content.getEditContainerStyle(context));
-            parameters.put("editRequest", editRequest);
-            parameters.put("enableEditValue", enableEditValue);
-            this.output.add("ContentEnd", parameters);
-        }
-        */
+        // when it will be used, code should be copied from MacroScreenRenderer and adapted
     }
 
+    // not yet used, (no use case in screens.xml using FrontJsRenderer)
     public void renderContentFrame(Appendable writer, Map<String, Object> context, ModelScreenWidget.Content content) throws IOException {
-        /*
-        String dataResourceId = content.getDataResourceId(context);
-        String urlString = "/ViewSimpleContent?dataResourceId=" + dataResourceId;
-        String fullUrlString = "";
-        HttpServletRequest request = (HttpServletRequest) context.get("request");
-        HttpServletResponse response = (HttpServletResponse) context.get("response");
-        if (request != null && response != null) {
-            ServletContext ctx = (ServletContext) request.getAttribute("servletContext");
-            RequestHandler rh = (RequestHandler) ctx.getAttribute("_REQUEST_HANDLER_");
-            fullUrlString = rh.makeLink(request, response, urlString, true, false, false);
-        }
-
-        Map<String, Object> parameters = new HashMap<>();
-        parameters.put("fullUrl", fullUrlString);
-        parameters.put("width", content.getWidth());
-        parameters.put("height", content.getHeight());
-        parameters.put("border", content.getBorder());
-        this.output.add("ContentFrame", parameters);
-        */
+        // when it will be used, code should be copied from MacroScreenRenderer and adapted
     }
 
+    // not yet used, (no use case in screens.xml using FrontJsRenderer)
     public void renderSubContentBegin(Appendable writer, Map<String, Object> context, ModelScreenWidget.SubContent content) throws IOException {
-        /*
-        String enableEditName = content.getEnableEditName(context);
-        String enableEditValue = (String)context.get(enableEditName);
-
-        Map<String, Object> parameters = new HashMap<>();
-        parameters.put("editContainerStyle", content.getEditContainerStyle(context));
-        parameters.put("editRequest", content.getEditRequest(context));
-        parameters.put("enableEditValue", enableEditValue == null ? "" : enableEditValue);
-        this.output.add("SubContentBegin", parameters);
-        */
+        // when it will be used, code should be copied from MacroScreenRenderer and adapted
     }
 
+    // not yet used, (no use case in screens.xml using FrontJsRenderer)
     public void renderSubContentBody(Appendable writer, Map<String, Object> context, ModelScreenWidget.SubContent content) throws IOException {
-        /*
-        Locale locale = UtilMisc.ensureLocale(context.get("locale"));
-        String mimeTypeId = "text/html";
-        String expandedContentId = content.getContentId(context);
-        String expandedMapKey = content.getMapKey(context);
-        String renderedContent = "";
-        LocalDispatcher dispatcher = (LocalDispatcher) context.get("dispatcher");
+        /* when it will be used, code should be copied from MacroScreenRenderer and at minimal
 
-        // create a new map for the content rendering; so our current context does not get overwritten!
-        Map<String, Object> contentContext = new HashMap<>();
-        contentContext.putAll(context);
-
-        try {
-            if (WidgetContentWorker.getContentWorker() != null) {
-                renderedContent = WidgetContentWorker.getContentWorker().renderSubContentAsTextExt(dispatcher, expandedContentId, expandedMapKey, contentContext, locale, mimeTypeId, true);
-            } else {
-                Debug.logError("Not rendering content, WidgetContentWorker.contentWorker not found.", module);
-            }
-            if (UtilValidate.isEmpty(renderedContent)) {
-                String editRequest = content.getEditRequest(context);
-                if (UtilValidate.isNotEmpty(editRequest)) {
-                    if (WidgetContentWorker.getContentWorker() != null) {
-                        // FIXME what to do ???
-                        // WidgetContentWorker.getContentWorker().renderContentAsTextExt(dispatcher, "NOCONTENTFOUND", writer, contentContext, locale, mimeTypeId, true);
-                    } else {
-                        Debug.logError("Not rendering content, WidgetContentWorker.contentWorker not found.", module);
-                    }
-                }
-            } else {
-                if (content.xmlEscape()) {
-                    renderedContent = UtilFormatOut.encodeXmlValue(renderedContent);
-                }
+                writer.append(renderedContent);
+           should be replace by
                 Map<String, Object> cb = new HashMap<>();
                 cb.put("content", renderedContent);
-                this.output.add("SubContentBody", cb);
-            }
-
-        } catch (GeneralException | IOException e) {
-            String errMsg = "Error rendering included content with id [" + expandedContentId + "] : " + e.toString();
-            Debug.logError(e, errMsg, module);
-        }
-        */
+                this.output.add("ContentBody", cb);
+*/
     }
 
+    // not yet used, (no use case in screens.xml using FrontJsRenderer)
     public void renderSubContentEnd(Appendable writer, Map<String, Object> context, ModelScreenWidget.SubContent content) throws IOException {
-        /*
-        String editMode = "Edit";
-        String editRequest = content.getEditRequest(context);
-        String enableEditName = content.getEnableEditName(context);
-        String enableEditValue = (String)context.get(enableEditName);
-        String expandedContentId = content.getContentId(context);
-        String expandedMapKey = content.getMapKey(context);
-        String urlString = "";
-        if (editRequest != null && !(editRequest.toUpperCase(Locale.getDefault()).indexOf("IMAGE") < 1)) {
-            editMode += " Image";
-        }
-        if (UtilValidate.isNotEmpty(editRequest) && "true".equals(enableEditValue)) {
-            HttpServletResponse response = (HttpServletResponse) context.get("response");
-            HttpServletRequest request = (HttpServletRequest) context.get("request");
-            if (request != null && response != null) {
-                if (editRequest.indexOf('?') < 0) {
-                    editRequest += "?";
-                } else {
-                    editRequest += "&amp;";
-                }
-                editRequest += "contentId=" + expandedContentId;
-                if (UtilValidate.isNotEmpty(expandedMapKey)) {
-                    editRequest += "&amp;mapKey=" + expandedMapKey;
-                }
-                ServletContext ctx = (ServletContext) request.getAttribute("servletContext");
-                RequestHandler rh = (RequestHandler) ctx.getAttribute("_REQUEST_HANDLER_");
-                urlString = rh.makeLink(request, response, editRequest, false, false, false);
-            }
-        }
-
-        Map<String, Object> parameters = new HashMap<>();
-        parameters.put("urlString", urlString);
-        parameters.put("editMode", editMode);
-        parameters.put("editContainerStyle", content.getEditContainerStyle(context));
-        parameters.put("editRequest", editRequest);
-        parameters.put("enableEditValue", enableEditValue == null ? "" : enableEditValue);
-        this.output.add("SubContentEnd", parameters);
-        */
+        // when it will be used, code should be copied from MacroScreenRenderer and adapted
     }
 
 
     public void renderScreenletBegin(Appendable writer, Map<String, Object> context, boolean collapsed, ModelScreenWidget.Screenlet screenlet) throws IOException {
+        /* currently theme is not manage
         HttpServletRequest request = (HttpServletRequest) context.get("request");
         HttpServletResponse response = (HttpServletResponse) context.get("response");
-        //VisualTheme visualTheme = UtilHttp.getVisualTheme(request);
-        //ModelTheme modelTheme = visualTheme.getModelTheme();
-        //boolean javaScriptEnabled = UtilHttp.isJavaScriptEnabled(request);
-
+        VisualTheme visualTheme = UtilHttp.getVisualTheme(request);
+        ModelTheme modelTheme = visualTheme.getModelTheme();
+        */
 
         String title = screenlet.getTitle(context);
         boolean collapsible = screenlet.collapsible();
@@ -530,24 +357,13 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
         ModelScreenWidget.Form navForm = screenlet.getNavigationForm();
         String expandToolTip = "";
         String collapseToolTip = "";
-        String fullUrlString = "";
-//        boolean showMore = false;
         if (collapsible) {
             Map<String, Object> uiLabelMap = UtilGenerics.cast(context.get("uiLabelMap"));
             if (uiLabelMap != null) {
                 expandToolTip = (String) uiLabelMap.get("CommonExpand");
                 collapseToolTip = (String) uiLabelMap.get("CommonCollapse");
             }
-//            this.getNextElementId();
-//            Map<String, Object> paramMap = UtilGenerics.cast(context.get("requestParameters"));
-//            Map<String, Object> requestParameters = new HashMap<>(paramMap);
-//            if (!javaScriptEnabled) {
-//                requestParameters.put(screenlet.getPreferenceKey(context) + "_collapsed", collapsed ? "false" : "true");
-//                String queryString = UtilHttp.urlEncodeArgs(requestParameters);
-//                fullUrlString = request.getRequestURI() + "?" + queryString;
-//            }
         }
-
 
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("title", title);
@@ -563,93 +379,57 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
             parameters.put("collapsibleAreaId","screenlet_" + screenLetsIdCounter + "_col");
             screenLetsIdCounter++;
         }
-        parameters.put("expandToolTip", expandToolTip);
-        parameters.put("collapseToolTip", collapseToolTip);
-        parameters.put("fullUrlString", fullUrlString);
-        parameters.put("padded", screenlet.padded());
+        if (collapsible) {
+            parameters.put("expandToolTip", expandToolTip);
+            parameters.put("collapseToolTip", collapseToolTip);
+        }
+        if (UtilValidate.isNotEmpty(screenlet.padded())) {
+            Debug.logWarning("screenlet attribute padded is used in screenlet with title="+title+
+                    "  it's not manage by FrontFjRenderer", module);
+            parameters.put("padded", screenlet.padded());
+        }
         parameters.put("collapsed", collapsed);
-        //parameters.put("javaScriptEnabled", javaScriptEnabled);
         parameters.put("showMore", (Boolean) (UtilValidate.isNotEmpty(title) || navMenu != null || navForm != null || collapsible));
         this.output.pushScreen("ScreenletBegin", parameters);
 
         if (tabMenu != null) {
-            ModelMenu menu = tabMenu.getModelMenu(context);
-            MenuStringRenderer menuStringRenderer = (MenuStringRenderer)context.get("menuStringRenderer");
-            AbstractModelAction.runSubActions(menu.getActions(), context);
-            menuStringRenderer.renderMenuOpen(writer, context, menu);
-
-            menuStringRenderer.renderFormatSimpleWrapperOpen(writer, context, menu);
-            for (ModelMenuItem item : menu.getMenuItemList()) {
-                if (item.shouldBeRendered(context)) {
-                    AbstractModelAction.runSubActions(item.getActions(), context);
-                    menuStringRenderer.renderMenuItem(writer, context, item);
-                }
-            }
-            menuStringRenderer.renderFormatSimpleWrapperClose(writer, context, menu);
-            menuStringRenderer.renderMenuClose(writer, context, menu);
-            parameters.put("tabMenu", this.output.getAndRemoveScreen());
+            // generate menu object, to be able to put it in parameters rather than as children
+            //   it's more easy for a frontJs component to manage attributes than sub-components
+            parameters.put("tabMenu", getMenuOutput(writer, context, tabMenu.getModelMenu(context)));
 
         }
-        if (UtilValidate.isNotEmpty(title) || navMenu != null || navForm != null ) {
-//            showMore = true;
-            //StringWriter sb = new StringWriter();
+        if (navMenu != null || navForm != null ) {
             if (navMenu != null) {
-//                MenuStringRenderer savedRenderer = (MenuStringRenderer) context.get("menuStringRenderer");
-//                MenuStringRenderer renderer;
-//                renderer = new FrontJsMenuRenderer(output, request, response);
-//                context.put("menuStringRenderer", renderer);
-                ModelMenu menu = navMenu.getModelMenu(context);
-                MenuStringRenderer menuStringRenderer = (MenuStringRenderer)context.get("menuStringRenderer");
-                AbstractModelAction.runSubActions(menu.getActions(), context);
-                menuStringRenderer.renderMenuOpen(writer, context, menu);
-
-                menuStringRenderer.renderFormatSimpleWrapperOpen(writer, context, menu);
-                for (ModelMenuItem item : menu.getMenuItemList()) {
-                    if (item.shouldBeRendered(context)) {
-                        AbstractModelAction.runSubActions(item.getActions(), context);
-                        menuStringRenderer.renderMenuItem(writer, context, item);
-                    }
-                }
-                menuStringRenderer.renderFormatSimpleWrapperClose(writer, context, menu);
-                menuStringRenderer.renderMenuClose(writer, context, menu);
-                parameters.put("navMenu", this.output.getAndRemoveScreen());
-//                context.put("menuStringRenderer", savedRenderer);
+                // generate menu object, to be able to put it in parameters rather than as children
+                //   it's more easy for a frontJs component to manage attributes than sub-components
+                parameters.put("navMenu", getMenuOutput(writer, context, navMenu.getModelMenu(context)));
             } else if (navForm != null) {
                 parameters.put("navForm",renderScreenletPaginateMenu(writer, context, navForm));
             }
         }
     }
+    // used by the method just above
+    private Map<String, Object> getMenuOutput(Appendable writer, Map<String, Object> context, ModelMenu menu) throws IOException{
+        MenuStringRenderer menuStringRenderer = (MenuStringRenderer)context.get("menuStringRenderer");
+        AbstractModelAction.runSubActions(menu.getActions(), context);
+        menuStringRenderer.renderMenuOpen(writer, context, menu);
+
+        menuStringRenderer.renderFormatSimpleWrapperOpen(writer, context, menu);
+        for (ModelMenuItem item : menu.getMenuItemList()) {
+            if (item.shouldBeRendered(context)) {
+                AbstractModelAction.runSubActions(item.getActions(), context);
+                menuStringRenderer.renderMenuItem(writer, context, item);
+            }
+        }
+        menuStringRenderer.renderFormatSimpleWrapperClose(writer, context, menu);
+        menuStringRenderer.renderMenuClose(writer, context, menu);
+        return this.output.getAndRemoveScreen();
+    }
 
     public void renderScreenletSubWidget(Appendable writer, Map<String, Object> context, ModelScreenWidget subWidget, ModelScreenWidget.Screenlet screenlet) throws GeneralException, IOException  {
         subWidget.renderWidgetString(writer, context, this);
-//        HashMap<String, Object> cb = new HashMap<>();
-//        this.output.putScreen("ScreenletSubWidget", cb);
-
-        // Bypass the if/else in comment
-        // si getNavigationForm la barre de pagination doit être dans l'entête de la screenlet
-        /*
-        if (subWidget.equals(screenlet.getNavigationForm())) {
-            HttpServletRequest request = (HttpServletRequest) context.get("request");
-            HttpServletResponse response = (HttpServletResponse) context.get("response");
-            VisualTheme visualTheme = UtilHttp.getVisualTheme(request);
-            ModelTheme modelTheme = visualTheme.getModelTheme();
-            this.output.add("ScreenletSubWidget", NOT_YET_SUPPORTED);
-            if (request != null && response != null) {
-                Map<String, Object> globalCtx = UtilGenerics.checkMap(context.get("globalContext"));
-                globalCtx.put("NO_PAGINATOR", true);
-                FormMapRenderer savedRenderer = (FormMapRenderer) context.get("formStringRenderer");
-                FrontJsFormRenderer renderer = new FrontJsFormRenderer(request, response);
-
-                renderer.setRenderPagination(false);
-                context.put("formStringRenderer", renderer);
-                subWidget.renderWidgetString(writer, context, this);
-                context.put("formStringRenderer", savedRenderer);
-            }
-
-        } else {
-            subWidget.renderWidgetString(writer, context, this);
-        }
-        */
+        // currently NavigationForm included in screenlet bar is not managed, maybe in future it will be necessary to add something like
+        //   if (subWidget.equals(screenlet.getNavigationForm())) { ...
     }
     public void renderScreenletEnd(Appendable writer, Map<String, Object> context, ModelScreenWidget.Screenlet screenlet) throws IOException {
         this.output.popScreen("ScreenletEnd");
