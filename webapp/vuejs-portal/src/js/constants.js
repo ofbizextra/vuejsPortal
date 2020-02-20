@@ -13,6 +13,7 @@ export default {
 
   components: {
     Container: 'vue-container',
+    ContentBegin: 'vue-error',
     DateTimeField: 'vue-date-time-field',
     DisplayField: 'vue-display-field',
     DropDownField: 'vue-drop-down-field',
