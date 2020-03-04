@@ -321,7 +321,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
             }
         }
         String displayHelpText = UtilProperties.getPropertyValue("widget", "widget.form.displayhelpText");
-        if ("Y".equals(displayHelpText)) {
+        if ("Y".equals(displayHelpText) && UtilValidate.isNotEmpty(modelFormField.getEntityName()) ) {
             Delegator delegator = WidgetWorker.getDelegator(context);
             Locale locale = (Locale) context.get("locale");
             String entityName = modelFormField.getEntityName();
