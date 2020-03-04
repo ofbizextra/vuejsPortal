@@ -150,7 +150,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
     private static String encodeDoubleQuotes(String htmlString) {
         return htmlString.replaceAll("\"", "\\\\\"");
     }
-    
+
     private List<String> getPkList(String entityName, ModelReader entityModelReader ) {
         ModelEntity modelEntity = null;
         if (UtilValidate.isNotEmpty(entityName)) {
@@ -208,6 +208,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         String size = displayField.getSize();
 
         Map<String, Object> attributes = new HashMap<>();
+        if ("single".equals(modelFormField.getModelForm().getType())) this.addTitle(attributes, modelFormField, context);
         attributes.put("formName", displayField.getModelFormField().getModelForm().getName());
         attributes.put("description", encodeDoubleQuotes(description));
         attributes.put("name", name);
@@ -1287,7 +1288,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         cb.put("viewSize", viewSize);
         cb.put("useRowSubmit", useRowSubmit);
         cb.put("entityName", modelForm.getDefaultEntityName());
-//        OH 2019.03.12 à prori non utilisé, s'il faut le réactiver, l faut gérer le format des champs date, cf ExampleFeatureppl 
+//        OH 2019.03.12 à prori non utilisé, s'il faut le réactiver, il faut gérer le format des champs date, cf ExampleFeatureppl
 //        if (!modelForm.getDefaultMapName().equals("") && ((GenericValue) context.get(modelForm.getDefaultMapName())) != null) {
 //            cb.put("primaryKey", ((GenericValue) context.get(modelForm.getDefaultMapName())).getPrimaryKey());
 //        }
@@ -1622,6 +1623,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         String tabindex = modelFormField.getTabindex();
         String formName = modelFormField.getModelForm().getName();
         Map<String, Object> cb = new HashMap<>();
+        this.addTitle(cb, modelFormField, context);
         cb.put("name", name);
         cb.put("value", value);
         cb.put("defaultOption", defaultOption);
@@ -1952,6 +1954,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         }
         String tabindex = modelFormField.getTabindex();
         Map<String, Object> cb = new HashMap<>();
+        if ("single".equals(modelFormField.getModelForm().getType())) this.addTitle(cb, modelFormField, context);
         cb.put("className", className);
         cb.put("alert", alert);
         cb.put("name", name);
@@ -2292,6 +2295,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
 
         String tabindex = modelFormField.getTabindex();
         Map<String, Object> cb = new HashMap<>();
+        if ("single".equals(modelFormField.getModelForm().getType())) this.addTitle(cb, modelFormField, context);
 
         cb.put("className", className);
         cb.put("alert", alert);
