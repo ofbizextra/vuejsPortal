@@ -1,6 +1,11 @@
 <template>
   <div id="vue-password-field">
-    <v-textField v-model="value" v-bind="data" dense :hide-details="noRules" :rules="rules" type="password"/>
+    <v-tooltip top>
+      <template v-slot:activator="{ on }">
+        <v-textField v-model="value" v-bind="data" dense :hide-details="noRules" :rules="rules" type="password" v-on="fieldHelpText ? on : null"/>
+      </template>
+      <span>{{fieldHelpText}}</span>
+    </v-tooltip>
   </div>
 </template>
 
@@ -66,6 +71,9 @@
       },
       fieldTitle() {
         return this.data.hasOwnProperty('fieldTitle') ? this.data.fieldTitle : ''
+      },
+      fieldHelpText() {
+        return this.data.hasOwnProperty('fieldHelpText') ? this.data.fieldHelpText : ''
       }
     },
     watch: {

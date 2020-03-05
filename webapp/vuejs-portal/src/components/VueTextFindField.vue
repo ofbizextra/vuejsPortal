@@ -2,15 +2,23 @@
   <v-row class="ma-0 pa-0">
     <v-select class="col-4 mt-0 mb-0" :items="items" v-if="data.opEquals" v-model="valueOp" hide-details dense>
     </v-select>
-    <v-text-field class="col-6 mt-0 mb-0"
-      :label="fieldTitle"
-      v-bind:name="data.name"
-      v-bind:size="data.size"
-      v-model="value"
-      v-bind:maxlength="data.maxlength"
-      v-bind:autocomplete="data.autocomplete"
-      v-bind:tabindex="data.tabindex" hide-details dense
-    />
+    <v-tooltip top>
+      <template v-slot:activator="{ on }">
+        <v-text-field class="col-6 mt-0 mb-0"
+                      :label="fieldTitle"
+                      v-bind:name="data.name"
+                      v-bind:size="data.size"
+                      v-model="value"
+                      v-bind:maxlength="data.maxlength"
+                      v-bind:autocomplete="data.autocomplete"
+                      v-bind:tabindex="data.tabindex"
+                      hide-details
+                      dense
+                      v-on="fieldHelpText ? on : null"
+        />
+      </template>
+      <span>{{fieldHelpText}}</span>
+    </v-tooltip>
       <input v-if="data.hideIgnoreCase" type="hidden" :name="data.name + '_ic'" :value="data.ignCase ? 'Y' : ''"/>
       <v-checkbox class="col-2 mt-0 mb-0" v-else type="checkbox" label="ignore case" :name="data.name + '_ic'" v-model="valueIc" hide-details dense/>
   </v-row>
@@ -114,6 +122,9 @@
       }),
       fieldTitle() {
         return this.data.hasOwnProperty('fieldTitle') ? this.data.fieldTitle : ''
+      },
+      fieldHelpText() {
+        return this.data.hasOwnProperty('fieldHelpText') ? this.data.fieldHelpText : ''
       }
     },
     watch: {

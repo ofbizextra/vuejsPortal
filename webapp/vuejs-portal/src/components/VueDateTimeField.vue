@@ -1,6 +1,11 @@
 <template>
   <v-row id="vue-date-time-field">
-    <label class="font-weight-medium ma-2">{{fieldTitle}}</label>
+    <v-tooltip top>
+      <template v-slot:activator="{ on }">
+        <label class="font-weight-medium ma-2" v-on="fieldHelpText ? on : null">{{fieldTitle}}</label>
+      </template>
+      <span>{{fieldHelpText}}</span>
+    </v-tooltip>
     <v-menu
         ref="dateMenu"
         v-model="dateMenu"
@@ -225,6 +230,9 @@
       },
       fieldTitle() {
         return this.data.hasOwnProperty('fieldTitle') ? this.data.fieldTitle : ''
+      },
+      fieldHelpText() {
+        return this.data.hasOwnProperty('fieldHelpText') ? this.data.fieldHelpText : ''
       }
     }
     ,

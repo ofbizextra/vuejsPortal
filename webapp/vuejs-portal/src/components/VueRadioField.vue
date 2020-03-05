@@ -1,16 +1,21 @@
 <template>
-  <v-radio-group id="vue-radio-field" :label="fieldTitle" v-model="value" row :hide-details="noRules" :rules="rules">
-    <input v-if="data.conditionGroup" type="hidden" :name="data.name + '_grp'" v-bind:value="data.conditionGroup"/>
-    <v-radio v-for="item in props.attributes.items" :key="item.key" :label="item.description" :value="item.key">
-    </v-radio>
-    <v-tooltip bottom v-if="value">
-      <template v-slot:activator="{ on }">
-        <v-btn icon small v-on="on" v-on:click="clear"><v-icon>mdi-close</v-icon></v-btn>
-      </template>
-      <span>Clear</span>
-    </v-tooltip>
-    <vue-error v-if="data.event" component="event"/>
-  </v-radio-group>
+  <v-tooltip top>
+    <template v-slot:activator="{ on }">
+      <v-radio-group id="vue-radio-field" :label="fieldTitle" v-model="value" row :hide-details="noRules" :rules="rules" v-on="fieldHelpText ? on : null">
+        <input v-if="data.conditionGroup" type="hidden" :name="data.name + '_grp'" v-bind:value="data.conditionGroup"/>
+        <v-radio v-for="item in props.attributes.items" :key="item.key" :label="item.description" :value="item.key">
+        </v-radio>
+        <v-tooltip bottom v-if="value">
+          <template v-slot:activator="{ on }">
+            <v-btn icon small v-on="on" v-on:click="clear"><v-icon>mdi-close</v-icon></v-btn>
+          </template>
+          <span>Clear</span>
+        </v-tooltip>
+        <vue-error v-if="data.event" component="event"/>
+      </v-radio-group>
+    </template>
+    <span>{{fieldHelpText}}</span>
+  </v-tooltip>
 </template>
 
 <script>
@@ -71,6 +76,9 @@
       },
       fieldTitle(){
         return this.data.hasOwnProperty('fieldTitle') ? this.data.fieldTitle : ''
+      },
+      fieldHelpText() {
+        return this.data.hasOwnProperty('fieldHelpText') ? this.data.fieldHelpText : ''
       }
     },
     methods: {

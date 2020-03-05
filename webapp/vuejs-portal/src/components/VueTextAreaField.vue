@@ -1,6 +1,11 @@
 <template>
   <div id="vue-text-area-field">
-    <v-textarea :label="fieldTitle" v-model="value" v-bind="data" :hide-details="noRules" :rules="rules"></v-textarea>
+    <v-tooltip top>
+      <template v-slot:activator="{ on }">
+        <v-textarea :label="fieldTitle" v-model="value" v-bind="data" :hide-details="noRules" :rules="rules" v-on="fieldHelpText ? on : null"></v-textarea>
+      </template>
+      <span>{{fieldHelpText}}</span>
+    </v-tooltip>
   </div>
 </template>
 
@@ -66,6 +71,9 @@
       },
       fieldTitle() {
         return this.data.hasOwnProperty('fieldTitle') ? this.data.fieldTitle : ''
+      },
+      fieldHelpText() {
+        return this.data.hasOwnProperty('fieldHelpText') ? this.data.fieldHelpText : ''
       }
     },
     watch: {

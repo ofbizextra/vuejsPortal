@@ -1,15 +1,20 @@
 <template>
-    <div :id="id" :name="name">
-      <input type="hidden" :name="data.name" :value="value" :formname="data.formName"/>
-      <v-select :label="fieldTitle" :items="data.options" item-value="key" item-text="description" v-model="value"
-                :hide-details="noRules" dense clearable :rules="rules">
-        <template slot="item" slot-scope="data">
+  <v-tooltip top>
+    <template v-slot:activator="{ on }">
+      <div :id="id" :name="name" v-on="fieldHelpText ? on : null">
+        <input type="hidden" :name="data.name" :value="value" :formname="data.formName"/>
+        <v-select :label="fieldTitle" :items="data.options" item-value="key" item-text="description" v-model="value"
+                  :hide-details="noRules" dense clearable :rules="rules">
+          <template slot="item" slot-scope="data">
         <span :id="data.item.key">
           {{data.item.description}}
         </span>
-        </template>
-      </v-select>
-    </div>
+          </template>
+        </v-select>
+      </div>
+    </template>
+    <span>{{fieldHelpText}}</span>
+  </v-tooltip>
 </template>
 
 <script>
@@ -78,6 +83,9 @@
       },
       fieldTitle() {
         return this.data.hasOwnProperty('fieldTitle') ? this.data.fieldTitle : ''
+      },
+      fieldHelpText() {
+        return this.data.hasOwnProperty('fieldHelpText') ? this.data.fieldHelpText : ''
       }
     },
     watch: {

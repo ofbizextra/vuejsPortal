@@ -1,7 +1,13 @@
 <template>
   <div id="vue-text-field">
-    <v-textField v-if="mask" v-model="value" :label="fieldTitle" :rules="rules" v-bind="data" v-mask="parsedMask" error-count="3" validate-on-blur/>
-    <v-textField v-else v-model="value" :label="fieldTitle" :rules="rules" v-bind="data" error-count="3" validate-on-blur/>
+    <v-tooltip top>
+      <template v-slot:activator="{ on }">
+        <v-textField v-if="mask" v-model="value" :label="fieldTitle" :rules="rules" v-bind="data" v-mask="parsedMask" error-count="3" validate-on-blur v-on="fieldHelpText ? on : null"/>
+        <v-textField v-else v-model="value" :label="fieldTitle" :rules="rules" v-bind="data" error-count="3" validate-on-blur v-on="fieldHelpText ? on : null"/>
+      </template>
+      <span>{{fieldHelpText}}</span>
+    </v-tooltip>
+
   </div>
 </template>
 
@@ -80,6 +86,9 @@
       },
       fieldTitle() {
         return this.data.hasOwnProperty('fieldTitle') ? this.data.fieldTitle : ''
+      },
+      fieldHelpText() {
+        return this.data.hasOwnProperty('fieldHelpText') ? this.data.fieldHelpText : ''
       }
     },
     watch: {

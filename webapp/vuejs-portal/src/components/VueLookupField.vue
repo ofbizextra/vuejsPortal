@@ -1,19 +1,25 @@
 <template>
   <span class="field-lookup">
     <div class="autosuggest-container d-block">
-      <v-combobox
-          :id="id"
-          :label="fieldTitle"
-          v-model="valueStored"
-          class="d-inline-flex"
-          :items="items"
-          hide-no-data
-          hide-selected
-          :hide-details="noRules"
-          :rules="rules"
-          no-filter
-          :return-object="false"
-          :search-input.sync="search"/>
+      <v-tooltip top>
+        <template v-slot:activator="{ on }">
+          <v-combobox
+              :id="id"
+              :label="fieldTitle"
+              v-model="valueStored"
+              class="d-inline-flex"
+              :items="items"
+              hide-no-data
+              hide-selected
+              :hide-details="noRules"
+              :rules="rules"
+              no-filter
+              :return-object="false"
+              :search-input.sync="search"
+              v-on="fieldHelpText ? on : null"/>
+        </template>
+        <span>{{fieldHelpText}}</span>
+      </v-tooltip>
       <v-btn icon @click.stop="showModal" class="d-inline-flex"><v-icon>mdi-arrow-expand</v-icon></v-btn>
       <v-dialog v-model="dialogStatus">
         <v-btn fab fixed top right @click.stop="closeModal"><v-icon>mdi-close</v-icon></v-btn>
@@ -198,6 +204,9 @@
       },
       fieldTitle() {
         return this.data.hasOwnProperty('fieldTitle') ? this.data.fieldTitle : ''
+      },
+      fieldHelpText() {
+        return this.data.hasOwnProperty('fieldHelpText') ? this.data.fieldHelpText : ''
       }
     },
     methods: {
