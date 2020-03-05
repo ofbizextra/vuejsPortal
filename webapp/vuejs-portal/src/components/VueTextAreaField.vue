@@ -1,6 +1,6 @@
 <template>
   <div id="vue-text-area-field">
-    <v-textarea v-model="value" v-bind="data" :hide-details="noRules" :rules="rules"></v-textarea>
+    <v-textarea :label="fieldTitle" v-model="value" v-bind="data" :hide-details="noRules" :rules="rules"></v-textarea>
   </div>
 </template>
 
@@ -63,6 +63,9 @@
           rules.push((v) => v.length > this.controls.maxLength || `This field must be less than ${this.controls.maxLength} characters` )
         }
         return rules
+      },
+      fieldTitle() {
+        return this.data.hasOwnProperty('fieldTitle') ? this.data.fieldTitle : ''
       }
     },
     watch: {

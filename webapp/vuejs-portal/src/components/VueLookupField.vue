@@ -3,6 +3,7 @@
     <div class="autosuggest-container d-block">
       <v-combobox
           :id="id"
+          :label="fieldTitle"
           v-model="valueStored"
           class="d-inline-flex"
           :items="items"
@@ -194,6 +195,9 @@
           rules.push((v) => v.length > this.controls.maxLength || `This field must be less than ${this.controls.maxLength} characters` )
         }
         return rules
+      },
+      fieldTitle() {
+        return this.data.hasOwnProperty('fieldTitle') ? this.data.fieldTitle : ''
       }
     },
     methods: {

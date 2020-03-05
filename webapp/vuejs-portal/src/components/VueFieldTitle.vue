@@ -1,5 +1,5 @@
 <template>
-    <label class="font-weight-medium ma-2">{{data.title ? data.title : data.description}}</label>
+    <label class="font-weight-medium ma-2" v-if="!single">{{data.title ? data.title : data.description}}</label>
 </template>
 
 <script>
@@ -16,6 +16,9 @@
           data.class = data.className ? data.className : '' + ' ' + data.alert === true ? 'alert' : ''
         }
         return data
+      },
+      single() {
+          return this.data.hasOwnProperty('single')
       }
     },
     props: [

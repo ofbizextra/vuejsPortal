@@ -1,5 +1,5 @@
 <template>
-  <v-radio-group id="vue-radio-field" v-model="value" row :hide-details="noRules" :rules="rules">
+  <v-radio-group id="vue-radio-field" :label="fieldTitle" v-model="value" row :hide-details="noRules" :rules="rules">
     <input v-if="data.conditionGroup" type="hidden" :name="data.name + '_grp'" v-bind:value="data.conditionGroup"/>
     <v-radio v-for="item in props.attributes.items" :key="item.key" :label="item.description" :value="item.key">
     </v-radio>
@@ -68,6 +68,9 @@
           rules.push((v) => !!v || 'This field is required')
         }
         return rules
+      },
+      fieldTitle(){
+        return this.data.hasOwnProperty('fieldTitle') ? this.data.fieldTitle : ''
       }
     },
     methods: {

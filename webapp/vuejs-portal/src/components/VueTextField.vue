@@ -1,7 +1,7 @@
 <template>
   <div id="vue-text-field">
-    <v-textField v-if="mask" v-model="value" :rules="rules" v-bind="data" v-mask="parsedMask" error-count="3" validate-on-blur/>
-    <v-textField v-else v-model="value" :rules="rules" v-bind="data" error-count="3" validate-on-blur/>
+    <v-textField v-if="mask" v-model="value" :label="fieldTitle" :rules="rules" v-bind="data" v-mask="parsedMask" error-count="3" validate-on-blur/>
+    <v-textField v-else v-model="value" :label="fieldTitle" :rules="rules" v-bind="data" error-count="3" validate-on-blur/>
   </div>
 </template>
 
@@ -77,6 +77,9 @@
           rules.push((v) => v.length === this.mask.length || `mask : ${this.mask}`)
         }
         return rules
+      },
+      fieldTitle() {
+        return this.data.hasOwnProperty('fieldTitle') ? this.data.fieldTitle : ''
       }
     },
     watch: {

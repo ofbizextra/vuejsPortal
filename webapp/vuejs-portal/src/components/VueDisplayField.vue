@@ -1,22 +1,56 @@
 // todo compare size and description.size and tronque
 <template>
   <div id="vue-display-field">
-    <div v-if="inPlaceEditor">
-      <div v-if="editing">
-        <v-text-field class="d-inline-flex ma-1" v-model="editValue" v-on:keydown.enter.prevent="save"></v-text-field><span>
+    <table v-if="fieldTitle">
+      <tr>
+        <td>
+          <v-tooltip top>
+            <template v-slot:activator="{ on }">
+              <label class="font-weight-medium ma-2" v-on="fieldHelpText ? on : null">{{fieldTitle}}</label>
+            </template>
+            <span>{{fieldHelpText}}</span>
+          </v-tooltip>
+        </td>
+        <td>
+          <div v-if="inPlaceEditor">
+            <div v-if="editing">
+              <v-text-field class="d-inline-flex ma-1" v-model="editValue" v-on:keydown.enter.prevent="save"></v-text-field><span>
+            <v-btn class="d-inline-flex ma-1 primary dark" @click.prevent="save">Save</v-btn>
+            <v-btn class="d-inline-flex ma-1" @click="toggleEdit">Cancel</v-btn>
+          </span>
+            </div>
+            <div v-else>
+              <v-hover v-slot:default="{ hover }">
+                <label :class="hover ? 'font-weight-bold' : ''" :idname="idName" class="ma-1" @click="toggleEdit">{{value}}</label>
+              </v-hover>
+            </div>
+          </div>
+            <div v-else>
+              <label :idname="idName" class="ma-1">{{value}}</label>
+          </div>
+        </td>
+      </tr>
+    </table>
+    <div v-else>
+      <div v-if="inPlaceEditor">
+        <div v-if="editing">
+          <v-text-field class="d-inline-flex ma-1" v-model="editValue" v-on:keydown.enter.prevent="save"></v-text-field><span>
         <v-btn class="d-inline-flex ma-1 primary dark" @click.prevent="save">Save</v-btn>
         <v-btn class="d-inline-flex ma-1" @click="toggleEdit">Cancel</v-btn>
       </span>
+        </div>
+        <div v-else>
+          <v-hover v-slot:default="{ hover }">
+            <label :class="hover ? 'font-weight-bold' : ''" :idname="idName" class="ma-1" @click="toggleEdit">{{value}}</label>
+          </v-hover>
+        </div>
       </div>
       <div v-else>
-        <v-hover v-slot:default="{ hover }">
-          <label :class="hover ? 'font-weight-bold' : ''" :idname="idName" class="ma-1" @click="toggleEdit">{{value}}</label>
-        </v-hover>
+        <label :idname="idName" class="ma-1">{{value}}</label>
       </div>
     </div>
-    <div v-else>
-         <label :idname="idName" class="ma-1">{{value}}</label>
-    </div>
+
+
   </div>
 </template>
 
@@ -99,6 +133,12 @@
             return this.newValue
           }
         }
+      },
+      fieldTitle() {
+        return this.props.attributes.hasOwnProperty('fieldTitle') ? this.props.attributes.fieldTitle : ''
+      },
+      fieldHelpText() {
+        return this.props.attributes.hasOwnProperty('fieldHelpText') ? this.props.attributes.fieldHelpText : ''
       }
     },
     methods: {

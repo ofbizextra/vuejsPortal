@@ -1,5 +1,6 @@
 <template>
   <v-row id="vue-date-time-field">
+    <label class="font-weight-medium ma-2">{{fieldTitle}}</label>
     <v-menu
         ref="dateMenu"
         v-model="dateMenu"
@@ -221,6 +222,9 @@
           rules.push((v) => !!v || 'This field is required')
         }
         return rules
+      },
+      fieldTitle() {
+        return this.data.hasOwnProperty('fieldTitle') ? this.data.fieldTitle : ''
       }
     }
     ,

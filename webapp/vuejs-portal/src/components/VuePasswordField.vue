@@ -63,6 +63,9 @@
           rules.push((v) => v.length > this.controls.maxLength || `This field must be less than ${this.controls.maxLength} characters` )
         }
         return rules
+      },
+      fieldTitle() {
+        return this.data.hasOwnProperty('fieldTitle') ? this.data.fieldTitle : ''
       }
     },
     watch: {

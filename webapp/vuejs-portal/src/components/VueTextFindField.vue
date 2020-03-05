@@ -3,7 +3,7 @@
     <v-select class="col-4 mt-0 mb-0" :items="items" v-if="data.opEquals" v-model="valueOp" hide-details dense>
     </v-select>
     <v-text-field class="col-6 mt-0 mb-0"
-      :label="data.name"
+      :label="fieldTitle"
       v-bind:name="data.name"
       v-bind:size="data.size"
       v-model="value"
@@ -111,7 +111,10 @@
       ...mapGetters({
         getForm: 'form/form',
         getDataFromForm: 'form/fieldInForm'
-      })
+      }),
+      fieldTitle() {
+        return this.data.hasOwnProperty('fieldTitle') ? this.data.fieldTitle : ''
+      }
     },
     watch: {
       data: function () {
