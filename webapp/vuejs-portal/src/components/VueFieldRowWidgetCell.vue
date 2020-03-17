@@ -1,7 +1,7 @@
 <template>
-  <td id="vue-field-row-widget-cell" v-bind="data">
+  <td id="vue-field-row-widget-cell">
     <div
-      v-for="(component, key) in props.children"
+      v-for="(component, key) in children"
       :key="key"
       v-bind:is="constants.components[component.name]"
       :props="component"
