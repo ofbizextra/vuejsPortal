@@ -1,5 +1,5 @@
 <template>
-  <v-form :ref="data.name" v-bind:id="'vue-form_' + data.name" v-bind="data" :autocomplete="autocomplete" v-model="valid" lazy-validation>
+  <v-form :ref="name" v-bind:id="'vue-form_' + name" :autocomplete="autocomplete" v-model="valid" lazy-validation>
     <div
       v-for="(component, key) in props.children"
       :key="key"
@@ -11,108 +11,129 @@
 </template>
 
 <script>
-  import cst from '../js/constants'
+  import constants from '../js/constants'
 
   export default {
     name: "VueForm",
     props: ['props', 'updateStore'],
     data() {
       return {
-        constants: cst,
+        constants: constants,
         valid: false
       }
     },
     computed: {
-      data() {
-        let data = this.props.attributes
-        delete data['value']
-        if (data.className || (data.alert && data.alert === true)) {
-          data.class = data.className ? data.className : '' + ' ' + data.alert === true ? 'alert' : ''
-        }
-        return data
+      autocomplete() {
+        return this.props.attributes.hasOwnProperty('autocomplete') && this.props.attributes.autocomplete !== '' ? 'on' : 'off'
+      },
+      defaultEntityName() {
+        return this.props.attributes.hasOwnProperty('defaultEntityName') ? this.props.attributes.defaultEntityName : ''
+      },
+      id() {
+        return this.props.attributes.hasOwnProperty('id') ? this.props.attributes.id : ''
+      },
+      linkUrl() {
+        return this.props.attributes.hasOwnProperty('linkUrl') ? this.props.attributes.linkUrl : ''
+      },
+      name() {
+        return this.props.attributes.hasOwnProperty('name') ? this.props.attributes.name : ''
+      },
+      primaryKey() {
+        return this.props.attributes.hasOwnProperty('primaryKey') ? this.props.attributes.primaryKey : ''
       },
       storeData() {
         return {
           id: this.$store.getters['data/currentId'],
-          key: this.props.attributes.id,
-          value: this.props.attributes.value ? this.props.attributes.value : ''
+          key: this.id,
+          value: this.value
         }
       },
-      autocomplete() {
-        return this.data.hasOwnProperty('autocomplete') && this.data.autocomplete !== '' ? 'on' : 'off'
+      value() {
+        return this.props.attributes.hasOwnProperty('value') ? this.props.attributes.value : ''
+      },
+      viewIndex() {
+        return this.props.attributes.hasOwnProperty('viewIndex') ? this.props.attributes.viewIndex : ''
+      },
+      viewIndexField() {
+        return this.props.attributes.hasOwnProperty('viewIndexField') ? this.props.attributes.viewIndexField : ''
+      },
+      viewSize() {
+        return this.props.attributes.hasOwnProperty('viewSize') ? this.props.attributes.viewSize : ''
+      },
+      viewSizeField() {
+        return this.props.attributes.hasOwnProperty('viewSizeField') ? this.props.attributes.viewSizeField : ''
+      },
+    },
+    created() {
+      this.$store.dispatch('form/addForm', this.name)
+      this.$store.dispatch('form/setFieldToForm', {
+        formId: this.name,
+        key: 'linkUrl',
+        value: this.linkUrl
+      })
+      this.$store.dispatch('form/setFieldToForm', {
+        formId: this.name,
+        key: 'viewIndex',
+        value: this.viewIndex
+      })
+      this.$store.dispatch('form/setFieldToForm', {
+        formId: this.name,
+        key: 'viewIndexField',
+        value: this.viewIndexField
+      })
+      this.$store.dispatch('form/setFieldToForm', {
+        formId: this.name,
+        key: 'viewSize',
+        value: this.viewSize
+      })
+      this.$store.dispatch('form/setFieldToForm', {
+        formId: this.name,
+        key: 'viewSizeField',
+        value: this.viewSizeField
+      })
+      if (this.defaultEntityName) {
+        this.$store.dispatch('data/setEntity', {
+          entityName: this.defaultEntityName,
+          list: {},
+          primaryKey: this.primaryKey
+        })
       }
+    },
+    mounted() {
+      this.$store.dispatch('form/addFormValidate', {formName: this.name, validate: this.$refs[this.name].validate})
+    },
+    updated() {
+      this.$store.dispatch('form/addFormValidate', {formName: this.name, validate: this.$refs[this.name].validate})
     },
     watch: {
       data: function (from, to) {
         this.$store.dispatch('form/addForm', to.name)
         this.$store.dispatch('form/setFieldToForm', {
-          formId: this.props.attributes.name,
+          formId: this.name,
           key: 'linkUrl',
-          value: this.props.attributes.linkUrl
+          value: this.linkUrl
         })
         this.$store.dispatch('form/setFieldToForm', {
-          formId: this.props.attributes.name,
+          formId: this.name,
           key: 'viewIndex',
-          value: this.props.attributes.viewIndex
+          value: this.viewIndex
         })
         this.$store.dispatch('form/setFieldToForm', {
-          formId: this.props.attributes.name,
+          formId: this.name,
           key: 'viewIndexField',
-          value: this.props.attributes.viewIndexField
+          value: this.viewIndexField
         })
         this.$store.dispatch('form/setFieldToForm', {
-          formId: this.props.attributes.name,
+          formId: this.name,
           key: 'viewSize',
-          value: this.props.attributes.viewSize
+          value: this.viewSize
         })
         this.$store.dispatch('form/setFieldToForm', {
-          formId: this.props.attributes.name,
+          formId: this.name,
           key: 'viewSizeField',
-          value: this.props.attributes.viewSizeField
+          value: this.viewSizeField
         })
       }
-    },
-    created() {
-      console.log('vue-form : ', this.data.name)
-      this.$store.dispatch('form/addForm', this.data.name)
-      this.$store.dispatch('form/setFieldToForm', {
-        formId: this.props.attributes.name,
-        key: 'linkUrl',
-        value: this.props.attributes.linkUrl
-      })
-      this.$store.dispatch('form/setFieldToForm', {
-        formId: this.props.attributes.name,
-        key: 'viewIndex',
-        value: this.props.attributes.viewIndex
-      })
-      this.$store.dispatch('form/setFieldToForm', {
-        formId: this.props.attributes.name,
-        key: 'viewIndexField',
-        value: this.props.attributes.viewIndexField
-      })
-      this.$store.dispatch('form/setFieldToForm', {
-        formId: this.props.attributes.name,
-        key: 'viewSize',
-        value: this.props.attributes.viewSize
-      })
-      this.$store.dispatch('form/setFieldToForm', {
-        formId: this.props.attributes.name,
-        key: 'viewSizeField',
-        value: this.props.attributes.viewSizeField
-      })
-      if (this.props.attributes.defaultEntityName) {
-        this.$store.dispatch('data/setEntity', {
-          entityName: this.props.attributes.defaultEntityName,
-          list: {},
-          primaryKey: this.props.attributes.primaryKey ? this.props.attributes.primaryKey : ''
-        })
-      }
-    },
-    mounted() {
-      this.$store.dispatch('form/addFormValidate', {formName: this.props.attributes.name, validate: this.$refs[this.props.attributes.name].validate})
-    },
-    updated() {
-      this.$store.dispatch('form/addFormValidate', {formName: this.props.attributes.name, validate: this.$refs[this.props.attributes.name].validate})
     }
   }
 </script>
