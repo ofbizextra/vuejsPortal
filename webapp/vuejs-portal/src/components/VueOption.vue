@@ -1,6 +1,6 @@
 <template>
-  <option id="vue-option" v-bind:value="props.key" :selected="selected">
-    {{props.description}}
+  <option id="vue-option" v-bind:value="key" :selected="selected">
+    {{description}}
   </option>
 </template>
 
@@ -13,6 +13,14 @@
       }
     },
     props: ['props','selected'],
+    computed: {
+      description() {
+        return this.props.hasOwnProperty('description') ? this.props.description : ''
+      },
+      key() {
+        return this.props.hasOwnProperty('key') ? this.props.key : ''
+      }
+    }
   }
 </script>
 
