@@ -1,6 +1,6 @@
 <template>
   <div id="vue-hyperlink-title">
-    <a :href="data.linkUrl" :title="data.title ? data.title : ''">{{data.value ? data.value : ''}}</a>
+    <a :href="linkUrl" :title="title">{{value}}</a>
   </div>
 </template>
 
@@ -9,18 +9,16 @@
     name: "VueHyperlinkTitle",
     props: ['props'],
     computed: {
-      data() {
-        let data = this.props.attributes
-        //delete data.value
-        if (data.className || (data.alert && data.alert === true)) {
-          data.class = data.className ? data.className : '' + ' ' + data.alert === true ? 'alert' : ''
-        }
-        return data
+      linkUrl() {
+        return this.props.attributes.hasOwnProperty('linkUrl') ? this.props.attributes.linkUrl : ''
+      },
+      title() {
+        return this.props.attributes.hasOwnProperty('title') ? this.props.attributes.title : ''
+      },
+      value() {
+        return this.props.attributes.hasOwnProperty('value') ? this.props.attributes.value : ''
       }
     },
-    mounted() {
-      console.log(this.data)
-    }
   }
 </script>
 
