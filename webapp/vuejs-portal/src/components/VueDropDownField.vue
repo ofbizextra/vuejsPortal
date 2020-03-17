@@ -2,9 +2,9 @@
   <v-tooltip top>
     <template v-slot:activator="{ on }">
       <div :id="id" :name="name" v-on="fieldHelpText ? on : null">
-        <input type="hidden" :name="data.name" :value="value" :formname="data.formName"/>
-        <v-select :label="fieldTitle" :items="data.options" item-value="key" item-text="description" v-model="value"
-                  :hide-details="noRules" dense clearable :rules="rules">
+        <input type="hidden" :name="name" :value="value" :formname="formName"/>
+        <v-select :label="fieldTitle" :items="options" item-value="key" item-text="description" v-model="value"
+                  :hide-details="!required" dense clearable :rules="rules">
           <template slot="item" slot-scope="data">
         <span :id="data.item.key">
           {{data.item.description}}
@@ -23,56 +23,36 @@
   export default {
     name: "VueDropDownField",
     props: ['props', 'updateStore'],
-    data() {
-      return {}
-    },
     computed: {
-      data() {
-        let data = this.props.attributes
-        //delete data['currentValue']
-        Object.keys(data).map(it => {
-          if (data[it] === ''){
-            delete data[it]
-          }
-        })
-        return data
-      },
-      storeForm() {
-        return {
-          formId: this.props.attributes.formName,
-          key: this.props.attributes.name,
-          value: this.props.attributes.currentValue ? this.props.attributes.currentValue : this.props.attributes.multiple ? [''] : ''
-        }
-      },
-      value: {
-        get() {
-          return this.getDataFromForm(this.storeForm)
-        },
-        set(value) {
-          this.$store.dispatch('form/setFieldToForm', {
-            formId: this.props.attributes.formName,
-            key: this.props.attributes.name,
-            value: value
-          })
-        }
-      },
       ...mapGetters({
         getForm: 'form/form',
         getDataFromForm: 'form/fieldInForm'
       }),
-      id() {
-        return this.data.hasOwnProperty('id') ? this.data.id : ''
-      },
-      name() {
-        return this.data.hasOwnProperty('name') ? this.data.name : ''
-      },
       controls() {
         return {
-          required: this.data.hasOwnProperty('requiredField') && this.data.requiredField === true
+          required: this.props.attributes.hasOwnProperty('requiredField') && this.props.attributes.requiredField === true
         }
       },
-      noRules() {
-        return this.controls.required === false
+      id() {
+        return this.props.attributes.hasOwnProperty('id') ? this.props.attributes.id : ''
+      },
+      fieldTitle() {
+        return this.props.attributes.hasOwnProperty('fieldTitle') ? this.props.attributes.fieldTitle : ''
+      },
+      fieldHelpText() {
+        return this.props.attributes.hasOwnProperty('fieldHelpText') ? this.props.attributes.fieldHelpText : ''
+      },
+      formName() {
+        return this.props.attributes.hasOwnProperty('formName') ? this.props.attributes.formName : ''
+      },
+      name() {
+        return this.props.attributes.hasOwnProperty('name') ? this.props.attributes.name : ''
+      },
+      options() {
+        return this.props.attributes.hasOwnProperty('options') ? this.props.attributes.options : ''
+      },
+      required() {
+        return this.controls.required
       },
       rules() {
         let rules = []
@@ -81,20 +61,33 @@
         }
         return rules
       },
-      fieldTitle() {
-        return this.data.hasOwnProperty('fieldTitle') ? this.data.fieldTitle : ''
+      storeForm() {
+        return {
+          formId: this.props.attributes.formName,
+          key: this.props.attributes.name,
+          value: this.props.attributes.hasOwnProperty('currentValue') ? this.props.attributes.currentValue : this.props.attributes.multiple ? [''] : ''
+        }
       },
-      fieldHelpText() {
-        return this.data.hasOwnProperty('fieldHelpText') ? this.data.fieldHelpText : ''
-      }
-    },
-    watch: {
-      data: function () {
-        this.$store.dispatch('form/setFieldToForm', this.storeForm)
+      value: {
+        get() {
+          return this.getDataFromForm(this.storeForm)
+        },
+        set(value) {
+          this.$store.dispatch('form/setFieldToForm', {
+            formId: this.formName,
+            key: this.name,
+            value: value
+          })
+        }
       }
     },
     created() {
       this.$store.dispatch('form/setFieldToForm', this.storeForm)
+    },
+    watch: {
+      props: function () {
+        this.$store.dispatch('form/setFieldToForm', this.storeForm)
+      }
     }
   }
 </script>
