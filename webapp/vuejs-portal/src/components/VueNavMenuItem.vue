@@ -35,7 +35,7 @@
       },
       id() {
         // noinspection JSPotentiallyInvalidTargetOfIndexedPropertyAccess
-        return this.children[0].split(' ').join('_')
+        return this.children[0].attributes.text.split(' ').join('_')
       },
       linkStr() {
         return this.props.attributes.hasOwnProperty('linkStr') ? this.props.attributes.linkStr : ''

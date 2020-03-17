@@ -1,5 +1,18 @@
 <template>
-    <div class="d-flex flex-row-reverse" v-if="inline">
+  <v-menu bottom left v-if="inline" transition="scale-transition" origin="center center">
+    <template v-slot:activator="{ on }">
+      <v-btn icon v-on="on">
+        <v-icon>mdi-dots-vertical</v-icon>
+      </v-btn>
+    </template>
+    <v-list dense>
+      <vue-nav-menu-item v-for="(component, index) in children"
+                         :key="index"
+                         :props="component"
+                         :updateStore="updateStore"></vue-nav-menu-item>
+    </v-list>
+  </v-menu>
+  <div class="d-flex flex-row-reverse" v-else>
       <vue-nav-menu-item-inline v-for="(component, index) in children"
                          :key="index"
                          :props="component"
@@ -7,19 +20,6 @@
                          class="text-right d-flex">
       </vue-nav-menu-item-inline>
     </div>
-    <v-menu bottom left v-else transition="scale-transition" origin="center center">
-      <template v-slot:activator="{ on }">
-        <v-btn icon v-on="on">
-          <v-icon>mdi-dots-vertical</v-icon>
-        </v-btn>
-      </template>
-      <v-list dense>
-        <vue-nav-menu-item v-for="(component, index) in children"
-             :key="index"
-             :props="component"
-             :updateStore="updateStore"></vue-nav-menu-item>
-      </v-list>
-    </v-menu>
 </template>
 
 <script>
