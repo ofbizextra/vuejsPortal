@@ -1,29 +1,25 @@
 <template>
-    <label class="font-weight-medium ma-2" v-if="!single">{{data.title ? data.title : data.description}}</label>
+  <label class="font-weight-medium ma-2" v-if="!single">{{display}}</label>
 </template>
 
 <script>
   export default {
     name: "VueFieldTitle",
-    data() {
-      return {
-      }
-    },
+    props: ['props'],
     computed: {
-      data() {
-        let data = this.props.attributes
-        if (data.className || (data.alert && data.alert === true)) {
-          data.class = data.className ? data.className : '' + ' ' + data.alert === true ? 'alert' : ''
-        }
-        return data
+      description() {
+        return this.props.attributes.hasOwnProperty('description') ? this.props.attributes.description : ''
+      },
+      display() {
+        return this.title ? this.title : this.description
       },
       single() {
-          return this.data.hasOwnProperty('single')
+        return this.props.attributes.hasOwnProperty('single')
+      },
+      title() {
+        return this.props.attributes.hasOwnProperty('title') ? this.props.attributes.title : ''
       }
-    },
-    props: [
-      'props'
-    ]
+    }
   }
 </script>
 
