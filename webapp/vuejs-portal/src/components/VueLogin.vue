@@ -34,7 +34,7 @@
     name: "VueLogin",
     data() {
       return {
-        username: 'admin',
+        username: '',
         password: '',
       }
     },
@@ -61,13 +61,10 @@
       singIn() {
         this.$store.dispatch('login/login', this.credential)
           .then(() => {
-            console.log('login successfull from modal', 'hidding modal')
             this.$store.dispatch('ui/setDialogStatus', {
               dialogId: 'loginDialog',
               dialogStatus: false
             })
-          }, (error) => {
-            console.log('Error during login from modal', error, 'keep modal open')
           })
       }
     }
