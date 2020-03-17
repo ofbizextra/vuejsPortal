@@ -1,6 +1,6 @@
 <template>
-    <div class="d-flex flex-row-reverse" v-if="props.children.length < 3">
-      <vue-nav-menu-item-inline v-for="(component, index) in props.children"
+    <div class="d-flex flex-row-reverse" v-if="inline">
+      <vue-nav-menu-item-inline v-for="(component, index) in children"
                          :key="index"
                          :props="component"
                          :updateStore="updateStore"
@@ -13,9 +13,8 @@
           <v-icon>mdi-dots-vertical</v-icon>
         </v-btn>
       </template>
-
       <v-list dense>
-        <vue-nav-menu-item v-for="(component, index) in props.children"
+        <vue-nav-menu-item v-for="(component, index) in children"
              :key="index"
              :props="component"
              :updateStore="updateStore"></vue-nav-menu-item>
@@ -32,26 +31,28 @@
     data() {
       return {
         constants: constants,
-        on: false
+        on: false,
+        maxInline: 3
       }
     },
     computed: {
-      data() {
-        let data = this.props.attributes
-        delete data['value']
-        return data
-      },
       boundaryComment() {
-        return this.data.hasOwnProperty('boundaryComment') ? this.data.boundaryComment : ''
+        return this.props.attributes.hasOwnProperty('boundaryComment') ? this.props.attributes.boundaryComment : ''
+      },
+      children() {
+        return this.props.hasOwnProperty('children') ? this.props.children : []
       },
       id() {
-        return this.data.hasOwnProperty('id') ? this.data.id : ''
+        return this.props.attributes.hasOwnProperty('id') ? this.props.attributes.id : ''
+      },
+      inline() {
+        return this.children.length >= this.maxInline
       },
       style() {
-        return this.data.hasOwnProperty('style') ? this.data.style : ''
+        return this.props.attributes.hasOwnProperty('style') ? this.props.attributes.style : ''
       },
       title() {
-        return this.data.hasOwnProperty('title') ? this.data.title : ''
+        return this.props.attributes.hasOwnProperty('title') ? this.props.attributes.title : ''
       },
     },
     methods: {}
