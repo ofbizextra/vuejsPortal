@@ -5,11 +5,11 @@
         {{firstMessage.messageContent}}
       </div>
       <div id="dismissSnackbar">
-        <v-btn v-if="messageListSize === 1" @click="dismissFirstMessage" dark :color="color" class="darken-1">
+        <v-btn v-if="messageListSize === 1" @click="dismiss(firstMessage)" dark :color="color" class="darken-1">
           Close
           <v-icon>mdi-close</v-icon>
         </v-btn>
-        <v-btn v-else @click="dismissFirstMessage" dark :color="color" class="darken-1">Next ({{messageListSize - 1}}
+        <v-btn v-else @click="dismiss(firstMessage)" dark :color="color" class="darken-1">Next ({{messageListSize - 1}}
           more)
           <v-icon>mdi-arrow-right</v-icon>
         </v-btn>
@@ -27,22 +27,22 @@
       ...mapGetters({
         messageList: 'backOfficeApi/messageList'
       }),
-      color() {
-        return this.firstMessage.messageType === 'error' ? 'error' : 'success'
-      },
       firstMessage() {
         return this.messageList.length > 0 ? this.messageList[0] : null
       },
       messageListSize() {
         return this.messageList.length
+      },
+      color() {
+        return this.firstMessage.messageType === 'error' ? 'error' : 'success'
       }
     },
     methods: {
+      dismiss(message) {
+        this.$store.dispatch('backOfficeApi/deleteMessage', {message})
+      },
       click() {
         this.flash('hello world !!!', 'success', 2000)
-      },
-      dismissFirstMessage() {
-        this.$store.dispatch('backOficeApi/deleteMessage', {message: this.firstMessage})
       }
     },
     watch: {
@@ -50,7 +50,7 @@
         if (message && message.messageType === 'event') {
           setTimeout(() => {
             if (message === this.firstMessage) {
-              this.dismissFirstMessage()
+              this.dismiss(message)
             }
           }, 9000)
         }
