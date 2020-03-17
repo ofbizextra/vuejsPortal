@@ -2,7 +2,7 @@
   <div id="vue-password-field">
     <v-tooltip top>
       <template v-slot:activator="{ on }">
-        <v-textField v-model="value" v-bind="data" dense :hide-details="noRules" :rules="rules" type="password" v-on="fieldHelpText ? on : null"/>
+        <v-textField v-model="value" dense :hide-details="noRules" :rules="rules" type="password" v-on="fieldHelpText ? on : null"/>
       </template>
       <span>{{fieldHelpText}}</span>
     </v-tooltip>
@@ -15,49 +15,37 @@
   export default {
     name: "VuePasswordField",
     props: ['props', 'updateStore'],
-    data() {
-      return {}
-    },
     computed: {
       ...mapGetters({
         getForm: 'form/form',
         getDataFromForm: 'form/fieldInForm'
       }),
-      data() {
-        let data = this.props.attributes
-        //delete data['value']
-        if (data.className || (data.alert && data.alert === true)) {
-          data.class = data.className ? data.className : '' + ' ' + data.alert === true ? 'alert' : ''
-        }
-        return data;
-      },
-      storeForm() {
-        return {
-          formId: this.props.attributes.formName,
-          key: this.props.attributes.name,
-          value: this.props.attributes.value ? this.props.attributes.value : ''
-        }
-      },
-      value: {
-        get() {
-          return this.getDataFromForm(this.storeForm)
-        },
-        set(value) {
-          this.$store.dispatch('form/setFieldToForm', {
-            formId: this.props.attributes.formName,
-            key: this.props.attributes.name,
-            value: value
-          })
-        }
-      },
       controls() {
         return {
-          required: this.data.hasOwnProperty('required') && this.data.required.hasOwnProperty('requiredField') && this.data.required.requiredField === "true",
-          maxLength: this.data.hasOwnProperty('maxLength') ? this.data.maxLength : null,
+          required: this.required,
+          maxLength: this.maxLength,
         }
+      },
+      formName() {
+        return this.props.attributes.hasOwnProperty('formName') ? this.props.attributes.formName : ''
+      },
+      fieldTitle() {
+        return this.props.attributes.hasOwnProperty('fieldTitle') ? this.props.attributes.fieldTitle : ''
+      },
+      fieldHelpText() {
+        return this.props.attributes.hasOwnProperty('fieldHelpText') ? this.props.attributes.fieldHelpText : ''
+      },
+      maxLength() {
+        return this.props.attributes.hasOwnProperty('maxLength') ? this.props.attributes.maxLength : null
+      },
+      name() {
+        return this.props.attributes.hasOwnProperty('name') ? this.props.attributes.name : ''
       },
       noRules() {
         return this.controls.required === false && this.controls.maxLength === null && this.controls.mask === null
+      },
+      required() {
+        return this.props.attributes.hasOwnProperty('required') && this.props.attributes.required.hasOwnProperty('requiredField') && this.props.attributes.required.requiredField === "true"
       },
       rules() {
         let rules = []
@@ -69,20 +57,33 @@
         }
         return rules
       },
-      fieldTitle() {
-        return this.data.hasOwnProperty('fieldTitle') ? this.data.fieldTitle : ''
+      storeForm() {
+        return {
+          formId: this.formName,
+          key: this.name,
+          value: this.props.attributes.value ? this.props.attributes.value : ''
+        }
       },
-      fieldHelpText() {
-        return this.data.hasOwnProperty('fieldHelpText') ? this.data.fieldHelpText : ''
-      }
-    },
-    watch: {
-      data: function () {
-        this.$store.dispatch('form/setFieldToForm', this.storeForm)
+      value: {
+        get() {
+          return this.getDataFromForm(this.storeForm)
+        },
+        set(value) {
+          this.$store.dispatch('form/setFieldToForm', {
+            formId: this.formName,
+            key: this.name,
+            value: value
+          })
+        }
       }
     },
     created() {
       this.$store.dispatch('form/setFieldToForm', this.storeForm)
+    },
+    watch: {
+      props: function () {
+        this.$store.dispatch('form/setFieldToForm', this.storeForm)
+      }
     }
   }
 </script>
