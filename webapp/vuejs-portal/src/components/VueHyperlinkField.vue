@@ -15,7 +15,7 @@
         </template>
         <span>{{imgTitle}}</span>
       </v-tooltip>
-      <img :src="src" :title="imgTitle" alt="" v-if="haveImage">
+      <img :src="src" :title="imgTitle" alt="" v-if="haveImage"/>
       {{description}}
     </v-btn>
     <router-link
@@ -72,84 +72,13 @@
       }
     },
     computed: {
-      data() {
-        let data = this.props.attributes
-        if (data.className || (data.alert && data.alert === true)) {
-          data.class = data.className ? data.className : '' + ' ' + data.alert === true ? 'alert' : ''
-        }
-        if (data.hasOwnProperty('style')) {
-          data.class = data.style
-        }
-        return data
-      },
-      attributes() {
-        return this.props.hasOwnProperty('attributes') ? this.props.attributes : {}
-      },
-      getPointer() {
-        return this.getData(this.pointer)
-      },
       ...mapGetters({
         getData: 'data/entityRowAttribute',
         getForm: 'form/form',
         currentApi: 'backOfficeApi/currentApi'
       }),
-      linkType() {
-        return this.data.hasOwnProperty('linkType') ? this.data.linkType : ''
-      },
-      urlMode() {
-        return this.attributes.hasOwnProperty('urlMode') ? this.attributes.urlMode : 'intra-app'
-      },
-      target() {
-        return this.attributes.hasOwnProperty('target') ? this.attributes.target : null
-      },
-      targetWindow() {
-        return this.attributes.hasOwnProperty('targetWindow') ? this.attributes.targetWindow : null
-      },
-      parameterMap() {
-        return this.attributes.hasOwnProperty('parameterMap') ? this.attributes.parameterMap : {}
-      },
-      description() {
-        return this.havePointer ? this.getPointer : this.attributes.hasOwnProperty('description') ? this.attributes.description : ''
-      },
-      title() {
-        return this.havePointer ? this.pointer.attribute : this.attributes.hasOwnProperty('title') ? this.attributes.title : ''
-      },
-      havePointer() {
-        return this.props.hasOwnProperty('stPointer')
-      },
-      haveUpdateAreas() {
-        return this.attributes.hasOwnProperty('updateAreas')
-      },
-      updateAreas() {
-        return this.haveUpdateAreas ? this.attributes.updateAreas : []
-      },
-      requestConfirmation() {
-        return this.attributes.hasOwnProperty('requestConfirmation') ? this.attributes.requestConfirmation : false
-      },
-      confirmationMessage() {
-        return this.attributes.hasOwnProperty('confirmationMessage') ? this.attributes.confirmationMessage : ''
-      },
-      haveImage() {
-        return this.data.hasOwnProperty('imgSrc') && !this.data.imgSrc.startsWith('mdi-')
-      },
-      haveIcon() {
-        return this.data.hasOwnProperty('imgSrc') && this.data.imgSrc.startsWith('mdi-')
-      },
-      src() {
-        return this.data.hasOwnProperty('imgSrc') ? this.data.imgSrc : ''
-      },
-      imgTitle() {
-        return this.attributes.hasOwnProperty('imgTitle') ? this.attributes.imgTitle : ''
-      },
-      routerLink() {
-        if (this.attributes.target === 'showPortalPage') {
-          return `/portalPage/${this.parameterMap.portalPageId}`
-        } else {
-          return `/screen/${this.target}`
-        }
-      },
       className() {
-        let data = this.attributes
+        let data = this.props.attributes
         if (data.className || (data.alert && data.alert === true)) {
           return data.className ? data.className : '' + ' ' + data.alert === true ? 'alert' : ''
         } else if (data.hasOwnProperty('style')) {
@@ -157,19 +86,75 @@
         } else {
           return ''
         }
+      },
+      confirmationMessage() {
+        return this.props.attributes.hasOwnProperty('confirmationMessage') ? this.props.attributes.confirmationMessage : ''
+      },
+      description() {
+        return this.havePointer ? this.getPointer : this.props.attributes.hasOwnProperty('description') ? this.props.attributes.description : ''
+      },
+      getPointer() {
+        return this.getData(this.pointer)
+      },
+      haveIcon() {
+        return this.props.attributes.hasOwnProperty('imgSrc') && this.props.attributes.imgSrc.startsWith('mdi-')
+      },
+      haveImage() {
+        return this.props.attributes.hasOwnProperty('imgSrc') && !this.props.attributes.imgSrc.startsWith('mdi-')
+      },
+      havePointer() {
+        return this.props.hasOwnProperty('stPointer')
+      },
+      haveUpdateAreas() {
+        return this.props.attributes.hasOwnProperty('updateAreas')
+      },
+      imgTitle() {
+        return this.props.attributes.hasOwnProperty('imgTitle') ? this.props.attributes.imgTitle : ''
+      },
+      linkType() {
+        return this.props.attributes.hasOwnProperty('linkType') ? this.props.attributes.linkType : ''
+      },
+      parameterMap() {
+        return this.props.attributes.hasOwnProperty('parameterMap') ? this.props.attributes.parameterMap : {}
+      },
+      requestConfirmation() {
+        return this.props.attributes.hasOwnProperty('requestConfirmation') ? this.props.attributes.requestConfirmation : false
+      },
+      routerLink() {
+        if (this.target === 'showPortalPage') {
+          return `/portalPage/${this.parameterMap.portalPageId}`
+        } else {
+          return `/screen/${this.target}`
+        }
+      },
+      src() {
+        return this.props.attributes.hasOwnProperty('imgSrc') ? this.props.attributes.imgSrc : ''
+      },
+      target() {
+        return this.props.attributes.hasOwnProperty('target') ? this.props.attributes.target : null
+      },
+      targetWindow() {
+        return this.props.attributes.hasOwnProperty('targetWindow') ? this.props.attributes.targetWindow : null
+      },
+      title() {
+        return this.havePointer ? this.pointer.attribute : this.props.attributes.hasOwnProperty('title') ? this.props.attributes.title : ''
+      },
+      updateAreas() {
+        return this.haveUpdateAreas ? this.props.attributes.updateAreas : []
+      },
+      urlMode() {
+        return this.props.attributes.hasOwnProperty('urlMode') ? this.props.attributes.urlMode : 'intra-app'
       }
     },
     methods: {
       resolveEvent(updateArea) {
         switch (updateArea.eventType) {
           case 'post':
-            // do post
             return this.$store.dispatch('backOfficeApi/doPost', {
               uri: `${this.currentApi}/${updateArea.areaTarget}`,
               params: updateArea.hasOwnProperty('parameterMap') ? updateArea.parameterMap : {}
             })
           case 'setArea':
-            // do setArea
             return this.$store.dispatch('ui/setArea', {
               areaId: updateArea.areaId,
               targetUrl: `${this.$store.getters['backOfficeApi/currentApi']}/${updateArea.areaTarget}`,
@@ -177,7 +162,6 @@
               params: updateArea.parameterMap
             })
           case 'setWatcher':
-            // do setWatcher
             this.$store.dispatch('data/setWatcher', {
               watcherName: updateArea.areaId,
               params: updateArea.hasOwnProperty('parameterMap') && Object.keys(updateArea.parameterMap).length > 0 ? updateArea.parameterMap : {}
@@ -188,7 +172,6 @@
               }, 0)
             })
           case 'submit':
-            // submit
             this.$el.closest('form').action = updateArea.areaTarget
             this.$el.closest('form').submit()
             return new Promise((resolve) => {
@@ -197,7 +180,6 @@
               }, 0)
             })
           case 'setFieldInForm':
-            // do setFieldInForm
             this.$store.dispatch('form/setFieldToForm', {
               formId: updateArea.areaId,
               key: updateArea.areaTarget,
@@ -209,7 +191,6 @@
               }, 0)
             })
           case 'closeModal':
-            // do closeModal
             if (updateArea.hasOwnProperty('areaId') && updateArea.areaId !== '') {
               this.$store.dispatch('ui/setDialogStatus', {
                 dialogId: updateArea.areaId,
@@ -226,28 +207,24 @@
           case 'collapse':
             switch (updateArea.areaTarget) {
               case 'collapse':
-                // collapse
                 this.$store.dispatch('ui/setCollapsibleStatus', {
                   areaId: updateArea.areaId,
                   areaTarget: true
                 })
                 break
               case 'expand':
-                // expand
                 this.$store.dispatch('ui/setCollapsibleStatus', {
                   areaId: updateArea.areaId,
                   areaTarget: false
                 })
                 break
               case 'toggle':
-                // toggle
                 this.$store.dispatch('ui/setCollapsibleStatus', {
                   areaId: updateArea.areaId,
                   areaTarget: !this.$store.getters['ui/collapsibleStatus'](updateArea.areaId)
                 })
                 break
               default:
-                // toggle
                 this.$store.dispatch('ui/setCollapsibleStatus', {
                   areaId: updateArea.areaId,
                   areaTarget: !this.$store.getters['ui/collapsibleStatus'](updateArea.areaId)
@@ -260,7 +237,6 @@
               }, 0)
             })
           default:
-            // do nothing
             return new Promise((resolve) => {
               setTimeout(() => {
                 resolve()
@@ -277,8 +253,6 @@
           }, Promise.resolve())
         }
       }
-    },
-    mounted() {
     },
     watch: {
       props: function () {
