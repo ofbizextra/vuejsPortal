@@ -1,6 +1,5 @@
 <template>
-  <span class="field-lookup">
-    <div class="autosuggest-container d-block">
+    <div class="autosuggest-container d-block field-lookup">
       <v-tooltip top>
         <template v-slot:activator="{ on }">
           <v-combobox
@@ -29,15 +28,11 @@
                            :auto-update-params="{targetUrl: getCurrentApi + '/' + fieldFormName, params: modalParams}">
             </vue-container>
           </v-card-text>
-<!--          <v-card-actions class="justify-space-around pa-0">-->
-<!--            <v-btn class="ma-1" @click.stop="closeModal">Close dialog</v-btn>-->
-<!--          </v-card-actions>-->
         </v-card>
       </v-dialog>
       <span v-if="tooltip" :id="'0_lookupId_' + id" class="tooltip d-block">{{tooltip}}</span>
       <p>{{modalResult}}</p>
     </div>
-  </span>
 </template>
 
 <script>
@@ -59,103 +54,49 @@
       }
     },
     computed: {
-      data() {
-        let data = this.props.attributes
-        //delete data['value']
-        if (data.className || (data.alert && data.alert === true)) {
-          data.class = data.className ? data.className : '' + ' ' + data.alert === true ? 'alert' : ''
-        }
-        return data
-      },
-      storeForm() {
-        return {
-          formId: this.formName,
-          key: this.name,
-          value: this.value
-        }
-      },
-      valueStored: {
-        get() {
-          return this.getDataFromForm(this.storeForm)
-        },
-        set(value) {
-          this.$store.dispatch('form/setFieldToForm', {
-            formId: this.props.attributes.formName,
-            key: this.props.attributes.name,
-            value: value
-          })
-        }
-      },
       ...mapGetters({
         getForm: 'form/form',
         getDataFromForm: 'form/fieldInForm',
         getCurrentApi: 'backOfficeApi/currentApi',
         getDialogStatus: 'ui/dialogStatus'
       }),
-      id() {
-        return this.data.hasOwnProperty('id') ? this.data.id : ''
-      },
-      name() {
-        return this.data.hasOwnProperty('name') ? this.data.name : ''
-      },
-      value() {
-        return this.data.hasOwnProperty('value') ? this.data.value : ''
-      },
-      formName() {
-        return this.data.hasOwnProperty('formName') ? this.data.formName : ''
+      ajaxLookup() {
+        return this.props.attributes.hasOwnProperty('ajaxEnabled') ? this.props.attributes.ajaxEnabled ? 'Y' : 'N' : 'N'
       },
       ajaxUrl() {
-        return this.data.hasOwnProperty('ajaxUrl') ? this.data.ajaxUrl : ''
+        return this.props.attributes.hasOwnProperty('ajaxUrl') ? this.props.attributes.ajaxUrl : ''
+      },
+      controls() {
+        return {
+          required: this.required,
+          maxLength: this.maxLength
+        }
+      },
+      dialogStatus: {
+        get() {
+          return this.getDialogStatus(this.id)
+        },
+        set(value) {
+          this.$store.dispatch('ui/setDialogStatus', {
+            dialogId: this.id,
+            dialogStatus: value
+          })
+        }
       },
       fieldFormName() {
-        return this.data.hasOwnProperty('fieldFormName') ? this.data.fieldFormName : ''
+        return this.props.attributes.hasOwnProperty('fieldFormName') ? this.props.attributes.fieldFormName : ''
       },
-      ajaxLookup() {
-        return this.data.hasOwnProperty('ajaxEnabled') ? this.data.ajaxEnabled ? 'Y' : 'N' : 'N'
+      fieldHelpText() {
+        return this.props.attributes.hasOwnProperty('fieldHelpText') ? this.props.attributes.fieldHelpText : ''
       },
-      searchValueFieldName() {
-        return this.data.hasOwnProperty('fieldFormName') ? this.data.fieldFormName : ''
+      fieldTitle() {
+        return this.props.attributes.hasOwnProperty('fieldTitle') ? this.props.attributes.fieldTitle : ''
       },
-      targetParameters() {
-        return this.data.hasOwnProperty('targetParameters') ? this.data.targetParameters.map( val => this.getDataFromForm({formId: this.data.formName, key: val})) : []
+      formName() {
+        return this.props.attributes.hasOwnProperty('formName') ? this.props.attributes.formName : ''
       },
-      modalParams() {
-        let modalParams = {
-            presentation: 'layer',
-            lookupFieldForm: this.formName,
-            lookupField: this.name
-        }
-        this.targetParameters.forEach((val, id) => {
-          modalParams['parm' + id] = val
-        })
-        return modalParams
-      },
-      params() {
-        let params = {
-          ajaxLookup: 'Y',//this.ajaxLookup,
-          searchValueFieldName: this.name, //this.name
-          term: this.valueStored,
-          autocompleterViewSize: "50",
-          displayFields: []
-        }
-        this.targetParameters.forEach((val, id) => {
-          params['parm' + id] = val
-        })
-        return params
-      },
-      tooltip() {
-        let selectedItem = this.wordList.find(item => item[this.name] === this.valueStored)
-        if (selectedItem === undefined) {
-          return false
-        }
-        let str = ''
-        for (let i = 0; i < this.displayFields.length; i++) {
-          str += selectedItem[this.displayFields[i]]
-          if (i < this.displayFields.length - 1) {
-            str += ' - '
-          }
-        }
-        return str
+      id() {
+        return this.props.attributes.hasOwnProperty('id') ? this.props.attributes.id : ''
       },
       items() {
         let items = []
@@ -172,25 +113,41 @@
         }
         return items
       },
-      dialogStatus: {
-        get() {
-          return this.getDialogStatus(this.id)
-        },
-        set(value) {
-          this.$store.dispatch('ui/setDialogStatus', {
-            dialogId: this.id,
-            dialogStatus: value
-          })
-        }
+      maxLength() {
+        return this.props.attributes.hasOwnProperty('maxLength') ? this.props.attributes.maxLength : null
       },
-      controls() {
-        return {
-          required: this.data.hasOwnProperty('required') && this.data.required.hasOwnProperty('requiredField') && this.data.required.requiredField === "true",
-          maxLength: this.data.hasOwnProperty('maxLength') ? this.data.maxLength : null,
+      modalParams() {
+        let modalParams = {
+          presentation: 'layer',
+          lookupFieldForm: this.formName,
+          lookupField: this.name
         }
+        this.targetParameters.forEach((val, id) => {
+          modalParams['parm' + id] = val
+        })
+        return modalParams
+      },
+      name() {
+        return this.props.attributes.hasOwnProperty('name') ? this.props.attributes.name : ''
       },
       noRules() {
         return this.controls.required === false && this.controls.maxLength === null && this.controls.mask === null
+      },
+      params() {
+        let params = {
+          ajaxLookup: 'Y',//this.ajaxLookup,
+          searchValueFieldName: this.name, //this.name
+          term: this.valueStored,
+          autocompleterViewSize: "50",
+          displayFields: []
+        }
+        this.targetParameters.forEach((val, id) => {
+          params['parm' + id] = val
+        })
+        return params
+      },
+      required() {
+        return this.props.attributes.hasOwnProperty('required') && this.props.attributes.required.hasOwnProperty('requiredField') && this.props.attributes.required.requiredField === "true"
       },
       rules() {
         let rules = []
@@ -202,11 +159,47 @@
         }
         return rules
       },
-      fieldTitle() {
-        return this.data.hasOwnProperty('fieldTitle') ? this.data.fieldTitle : ''
+      searchValueFieldName() {
+        return this.props.attributes.hasOwnProperty('fieldFormName') ? this.props.attributes.fieldFormName : ''
       },
-      fieldHelpText() {
-        return this.data.hasOwnProperty('fieldHelpText') ? this.data.fieldHelpText : ''
+      storeForm() {
+        return {
+          formId: this.formName,
+          key: this.name,
+          value: this.value
+        }
+      },
+      targetParameters() {
+        return this.props.attributes.hasOwnProperty('targetParameters') ? this.props.attributes.targetParameters.map( val => this.getDataFromForm({formId: this.formName, key: val})) : []
+      },
+      tooltip() {
+        let selectedItem = this.wordList.find(item => item[this.name] === this.valueStored)
+        if (selectedItem === undefined) {
+          return false
+        }
+        let str = ''
+        for (let i = 0; i < this.displayFields.length; i++) {
+          str += selectedItem[this.displayFields[i]]
+          if (i < this.displayFields.length - 1) {
+            str += ' - '
+          }
+        }
+        return str
+      },
+      value() {
+        return this.props.attributes.hasOwnProperty('value') ? this.props.attributes.value : ''
+      },
+      valueStored: {
+        get() {
+          return this.getDataFromForm(this.storeForm)
+        },
+        set(value) {
+          this.$store.dispatch('form/setFieldToForm', {
+            formId: this.props.attributes.formName,
+            key: this.props.attributes.name,
+            value: value
+          })
+        }
       }
     },
     methods: {
@@ -258,24 +251,12 @@
           targetUrl: `${this.$store.getters['backOfficeApi/currentApi']}/${this.fieldFormName}`,
           wait: this.$wait,
           params: {presentation: 'layer'}
-        }).then(
-          () => {
+        }).then(() => {
             this.$store.dispatch('ui/setDialogStatus', {
               dialogId: this.id,
               dialogStatus: true
             })
-          }, error => {
-            console.log(error)
           })
-        // this.$store.dispatch('backOfficeApi/doPost', {uri: constants.apiUrl + '/' + this.fieldFormName, params: {presentation: 'layer'}}).then(
-        //   result => {
-        //     console.log('Modal result : ', result)
-        //     this.modalResult = result.body
-        //     this.$modal.show(this.id + '_modal')
-        //   }, error =>  {
-        //     console.log(error)
-        //     this.modalResult = error
-        //   })
       },
       closeModal() {
         this.$store.dispatch('ui/setDialogStatus', {
@@ -285,7 +266,7 @@
       }
     },
     watch: {
-      data: function () {
+      props: function () {
         this.$store.dispatch('form/setFieldToForm', this.storeForm)
       },
       search: function (val) {
@@ -300,15 +281,6 @@
 </script>
 
 <style>
-  .autosuggest__results-item--highlighted {
-    background-color: rgb(255, 233, 58);
-  }
-
-  .autosuggest__results {
-    overflow: scroll;
-    max-height: 250px;
-  }
-
   .autosuggest-container {
     display: flex;
     justify-content: center;
