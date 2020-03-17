@@ -1,7 +1,7 @@
 <template>
   <v-toolbar id="vue-menu" color="secondary" dark class="ma-0 pa-0" height="35px">
     <v-toolbar-items class="ma-0 pa-0">
-      <div v-for="(component, index) in props.children"
+      <div v-for="(component, index) in children"
            :key="index"
            v-bind:is="constants.components[component.name]"
            :props="component"
@@ -9,28 +9,6 @@
       </div>
     </v-toolbar-items>
   </v-toolbar>
-<!--  <v-row v-if="props.children.length < 2">-->
-<!--    <div v-for="(component, index) in props.children"-->
-<!--         :key="index"-->
-<!--         v-bind:is="constants.components[component.name]"-->
-<!--         :props="component"-->
-<!--         :updateStore="updateStore"></div>-->
-<!--  </v-row>-->
-<!--  <v-menu bottom left v-else transition="scale-transition" origin="center center">-->
-<!--    <template v-slot:activator="{ on }">-->
-<!--      <v-btn icon v-on="on">-->
-<!--        <v-icon>mdi-dots-vertical</v-icon>-->
-<!--      </v-btn>-->
-<!--    </template>-->
-
-<!--    <v-list dense>-->
-<!--      <div v-for="(component, index) in props.children"-->
-<!--           :key="index"-->
-<!--           v-bind:is="constants.components[component.name]"-->
-<!--           :props="component"-->
-<!--           :updateStore="updateStore"></div>-->
-<!--    </v-list>-->
-<!--  </v-menu>-->
 </template>
 
 <script>
@@ -46,25 +24,22 @@
       }
     },
     computed: {
-      data() {
-        let data = this.props.attributes
-        delete data['value']
-        return data
-      },
       boundaryComment() {
-        return this.data.hasOwnProperty('boundaryComment') ? this.data.boundaryComment : ''
+        return this.props.attributes.hasOwnProperty('boundaryComment') ? this.props.attributes.boundaryComment : ''
+      },
+      children() {
+        return this.props.hasOwnProperty('children') ? this.props.children : []
       },
       id() {
-        return this.data.hasOwnProperty('id') ? this.data.id : ''
+        return this.props.attributes.hasOwnProperty('id') ? this.props.attributes.id : ''
       },
       style() {
-        return this.data.hasOwnProperty('style') ? this.data.style : ''
+        return this.props.attributes.hasOwnProperty('style') ? this.props.attributes.style : ''
       },
       title() {
-        return this.data.hasOwnProperty('title') ? this.data.title : ''
-      },
-    },
-    methods: {}
+        return this.props.attributes.hasOwnProperty('title') ? this.props.attributes.title : ''
+      }
+    }
   }
 </script>
 
