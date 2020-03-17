@@ -6,7 +6,7 @@
       </v-expansion-panel-header>
       <v-expansion-panel-content :id="collapsibleAreaId">
         <div
-            v-for="(component, key) in props.children"
+            v-for="(component, key) in children"
             :key="key"
             v-bind:is="constants.components[component.name]"
             :props="component"
@@ -30,43 +30,38 @@
       }
     },
     computed: {
-      data() {
-        let data = this.props.attributes
-        delete data['value']
-        if (data.className || (data.alert && data.alert === true)) {
-          data.class = data.className ? data.className : '' + ' ' + data.alert === true ? 'alert' : ''
-        }
-        return data
+      children() {
+        return this.props.hasOwnProperty('children') ? this.props.children : []
       },
       collapseToolTip() {
-        return this.data.hasOwnProperty('collapseToolTip') ? this.data.collapseToolTip : ''
+        return this.props.attributes.hasOwnProperty('collapseToolTip') ? this.props.attributes.collapseToolTip : ''
       },
       collapsed() {
-        return this.data.hasOwnProperty('collapsed') ? this.data.collapsed : false
+        return this.props.attributes.hasOwnProperty('collapsed') ? this.props.attributes.collapsed : false
+      },
+      collapsible() {
+        return this.props.attributes.hasOwnProperty('collapsible') ? this.props.attributes.collapsible : false
+      },
+      collapsibleAreaId() {
+        return this.props.attributes.hasOwnProperty('collapsibleAreaId') ? this.props.attributes.collapsibleAreaId : ''
       },
       expanded() {
         return !this.collapsed
       },
-      collapsible() {
-        return this.data.hasOwnProperty('collapsible') ? this.data.collapsible : false
-      },
-      collapsibleAreaId() {
-        return this.data.hasOwnProperty('collapsibleAreaId') ? this.data.collapsibleAreaId : ''
-      },
       expandToolTip() {
-        return this.data.hasOwnProperty('expandToolTip') ? this.data.expandToolTip : ''
-      },
-      id() {
-        return this.data.hasOwnProperty('id') ? this.data.id : ''
-      },
-      style() {
-        return this.data.hasOwnProperty('style') ? this.data.style : ''
-      },
-      title() {
-        return this.data.hasOwnProperty('title') ? this.data.title : ''
+        return this.props.attributes.hasOwnProperty('expandToolTip') ? this.props.attributes.expandToolTip : ''
       },
       iconClass() {
         return this.collapsed ? 'collapsed' : 'expanded'
+      },
+      id() {
+        return this.props.attributes.hasOwnProperty('id') ? this.props.attributes.id : ''
+      },
+      style() {
+        return this.props.attributes.hasOwnProperty('style') ? this.props.attributes.style : ''
+      },
+      title() {
+        return this.props.attributes.hasOwnProperty('title') ? this.props.attributes.title : ''
       },
       tooltip() {
         return this.collapsed ? this.expandToolTip : this.collapseToolTip
@@ -74,11 +69,11 @@
     },
     methods: {
       toggleCollapse() {
-        this.data.collapsed = !this.data.collapsed
+        this.props.attributes.collapsed = !this.props.attributes.collapsed
       }
     },
     created() {
-      if (!this.data.collapsed) {
+      if (!this.props.attributes.collapsed) {
         this.panels = 0
       }
     }
