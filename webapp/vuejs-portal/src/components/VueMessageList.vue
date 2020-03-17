@@ -39,7 +39,6 @@
     },
     methods: {
       click() {
-        console.log('flash message')
         this.flash('hello world !!!', 'success', 2000)
       },
       dismissFirstMessage() {
