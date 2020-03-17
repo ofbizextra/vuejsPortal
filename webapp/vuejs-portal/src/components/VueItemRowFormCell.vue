@@ -1,7 +1,7 @@
 <template>
-  <td id="vue-item-row-form-cell" v-bind="data">
+  <td id="vue-item-row-form-cell">
     <div
-      v-for="(component, key) in props.children"
+      v-for="(component, key) in children"
       :key="key"
       v-bind:is="constants.components[component.name]"
       :props="component"
@@ -11,24 +11,19 @@
 </template>
 
 <script>
-  import cst from '../js/constants'
+  import constants from '../js/constants'
 
   export default {
     name: "VueItemRowFormCell",
     props: ['props', 'updateStore'],
     data() {
       return {
-        constants: cst
+        constants: constants
       }
     },
     computed: {
-      data() {
-        let data = this.props.attributes
-        delete data['value']
-        if (data.className || (data.alert && data.alert === true)) {
-          data.class = data.className ? data.className : '' + ' ' + data.alert === true ? 'alert' : ''
-        }
-        return data
+      children() {
+        return this.props.hasOwnProperty('children') ? this.props.children : []
       }
     }
   }
