@@ -1,37 +1,32 @@
 <template>
-  <table dense id="vue-list-wrapper" v-bind="data" v-if="show">
-    <div
-        v-for="(component, key) in props.children"
+  <table id="vue-list-wrapper" v-if="show">
+    <tbody
+        v-for="(component, key) in children"
         :key="key"
         v-bind:is="constants.components[component.name]"
         :props="component"
         :updateStore="updateStore">
-    </div>
+    </tbody>
   </table>
 </template>
 
 <script>
-  import cst from '../js/constants'
+  import constants from '../js/constants'
 
   export default {
     name: "VueListWrapper",
     props: ['props', 'updateStore'],
     data() {
       return {
-        constants: cst
+        constants: constants
       }
     },
     computed: {
-      data() {
-        let data = this.props.attributes
-        delete data['value']
-        if (data.style || (data.alert && data.alert === true)) {
-          data.class = data.style ? data.style : '' + ' ' + data.alert === true ? 'alert' : ''
-        }
-        return data
+      children() {
+        return this.props.hasOwnProperty('children') ? this.props.children : []
       },
       listSize() {
-        return this.data.hasOwnProperty("listSize") ? this.data.listSize : 0
+        return this.props.attributes.hasOwnProperty("listSize") ? this.props.attributes.listSize : 0
       },
       show() {
         return this.listSize > 0
@@ -39,7 +34,6 @@
     },
     created() {
       if (this.props.attributes.hasOwnProperty('errorMessage')) {
-        console.log(this.props.attributes.errorMessage)
         this._vm.flash(this.props.attributes.errorMessage, 'error', 10000)
       }
     }
