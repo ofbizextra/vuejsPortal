@@ -1,9 +1,9 @@
 <template>
-  <v-list-item :id="props.children[0].attributes.text.split(' ').join('_')" link @click="propagate">
+  <v-list-item :id="id" link @click="propagate">
     <v-list-item-content>
     <div
-        :ref="props.children[0].attributes.text.split(' ').join('_') + '_link'"
-        v-for="(component, index) in props.children"
+        :ref="ref"
+        v-for="(component, index) in children"
         :key="index"
         v-bind:is="constants.components[component.name]"
         :props="component"
@@ -27,28 +27,32 @@
       }
     },
     computed: {
-      data() {
-        let data = this.props.attributes
-        delete data['value']
-        return data
-      },
-      style() {
-        return this.data.hasOwnProperty('style') ? this.data.style : ''
-      },
-      toolTip() {
-        return this.data.hasOwnProperty('toolTip') ? this.data.toolTip : ''
-      },
-      linkStr() {
-        return this.data.hasOwnProperty('linkStr') ? this.data.linkStr : ''
+      children() {
+        return this.props.hasOwnProperty('children') ? this.props.children : []
       },
       containsNestedMenus() {
-        return this.data.hasOwnProperty('containsNestedMenus') ? this.data.containsNestedMenus : ''
+        return this.props.attributes.hasOwnProperty('containsNestedMenus') ? this.props.attributes.containsNestedMenus : ''
+      },
+      id() {
+        // noinspection JSPotentiallyInvalidTargetOfIndexedPropertyAccess
+        return this.children[0].split(' ').join('_')
+      },
+      linkStr() {
+        return this.props.attributes.hasOwnProperty('linkStr') ? this.props.attributes.linkStr : ''
+      },
+      ref() {
+        return this.id + '_link'
+      },
+      style() {
+        return this.props.attributes.hasOwnProperty('style') ? this.props.attributes.style : ''
+      },
+      toolTip() {
+        return this.props.attributes.hasOwnProperty('toolTip') ? this.props.attributes.toolTip : ''
       }
     },
     methods: {
       propagate() {
-        console.log(this.$refs[this.props.children[0].attributes.text.split(' ').join('_') + '_link'])
-        this.$refs[this.props.children[0].attributes.text.split(' ').join('_') + '_link'][0].redirect()
+        this.$refs[this.ref][0].redirect()
       }
     }
   }
