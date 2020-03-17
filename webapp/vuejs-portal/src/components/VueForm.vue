@@ -106,7 +106,7 @@
       this.$store.dispatch('form/addFormValidate', {formName: this.name, validate: this.$refs[this.name].validate})
     },
     watch: {
-      data: function (from, to) {
+      props: function (from, to) {
         this.$store.dispatch('form/addForm', to.name)
         this.$store.dispatch('form/setFieldToForm', {
           formId: this.name,
