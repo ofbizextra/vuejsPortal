@@ -1,6 +1,5 @@
 <template>
   <div id="vue-link">
-    <!--method="post"-->
     <form
         v-if="linkType === 'hidden-form'"
         v-on:click.prevent=""
@@ -129,77 +128,27 @@
     props: ['props', 'updateStore', 'inline', 'clickDisabled'],  // <== TODO-TRAING OH what is the rule of inline ?
     data() {
       return {
-        constants
+        constants: constants
       }
     },
     computed: {
-      data() {
-        let data = this.props.attributes
-        delete data['value']  // <== why, no 'value' exist as attribute ?
-        return data
-      },
       ...mapGetters({
         currentApi: 'backOfficeApi/currentApi'
       }),
-      parameterMap() {
-        return this.data.hasOwnProperty('parameterMap') ? this.data.parameterMap : {}
-      },
-      targetWindow() {
-        return this.data.hasOwnProperty('targetWindow') ? this.data.targetWindow : ''
-      },
-      uniqueItemName() {
-        return this.data.uniqueItemName
-      },
-      linkType() {
-        return this.data.hasOwnProperty('linkType') ? this.data.linkType : ''
-      },
       id() {
-        return this.data.hasOwnProperty('id') ? this.data.id : ''
-      },
-      style() {
-        return this.data.hasOwnProperty('style') ? this.data.style : ''
-      },
-      name() {
-        return this.data.hasOwnProperty('name') ? this.data.name : ''
-      },
-      height() { // what is usage except for modal, there is always a value the default theme value or specifics to this link
-        return this.data.height
-      },
-      width() { // what is usage except for modal, there is always a value the default theme value or specifics to this link
-        return this.data.width
-      },
-      text() {
-        return this.data.hasOwnProperty('text') ? this.data.text : ''
-      },
-      haveImage() {
-        return this.data.hasOwnProperty('img') && this.data.img.hasOwnProperty('src') && !this.data.img.src.startsWith('mdi-')
+        return this.props.attributes.hasOwnProperty('id') ? this.props.attributes.id : ''
       },
       haveIcon() {
-        return this.data.hasOwnProperty('img') && this.data.img.hasOwnProperty('src') && this.data.img.src.startsWith('mdi-')
+        return this.props.attributes.hasOwnProperty('img') && this.props.attributes.img.hasOwnProperty('src') && this.props.attributes.img.src.startsWith('mdi-')
       },
-      src() {
-        return this.data.hasOwnProperty('img') && this.data.img.hasOwnProperty('src') ? this.data.img.src : ''
+      haveImage() {
+        return this.props.attributes.hasOwnProperty('img') && this.props.attributes.img.hasOwnProperty('src') && !this.props.attributes.img.src.startsWith('mdi-')
       },
-      imgTitle() {
-        return this.data.hasOwnProperty('img') && this.data.img.hasOwnProperty('title') ? this.data.img.title : ''
-      },
-      target() {
-        return this.data.hasOwnProperty('target') ? this.data.target : ''
-      },
-      params() {  // TODO-TRAINING OH why using a string for Map, or why not using parameterMap
-        if (this.uniqueItemName.length > 0) {
-          return ""
-        }
-        let params = "{&quot;presentation&quot;:&quot;layer&quot; "
-        for (let key in Object.keys(this.parameterMap)) {
-          params += `,&quot;${key}&quot;: &quot;${this.parameterMap[key]}&quot;`
-        }
-        params += "}"
-        return params
+      height() {
+        return this.props.attributes.hasOwnProperty('height') ? this.props.attributes.height : ''
       },
       href() {
         if (this.linkType === 'hidden-form') {
-          // return `javascript:document.${this.uniqueItemName}.submit()` // todo: no yet supported
           return ''
         }
         let href
@@ -208,7 +157,7 @@
             href = this.constants.hostUrl + this.target
             break
           case 'inter-app':
-            href = this.constants.hostUrl + this.target // it should be necessary to add externalLoginKey as parameters
+            href = this.constants.hostUrl + this.target
             break
           case 'plain':
             href = this.target
@@ -219,12 +168,28 @@
         }
         return href
       },
-      urlMode() {
-        if (this.data.hasOwnProperty('urlMode')) {
-          return this.data.urlMode
-        } else {
-          return 'intra-app'
+      imgTitle() {
+        return this.props.attributes.hasOwnProperty('img') && this.props.attributes.img.hasOwnProperty('title') ? this.props.attributes.img.title : ''
+      },
+      linkType() {
+        return this.props.attributes.hasOwnProperty('linkType') ? this.props.attributes.linkType : ''
+      },
+      name() {
+        return this.props.attributes.hasOwnProperty('name') ? this.props.attributes.name : ''
+      },
+      parameterMap() {
+        return this.props.attributes.hasOwnProperty('parameterMap') ? this.props.attributes.parameterMap : {}
+      },
+      params() {
+        if (this.uniqueItemName.length > 0) {
+          return ""
         }
+        let params = "{&quot;presentation&quot;:&quot;layer&quot; "
+        for (let key in Object.keys(this.parameterMap)) {
+          params += `,&quot;${key}&quot;: &quot;${this.parameterMap[key]}&quot;`
+        }
+        params += "}"
+        return params
       },
       routerLink() {
         if (this.target === 'showPortalPage') {
@@ -232,22 +197,49 @@
         } else {
           return `/screen/${this.target}`
         }
+      },
+      src() {
+        return this.props.attributes.hasOwnProperty('img') && this.props.attributes.img.hasOwnProperty('src') ? this.props.attributes.img.src : ''
+      },
+      style() {
+        return this.props.attributes.hasOwnProperty('style') ? this.props.attributes.style : ''
+      },
+      text() {
+        return this.props.attributes.hasOwnProperty('text') ? this.props.attributes.text : ''
+      },
+      targetWindow() {
+        return this.props.attributes.hasOwnProperty('targetWindow') ? this.props.attributes.targetWindow : ''
+      },
+      target() {
+        return this.props.attributes.hasOwnProperty('target') ? this.props.attributes.target : ''
+      },
+      uniqueItemName() {
+        return this.props.attributes.hasOwnProperty('uniqueItemName') ? this.props.attributes.uniqueItemName : ''
+      },
+      urlMode() {
+        if (this.props.attributes.hasOwnProperty('urlMode')) {
+          return this.props.attributes.urlMode
+        } else {
+          return 'intra-app'
+        }
+      },
+      width() {
+        return this.props.attributes.hasOwnProperty('width') ? this.props.attributes.width : ''
       }
     },
     methods: {
+      loadPortalPage() {
+        this.$store.dispatch('ui/loadPortalPageDetail', {api: this.currentApi, params: this.parameterMap})
+      },
       redirect() {
-        console.log('click on link : ', this.data.text)
-        if (this.data.hasOwnProperty('targetWindow') && this.data.hasOwnProperty('target')) {
+        if (this.props.attributes.hasOwnProperty('targetWindow') && this.props.attributes.hasOwnProperty('target')) {
           this.$store.dispatch('ui/setArea', {
-            areaId: this.data.targetWindow,
-            targetUrl: `${this.$store.getters['backOfficeApi/currentApi']}/${this.data.target}`,
+            areaId: this.props.attributes.targetWindow,
+            targetUrl: `${this.$store.getters['backOfficeApi/currentApi']}/${this.props.attributes.target}`,
             wait: this.$wait,
             params: this.parameterMap
           })
         }
-      },
-      loadPortalPage() {
-        this.$store.dispatch('ui/loadPortalPageDetail', {api: this.currentApi, params: this.parameterMap})
       }
     }
   }
