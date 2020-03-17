@@ -1,6 +1,6 @@
 <template>
   <div id="vue-platform-specific">
-    <div v-bind:is="componentName" :props="props.attributes"></div>
+    <div v-bind:is="componentName" :props="attributes"></div>
   </div>
 </template>
 
@@ -8,11 +8,10 @@
   export default {
     name: "VuePlatformSpecific",
     props: ['props', 'updateStore'],
-    data() {
-      return {
-      }
-    },
     computed: {
+      attributes() {
+        return this.props.hasOwnProperty('attributes') ? this.props.attributes : {}
+      },
       componentName() {
         return this.props.attributes.hasOwnProperty('componentName') ? this.props.attributes.componentName : ''
       }
