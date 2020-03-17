@@ -1,7 +1,7 @@
 <template>
   <div>
     <div
-        v-for="(component, index) in props.children"
+        v-for="(component, index) in children"
         :key="index"
         v-bind:is="constants.components[component.name]"
         :props="component"
@@ -23,25 +23,22 @@
       }
     },
     computed: {
-      data() {
-        let data = this.props.attributes
-        delete data['value']
-        return data
-      },
-      style() {
-        return this.data.hasOwnProperty('style') ? this.data.style : ''
-      },
-      toolTip() {
-        return this.data.hasOwnProperty('toolTip') ? this.data.toolTip : ''
-      },
-      linkStr() {
-        return this.data.hasOwnProperty('linkStr') ? this.data.linkStr : ''
+      children() {
+        return this.props.hasOwnProperty('children') ? this.props.children : []
       },
       containsNestedMenus() {
-        return this.data.hasOwnProperty('containsNestedMenus') ? this.data.containsNestedMenus : ''
+        return this.props.attributes.hasOwnProperty('containsNestedMenus') ? this.props.attributes.containsNestedMenus : ''
+      },
+      linkStr() {
+        return this.props.attributes.hasOwnProperty('linkStr') ? this.props.attributes.linkStr : ''
+      },
+      style() {
+        return this.props.attributes.hasOwnProperty('style') ? this.props.attributes.style : ''
+      },
+      toolTip() {
+        return this.props.attributes.hasOwnProperty('toolTip') ? this.props.attributes.toolTip : ''
       }
     },
-    methods: {}
   }
 </script>
 
