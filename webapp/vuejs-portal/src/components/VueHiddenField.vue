@@ -1,7 +1,7 @@
 <template>
   <div id="vue-hidden-field">
-    <input v-if="data.conditionGroup" type="hidden" :name="data.name + '_grp'" v-bind:value="data.value" />
-    <input v-else type="hidden" v-bind="data" v-model="value"/>
+    <input v-if="conditionGroup" type="hidden" :name="name + '_grp'" v-bind:value="value" />
+    <input v-else type="hidden" v-model="storeValue"/>
   </div>
 </template>
 
@@ -11,53 +11,55 @@
   export default {
     name: "VueHiddenField",
     props: ['props', 'updateStore'],
-    data() {
-      return {
-      }
-    },
     computed: {
-      data() {
-        let data = this.props.attributes
-        if (data.className || (data.alert && data.alert === true)) {
-          data.class = data.className ? data.className : '' + ' ' + data.alert === true ? 'alert' : ''
-        }
-        return data
-      },
-      storeForm() {
-        return {
-          formId: this.props.attributes.formName,
-          key: this.props.attributes.name,
-          value: this.props.attributes.value ? this.props.attributes.value : ''
-        }
-      },
-      value: {
-        get() {
-          return this.getDataFromForm(this.storeForm)
-        },
-        set(value) {
-          this.$store.dispatch('form/setFieldToForm', {
-            formId: this.props.attributes.formName,
-            key: this.props.attributes.id,
-            value: value
-          })
-        }
-      },
       ...mapGetters({
         dataFromExample: 'data/dataFromExample',
         currentId: 'data/currentId',
         getForm: 'form/form',
         getDataFromForm: 'form/fieldInForm'
-      })
-    },
-    watch: {
-      data: function () {
-        console.log('vue-hidden : ', this.storeForm)
-        this.$store.dispatch('form/setFieldToForm', this.storeForm)
+      }),
+      conditionGroup() {
+        return this.props.attributes.hasOwnProperty('conditionGroup') ? this.props.attributes.conditionGroup : ''
+      },
+      formName() {
+        return this.props.attributes.hasOwnProperty('formName') ? this.props.attributes.formName : ''
+      },
+      id() {
+        return this.props.attributes.hasOwnProperty('id') ? this.props.attributes.id : ''
+      },
+      name() {
+        return this.props.attributes.hasOwnProperty('name') ? this.props.attributes.name : ''
+      },
+      storeForm() {
+        return {
+          formId: this.formName,
+          key: this.name,
+          value: this.value
+        }
+      },
+      storeValue: {
+        get() {
+          return this.getDataFromForm(this.storeForm)
+        },
+        set(value) {
+          this.$store.dispatch('form/setFieldToForm', {
+            formId: this.formName,
+            key: this.id,
+            value: value
+          })
+        }
+      },
+      value() {
+        return this.props.attributes.hasOwnProperty('value') ? this.props.attributes.value : ''
       }
     },
     created() {
-      console.log('vue-hidden : ', this.storeForm)
       this.$store.dispatch('form/setFieldToForm', this.storeForm)
+    },
+    watch: {
+      props: function () {
+        this.$store.dispatch('form/setFieldToForm', this.storeForm)
+      }
     }
   }
 </script>
