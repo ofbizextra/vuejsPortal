@@ -1,15 +1,7 @@
 <template>
-  <div component="vue-label">
-    <div v-if="hasStyle">
-      <h1 :id="id" v-if="style === 'h1'">{{text}}</h1>
-      <h2 :id="id" v-else-if="style === 'h2'">{{text}}</h2>
-      <h3 :id="id" v-else-if="style === 'h3'">{{text}}</h3>
-      <h4 :id="id" v-else-if="style === 'h4'">{{text}}</h4>
-      <h5 :id="id" v-else-if="style === 'h5'">{{text}}</h5>
-      <h6 :id="id" v-else-if="style === 'h6'">{{text}}</h6>
-      <span :id="id" :class="style" v-else>{{text}}</span>
-    </div>
-    <span :id="id" v-else>{{text}}</span>
+  <div>
+    <h1 :id="id" v-if="isHeader" v-bind:is="style">{{text}}</h1>
+    <span :id="id" v-else :class="style">{{text}}</span>
   </div>
 </template>
 
@@ -17,27 +9,18 @@
   export default {
     name: "VueLabel",
     props: ['props', 'updateStore'],
-    data() {
-      return {}
-    },
     computed: {
-      attributes() {
-        return this.props.hasOwnProperty('attributes') ? this.props.attributes : {}
+      id() {
+        return this.props.attributes.hasOwnProperty('id') ? this.props.attributes.id : ''
       },
-      text() {
-        return this.attributes.hasOwnProperty('text') ? this.attributes.text : ''
+      isHeader() {
+        return ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'].includes(this.style)
       },
       style() {
-        return this.hasStyle ? this.attributes.style : ''
+        return this.props.attributes.hasOwnProperty('style') ? this.props.attributes.style : ''
       },
-      id() {
-        return this.hasId ? this.attributes.id : ''
-      },
-      hasStyle() {
-        return this.attributes.hasOwnProperty('style')
-      },
-      hasId() {
-        return this.attributes.hasOwnProperty('id')
+      text() {
+        return this.props.attributes.hasOwnProperty('text') ? this.props.attributes.text : ''
       }
     }
   }
