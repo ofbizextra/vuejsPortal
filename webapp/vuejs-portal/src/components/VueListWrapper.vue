@@ -1,5 +1,5 @@
 <template>
-  <table id="vue-list-wrapper" v-if="show">
+  <table :id='formName' vue-component="vue-list-wrapper" v-if="show">
     <tbody
         v-for="(component, key) in children"
         :key="key"
@@ -24,6 +24,9 @@
     computed: {
       children() {
         return this.props.hasOwnProperty('children') ? this.props.children : []
+      },
+      formName() {
+        return this.props.attributes.formName
       },
       listSize() {
         return this.props.attributes.hasOwnProperty("listSize") ? this.props.attributes.listSize : 0

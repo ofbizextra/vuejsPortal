@@ -1,5 +1,5 @@
 <template>
-  <td id="vue-item-row-cell">
+  <td vue-component="vue-item-row-cell" :fieldname='fieldName'>
     <div
       v-for="(component, key) in children"
       :key="key"
@@ -24,6 +24,9 @@
     computed: {
       children() {
         return this.props.hasOwnProperty('children') ? this.props.children : []
+      },
+      fieldName() { // currently needed for selenium test
+        return this.props.attributes.fieldName
       }
     }
   }
