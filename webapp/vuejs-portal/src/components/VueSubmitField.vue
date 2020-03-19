@@ -1,7 +1,13 @@
 <template>
   <v-flex text-center id="vue-submit-field" class="ma-2">
-    <v-btn raised dark color="primary" type="submit" :label="data.title" :value="data.title" v-bind="data"
-           v-on:click.prevent="resolveEvents">{{data.title}}
+    <v-btn
+        raised
+        dark
+        color="primary"
+        type="submit"
+        :label="title"
+        :value="title"
+        v-on:click.prevent="resolveEvents">{{title}}
     </v-btn>
   </v-flex>
 </template>
@@ -12,74 +18,32 @@
   export default {
     name: "VueSubmitField",
     props: ['props'],
-    data() {
-      return {}
-    },
     computed: {
       ...mapGetters({
         getForm: 'form/form',
         getDataFromForm: 'form/fieldInForm',
         formValidate: 'form/formValidate'
       }),
-      data() {
-        let data = this.props.attributes
-        if (data.className || (data.alert && data.alert === true)) {
-          data.class = data.className ? data.className : '' + ' ' + data.alert === true ? 'alert' : ''
-        }
-        return data
-      },
       haveUpdateAreas() {
-        return this.data.hasOwnProperty('updateAreas') && !this.data.updateAreas.empty
-      },
-      updateAreas() {
-        return this.haveUpdateAreas ? this.data.updateAreas : []
+        return this.props.attributes.hasOwnProperty('updateAreas') && !this.props.attributes.updateAreas.empty
       },
       form() {
         return this.getForm(this.formName)
       },
       formName() {
-        return this.data.formName
+        return this.props.attributes.hasOwnProperty('formName') ? this.props.attributes.formName : ''
+      },
+      title() {
+        return this.props.attributes.hasOwnProperty('title') ? this.props.attributes.title : ''
+      },
+      updateAreas() {
+        return this.haveUpdateAreas ? this.props.attributes.updateAreas : []
       }
     },
     methods: {
-      submit() {
-        return this.$store.dispatch('backOfficeApi/doPost', {
-          uri: this.getDataFromForm({formId: this.props.attributes.formName, key: 'linkUrl'}),
-          params: this.form
-        })
-      },
-      setWatcher(updateArea) {
-        this.$store.dispatch('data/setWatcher', {
-          watcherName: updateArea.areaId,
-          params: (updateArea.hasOwnProperty('parameterMap') && Object.keys(updateArea.parameterMap).length > 0) ? updateArea.parameterMap : this.form
-        })
-      },
-      setArea(updateArea) {
-        return this.$store.dispatch('ui/setArea', {
-          areaId: updateArea.areaId,
-          targetUrl: `${this.$store.getters['backOfficeApi/currentApi']}/${updateArea.areaTarget}`,
-          wait: this.$wait,
-          params: (updateArea.hasOwnProperty('parameterMap') && Object.keys(updateArea.parameterMap).length > 0) ? updateArea.parameterMap : this.form
-        })
-      },
       resolveEvent(updateArea) {
         switch (updateArea.eventType) {
-          case 'submit':
-            // do post
-            return this.submit()
-          case 'setWatcher':
-            // do update store
-            this.setWatcher(updateArea)
-            return new Promise((resolve) => {
-              setTimeout(() => {
-                resolve()
-              }, 0)
-            })
-          case 'setArea':
-            // do post then set area
-            return this.setArea(updateArea)
           case 'closeModal':
-            // do closeModal
             if (updateArea.hasOwnProperty('areaId') && updateArea.areaId !== '') {
               this.$store.dispatch('ui/setDialogStatus', {
                 dialogId: updateArea.areaId,
@@ -96,28 +60,24 @@
           case 'collapse':
             switch (updateArea.areaTarget) {
               case 'collapse':
-                // collapse
                 this.$store.dispatch('ui/setCollapsibleStatus', {
                   areaId: updateArea.areaId,
                   areaTarget: true
                 })
                 break
               case 'expand':
-                // expand
                 this.$store.dispatch('ui/setCollapsibleStatus', {
                   areaId: updateArea.areaId,
                   areaTarget: false
                 })
                 break
               case 'toggle':
-                // toggle
                 this.$store.dispatch('ui/setCollapsibleStatus', {
                   areaId: updateArea.areaId,
                   areaTarget: !this.$store.getters['ui/collapsibleStatus'](updateArea.areaId)
                 })
                 break
               default:
-                // toggle
                 this.$store.dispatch('ui/setCollapsibleStatus', {
                   areaId: updateArea.areaId,
                   areaTarget: !this.$store.getters['ui/collapsibleStatus'](updateArea.areaId)
@@ -129,8 +89,18 @@
                 resolve()
               }, 0)
             })
+          case 'setArea':
+            return this.setArea(updateArea)
+          case 'setWatcher':
+            this.setWatcher(updateArea)
+            return new Promise((resolve) => {
+              setTimeout(() => {
+                resolve()
+              }, 0)
+            })
+          case 'submit':
+            return this.submit()
           default:
-            // do nothing
             return new Promise((resolve) => {
               setTimeout(() => {
                 resolve()
@@ -139,7 +109,7 @@
         }
       },
       resolveEvents() {
-        if (this.formValidate(this.data.formName)()) {
+        if (this.formValidate(this.props.attributes.formName)()) {
           if (this.haveUpdateAreas) {
             this.updateAreas.reduce((accumulatorPromise, nextUpdateArea) => {
               return accumulatorPromise.then(() => {
@@ -150,6 +120,26 @@
             this.submit()
           }
         }
+      },
+      setArea(updateArea) {
+        return this.$store.dispatch('ui/setArea', {
+          areaId: updateArea.areaId,
+          targetUrl: `${this.$store.getters['backOfficeApi/currentApi']}/${updateArea.areaTarget}`,
+          wait: this.$wait,
+          params: (updateArea.hasOwnProperty('parameterMap') && Object.keys(updateArea.parameterMap).length > 0) ? updateArea.parameterMap : this.form
+        })
+      },
+      setWatcher(updateArea) {
+        this.$store.dispatch('data/setWatcher', {
+          watcherName: updateArea.areaId,
+          params: (updateArea.hasOwnProperty('parameterMap') && Object.keys(updateArea.parameterMap).length > 0) ? updateArea.parameterMap : this.form
+        })
+      },
+      submit() {
+        return this.$store.dispatch('backOfficeApi/doPost', {
+          uri: this.getDataFromForm({formId: this.props.attributes.formName, key: 'linkUrl'}),
+          params: this.form
+        })
       }
     }
   }
