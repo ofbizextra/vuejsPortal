@@ -1,6 +1,6 @@
 <template>
   <div id="vue-sort-field">
-    <a :class="data.style" :href="linkUrl" v-on:click.prevent="sort" v-bind:title="data.tooltip">{{data.title}}</a>
+    <a :class="style" :href="linkUrl" v-on:click.prevent="sort" :title="tooltip">{{title}}</a>
   </div>
 </template>
 
@@ -10,34 +10,43 @@
   export default {
     name: "VueSortField",
     props: ['props', 'updateStore'],
-    data() {
-      return {}
-    },
     computed: {
       ...mapGetters({
         watcher: 'data/watcher'
       }),
-      data() {
-        let data = this.props.attributes
-        delete data.value
-        return data
-      },
-      paginateTarget() {
-        return this.data.hasOwnProperty('paginateTarget') ? this.data.paginateTarget : null
+      currentWatcher() {
+        return this.paginateTarget ? this.watcher(this.paginateTarget) : {}
       },
       entityField() {
-        return this.data.hasOwnProperty('entityField') ? this.data.entityField : null
-      }
+        return this.props.attributes.hasOwnProperty('entityField') ? this.props.attributes.entityField : ''
+      },
+      linkUrl() {
+        return this.props.attributes.hasOwnProperty('linkUrl') ? this.props.attributes.linkUrl : ''
+      },
+      paginateTarget() {
+        return this.props.attributes.hasOwnProperty('paginateTarget') ? this.props.attributes.paginateTarget : ''
+      },
+      sortField() {
+        return this.currentWatcher.hasOwnProperty('sortField') && this.currentWatcher.sortField === this.entityField ? '-' + this.entityField : this.entityField
+      },
+      style() {
+        return this.props.attributes.hasOwnProperty('style') ? this.props.attributes.style : ''
+      },
+      title() {
+        return this.props.attributes.hasOwnProperty('title') ? this.props.attributes.title : ''
+      },
+      tooltip() {
+        return this.props.attributes.hasOwnProperty('tooltip') ? this.props.attributes.tooltip : ''
+      },
     },
     methods: {
       sort() {
         if (this.paginateTarget && this.entityField) {
-          let currentWatcher = this.watcher(this.paginateTarget)
           this.$store.dispatch('data/setWatcherAttributes', {
             watcherName: this.paginateTarget,
             params: {
               orderBy: this.entityField,
-              sortField: currentWatcher.hasOwnProperty('sortField') && currentWatcher.sortField === this.entityField ? '-' + this.entityField : this.entityField
+              sortField: this.sortField
             }
           })
         }
