@@ -1,6 +1,8 @@
 <template>
   <li id="vue-screenlet-sub-widget" class="expanded">
-    <a v-on:click.prevent="toggleCollapse" title="expand">&nbsp;</a>
+    <h1 class="error--text">This component is not supported yet (VueScreenletSubWidget) !!!</h1>
+    <h1 class="error--text">If not used it will be deleted soon</h1>
+    <a title="expand">&nbsp;</a>
   </li>
 </template>
 
@@ -8,25 +10,6 @@
   export default {
     name: "VueScreenletSubWidget",
     props: ['props', 'updateStore'],
-    data() {
-      return {
-      }
-    },
-    computed: {
-      data() {
-        let data = this.props.attributes
-        delete data['value']
-        if (data.className || (data.alert && data.alert === true)) {
-          data.class = data.className ? data.className : '' + ' ' + data.alert === true ? 'alert' : ''
-        }
-        return data
-      }
-    },
-    methods: {
-      toggleCollapse() {
-        console.log('toggle collapse')
-      }
-    }
   }
 </script>
 
