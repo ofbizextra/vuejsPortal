@@ -2,7 +2,7 @@
   <v-tooltip top>
     <template v-slot:activator="{ on }">
       <v-radio-group id="vue-radio-field" :label="fieldTitle" v-model="value" row :hide-details="noRules" :rules="rules" v-on="fieldHelpText ? on : null">
-        <input v-if="data.conditionGroup" type="hidden" :name="data.name + '_grp'" v-bind:value="data.conditionGroup"/>
+<!-- TODO: check if we need this       <input v-if="conditionGroup" type="hidden" :name="name + '_grp'" :value="conditionGroup"/>-->
         <v-radio v-for="item in props.attributes.items" :key="item.key" :label="item.description" :value="item.key">
         </v-radio>
         <v-tooltip bottom v-if="value">
@@ -11,7 +11,7 @@
           </template>
           <span>Clear</span>
         </v-tooltip>
-        <vue-error v-if="data.event" component="event"/>
+        <vue-error v-if="event" component="event"/>
       </v-radio-group>
     </template>
     <span>{{fieldHelpText}}</span>
@@ -24,27 +24,50 @@
   export default {
     name: "VueRadioField",
     props: ['props', 'updateStore'],
-    data() {
-      return {}
-    },
     computed: {
       ...mapGetters({
         getDataFromForm: 'form/fieldInForm',
         getForm: 'form/form'
       }),
-      data() {
-        let data = this.props.attributes
-        //delete data['currentValue']
-        if (data.className || (data.alert && data.alert === true)) {
-          data.class = data.className ? data.className : '' + ' ' + data.alert === true ? 'alert' : ''
+      conditionGroup() {
+        return this.props.attributes.hasOwnProperty('conditionGroup') ? this.props.conditionGroup : ''
+      },
+      currentValue() {
+        return this.props.attributes.hasOwnProperty('currentValue') ? this.props.attributes.currentValue : ''
+      },
+      event() {
+        return this.props.attributes.hasOwnProperty('event') ? this.props.attributes.event : ''
+      },
+      fieldTitle(){
+        return this.props.attributes.hasOwnProperty('fieldTitle') ? this.props.attributes.fieldTitle : ''
+      },
+      fieldHelpText() {
+        return this.props.attributes.hasOwnProperty('fieldHelpText') ? this.props.attributes.fieldHelpText : ''
+      },
+      formName() {
+        return this.props.attributes.hasOwnProperty('formName') ? this.props.attributes.formName : ''
+      },
+      name() {
+        return this.props.attributes.hasOwnProperty('name') ? this.props.attributes.name : ''
+      },
+      noRules() {
+        return this.required === false
+      },
+      required() {
+        return this.props.attributes.hasOwnProperty('requiredField') &&  this.props.attributes.requiredField === true
+      },
+      rules() {
+        let rules = []
+        if (this.required) {
+          rules.push((v) => !!v || 'This field is required')
         }
-        return data
+        return rules
       },
       storeForm() {
         return {
-          formId: this.props.attributes.formName,
-          key: this.props.attributes.name,
-          value: this.props.attributes.currentValue ? this.props.attributes.currentValue : ''
+          formId: this.formName,
+          key: this.name,
+          value: this.currentValue
         }
       },
       value: {
@@ -53,32 +76,11 @@
         },
         set(value) {
           this.$store.dispatch('form/setFieldToForm', {
-            formId: this.props.attributes.formName,
-            key: this.props.attributes.name,
+            formId: this.formName,
+            key: this.name,
             value: value
           })
         }
-      },
-      controls() {
-        return {
-          required: this.data.hasOwnProperty('requiredField') &&  this.data.requiredField === true
-        }
-      },
-      noRules() {
-        return this.controls.required === false && this.controls.maxLength === null && this.controls.mask === null
-      },
-      rules() {
-        let rules = []
-        if (this.controls.required) {
-          rules.push((v) => !!v || 'This field is required')
-        }
-        return rules
-      },
-      fieldTitle(){
-        return this.data.hasOwnProperty('fieldTitle') ? this.data.fieldTitle : ''
-      },
-      fieldHelpText() {
-        return this.data.hasOwnProperty('fieldHelpText') ? this.data.fieldHelpText : ''
       }
     },
     methods: {
@@ -86,15 +88,13 @@
         this.value = ''
       }
     },
+    created() {
+      this.$store.dispatch('form/setFieldToForm', this.storeForm)
+    },
     watch: {
-      data: function () {
-        console.log('vue-radio : ', this.storeForm)
+      props: function () {
         this.$store.dispatch('form/setFieldToForm', this.storeForm)
       }
-    },
-    created() {
-      console.log('vue-radio : ', this.storeForm)
-      this.$store.dispatch('form/setFieldToForm', this.storeForm)
     }
   }
 </script>
