@@ -304,7 +304,7 @@
                 </v-list>
               </v-col>
               <v-col cols="12" md="6" align-self="start">
-                <v-list dense>
+                <v-list dense sel-label="postalAddr">
                   <v-list-item v-for="postalAddress in postalAddressList"
                                :key="postalAddress.contactMech.contactMechId">
                     <v-list-item-icon>
@@ -387,7 +387,7 @@
                   <v-list-item v-if="editMode">
                     <v-list-item-icon></v-list-item-icon>
                     <v-list-item-content>
-                      <v-list-item-subtitle @click="addPostalAddress">
+                      <v-list-item-subtitle sel-label="addPostalAddr" @click="addPostalAddress">
                         <v-icon left>mdi-plus-circle</v-icon>
                         Add postal address
                       </v-list-item-subtitle>
@@ -600,8 +600,8 @@
               </v-col>
             </v-row>
             <v-row justify="center">
-              <v-btn text @click="toggleShowMore" v-if="!showMore">Show more</v-btn>
-              <v-btn text @click="toggleShowMore" v-if="showMore">Show less</v-btn>
+              <v-btn sel-label="showMore" text @click="toggleShowMore" v-if="!showMore">Show more</v-btn>
+              <v-btn sel-label="showLess" text @click="toggleShowMore" v-if="showMore">Show less</v-btn>
             </v-row>
           </v-card-text>
         </v-card>
@@ -1243,9 +1243,11 @@
           }
         }
         this.editMode = !this.editMode
+        this.$store.dispatch('ui/incrementUpdateCpt')
       },
       toggleShowMore() {
         this.showMore = !this.showMore
+        this.$store.dispatch('ui/incrementUpdateCpt')
       },
       updateAll() {
         let promises = []
