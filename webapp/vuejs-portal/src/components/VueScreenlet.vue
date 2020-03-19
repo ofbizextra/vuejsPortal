@@ -1,25 +1,27 @@
 <template>
   <div id="vue-screenlet">
-    <div :id="data.id + '-' + data.name" class="ma-1">
-      <v-toolbar v-if="data.showMore" dense color="primary" dark class="screenlet-title-bar">
-        <v-toolbar-title class="title">{{data.title}}</v-toolbar-title>
+    <div :id="templateId" class="ma-1">
+      <v-toolbar v-if="showMore" dense color="primary" dark class="screenlet-title-bar">
+        <v-toolbar-title class="title">{{title}}</v-toolbar-title>
         <v-spacer></v-spacer>
         <vue-nav-menu v-if="navMenu" :props="navMenu" :updateStore="updateStore"></vue-nav-menu>
-        <v-btn id="toggleCollapse" icon v-if="collapsible" @click="toggle"><v-icon>{{ collapseIcon }}</v-icon></v-btn>
+        <v-btn id="toggleCollapse" icon v-if="collapsible" @click="toggle">
+          <v-icon>{{ collapseIcon }}</v-icon>
+        </v-btn>
       </v-toolbar>
       <v-expand-transition>
-      <v-card :id="collapsibleAreaId" v-show="!collapsed">
-        <v-card-text class="pa-1">
-        <div
-          v-for="(component, key) in props.children"
-          :key="key"
-          v-bind:is="constants.components[component.name]"
-          :props="component"
-          :updateStore="updateStore"
-          class="mt-2">
-        </div>
-        </v-card-text>
-      </v-card>
+        <v-card :id="collapsibleAreaId" v-show="!collapsed">
+          <v-card-text class="pa-1">
+            <div
+                v-for="(component, key) in props.children"
+                :key="key"
+                v-bind:is="constants.components[component.name]"
+                :props="component"
+                :updateStore="updateStore"
+                class="mt-2">
+            </div>
+          </v-card-text>
+        </v-card>
       </v-expand-transition>
     </div>
   </div>
@@ -41,35 +43,44 @@
       ...mapGetters({
         collapsibleStatus: 'ui/collapsibleStatus'
       }),
-      collapsed() {
-        return this.collapsibleStatus(this.data.id)
-      },
-      data() {
-        let data = this.props.attributes
-        delete data['value']
-        if (data.className || (data.alert && data.alert === true)) {
-          data.class = data.className ? data.className : '' + ' ' + data.alert === true ? 'alert' : ''
-        }
-        return data
-      },
-      headerChildren() {
-        return this.props.children.filter(component => ['Menu'].includes(component.name)) // 'ScreenletSubWidget'
-      },
       bodyChildren() {
         return this.props.children.filter(component => !['Menu', 'ScreenletSubWidget'].includes(component.name)) // 'ScreenletSubWidget'
       },
-      toolTip() {
-        if (this.data.hasOwnProperty('collapsed') && this.data.collapsed == true) {
-          return this.data.hasOwnProperty('expandToolTip') ? this.data.expandToolTip : ''
-        } else {
-          return this.data.hasOwnProperty('collapseToolTip') ? this.data.collapseToolTip : ''
-        }
+      collapsed() {
+        return this.collapsibleStatus(this.props.attributes.id)
+      },
+      collapseIcon() {
+        return this.collapsed ? 'mdi-arrow-expand-down' : 'mdi-arrow-collapse-up'
+      },
+      collapseToolTip() {
+        return this.props.attributes.hasOwnProperty('collapseToolTip') ? this.props.attributes.collapseToolTip : ''
+      },
+      collapsible() {
+        return this.props.attributes.hasOwnProperty('collapsible') && this.props.attributes.collapsible
       },
       collapsibleAreaId() {
-        return this.data.hasOwnProperty('collapsibleAreaId') ? this.data.collapsibleAreaId : ''
+        return this.props.attributes.hasOwnProperty('collapsibleAreaId') ? this.props.attributes.collapsibleAreaId : ''
+      },
+      expandToolTip() {
+        return this.props.attributes.hasOwnProperty('expandToolTip') ? this.props.attributes.expandToolTip : ''
+      },
+      headerChildren() {
+        return this.props.children.filter(component => ['Menu'].includes(component.name))
+      },
+      id() {
+        return this.props.attributes.hasOwnProperty('id') ? this.props.attributes.id : ''
+      },
+      name() {
+        return this.props.attributes.hasOwnProperty('name') ? this.props.attributes.name : ''
+      },
+      navMenu() {
+        return this.props.attributes.hasOwnProperty('navMenu') ? this.props.attributes.navMenu : null
+      },
+      showMore() {
+        return this.props.attributes.hasOwnProperty('showMore') ? this.props.attributes.showMore : ''
       },
       style() {
-        if (this.data.collapsible) {
+        if (this.props.attributes.collapsible) {
           if (this.collapsed) {
             return {display: 'none'}
           } else {
@@ -79,30 +90,34 @@
           return {}
         }
       },
-      id() {
-        return `${this.data.id}-${this.data.name}`
-      },
-      collapseIcon() {
-        return this.collapsed ? 'mdi-arrow-expand-down' :  'mdi-arrow-collapse-up'
-      },
-      collapsible() {
-        return this.data.hasOwnProperty('collapsible') && this.data.collapsible
-      },
       tabMenu() {
-        return this.data.hasOwnProperty('tabMenu') ? this.data.tabMenu : null
+        return this.props.attributes.hasOwnProperty('tabMenu') ? this.props.attributes.tabMenu : null
       },
-      navMenu() {
-        return this.data.hasOwnProperty('navMenu') ? this.data.navMenu : null
+      templateId() {
+        return `${this.id}-${this.name}`
+      },
+      title() {
+        return this.props.attributes.hasOwnProperty('title') ? this.props.attributes.title : ''
+      },
+      toolTip() {
+        if (this.collapsed) {
+          return this.expandToolTip
+        } else {
+          return this.collapseToolTip
+        }
       }
     },
     methods: {
       toggle() {
-        this.$store.dispatch('ui/setCollapsibleStatus', {areaId: this.data.id, areaTarget: !this.collapsed})
+        this.$store.dispatch('ui/setCollapsibleStatus', {areaId: this.templateId, areaTarget: !this.collapsed})
       }
     },
     created() {
-      if (this.data.collapsible) {
-        this.$store.dispatch('ui/setCollapsibleStatus', {areaId: this.props.attributes.id, areaTarget: this.props.attributes.collapsed})
+      if (this.collapsible) {
+        this.$store.dispatch('ui/setCollapsibleStatus', {
+          areaId: this.templateId,
+          areaTarget: this.collapsed
+        })
       }
     }
   }
