@@ -1,9 +1,9 @@
 <template>
   <div id="vue-portlet">
-    <div v-bind:id="'vue-portlet_' + portletId">
+    <div :id="'vue-portlet_' + portletId">
       <div v-if="portlet">
         <div
-          v-for="(component, key) in portlet.viewScreen"
+          v-for="(component, key) in viewScreen"
           :key="key"
           v-bind:is="constants.components[component.name]"
           :props="component">
@@ -23,14 +23,14 @@
 
 <script>
   import {mapGetters} from 'vuex'
-  import cst from '../js/constants'
+  import constants from '../js/constants'
 
   export default {
     name: "VuePortlet",
     props: ['props'],
     data() {
       return {
-        constants: cst,
+        constants: constants,
       }
     },
     computed: {
@@ -40,14 +40,17 @@
         portalPageId: 'ui/currentPortalPage',
         currentPortalPageParams: 'ui/currentPortalPageParams'
       }),
+      children() {
+        return this.props.hasOwnProperty('children') ? this.props.children : []
+      },
+      getParams() {
+        return this.$store.getters['data/watcher'](this.watcherName)
+      },
+      isPosted() {
+        return this.props.hasOwnProperty('attributes')
+      },
       portalPortletId() {
         return this.props.hasOwnProperty('portalPortletId') ? this.props.portalPortletId : this.props.attributes.portalPortletId
-      },
-      portletSeqId() {
-        return this.props.hasOwnProperty('portletSeqId') ? this.props.portletSeqId : this.props.attributes.portletSeqId
-      },
-      watcherName() {
-        return this.props.hasOwnProperty('watcherName') ? this.props.watcherName : this.props.attributes.watcherName
       },
       portlet() {
         return this.getPortlet(this.portletId)
@@ -55,34 +58,27 @@
       portletId() {
         return this.portalPortletId + '-' + this.portletSeqId
       },
-      isWatching() {
-        return this.watcherName ? this.watcherName : null
+      portletSeqId() {
+        return this.props.hasOwnProperty('portletSeqId') ? this.props.portletSeqId : this.props.attributes.portletSeqId
       },
-      getParams() {
-        return this.$store.getters['data/watcher'](this.isWatching)
+      viewScreen() {
+        return this.portlet && this.portlet.hasOwnProperty('viewScreen') ? this.portlet.viewScreen : []
       },
-      children() {
-        return this.props.hasOwnProperty('children') ? this.props.children : []
-      },
-      isPosted() {
-        return this.props.hasOwnProperty('attributes')
+      watcherName() {
+        return this.props.hasOwnProperty('watcherName') ? this.props.watcherName : this.props.attributes.watcherName
       }
     },
     created() {
       this.$store.dispatch('ui/deleteArea', {areaId: this.portletId})
-      if (this.isWatching) {
+      if (this.watcherName) {
         this.$store.dispatch('data/setWatcherAttributes', {
-          watcherName: this.isWatching,
+          watcherName: this.watcherName,
           params: this.currentPortalPageParams
         })
-      } else {
-        if (this.isPosted) {
-          return
-        }
-        console.log(this.$store.getters['backOfficeApi/apiUrl'] + cst.showPortlet.path + ' : => ' + this.portalPortletId + '-' + this.portletSeqId)
+      } else if (!this.isPosted) {
         this.$store.dispatch('ui/setArea', {
           areaId: this.portalPortletId + '-' + this.portletSeqId,
-          targetUrl: this.$store.getters['backOfficeApi/currentApi'] + cst.showPortlet.path,
+          targetUrl: this.$store.getters['backOfficeApi/currentApi'] + constants.showPortlet.path,
           wait: this.$wait,
           params: {...this.currentPortalPageParams, portalPortletId: this.portalPortletId, portalPageId: this.portalPageId, portletSeqId: this.portletSeqId}
         })
@@ -92,22 +88,18 @@
       this.$store.dispatch('ui/deleteArea', {areaId: this.portletId})
     },
     watch: {
-      getParams: function (val) {
-        console.log('portlet params updated: ', val)
-        console.log(this.$store.getters['backOfficeApi/apiUrl'] + cst.showPortlet.path + ' : => ' + this.portalPortletId + '-' + this.portletSeqId)
+      currentPortalPageParams: function (val) {
         this.$store.dispatch('ui/setArea', {
           areaId: this.portletId,
-          targetUrl: this.$store.getters['backOfficeApi/currentApi'] + cst.showPortlet.path,
+          targetUrl: this.$store.getters['backOfficeApi/currentApi'] + constants.showPortlet.path,
           wait: this.$wait,
           params: {...val, portalPortletId: this.portalPortletId, portalPageId: this.portalPageId, portletSeqId: this.portletSeqId}
         })
       },
-      currentPortalPageParams: function (val) {
-        console.log('portlet params updated: ', val)
-        console.log(this.$store.getters['backOfficeApi/apiUrl'] + cst.showPortlet.path + ' : => ' + this.portalPortletId + '-' + this.portletSeqId)
+      getParams: function (val) {
         this.$store.dispatch('ui/setArea', {
           areaId: this.portletId,
-          targetUrl: this.$store.getters['backOfficeApi/currentApi'] + cst.showPortlet.path,
+          targetUrl: this.$store.getters['backOfficeApi/currentApi'] + constants.showPortlet.path,
           wait: this.$wait,
           params: {...val, portalPortletId: this.portalPortletId, portalPageId: this.portalPageId, portletSeqId: this.portletSeqId}
         })
