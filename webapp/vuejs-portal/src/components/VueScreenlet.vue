@@ -109,7 +109,7 @@
     },
     methods: {
       toggle() {
-        this.$store.dispatch('ui/setCollapsibleStatus', {areaId: this.templateId, areaTarget: !this.collapsed})
+        this.$store.dispatch('ui/setCollapsibleStatus', {areaId: this.id, areaTarget: !this.collapsed})
       }
     },
     created() {
