@@ -1,5 +1,5 @@
 <template>
-  <v-flex text-center vue-component="vue-submit-field" class="ma-2">
+  <v-flex id="vue-submit-field" text-center class="ma-2">
     <v-btn
         raised
         dark
