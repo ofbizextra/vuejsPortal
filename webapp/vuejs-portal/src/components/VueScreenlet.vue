@@ -1,6 +1,5 @@
 <template>
-  <div id="vue-screenlet">
-    <div :id="templateId" class="ma-1">
+  <div vue-component="vue-screenlet" :id="templateId" class="ma-1">
       <v-toolbar v-if="showMore" dense color="primary" dark class="screenlet-title-bar">
         <v-toolbar-title class="title">{{title}}</v-toolbar-title>
         <v-spacer></v-spacer>
@@ -23,7 +22,6 @@
           </v-card-text>
         </v-card>
       </v-expand-transition>
-    </div>
   </div>
 </template>
 
