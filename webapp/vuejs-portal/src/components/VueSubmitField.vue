@@ -1,12 +1,11 @@
 <template>
-  <v-flex text-center id="vue-submit-field" class="ma-2">
+  <v-flex text-center vue-component="vue-submit-field" class="ma-2">
     <v-btn
         raised
         dark
         color="primary"
         type="submit"
         :label="title"
-        :value="title"
         v-on:click.prevent="resolveEvents">{{title}}
     </v-btn>
   </v-flex>
