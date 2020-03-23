@@ -2,7 +2,7 @@
   <v-menu bottom left v-if="!inline" transition="scale-transition" origin="center center">
     <template v-slot:activator="{ on }">
       <v-btn icon v-on="on">
-        <v-icon>{{getIcon('mdi-dots-vertical')}}</v-icon>
+        <v-icon id='mdi-dots-vertical'>{{getIcon('mdi-dots-vertical')}}</v-icon>
       </v-btn>
     </template>
     <v-list dense>

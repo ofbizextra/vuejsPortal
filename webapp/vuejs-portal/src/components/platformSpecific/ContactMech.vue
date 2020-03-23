@@ -7,17 +7,17 @@
             <v-toolbar-title>Contact mech "{{this.props.partyId}}"</v-toolbar-title>
             <div class="flex-grow-1"></div>
             <v-btn icon @click="toggleEdit">
-              <v-icon v-on="on">{{getIcon('mdi-pencil')}}</v-icon>
+              <v-icon v-on="on" id='mdi-pencil'>{{getIcon('mdi-pencil')}}</v-icon>
             </v-btn>
           </v-toolbar>
           <v-toolbar flat v-if="editMode">
             <v-btn icon @click="toggleEdit">
-              <v-icon>{{getIcon('mdi-arrow-left')}}</v-icon>
+              <v-icon id='mdi-arrow-left'>{{getIcon('mdi-arrow-left')}}</v-icon>
             </v-btn>
             <v-toolbar-title>Edit contact mech</v-toolbar-title>
             <div class="flex-grow-1"></div>
             <v-btn icon @click="updateAll">
-              <v-icon>{{getIcon('mdi-check')}}</v-icon>
+              <v-icon id='mdi-check'>{{getIcon('mdi-check')}}</v-icon>
             </v-btn>
           </v-toolbar>
           <v-divider></v-divider>
@@ -30,7 +30,7 @@
                     <v-tooltip top>
                       <template v-slot:activator="{ on }">
                         <v-list-item-icon v-on="on">
-                          <v-icon left>{{getIcon('mdi-phone')}}</v-icon>
+                          <v-icon id='mdi-phone' left>{{getIcon('mdi-phone')}}</v-icon>
                         </v-list-item-icon>
                       </template>
                       <span>Telecom number</span>
@@ -74,7 +74,7 @@
                     </v-list-item-content>
                     <v-list-item-action v-if="editMode">
                       <v-btn icon @click="removeContactMech(phoneNumber)">
-                        <v-icon color="red">{{getIcon('mdi-delete')}}</v-icon>
+                        <v-icon id='mdi-delete' color="red">{{getIcon('mdi-delete')}}</v-icon>
                       </v-btn>
                     </v-list-item-action>
                   </v-list-item>
@@ -82,7 +82,7 @@
                     <v-list-item-icon></v-list-item-icon>
                     <v-list-item-content>
                       <v-list-item-subtitle @click="addTelecomNumber">
-                        <v-icon left>{{getIcon('mdi-plus-circle')}}</v-icon>
+                        <v-icon id='mdi-plus-circle' left>{{getIcon('mdi-plus-circle')}}</v-icon>
                         Add telecom number
                       </v-list-item-subtitle>
                     </v-list-item-content>
@@ -93,7 +93,7 @@
                     <v-list-item-icon>
                       <v-tooltip top>
                         <template v-slot:activator="{ on }">
-                          <v-icon left v-on="on">{{getIcon('mdi-email')}}</v-icon>
+                          <v-icon id='mdi-email' left v-on="on">{{getIcon('mdi-email')}}</v-icon>
                         </template>
                         <span>Email address</span>
                       </v-tooltip>
@@ -132,7 +132,7 @@
                     </v-list-item-content>
                     <v-list-item-action v-if="editMode">
                       <v-btn icon @click="removeContactMech(email)">
-                        <v-icon color="red">{{getIcon('mdi-delete')}}</v-icon>
+                        <v-icon id='mdi-delete' color="red">{{getIcon('mdi-delete')}}</v-icon>
                       </v-btn>
                     </v-list-item-action>
                   </v-list-item>
@@ -140,7 +140,7 @@
                     <v-list-item-icon></v-list-item-icon>
                     <v-list-item-content>
                       <v-list-item-subtitle @click="addEmailAddress">
-                        <v-icon left>{{getIcon('mdi-plus-circle')}}</v-icon>
+                        <v-icon id='mdi-plus-circle' left>{{getIcon('mdi-plus-circle')}}</v-icon>
                         Add email address
                       </v-list-item-subtitle>
                     </v-list-item-content>
@@ -152,7 +152,7 @@
                       <v-list-item-icon>
                         <v-tooltip top>
                           <template v-slot:activator="{ on }">
-                            <v-icon left v-on="on">{{getIcon('mdi-desktop-tower')}}</v-icon>
+                            <v-icon id='mdi-descktop-tower' left v-on="on">{{getIcon('mdi-desktop-tower')}}</v-icon>
                           </template>
                           <span>IP address</span>
                         </v-tooltip>
@@ -178,7 +178,7 @@
                       </v-list-item-content>
                       <v-list-item-action v-if="editMode">
                         <v-btn icon @click="removeContactMech(ipAddress)">
-                          <v-icon color="red">{{getIcon('mdi-delete')}}</v-icon>
+                          <v-icon id='mdi-delete' color="red">{{getIcon('mdi-delete')}}</v-icon>
                         </v-btn>
                       </v-list-item-action>
                     </v-list-item>
@@ -187,7 +187,7 @@
                     <v-list-item-icon></v-list-item-icon>
                     <v-list-item-content>
                       <v-list-item-subtitle @click="addIpAddress">
-                        <v-icon left>{{getIcon('mdi-plus-circle')}}</v-icon>
+                        <v-icon id='mdi-plus-circle' left>{{getIcon('mdi-plus-circle')}}</v-icon>
                         Add IP address
                       </v-list-item-subtitle>
                     </v-list-item-content>
@@ -199,7 +199,7 @@
                       <v-list-item-icon>
                         <v-tooltip top>
                           <template v-slot:activator="{ on }">
-                            <v-icon left v-on="on">{{getIcon('mdi-at')}}</v-icon>
+                            <v-icon id='mdi-at' left v-on="on">{{getIcon('mdi-at')}}</v-icon>
                           </template>
                           <span>Domain Name</span>
                         </v-tooltip>
@@ -225,7 +225,7 @@
                       </v-list-item-content>
                       <v-list-item-action v-if="editMode">
                         <v-btn icon @click="removeContactMech(domainName)">
-                          <v-icon color="red">{{getIcon('mdi-delete')}}</v-icon>
+                          <v-icon id='mdi-delete' color="red">{{getIcon('mdi-delete')}}</v-icon>
                         </v-btn>
                       </v-list-item-action>
                     </v-list-item>
@@ -234,7 +234,7 @@
                     <v-list-item-icon></v-list-item-icon>
                     <v-list-item-content>
                       <v-list-item-subtitle @click="addDomainName">
-                        <v-icon left>{{getIcon('mdi-plus-circle')}}</v-icon>
+                        <v-icon id='mdi-plus-circle' left>{{getIcon('mdi-plus-circle')}}</v-icon>
                         Add domain name
                       </v-list-item-subtitle>
                     </v-list-item-content>
@@ -246,7 +246,7 @@
                       <v-list-item-icon>
                         <v-tooltip top>
                           <template v-slot:activator="{ on }">
-                            <v-icon left v-on="on">{{getIcon('mdi-file-cloud')}}</v-icon>
+                            <v-icon id='mdi-file-cloud' left v-on="on">{{getIcon('mdi-file-cloud')}}</v-icon>
                           </template>
                           <span>LDAP address</span>
                         </v-tooltip>
@@ -285,7 +285,7 @@
                       </v-list-item-content>
                       <v-list-item-action v-if="editMode">
                         <v-btn icon @click="removeContactMech(ldapAddress)">
-                          <v-icon color="red">{{getIcon('mdi-delete')}}</v-icon>
+                          <v-icon id='mdi-delete' color="red">{{getIcon('mdi-delete')}}</v-icon>
                         </v-btn>
                       </v-list-item-action>
                     </v-list-item>
@@ -294,7 +294,7 @@
                     <v-list-item-icon></v-list-item-icon>
                     <v-list-item-content>
                       <v-list-item-subtitle @click="addLdapAddress">
-                        <v-icon left>{{getIcon('mdi-plus-circle')}}</v-icon>
+                        <v-icon id='mdi-plus-circle' left>{{getIcon('mdi-plus-circle')}}</v-icon>
                         Add LDAP address
                       </v-list-item-subtitle>
                     </v-list-item-content>
@@ -310,7 +310,7 @@
                     <v-list-item-icon>
                       <v-tooltip top>
                         <template v-slot:activator="{ on }">
-                          <v-icon left v-on="on">{{getIcon('mdi-map-marker')}}</v-icon>
+                          <v-icon id='mdi-map-marker' left v-on="on">{{getIcon('mdi-map-marker')}}</v-icon>
                         </template>
                         <span>Postal address</span>
                       </v-tooltip>
@@ -380,7 +380,7 @@
                     </v-list-item-content>
                     <v-list-item-action v-if="editMode">
                       <v-btn icon @click="removeContactMech(postalAddress)">
-                        <v-icon color="red">{{getIcon('mdi-delete')}}</v-icon>
+                        <v-icon id='mdi-delete' color="red">{{getIcon('mdi-delete')}}</v-icon>
                       </v-btn>
                     </v-list-item-action>
                   </v-list-item>
@@ -388,7 +388,7 @@
                     <v-list-item-icon></v-list-item-icon>
                     <v-list-item-content>
                       <v-list-item-subtitle sel-label="addPostalAddr" @click="addPostalAddress">
-                        <v-icon left>{{getIcon('mdi-plus-circle')}}</v-icon>
+                        <v-icon id='mdi-plus-circle' left>{{getIcon('mdi-plus-circle')}}</v-icon>
                         Add postal address
                       </v-list-item-subtitle>
                     </v-list-item-content>
@@ -400,7 +400,7 @@
                 <v-list-item-icon>
                   <v-tooltip top>
                     <template v-slot:activator="{ on }">
-                      <v-icon left v-on="on">{{getIcon('mdi-note-text')}}</v-icon>
+                      <v-icon id='mdi-note-text' left v-on="on">{{getIcon('mdi-note-text')}}</v-icon>
                     </template>
                     <span>Internal note</span>
                   </v-tooltip>
@@ -426,7 +426,7 @@
                 </v-list-item-content>
                 <v-list-item-action v-if="editMode">
                       <v-btn icon @click="removeContactMech(internalNote)">
-                        <v-icon color="red">{{getIcon('mdi-delete')}}</v-icon>
+                        <v-icon id='mdi-delete' color="red">{{getIcon('mdi-delete')}}</v-icon>
                       </v-btn>
                     </v-list-item-action>
               </v-list-item>
@@ -434,7 +434,7 @@
                     <v-list-item-icon></v-list-item-icon>
                     <v-list-item-content>
                       <v-list-item-subtitle @click="addInternalPartyId">
-                        <v-icon left>{{getIcon('mdi-plus-circle')}}</v-icon>
+                        <v-icon id='mdi-plus-circle' left>{{getIcon('mdi-plus-circle')}}</v-icon>
                         Add internal note
                       </v-list-item-subtitle>
                     </v-list-item-content>
@@ -446,7 +446,7 @@
                   <v-list-item-icon>
                     <v-tooltip top>
                       <template v-slot:activator="{ on }">
-                        <v-icon left v-on="on">{{getIcon('mdi-web')}}</v-icon>
+                        <v-icon id='mdi-web' left v-on="on">{{getIcon('mdi-web')}}</v-icon>
                       </template>
                       <span>Web address</span>
                     </v-tooltip>
@@ -485,7 +485,7 @@
                   </v-list-item-content>
                     <v-list-item-action v-if="editMode">
                         <v-btn icon @click="removeContactMech(webAddress)">
-                          <v-icon color="red">{{getIcon('mdi-delete')}}</v-icon>
+                          <v-icon id='mdi-delete' color="red">{{getIcon('mdi-delete')}}</v-icon>
                         </v-btn>
                       </v-list-item-action>
                 </v-list-item>
@@ -494,7 +494,7 @@
                     <v-list-item-icon></v-list-item-icon>
                     <v-list-item-content>
                       <v-list-item-subtitle @click="addWebAddress">
-                        <v-icon left>{{getIcon('mdi-plus-circle')}}</v-icon>
+                        <v-icon id='mdi-plus-circle' left>{{getIcon('mdi-plus-circle')}}</v-icon>
                         Add web address
                       </v-list-item-subtitle>
                     </v-list-item-content>
@@ -505,7 +505,7 @@
                 <v-list-item-icon>
                   <v-tooltip top>
                     <template v-slot:activator="{ on }">
-                      <v-icon left v-on="on">{{getIcon('mdi-server')}}</v-icon>
+                      <v-icon id='mdi-server' left v-on="on">{{getIcon('mdi-server')}}</v-icon>
                     </template>
                     <span>FTP server</span>
                   </v-tooltip>
@@ -581,7 +581,7 @@
                 </v-list-item-content>
                   <v-list-item-action v-if="editMode">
                       <v-btn icon @click="removeContactMech(ftpAddress)">
-                        <v-icon color="red">{{getIcon('mdi-delete')}}</v-icon>
+                        <v-icon id='mdi-delete' color="red">{{getIcon('mdi-delete')}}</v-icon>
                       </v-btn>
                     </v-list-item-action>
               </v-list-item>
@@ -589,7 +589,7 @@
                 <v-list-item-icon></v-list-item-icon>
                 <v-list-item-content>
                   <v-list-item-subtitle @click="addFtpAddress">
-                    <v-icon left>{{getIcon('mdi-plus-circle')}}</v-icon>
+                    <v-icon id='mdi-plus-circle' left>{{getIcon('mdi-plus-circle')}}</v-icon>
                     Add FTP address
                   </v-list-item-subtitle>
                 </v-list-item-content>

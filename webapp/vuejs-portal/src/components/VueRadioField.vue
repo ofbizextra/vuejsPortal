@@ -7,7 +7,7 @@
         </v-radio>
         <v-tooltip bottom v-if="value">
           <template v-slot:activator="{ on }">
-            <v-btn icon small v-on="on" v-on:click="clear"><v-icon>mdi-close</v-icon></v-btn>
+            <v-btn icon small v-on="on" v-on:click="clear"><v-icon id='mdi-close'>mdi-close</v-icon></v-btn>
           </template>
           <span>Clear</span>
         </v-tooltip>

@@ -25,7 +25,7 @@
     >
       <v-tooltip bottom>
         <template v-slot:activator="{ on }">
-          <v-icon v-if="haveIcon" v-on="on">{{getIcon(src)}}</v-icon>
+          <v-icon v-if="haveIcon" v-on="on" :id="src">{{getIcon(src)}}</v-icon>
         </template>
         <span>{{imgTitle}}</span>
       </v-tooltip>
@@ -46,7 +46,7 @@
     >
       <v-tooltip bottom>
         <template v-slot:activator="{ on }">
-          <v-icon v-if="haveIcon" v-on="on">{{getIcon(src)}}</v-icon>
+          <v-icon v-if="haveIcon" v-on="on" :id="src">{{getIcon(src)}}</v-icon>
         </template>
         <span>{{imgTitle}}</span>
       </v-tooltip>
@@ -68,7 +68,7 @@
     >
       <v-tooltip bottom>
         <template v-slot:activator="{ on }">
-          <v-icon v-if="haveIcon" v-on="on">{{getIcon(src)}}</v-icon>
+          <v-icon v-if="haveIcon" v-on="on" :id="src">{{getIcon(src)}}</v-icon>
         </template>
         <span>{{imgTitle}}</span>
       </v-tooltip>
@@ -89,7 +89,7 @@
     >
       <v-tooltip bottom>
         <template v-slot:activator="{ on }">
-          <v-icon v-if="haveIcon" v-on="on">{{getIcon(src)}}</v-icon>
+          <v-icon v-if="haveIcon" v-on="on" :id="src">{{getIcon(src)}}</v-icon>
         </template>
         <span>{{imgTitle}}</span>
       </v-tooltip>
@@ -109,7 +109,7 @@
     >
       <v-tooltip bottom>
         <template v-slot:activator="{ on }">
-          <v-icon v-if="haveIcon" v-on="on">{{getIcon(src)}}</v-icon>
+          <v-icon v-if="haveIcon" v-on="on" :id="src">{{getIcon(src)}}</v-icon>
         </template>
         <span>{{imgTitle}}</span>
       </v-tooltip>
