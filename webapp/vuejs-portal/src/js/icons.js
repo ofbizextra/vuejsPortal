@@ -1,6 +1,8 @@
 import {
   mdiArrowCollapse,
   mdiArrowExpand,
+  mdiArrowCollapseUp,
+  mdiArrowExpandDown,
   mdiArrowCollapseLeft,
   mdiArrowCollapseRight,
   mdiArrowLeft,
@@ -33,6 +35,8 @@ import {
 export default {
   'mdi-arrow-collapse': mdiArrowCollapse,
   'mdi-arrow-expand': mdiArrowExpand,
+  'mdi-arrow-collapse-up': mdiArrowCollapseUp,
+  'mdi-arrow-expand-down': mdiArrowExpandDown,
   'mdi-arrow-collapse-left': mdiArrowCollapseLeft,
   'mdi-arrow-collapse-right': mdiArrowCollapseRight,
   'mdi-arrow-left': mdiArrowLeft,

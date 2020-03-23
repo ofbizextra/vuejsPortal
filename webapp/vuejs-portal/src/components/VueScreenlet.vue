@@ -36,8 +36,8 @@
     data() {
       return {
         constants: constants,
-        mdiArrowCollapse: icons['mdi-arrow-collapse'],
-        mdiArrowExpand: icons['mdi-arrow-expand']
+        mdiArrowCollapseUp: icons['mdi-arrow-collapse-up'],
+        mdiArrowExpandDown: icons['mdi-arrow-expand-down']
       }
     },
     computed: {
@@ -51,7 +51,7 @@
         return this.collapsibleStatus(this.id)
       },
       collapseIcon() {
-        return this.collapsed ? this.mdiArrowExpand : this.mdiArrowCollapse
+        return this.collapsed ? this.mdiArrowExpandDown : this.mdiArrowCollapseUp
       },
       collapseToolTip() {
         return this.props.attributes.hasOwnProperty('collapseToolTip') ? this.props.attributes.collapseToolTip : ''
