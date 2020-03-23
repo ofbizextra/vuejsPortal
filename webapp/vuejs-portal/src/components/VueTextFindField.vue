@@ -1,17 +1,17 @@
 <template>
   <v-row class="ma-0 pa-0">
-    <v-select class="col-4 mt-0 mb-0" :items="items" v-if="data.opEquals" v-model="valueOp" hide-details dense>
+    <v-select class="col-4 mt-0 mb-0" :items="items" v-if="opEquals" v-model="valueOp" hide-details dense>
     </v-select>
     <v-tooltip top>
       <template v-slot:activator="{ on }">
         <v-text-field class="col-6 mt-0 mb-0"
                       :label="fieldTitle"
-                      v-bind:name="data.name"
-                      v-bind:size="data.size"
+                      v-bind:name="name"
+                      v-bind:size="size"
                       v-model="value"
-                      v-bind:maxlength="data.maxlength"
-                      v-bind:autocomplete="data.autocomplete"
-                      v-bind:tabindex="data.tabindex"
+                      v-bind:maxlength="maxlength"
+                      v-bind:autocomplete="autocomplete"
+                      v-bind:tabindex="tabindex"
                       hide-details
                       dense
                       v-on="fieldHelpText ? on : null"
@@ -19,8 +19,8 @@
       </template>
       <span>{{fieldHelpText}}</span>
     </v-tooltip>
-      <input v-if="data.hideIgnoreCase" type="hidden" :name="data.name + '_ic'" :value="data.ignCase ? 'Y' : ''"/>
-      <v-checkbox class="col-2 mt-0 mb-0" v-else type="checkbox" label="ignore case" :name="data.name + '_ic'" v-model="valueIc" hide-details dense/>
+      <input v-if="hideIgnoreCase" type="hidden" :name="name + '_ic'" :value="ignCase"/>
+      <v-checkbox class="col-2 mt-0 mb-0" v-else type="checkbox" label="ignore case" :name="name + '_ic'" v-model="valueIc" hide-details dense/>
   </v-row>
 </template>
 
@@ -42,34 +42,69 @@
       }
     },
     computed: {
-      data() {
-        let data = this.props.attributes
-        delete data['value']
-        if (data.className || (data.alert && data.alert === true)) {
-          data.class = data.className ? data.className : '' + ' ' + data.alert === true ? 'alert' : ''
+      autocomplete() {
+        return this.props.attributes.hasOwnProperty('autocomplete') ? this.props.attributes.autocomplete : ''
+      },
+      defaultOption() {
+        return this.props.attributes.hasOwnProperty('defaultOption') ? this.props.attributes.defaultOption : ''
+      },
+      fieldTitle() {
+        return this.props.attributes.hasOwnProperty('fieldTitle') ? this.props.attributes.fieldTitle : ''
+      },
+      fieldHelpText() {
+        return this.props.attributes.hasOwnProperty('fieldHelpText') ? this.props.attributes.fieldHelpText : ''
+      },
+      formName() {
+        return this.props.attributes.hasOwnProperty('formName') ? this.props.attributes.formName : ''
+      },
+      hideIgnoreCase() {
+        return this.props.attributes.hasOwnProperty('hideIgnoreCase') ? this.props.attributes.hideIgnoreCase : false
+      },
+      ignCase() {
+        return this.props.attributes.hasOwnProperty('ignCase') ? 'Y' : ''
+      },
+      maxlength() {
+        return this.props.attributes.hasOwnProperty('maxlength') ? this.props.attributes.maxlength : ''
+      },
+      name() {
+        return this.props.attributes.hasOwnProperty('name') ? this.props.attributes.name : ''
+      },
+      opEquals() {
+        return this.props.attributes.hasOwnProperty('opEquals') ? this.props.attributes.opEquals : false
+      },
+      ...mapGetters({
+        getForm: 'form/form',
+        getDataFromForm: 'form/fieldInForm'
+      }),
+      titleStyle() {
+        return this.props.attributes.hasOwnProperty('titleStyle') ? this.props.attributes.titleStyle : ''
+      },
+      size() {
+        return this.props.attributes.hasOwnProperty('size') ? this.props.attributes.size : ''
+      },
+      storeFormIc() {
+        return {
+          formId: this.formName,
+          key: this.name + '_ic',
+          value: this.ignCase ? 'Y' : 'N'
         }
-        return data
       },
       storeForm() {
         return {
-          formId: this.props.attributes.formName,
-          key: this.props.attributes.name,
+          formId: this.formName,
+          key: this.name,
           value: this.props.attributes.value ? this.props.attributes.value : ''
         }
       },
       storeFormOp() {
         return {
-          formId: this.props.attributes.formName,
-          key: this.props.attributes.name + '_op',
-          value: this.props.attributes.defaultOption ? this.props.attributes.defaultOption : ''
+          formId: this.formName,
+          key: this.name + '_op',
+          value: this.defaultOption
         }
       },
-      storeFormIc() {
-        return {
-          formId: this.props.attributes.formName,
-          key: this.props.attributes.name + '_ic',
-          value: this.props.attributes.ignCase ? 'Y' : 'N'
-        }
+      tabindex() {
+        return this.props.attributes.hasOwnProperty('tabindex') ? this.props.attributes.tabindex : ''
       },
       value: {
         get() {
@@ -77,8 +112,8 @@
         },
         set(value) {
           this.$store.dispatch('form/setFieldToForm', {
-            formId: this.props.attributes.formName,
-            key: this.props.attributes.name,
+            formId: this.formName,
+            key: this.name,
             value: value
           })
         }
@@ -89,8 +124,8 @@
         },
         set(value) {
           this.$store.dispatch('form/setFieldToForm', {
-            formId: this.props.attributes.formName,
-            key: this.props.attributes.name + '_op',
+            formId: this.formName,
+            key: this.name + '_op',
             value: value
           })
         }
@@ -101,43 +136,24 @@
         },
         set(value) {
           this.$store.dispatch('form/setFieldToForm', {
-            formId: this.props.attributes.formName,
-            key: this.props.attributes.name + '_ic',
+            formId: this.formName,
+            key: this.name + '_ic',
             value: value ? 'Y' : 'N'
           })
         }
-      },
-      opEquals() {
-        return this.data.hasOwnProperty('opEquals') ? this.data.opEquals : false
-      },
-      titleStyle() {
-        return this.data.hasOwnProperty('titleStyle') ? this.data.titleStyle : ''
-      },
-      hideIgnoreCase() {
-        return this.data.hasOwnProperty('hideIgnoreCase') ? this.data.hideIgnoreCase : false
-      },
-      ...mapGetters({
-        getForm: 'form/form',
-        getDataFromForm: 'form/fieldInForm'
-      }),
-      fieldTitle() {
-        return this.data.hasOwnProperty('fieldTitle') ? this.data.fieldTitle : ''
-      },
-      fieldHelpText() {
-        return this.data.hasOwnProperty('fieldHelpText') ? this.data.fieldHelpText : ''
-      }
-    },
-    watch: {
-      data: function () {
-        this.$store.dispatch('form/setFieldToForm', this.storeForm)
-        this.$store.dispatch('form/setFieldToForm', this.storeFormOp)
-        this.$store.dispatch('form/setFieldToForm', this.storeFormIc)
       }
     },
     created() {
       this.$store.dispatch('form/setFieldToForm', this.storeForm)
       this.$store.dispatch('form/setFieldToForm', this.storeFormOp)
       this.$store.dispatch('form/setFieldToForm', this.storeFormIc)
+    },
+    watch: {
+      props: function () {
+        this.$store.dispatch('form/setFieldToForm', this.storeForm)
+        this.$store.dispatch('form/setFieldToForm', this.storeFormOp)
+        this.$store.dispatch('form/setFieldToForm', this.storeFormIc)
+      }
     }
   }
 </script>
