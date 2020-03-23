@@ -1,5 +1,5 @@
 <template>
-  <v-navigation-drawer id="app-menu" mini-variant expand-on-hover app>
+  <v-navigation-drawer id="app-menu" :value="true" mini-variant mini-variant-width="86" mobile-break-point="0" expand-on-hover app>
     <v-list-item>
       <v-list-item-content>
         <v-list-item-title class="title">Ofbiz</v-list-item-title>
@@ -21,7 +21,7 @@
       <v-list>
         <v-list-item>
           <v-list-item-icon>
-            <v-icon>mdi-theme-light-dark</v-icon>
+            <v-icon>{{getIcon('mdi-theme-light-dark')}}</v-icon>
           </v-list-item-icon>
           <v-list-item-content>
             <v-list-item-title>
@@ -32,7 +32,7 @@
             <v-switch v-model="darkMode"></v-switch>
           </v-list-item-action>
         </v-list-item>
-        <v-list-group dense prepend-icon="mdi-palette">
+        <v-list-group dense :prepend-icon="getIcon('mdi-palette')">
           <template v-slot:activator>
             <v-list-item-title>Colors</v-list-item-title>
           </template>
@@ -123,6 +123,7 @@
 <script>
   import {mapGetters} from 'vuex'
   import constants from '../js/constants'
+  import icons from '../js/icons'
 
   export default {
     name: "AppMenu",
@@ -276,6 +277,9 @@
           }
           return `/screen/${webapp}`
         }
+      },
+      getIcon(icon) {
+        return icons.hasOwnProperty(icon) ? icons[icon] : null
       }
     },
     mounted() {

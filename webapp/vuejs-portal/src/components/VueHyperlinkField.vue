@@ -11,7 +11,7 @@
     >
       <v-tooltip bottom>
         <template v-slot:activator="{ on }">
-          <v-icon v-if="haveIcon" v-on="on">{{src}}</v-icon>
+          <v-icon v-if="haveIcon" v-on="on">{{getIcon(src)}}</v-icon>
         </template>
         <span>{{imgTitle}}</span>
       </v-tooltip>
@@ -26,7 +26,7 @@
     >
       <v-tooltip bottom>
         <template v-slot:activator="{ on }">
-          <v-icon v-if="haveIcon" v-on="on">{{src}}</v-icon>
+          <v-icon v-if="haveIcon" v-on="on">{{getIcon(src)}}</v-icon>
         </template>
         <span>{{imgTitle}}</span>
       </v-tooltip>
@@ -46,7 +46,7 @@
     >
       <v-tooltip bottom>
         <template v-slot:activator="{ on }">
-          <v-icon v-if="haveIcon" v-on="on">{{src}}</v-icon>
+          <v-icon v-if="haveIcon" v-on="on">{{getIcon(src)}}</v-icon>
         </template>
         <span>{{imgTitle}}</span>
       </v-tooltip>
@@ -58,6 +58,7 @@
 
 <script>
   import {mapGetters} from 'vuex'
+  import icons from '../js/icons'
 
   export default {
     name: "VueHyperlinkField",
@@ -147,6 +148,9 @@
       }
     },
     methods: {
+      getIcon(icon) {
+        return icons.hasOwnProperty(icon) ? icons[icon] : null
+      },
       resolveEvent(updateArea) {
         switch (updateArea.eventType) {
           case 'post':

@@ -81,7 +81,7 @@ import AppCpt from './components/AppCpt'
 
 import ContactMech from './components/platformSpecific/ContactMech'
 import store from './store'
-import vuetify from './plugins/vuetify';
+import vuetify from '@/plugins/vuetify';
 
 Vue.use(VueResource)
 Vue.use(VueRouter)

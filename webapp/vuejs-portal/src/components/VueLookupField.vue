@@ -19,9 +19,9 @@
         </template>
         <span>{{fieldHelpText}}</span>
       </v-tooltip>
-      <v-btn icon @click.stop="showModal" class="d-inline-flex"><v-icon>mdi-arrow-expand</v-icon></v-btn>
+      <v-btn icon @click.stop="showModal" class="d-inline-flex"><v-icon>{{getIcon('mdi-arrow-expand')}}</v-icon></v-btn>
       <v-dialog v-model="dialogStatus">
-        <v-btn fab fixed top right @click.stop="closeModal"><v-icon>mdi-close</v-icon></v-btn>
+        <v-btn fab fixed top right @click.stop="closeModal"><v-icon>{{getIcon('mdi-close')}}</v-icon></v-btn>
         <v-card class="pa-1">
           <v-card-text class="pa-0">
             <vue-container :props="{attributes: {id: name + '_lookup_modalContent'}}"
@@ -38,6 +38,7 @@
 <script>
   import {mapGetters} from 'vuex'
   import _ from 'lodash'
+  import icons from '../js/icons'
 
   export default {
     name: "VueLookupField",
@@ -206,6 +207,9 @@
       debounceUpdateWordList: _.debounce(function () {
         this.updateWordList()
       }, 250),
+      getIcon(icon) {
+        return icons.hasOwnProperty(icon) ? icons[icon] : null
+      },
       updateWordList() {
         this.$store.dispatch('form/setFieldToForm', {
           formId: this.props.attributes.formName,

@@ -1,8 +1,8 @@
 <template>
-  <v-menu bottom left v-if="inline" transition="scale-transition" origin="center center">
+  <v-menu bottom left v-if="!inline" transition="scale-transition" origin="center center">
     <template v-slot:activator="{ on }">
       <v-btn icon v-on="on">
-        <v-icon>mdi-dots-vertical</v-icon>
+        <v-icon>{{getIcon('mdi-dots-vertical')}}</v-icon>
       </v-btn>
     </template>
     <v-list dense>
@@ -24,6 +24,7 @@
 
 <script>
   import constants from '../js/constants'
+  import icons from '../js/icons'
 
   export default {
     name: "VueNavMenu",
@@ -46,7 +47,7 @@
         return this.props.attributes.hasOwnProperty('id') ? this.props.attributes.id : ''
       },
       inline() {
-        return this.children.length >= this.maxInline
+        return this.children.length <= this.maxInline
       },
       style() {
         return this.props.attributes.hasOwnProperty('style') ? this.props.attributes.style : ''
@@ -55,7 +56,11 @@
         return this.props.attributes.hasOwnProperty('title') ? this.props.attributes.title : ''
       },
     },
-    methods: {}
+    methods: {
+      getIcon(icon) {
+        return icons.hasOwnProperty(icon) ? icons[icon] : null
+      }
+    }
   }
 </script>
 

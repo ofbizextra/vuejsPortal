@@ -1,11 +1,11 @@
 <template>
   <div id="vue-next-prev" :class="paginateStyle" v-if="show">
     <v-toolbar dark color="secondary" class="mb-1" dense text-center>
-      <v-btn icon v-on:click.prevent="first" class="d-inline"><v-icon>mdi-arrow-collapse-left</v-icon></v-btn>
-      <v-btn icon v-on:click.prevent="previous" class="d-inline"><v-icon>mdi-arrow-left</v-icon></v-btn>
+      <v-btn icon v-on:click.prevent="first" class="d-inline"><v-icon>{{getIcon('mdi-arrow-collapse-left')}}</v-icon></v-btn>
+      <v-btn icon v-on:click.prevent="previous" class="d-inline"><v-icon>{{getIcon('mdi-arrow-left')}}</v-icon></v-btn>
       <v-select v-model="viewIndex" :items="indexList" hide-details prefix="Page : " class="d-inline-flex"></v-select>
-      <v-btn icon v-on:click.prevent="next" class="d-inline"><v-icon>mdi-arrow-right</v-icon></v-btn>
-      <v-btn icon v-on:click.prevent="last" class="d-inline"><v-icon>mdi-arrow-collapse-right</v-icon></v-btn>
+      <v-btn icon v-on:click.prevent="next" class="d-inline"><v-icon>{{getIcon('mdi-arrow-right')}}</v-icon></v-btn>
+      <v-btn icon v-on:click.prevent="last" class="d-inline"><v-icon>{{getIcon('mdi-arrow-collapse-right')}}</v-icon></v-btn>
       <v-select v-model="viewSize" :items="viewSizeList" hide-details prefix="Items per page : " class="d-inline-flex"></v-select>
       <v-label class=" col-2">{{commonDisplaying}}</v-label>
     </v-toolbar>
@@ -13,6 +13,8 @@
 </template>
 
 <script>
+  import icons from '../js/icons'
+
   export default {
     name: "VueNextPrev",
     props: ['props', 'updateStore'],
@@ -100,6 +102,9 @@
     methods: {
       first() {
         this.$store.dispatch('data/setWatcherAttributes', {watcherName: this.paginateTarget, params: {VIEW_INDEX_1: 0}})
+      },
+      getIcon(icon) {
+        return icons.hasOwnProperty(icon) ? icons[icon] : null
       },
       last() {
         this.$store.dispatch('data/setWatcherAttributes', {watcherName: this.paginateTarget, params: {VIEW_INDEX_1: this.numberOfPages - 1}})

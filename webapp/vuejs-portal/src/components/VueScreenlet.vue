@@ -27,6 +27,7 @@
 
 <script>
   import constants from '../js/constants'
+  import icons from '../js/icons'
   import {mapGetters} from 'vuex'
 
   export default {
@@ -34,21 +35,26 @@
     props: ['props', 'updateStore'],
     data() {
       return {
-        constants: constants
+        constants: constants,
+        mdiArrowCollapse: icons['mdi-arrow-collapse'],
+        mdiArrowExpand: icons['mdi-arrow-expand']
       }
     },
     computed: {
       ...mapGetters({
         collapsibleStatus: 'ui/collapsibleStatus'
       }),
+      attributesId() {
+        return this.props.attributes.hasOwnProperty('id') ? this.props.attributes.id : ''
+      },
       bodyChildren() {
-        return this.props.children.filter(component => !['Menu', 'ScreenletSubWidget'].includes(component.name)) // 'ScreenletSubWidget'
+        return this.props.children.filter(component => !['Menu', 'ScreenletSubWidget'].includes(component.name))
       },
       collapsed() {
-        return this.collapsibleStatus(this.props.attributes.id)
+        return this.collapsibleStatus(this.id)
       },
       collapseIcon() {
-        return this.collapsed ? 'mdi-arrow-expand-down' : 'mdi-arrow-collapse-up'
+        return this.collapsed ? this.mdiArrowExpand : this.mdiArrowCollapse
       },
       collapseToolTip() {
         return this.props.attributes.hasOwnProperty('collapseToolTip') ? this.props.attributes.collapseToolTip : ''
@@ -66,7 +72,7 @@
         return this.props.children.filter(component => ['Menu'].includes(component.name))
       },
       id() {
-        return this.props.attributes.hasOwnProperty('id') ? this.props.attributes.id : ''
+        return `${this.attributesId}-${this.name}`
       },
       name() {
         return this.props.attributes.hasOwnProperty('name') ? this.props.attributes.name : ''
@@ -91,9 +97,6 @@
       tabMenu() {
         return this.props.attributes.hasOwnProperty('tabMenu') ? this.props.attributes.tabMenu : null
       },
-      templateId() {
-        return `${this.id}-${this.name}`
-      },
       title() {
         return this.props.attributes.hasOwnProperty('title') ? this.props.attributes.title : ''
       },
@@ -113,7 +116,7 @@
     created() {
       if (this.collapsible) {
         this.$store.dispatch('ui/setCollapsibleStatus', {
-          areaId: this.templateId,
+          areaId: this.id,
           areaTarget: this.collapsed
         })
       }
