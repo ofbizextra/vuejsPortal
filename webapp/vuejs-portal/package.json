@@ -53,6 +53,6 @@
     "uglifyjs-webpack-plugin": "^2.2.0",
     "vue-cli-plugin-vuetify": "^1.1.1",
     "vue-template-compiler": "^2.6.10",
-    "vuetify-loader": "^1.2.2"
+    "vuetify-loader": "^1.4.3"
   }
 }
