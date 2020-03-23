@@ -36,11 +36,6 @@
       ).then(
         response => {
           this.screen = response.body
-        },
-        error => {
-          if (this.$debug) {
-            console.log(error.body)
-          }
         }
       )
     },
@@ -56,11 +51,6 @@
         ).then(
           response => {
             this.screen = response.body
-          },
-          error => {
-            if (this.$debug) {
-              console.log(error.body)
-            }
           }
         )
       }
