@@ -63,7 +63,6 @@
     props: ['props', 'updateStore'],
     data() {
       return {
-        // dateTime: '',
         date: '',
         time: '',
         onDate: false,
@@ -73,137 +72,33 @@
       }
     },
     computed: {
-      data() {
-        let data = this.props.attributes
-        //delete data['value']
-        if (data.className || (data.alert && data.alert === true)) {
-          data.class = data.className ? data.className : '' + ' ' + data.alert === true ? 'alert' : ''
-        }
-        return data
+      action() {
+        return this.props.attributes.hasOwnProperty('action') ? this.props.attributes.action : null
       },
-      storeForm() {
-        return {
-          formId: this.formName,
-          key: this.name,
-          value: this.props.attributes.value ? this.props.attributes.value : ''
-        }
-      },
-      // valueStore: {
-      //   get() {
-      //     return this.getDataFromForm(this.storeForm)
-      //   },
-      //   set(value) {
-      //
-      //   }
-      // },
       ...mapGetters({
         getForm: 'form/form',
         getDataFromForm: 'form/fieldInForm'
       }),
-      datetime() {
-        return this.date + ' ' + this.time
-      },
-      action() {
-        return this.data.hasOwnProperty('action') ? this.data.action : null
-      },
       alert() {
-        return this.data.hasOwnProperty('alert') ? this.data.alert : null
+        return this.props.attributes.hasOwnProperty('alert') ? this.props.attributes.alert : null
       },
       amSelected() {
-        return this.data.hasOwnProperty('amSelected') ? this.data.amSelected : ''
+        return this.props.attributes.hasOwnProperty('amSelected') ? this.props.attributes.amSelected : ''
       },
       ampmName() {
-        return this.data.hasOwnProperty('ampmName') ? this.data.ampmName : ''
+        return this.props.attributes.hasOwnProperty('ampmName') ? this.props.attributes.ampmName : ''
       },
       class() {
-        return this.data.hasOwnProperty('class') ? this.data.class : ''
+        return this.props.attributes.hasOwnProperty('class') ? this.props.attributes.class : ''
       },
       className() {
-        return this.data.hasOwnProperty('className') ? this.data.className : ''
+        return this.props.attributes.hasOwnProperty('className') ? this.props.attributes.className : ''
       },
       classString() {
-        return this.data.hasOwnProperty('classString') ? this.data.classString : ''
+        return this.props.attributes.hasOwnProperty('classString') ? this.props.attributes.classString : ''
       },
       compositeType() {
-        return this.data.hasOwnProperty('compositeType') ? this.data.compositeType : ''
-      },
-      dateType() {
-        return this.data.hasOwnProperty('datetype') ? this.data.datetype : 'default'
-      },
-      defaultDateTimeString() {
-        return this.data.hasOwnProperty('defaultDateTimeString') ? this.data.defaultDateTimeString : ''
-      },
-      event() {
-        return this.data.hasOwnProperty('event') ? this.data.event : ''
-      },
-      formName() {
-        return this.data.hasOwnProperty('formName') ? this.data.formName : ''
-      },
-      hour1() {
-        return this.data.hasOwnProperty('hour1') ? this.data.hour1 : ''
-      },
-      hour2() {
-        return this.data.hasOwnProperty('hour2') ? this.data.hour2 : ''
-      },
-      id() {
-        return this.data.hasOwnProperty('id') ? this.data.id : ''
-      },
-      isTwelveHour() {
-        return this.data.hasOwnProperty('isTwelveHour') && this.data.isTwelveHour === 'Y' ? this.data.isTwelveHour : false
-      },
-      localizedIconTitle() {
-        return this.data.hasOwnProperty('localizedIconTitle') ? this.data.localizedIconTitle : ''
-      },
-      mask() {
-        return this.data.hasOwnProperty('mask') ? this.data.mask : ''
-      },
-      maxlength() {
-        return this.data.hasOwnProperty('maxlength') ? this.data.maxlength : ''
-      },
-      minutes() {
-        return this.data.hasOwnProperty('minutes') ? this.data.minutes : ''
-      },
-      name() {
-        return this.data.hasOwnProperty('name') ? this.data.name : ''
-      },
-      pmSelected() {
-        return this.data.hasOwnProperty('pmSelected') ? this.data.pmSelected : ''
-      },
-      required() {
-        return this.data.hasOwnProperty('required') ? this.data.required : {}
-      },
-      shortDateInput() {
-        return this.data.hasOwnProperty('shortDateInput') ? this.data.shortDateInput : ''
-      },
-      size() {
-        return this.data.hasOwnProperty('size') ? this.data.size : ''
-      },
-      step() {
-        return this.data.hasOwnProperty('step') ? this.data.step : ''
-      },
-      tabindex() {
-        return this.data.hasOwnProperty('tabindex') ? this.data.tabindex : ''
-      },
-      timeDropdown() {
-        return this.data.hasOwnProperty('timeDropdown') ? this.data.timeDropdown : ''
-      },
-      timeDropdownParamName() {
-        return this.data.hasOwnProperty('timeDropdownParamName') ? this.data.timeDropdownParamName : ''
-      },
-      timeHourName() {
-        return this.data.hasOwnProperty('timeHourName') ? this.data.timeHourName : ''
-      },
-      timeMinutesName() {
-        return this.data.hasOwnProperty('timeMinutesName') ? this.data.timeMinutesName : ''
-      },
-      timeValues() {
-        return this.data.hasOwnProperty('timeValues') ? this.data.timeValues : ''
-      },
-      title() {
-        return this.data.hasOwnProperty('title') ? this.data.title : ''
-      },
-      value() {
-        return this.data.hasOwnProperty('value') ? this.data.value.split('.')[0] : ''
+        return this.props.attributes.hasOwnProperty('compositeType') ? this.props.attributes.compositeType : ''
       },
       config() {
         return {
@@ -215,11 +110,65 @@
       },
       controls() {
         return {
-          required: this.data.hasOwnProperty('required') && this.data.required.hasOwnProperty('requiredField') && this.data.required.requiredField === "true"
+          required: this.props.attributes.hasOwnProperty('required') && this.props.attributes.required.hasOwnProperty('requiredField') && this.props.attributes.required.requiredField === "true"
         }
+      },
+      datetime() {
+        return this.date + ' ' + this.time
+      },
+      dateType() {
+        return this.props.attributes.hasOwnProperty('datetype') ? this.props.attributes.datetype : 'default'
+      },
+      defaultDateTimeString() {
+        return this.props.attributes.hasOwnProperty('defaultDateTimeString') ? this.props.attributes.defaultDateTimeString : ''
+      },
+      event() {
+        return this.props.attributes.hasOwnProperty('event') ? this.props.attributes.event : ''
+      },
+      fieldTitle() {
+        return this.props.attributes.hasOwnProperty('fieldTitle') ? this.props.attributes.fieldTitle : ''
+      },
+      fieldHelpText() {
+        return this.props.attributes.hasOwnProperty('fieldHelpText') ? this.props.attributes.fieldHelpText : ''
+      },
+      formName() {
+        return this.props.attributes.hasOwnProperty('formName') ? this.props.attributes.formName : ''
+      },
+      hour1() {
+        return this.props.attributes.hasOwnProperty('hour1') ? this.props.attributes.hour1 : ''
+      },
+      hour2() {
+        return this.props.attributes.hasOwnProperty('hour2') ? this.props.attributes.hour2 : ''
+      },
+      id() {
+        return this.props.attributes.hasOwnProperty('id') ? this.props.attributes.id : ''
+      },
+      isTwelveHour() {
+        return this.props.attributes.hasOwnProperty('isTwelveHour') && this.props.attributes.isTwelveHour === 'Y' ? this.props.attributes.isTwelveHour : false
+      },
+      localizedIconTitle() {
+        return this.props.attributes.hasOwnProperty('localizedIconTitle') ? this.props.attributes.localizedIconTitle : ''
+      },
+      mask() {
+        return this.props.attributes.hasOwnProperty('mask') ? this.props.attributes.mask : ''
+      },
+      maxlength() {
+        return this.props.attributes.hasOwnProperty('maxlength') ? this.props.attributes.maxlength : ''
+      },
+      minutes() {
+        return this.props.attributes.hasOwnProperty('minutes') ? this.props.attributes.minutes : ''
+      },
+      name() {
+        return this.props.attributes.hasOwnProperty('name') ? this.props.attributes.name : ''
       },
       noRules() {
         return this.controls.required === false
+      },
+      pmSelected() {
+        return this.props.attributes.hasOwnProperty('pmSelected') ? this.props.attributes.pmSelected : ''
+      },
+      required() {
+        return this.props.attributes.hasOwnProperty('required') ? this.props.attributes.required : {}
       },
       rules() {
         let rules = []
@@ -228,38 +177,71 @@
         }
         return rules
       },
-      fieldTitle() {
-        return this.data.hasOwnProperty('fieldTitle') ? this.data.fieldTitle : ''
+      shortDateInput() {
+        return this.props.attributes.hasOwnProperty('shortDateInput') ? this.props.attributes.shortDateInput : ''
       },
-      fieldHelpText() {
-        return this.data.hasOwnProperty('fieldHelpText') ? this.data.fieldHelpText : ''
+      size() {
+        return this.props.attributes.hasOwnProperty('size') ? this.props.attributes.size : ''
+      },
+      step() {
+        return this.props.attributes.hasOwnProperty('step') ? this.props.attributes.step : ''
+      },
+      storeForm() {
+        return {
+          formId: this.formName,
+          key: this.name,
+          value: this.props.attributes.value ? this.props.attributes.value : ''
+        }
+      },
+      tabindex() {
+        return this.props.attributes.hasOwnProperty('tabindex') ? this.props.attributes.tabindex : ''
+      },
+      timeDropdown() {
+        return this.props.attributes.hasOwnProperty('timeDropdown') ? this.props.attributes.timeDropdown : ''
+      },
+      timeDropdownParamName() {
+        return this.props.attributes.hasOwnProperty('timeDropdownParamName') ? this.props.attributes.timeDropdownParamName : ''
+      },
+      timeHourName() {
+        return this.props.attributes.hasOwnProperty('timeHourName') ? this.props.attributes.timeHourName : ''
+      },
+      timeMinutesName() {
+        return this.props.attributes.hasOwnProperty('timeMinutesName') ? this.props.attributes.timeMinutesName : ''
+      },
+      timeValues() {
+        return this.props.attributes.hasOwnProperty('timeValues') ? this.props.attributes.timeValues : ''
+      },
+      title() {
+        return this.props.attributes.hasOwnProperty('title') ? this.props.attributes.title : ''
+      },
+      value() {
+        return this.props.attributes.hasOwnProperty('value') ? this.props.attributes.value.split('.')[0] : ''
       }
     }
     ,
+    mounted() {
+      if (this.props.attributes.hasOwnProperty('value') && this.props.attributes.value !== '') {
+        this.date = this.props.attributes.value.split(' ')[0]
+        this.time = this.props.attributes.value.split(' ')[1].split('.')[0]
+      }
+    },
+    created() {
+      this.$store.dispatch('form/setFieldToForm', this.storeForm)
+    },
     watch: {
-      data: function () {
-        this.$store.dispatch('form/setFieldToForm', this.storeForm)
-        if (this.props.attributes.hasOwnProperty('value') && this.props.attributes.value !== '') {
-          this.date = this.props.attributes.value.split(' ')[0]
-          this.time = this.props.attributes.value.split(' ')[1].split('.')[0]
-        }
-      },
       datetime: function (newValue) {
         this.$store.dispatch('form/setFieldToForm', {
           formId: this.formName,
           key: this.name,
           value: newValue
         })
-      }
-    }
-    ,
-    created() {
-      this.$store.dispatch('form/setFieldToForm', this.storeForm)
-    },
-    mounted() {
-      if (this.props.attributes.hasOwnProperty('value') && this.props.attributes.value !== '') {
-        this.date = this.props.attributes.value.split(' ')[0]
-        this.time = this.props.attributes.value.split(' ')[1].split('.')[0]
+      },
+      props: function () {
+        this.$store.dispatch('form/setFieldToForm', this.storeForm)
+        if (this.props.attributes.hasOwnProperty('value') && this.props.attributes.value !== '') {
+          this.date = this.props.attributes.value.split(' ')[0]
+          this.time = this.props.attributes.value.split(' ')[1].split('.')[0]
+        }
       }
     }
   }
