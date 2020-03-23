@@ -928,7 +928,6 @@
                 resolve()
               },
               () => {
-                console.log('Error during contactMech acquisition')
                 reject()
               }
             )
@@ -944,9 +943,6 @@
         }).then(
           () => {
             this.updateDataSet()
-          },
-          () => {
-            console.log('Error during contactMech creation')
           }
         )
       },
@@ -967,9 +963,6 @@
           () => {
             this.updateDataSet()
           },
-          () => {
-            console.log('Error during postalAddress creation')
-          }
         )
       },
       createTelecomNumber() {
@@ -984,9 +977,6 @@
         }).then(
           () => {
             this.updateDataSet()
-          },
-          () => {
-            console.log('Error during contactMech creation')
           }
         )
       },
@@ -999,9 +989,6 @@
         }).then(
           () => {
             this.updateDataSet()
-          },
-          () => {
-            console.log('Error during email address creation')
           }
         )
       },
@@ -1014,9 +1001,6 @@
         }).then(
           () => {
             this.updateDataSet()
-          },
-          () => {
-            console.log('Error during contactMech creation')
           }
         )
       },
@@ -1029,9 +1013,6 @@
         }).then(
           () => {
             this.updateDataSet()
-          },
-          () => {
-            console.log('Error during contactMech creation')
           }
         )
       },
@@ -1044,9 +1025,6 @@
         }).then(
           () => {
             this.updateDataSet()
-          },
-          () => {
-            console.log('Error during contactMech creation')
           }
         )
       },
@@ -1059,9 +1037,6 @@
         }).then(
           () => {
             this.updateDataSet()
-          },
-          () => {
-            console.log('Error during internal note creation')
           }
         )
       },
@@ -1082,9 +1057,6 @@
         }).then(
           () => {
             this.updateDataSet()
-          },
-          () => {
-            console.log('Error during FTP Address creation')
           }
         )
       },
@@ -1097,9 +1069,6 @@
         }).then(
           () => {
             this.updateDataSet()
-          },
-          () => {
-            console.log('Error during internal note creation')
           }
         )
       },
@@ -1280,7 +1249,6 @@
                       resolve()
                     },
                     () => {
-                      console.log('Error during contactMech update.')
                       reject()
                     }
                   )
@@ -1302,7 +1270,6 @@
                       resolve()
                     },
                     () => {
-                      console.log('Error during contactMech update.')
                       reject()
                     }
                   )
@@ -1323,7 +1290,6 @@
                       resolve()
                     },
                     () => {
-                      console.log('Error during contactMech update.')
                       reject()
                     }
                   )
@@ -1352,7 +1318,6 @@
                       resolve()
                     },
                     () => {
-                      console.log('Error during contactMech update.')
                       reject()
                     }
                   )
@@ -1373,7 +1338,6 @@
                       resolve()
                     },
                     () => {
-                      console.log('Error during contactMech update.')
                       reject()
                     }
                   )
@@ -1402,7 +1366,6 @@
                       resolve()
                     },
                     () => {
-                      console.log('Error during postal address creation')
                       reject()
                     }
                   )
@@ -1423,7 +1386,6 @@
                       resolve()
                     },
                     () => {
-                      console.log('Error during telecom number creation')
                       reject()
                     }
                   )
@@ -1443,7 +1405,6 @@
                       resolve()
                     },
                     () => {
-                      console.log('Error during email address creation')
                       reject()
                     }
                   )
@@ -1471,7 +1432,6 @@
                       resolve()
                     },
                     () => {
-                      console.log('Error during FTP address creation')
                       reject()
                     }
                   )
@@ -1491,7 +1451,6 @@
                       resolve()
                     },
                     () => {
-                      console.log('Error during contactMech creation')
                       reject()
                     }
                   )
@@ -1511,7 +1470,6 @@
                   resolve()
                 },
                 () => {
-                  console.log('Error during contactMech deletion')
                   reject()
                 }
               )
@@ -1535,8 +1493,7 @@
                         () => {
                           resolve()
                         },
-                        error => {
-                          console.log(error)
+                        () => {
                           reject()
                         }
                       )
@@ -1560,8 +1517,7 @@
                         () => {
                           resolve()
                         },
-                        error => {
-                          console.log(error)
+                        () => {
                           reject()
                         }
                       )
@@ -1585,8 +1541,6 @@
           contactMechTypeId: type
         }).then(response => {
           this.purposeListByType[type] = response.body.purposeTypeList
-        }, error => {
-          console.log('Error during purposes acquisition...', error)
         })
       }
     },

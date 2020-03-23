@@ -24,11 +24,6 @@ export default {
         description: ''
       }
     }
-  },
-  methods: {
-    log: () => {
-      console.log('submit')
-    }
   }
 }
 </script>

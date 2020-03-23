@@ -15,15 +15,9 @@
   export default {
     name: 'app',
     mounted() {
-      if (this.$debug) {
-        console.log(this.$route.path)
-      }
       let pathname = window.location.pathname
       let api = pathname.substring(0, pathname.indexOf('/', 1)) + '/control'
       let webapp = pathname.substring(pathname.lastIndexOf('/') + 1, pathname.length)
-      if (this.$debug) {
-        console.log('WebApp : ', webapp)
-      }
       this.$store.dispatch('backOfficeApi/setApi', api)
       this.$store.dispatch('login/check').then(() => {
         if (webapp === 'showPortalPage') {

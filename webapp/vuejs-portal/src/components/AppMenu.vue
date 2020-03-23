@@ -267,14 +267,8 @@
           })
         }
         if (webapp === 'showPortalPage') {
-          if (this.$debug) {
-            console.log('Generating MenuLink => url : ', url, 'Final router-link : ', `/portalPage/${params.portalPageId}`)
-          }
           return `/portalPage/${params.portalPageId}`
         } else {
-          if (this.$debug) {
-            console.log('Generating MenuLink => url : ', url, 'Final router-link : ', `/screen/${webapp}`)
-          }
           return `/screen/${webapp}`
         }
       },
@@ -285,10 +279,6 @@
     mounted() {
       this.$store.dispatch('backOfficeApi/doPost', {uri: 'applicationMenu', params: {}}).then(result => {
         this.menu = result.body
-      }, error => {
-        if (this.$debug) {
-          console.log(error)
-        }
       })
       this.$store.dispatch('backOfficeApi/doPost', {uri: 'getUserPreference', params: {userPrefTypeId: 'DARK_MODE', userPrefGroupTypeId: 'FRONTJS_PREFERENCES'}}).then(result => {
         if (result.body.hasOwnProperty('userPrefValue')) {
