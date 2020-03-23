@@ -2,8 +2,8 @@
   <div id="vue-text-field">
     <v-tooltip top>
       <template v-slot:activator="{ on }">
-        <v-textField v-if="mask" v-model="value" :label="fieldTitle" :rules="rules" v-bind="data" v-mask="parsedMask" error-count="3" validate-on-blur v-on="fieldHelpText ? on : null"/>
-        <v-textField v-else v-model="value" :label="fieldTitle" :rules="rules" v-bind="data" error-count="3" validate-on-blur v-on="fieldHelpText ? on : null"/>
+        <v-textField v-if="mask" v-model="value" :label="fieldTitle" :rules="rules" v-mask="parsedMask" error-count="3" validate-on-blur v-on="fieldHelpText ? on : null"/>
+        <v-textField v-else v-model="value" :label="fieldTitle" :rules="rules" error-count="3" validate-on-blur v-on="fieldHelpText ? on : null"/>
       </template>
       <span>{{fieldHelpText}}</span>
     </v-tooltip>
@@ -17,29 +17,55 @@
   export default {
     name: "VueTextField",
     props: ['props', 'updateStore'],
-    data() {
-      return {}
-    },
     computed: {
       ...mapGetters({
         getForm: 'form/form',
         getDataFromForm: 'form/fieldInForm'
       }),
-      data() {
-        let data = this.props.attributes
-        //delete data['value']
-        if (data.className || (data.alert && data.alert === true)) {
-          data.class = data.className ? data.className : '' + ' ' + data.alert === true ? 'alert' : ''
-        }
-        return data;
+      fieldTitle() {
+        return this.props.attributes.hasOwnProperty('fieldTitle') ? this.props.attributes.fieldTitle : ''
+      },
+      fieldHelpText() {
+        return this.props.attributes.hasOwnProperty('fieldHelpText') ? this.props.attributes.fieldHelpText : ''
+      },
+      formName() {
+        return this.props.attributes.hasOwnProperty('formName') ? this.props.attributes.formName : ''
+      },
+      mask() {
+        return this.props.attributes.hasOwnProperty('mask') ? this.props.attributes.mask : null
+      },
+      maxLength() {
+        return this.props.attributes.hasOwnProperty('maxLength') ? this.props.attributes.maxLength : null
       },
       name() {
-        return this.data.hasOwnProperty('name') ? this.data.name : ''
+        return this.props.attributes.hasOwnProperty('name') ? this.props.attributes.name : ''
+      },
+      noRules() {
+        return this.required === false && this.maxLength === null && this.mask === null
+      },
+      parsedMask() {
+        return this.props.attributes.hasOwnProperty('mask') ? this.props.attributes.mask.replace(/\*/gi, 'X').replace(/9/gi, '#').replace(/a/gi, 'S') : []
+      },
+      required() {
+        return this.props.attributes.hasOwnProperty('required') && this.props.attributes.required.hasOwnProperty('requiredField') && this.props.attributes.required.requiredField === "true"
+      },
+      rules() {
+        let rules = []
+        if (this.required) {
+          rules.push((v) => !!v || 'This field is required')
+        }
+        if (this.maxLength !== null) {
+          rules.push((v) => v.length > this.maxLength || `This field must be less than ${this.maxLength} characters` )
+        }
+        if (this.mask !== null) {
+          rules.push((v) => v.length === this.mask.length || `mask : ${this.mask}`)
+        }
+        return rules
       },
       storeForm() {
         return {
-          formId: this.props.attributes.formName,
-          key: this.props.attributes.name,
+          formId: this.formName,
+          key: this.name,
           value: this.props.attributes.value ? this.props.attributes.value : ''
         }
       },
@@ -49,55 +75,20 @@
         },
         set(value) {
           this.$store.dispatch('form/setFieldToForm', {
-            formId: this.props.attributes.formName,
-            key: this.props.attributes.name,
+            formId: this.formName,
+            key: this.name,
             value: value
           })
         }
-      },
-      mask() {
-        return this.data.hasOwnProperty('mask') ? this.data.mask : null
-      },
-      parsedMask() {
-        return this.data.hasOwnProperty('mask') ? this.data.mask.replace(/\*/gi, 'X').replace(/9/gi, '#').replace(/a/gi, 'S') : []
-      },
-      controls() {
-        return {
-          required: this.data.hasOwnProperty('required') && this.data.required.hasOwnProperty('requiredField') && this.data.required.requiredField === "true",
-          maxLength: this.data.hasOwnProperty('maxLength') ? this.data.maxLength : null,
-          mask: this.data.hasOwnProperty('mask') ? this.data.mask : null
-        }
-      },
-      noRules() {
-        return this.controls.required === false && this.controls.maxLength === null && this.controls.mask === null
-      },
-      rules() {
-        let rules = []
-        if (this.controls.required) {
-          rules.push((v) => !!v || 'This field is required')
-        }
-        if (this.controls.maxLength !== null) {
-          rules.push((v) => v.length > this.controls.maxLength || `This field must be less than ${this.controls.maxLength} characters` )
-        }
-        if (this.controls.mask !== null) {
-          rules.push((v) => v.length === this.mask.length || `mask : ${this.mask}`)
-        }
-        return rules
-      },
-      fieldTitle() {
-        return this.data.hasOwnProperty('fieldTitle') ? this.data.fieldTitle : ''
-      },
-      fieldHelpText() {
-        return this.data.hasOwnProperty('fieldHelpText') ? this.data.fieldHelpText : ''
-      }
-    },
-    watch: {
-      data: function () {
-        this.$store.dispatch('form/setFieldToForm', this.storeForm)
       }
     },
     mounted() {
       this.$store.dispatch('form/setFieldToForm', this.storeForm)
+    },
+    watch: {
+      props: function () {
+        this.$store.dispatch('form/setFieldToForm', this.storeForm)
+      }
     }
   }
 </script>
