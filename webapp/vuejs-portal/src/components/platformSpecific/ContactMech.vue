@@ -600,8 +600,8 @@
               </v-col>
             </v-row>
             <v-row justify="center">
-              <v-btn sel-label="showMore" text @click="toggleShowMore" v-if="!showMore">Show more</v-btn>
-              <v-btn sel-label="showLess" text @click="toggleShowMore" v-if="showMore">Show less</v-btn>
+              <v-btn sel-label="Show more" text @click="toggleShowMore" v-if="!showMore">Show more</v-btn>
+              <v-btn sel-label="Show less" text @click="toggleShowMore" v-if="showMore">Show less</v-btn>
             </v-row>
           </v-card-text>
         </v-card>
@@ -1140,6 +1140,7 @@
           },
           purposes: []
         })
+        this.$store.dispatch('ui/incrementUpdateCpt')
       },
       addIpAddress() {
         this.toCreate.push({
@@ -1224,6 +1225,8 @@
         } else {
           this.toCreate.splice(this.toCreate.indexOf(contactMech), 1)
         }
+        this.$store.dispatch('ui/incrementUpdateCpt')
+
       },
       displayPurpose(contactMechTypeId, purposeTypeId) {
         return this.purposeListByType[contactMechTypeId].filter(item => item.contactMechPurposeTypeId === purposeTypeId)[0].description
