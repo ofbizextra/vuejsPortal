@@ -2,8 +2,8 @@
   <div id="vue-text-field">
     <v-tooltip top>
       <template v-slot:activator="{ on }">
-        <v-textField v-if="mask" v-model="value" :label="fieldTitle" :rules="rules" v-mask="parsedMask" error-count="3" validate-on-blur v-on="fieldHelpText ? on : null"/>
-        <v-textField v-else v-model="value" :label="fieldTitle" :rules="rules" error-count="3" validate-on-blur v-on="fieldHelpText ? on : null"/>
+        <v-textField v-if="mask" v-model="value" :id="id" :label="fieldTitle" :rules="rules" v-mask="parsedMask" error-count="3" validate-on-blur v-on="fieldHelpText ? on : null"/>
+        <v-textField v-else v-model="value" :id="id" :label="fieldTitle" :rules="rules" error-count="3" validate-on-blur v-on="fieldHelpText ? on : null"/>
       </template>
       <span>{{fieldHelpText}}</span>
     </v-tooltip>
@@ -30,6 +30,9 @@
       },
       formName() {
         return this.props.attributes.hasOwnProperty('formName') ? this.props.attributes.formName : ''
+      },
+      id() {
+        return this.props.attributes.hasOwnProperty('id') ? this.props.attributes.id : ''
       },
       mask() {
         return this.props.attributes.hasOwnProperty('mask') ? this.props.attributes.mask : null
