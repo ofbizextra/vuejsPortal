@@ -1,5 +1,5 @@
 <template>
-  <div vue-component="vue-screenlet" :id="templateId" class="ma-1">
+  <div vue-component="vue-screenlet" :id="screenletId" class="ma-1">
       <v-toolbar v-if="showMore" dense color="primary" dark class="screenlet-title-bar">
         <v-toolbar-title class="title">{{title}}</v-toolbar-title>
         <v-spacer></v-spacer>
@@ -44,9 +44,6 @@
       ...mapGetters({
         collapsibleStatus: 'ui/collapsibleStatus'
       }),
-      attributesId() {
-        return this.props.attributes.hasOwnProperty('id') ? this.props.attributes.id : ''
-      },
       bodyChildren() {
         return this.props.children.filter(component => !['Menu', 'ScreenletSubWidget'].includes(component.name))
       },
@@ -72,7 +69,7 @@
         return this.props.children.filter(component => ['Menu'].includes(component.name))
       },
       id() {
-        return `${this.attributesId}-${this.name}`
+        return this.props.attributes.hasOwnProperty('id') ? this.props.attributes.id : ''
       },
       name() {
         return this.props.attributes.hasOwnProperty('name') ? this.props.attributes.name : ''
@@ -96,6 +93,9 @@
       },
       tabMenu() {
         return this.props.attributes.hasOwnProperty('tabMenu') ? this.props.attributes.tabMenu : null
+      },
+      screenletId() {
+        return `${this.id}-${this.name}`
       },
       title() {
         return this.props.attributes.hasOwnProperty('title') ? this.props.attributes.title : ''
