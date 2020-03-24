@@ -5,11 +5,6 @@ import VueRouter from 'vue-router'
 import VueWait from 'vue-wait'
 import {BreedingRhombusSpinner} from 'epic-spinners'
 import BlockUI from 'vue-blockui'
-import VueFlashMessage from 'vue-flash-message'
-import VModal from 'vue-js-modal'
-import VueAutosuggest from 'vue-autosuggest'
-import VueFlatPickr from 'vue-flatpickr-component';
-import 'flatpickr/dist/flatpickr.css';
 import _ from 'lodash'
 import VueTheMask from 'vue-the-mask'
 
@@ -88,16 +83,6 @@ Vue.use(VueRouter)
 
 Vue.use(VueWait)
 Vue.use(BlockUI)
-Vue.use(VueFlashMessage, {
-  messageOptions: {
-    timeout: 8000,
-    pauseOnInteract: true
-  }
-})
-require('vue-flash-message/dist/vue-flash-message.min.css')
-Vue.use(VModal)
-Vue.use(VueAutosuggest)
-Vue.use(VueFlatPickr)
 Vue.use(VueTheMask)
 
 Vue.component('login', Login)
@@ -164,7 +149,6 @@ Vue.component('app-menu', AppMenu)
 Vue.component('app-wait', AppWait)
 Vue.component('app-cpt', AppCpt)
 
-// Platform Specific
 Vue.component('ContactMech', ContactMech)
 
 Object.defineProperty(Vue.prototype, '$_', {value: _})
@@ -217,33 +201,26 @@ function requireAuth(to, from, next) {
   function proceed() {
     if (store.getters['login/isLoggedIn']) {
       if (to.path === '/login') {
-        // console.log("Already logged in -> redirect to /home")
         next('/')
       } else {
-        // console.log("Authorized")
         next()
       }
     } else {
       if (to.path === '/login') {
         next()
       } else {
-        // console.log("You are not logged in redirect to login")
         next('/login')
       }
     }
   }
 
-  // console.log('Routing ...')
   if (store.getters['login/pending']()) {
-    // console.log('Pending ...')
     store.watch(store.getters['login/pending'], () => {
       if (!store.getters['login/pending']()) {
-        // console.log('Proceed ...')
         proceed()
       }
     })
   } else {
-    // console.log('Proceed ...')
     proceed()
   }
 }
