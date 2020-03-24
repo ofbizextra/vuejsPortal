@@ -13,11 +13,9 @@ const state = {
   portlets: {},
   portletTarget: {},
   containers: {},
-  containerWatcher: {},
   areas: {},
   watchers: {},
   updateCpt: 0,
-  errorMessageList: [],
   collapsibleStatus: {},
   dialogStatus: {}
 }
@@ -45,9 +43,6 @@ const mutations = {
   SET_CONTAINER: (state, {containerName, content}) => {
     Vue.set(state.containers, containerName, content)
   },
-  SET_CONTAINER_WATCHER: (state, {watcheName, watcherTarget, params}) => {
-    Vue.set(state.containerWatcher, watcheName, watcherTarget.isEmpty() ? null : {portalPageId: watcherTarget, params})
-  },
   SET_AREA: (state, {areaId, areaContent}) => {
     Vue.set(state.areas, areaId, areaContent)
   },
@@ -66,12 +61,6 @@ const mutations = {
   },
   INCREMENT_UPDATE_CPT: (state) => {
     Vue.set(state, 'updateCpt', state.updateCpt + 1)
-  },
-  ADD_ERROR_MESSAGE: (state, {errorMessage}) => {
-    Vue.set(state, 'errorMessageList', [...state.errorMessageList, errorMessage])
-  },
-  DELETE_ERROR_MESSAGE: (state, {errorMessage}) => {
-    state.errorMessageList.splice(state.errorMessageList.indexOf(errorMessage), 1)
   },
   SET_COLLAPSIBLE_STATUS: (state, {areaId, areaTarget}) => {
     Vue.set(state.collapsibleStatus, areaId, areaTarget)
@@ -108,11 +97,6 @@ const getters = {
       return state.containers.hasOwnProperty(containerName) ? state.containers[containerName] : null
     }
   },
-  containerTarget(state) {
-    return function (watcherName) {
-      return state.containerWatcher.hasOwnProperty(watcherName) ? state.containerWatcher[watcherName] : null
-    }
-  },
   area(state) {
     return function (areaId) {
       return state.areas.hasOwnProperty(areaId) ? state.areas[areaId] : null
@@ -124,7 +108,6 @@ const getters = {
     }
   },
   updateCpt: state => state.updateCpt,
-  errorMessageList: state => state.errorMessageList,
   collapsibleStatus(state) {
     return function (areaId) {
       return state.collapsibleStatus.hasOwnProperty(areaId) ? state.collapsibleStatus[areaId] : false
@@ -144,10 +127,8 @@ const actions = {
     commit('SET_CURRENT_PORTAL_PAGE', portalPageId)
   },
   setPortlet({commit, getters}, {portalPortletId, portletSeqId, params = {}}) {
-    // this.$wait.start(portalPortletId + '-' + portletSeqId)
     return new Promise((resolve, reject) => {
       setTimeout(() => {
-        // this._vm.$wait.start(portalPortletId + '-' + portletSeqId)
         Vue.http.post(getters['backOfficeApi/apiUrl'] + getters['backOfficeApi/currentApi'] + constants.showPortlet.path,
           queryString.stringify({
             portalPortletId: portalPortletId,
@@ -156,15 +137,8 @@ const actions = {
           {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}
         ).then(response => {
           commit('SET_PORTLET', {portletId: portalPortletId + '-' + portletSeqId, data: response.body})
-          // this._vm.$wait.end(portalPortletId + '-' + portletSeqId)
-          // this.$wait.end(portalPortletId + '-' + portletSeqId)
           resolve(portalPortletId)
-        }, error => {
-          if (this.$debug) {
-            console.log(error)
-          }
-          // this._vm.$wait.end(portalPortletId + '-' + portletSeqId)
-          // this.$wait.end(portalPortletId + '-' + portletSeqId)
+        }, () => {
           reject()
         })
       }, 0)
@@ -185,17 +159,11 @@ const actions = {
         ).then(response => {
           commit('SET_CONTAINER', {containerName, content: response.body})
           resolve(containerName)
-        }, error => {
-          if (this.$debug) {
-            console.log(error)
-          }
+        }, () => {
           reject()
         })
       }, 0)
     })
-  },
-  setContainerWatcher({commit}, {watcherName, watcherTarget, params}) {
-    commit('SET_CONTAINER_WATCHER', {watcherName, watcherTarget, params})
   },
   setArea({commit, dispatch}, {areaId, targetUrl, wait, params = {}}) {
     return new Promise((resolve, reject) => {
@@ -204,9 +172,6 @@ const actions = {
         dispatch('incrementUpdateCpt')
         dispatch('backOfficeApi/doPost', {uri: constants.hostUrl + targetUrl.replace('amp;', ''), params: params}, {root: true}
         ).then(response => {
-          if (this.$debug) {
-            console.log({...response.body})
-          }
           if (response.body.hasOwnProperty('_ERROR_MESSAGE_')) {
             dispatch('addErrorMessage', {errorMessage: response.body['_ERROR_MESSAGE_']})
             reject()
@@ -222,9 +187,6 @@ const actions = {
             let entities = []
             let records = []
             Object.keys(response.body.viewEntities).forEach((key) => {
-              if (this.$debug) {
-                console.log('setEntity => ' + key)
-              }
               entities.push(dispatch('data/setEntity', {
                 entityName: key,
                 primaryKey: response.body.viewEntities[key].primaryKeys.join('-')
@@ -233,17 +195,8 @@ const actions = {
               }))
             })
             Promise.all(entities).then(all => {
-              if (this.$debug) {
-                console.log('all entity have been created')
-              }
               all.forEach((entity => {
-                if (this.$debug) {
-                  console.log('creating record for entity: ' + entity.entityName)
-                }
-                response.body.viewEntities[entity.entityName].list.forEach((record, index) => {
-                  if (this.$debug) {
-                    console.log(entity.entityName + ': creating record number ' + index + ': ', record)
-                  }
+                response.body.viewEntities[entity.entityName].list.forEach((record) => {
                   if (record.stId !== null) {
                     let data = {
                       entityName: entity.entityName,
@@ -268,9 +221,6 @@ const actions = {
             resolve(areaId)
           }
         }, error => {
-          if (this.$debug) {
-            console.log(error)
-          }
           setTimeout(() => {
             wait.end(areaId)
           }, 0)
@@ -291,56 +241,24 @@ const actions = {
   incrementUpdateCpt({commit}) {
     commit('INCREMENT_UPDATE_CPT')
   },
-  addErrorMessage({commit}, {errorMessage}) {
-    commit('ADD_ERROR_MESSAGE', {errorMessage})
-  },
-  deleteErrorMessage({commit}, {errorMessage}) {
-    commit('DELETE_ERROR_MESSAGE', {errorMessage})
-  },
   initialize({dispatch}, location) {
-    if (this.$debug) {
-      console.log('location : ', location)
-    }
-    let origin = location.origin
     let pathname = location.pathname
-    let path = origin + pathname
     let search = location.search
-    if (this.$debug) {
-      console.log('path : ', path)
-    }
-    if (this.$debug) {
-      console.log('Params : ', search)
-    }
-    // PORTAL_PAGE_ID not defined in the scope but in the main application
-    // eslint-disable-next-line
     let params = {portalPageId: this._vm.$route.params.portalPageId}
     search.substr(1).split('&amp;').forEach(param => {
       let tmp = param.split('=')
       params[tmp[0]] = tmp[1]
     })
-    if (this.$debug) {
-      console.log('params : ', params)
-    }
     let api = pathname.substring(0, pathname.indexOf('/', 1)) + '/control'
-    if (this.$debug) {
-      console.log('API ===> ' + api)
-    }
     dispatch('loadPortalPageDetail', {api: api, params: params})
   },
   loadPortalPageDetail({commit, dispatch}, {api, params}) {
     dispatch('backOfficeApi/setApi', api, {root: true})
     dispatch('backOfficeApi/doPost', {uri: constants.hostUrl + api + constants.portalPageDetail.path, params}, {root: true}).then(response => {
       let portalPage = response.body
-      if (this.$debug) {
-        console.log('PortalPage : ', portalPage)
-      }
       commit('SET_CURRENT_PORTAL_PAGE_PARAMS', params)
       commit('SET_PORTAL_PAGE', {portalPageId: params.portalPageId, portalPage})
       commit('SET_CURRENT_PORTAL_PAGE', params.portalPageId)
-    }, error => {
-      if (this.$debug) {
-        console.log('Error during portalPage acquisition : ', error)
-      }
     })
   },
   setCollapsibleStatus({commit}, {areaId, areaTarget}) {

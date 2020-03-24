@@ -5,7 +5,6 @@ Vue.use(Vuex)
 
 const state = {
   forms: {},
-  formsControl: {},
   formValidate: {}
 }
 

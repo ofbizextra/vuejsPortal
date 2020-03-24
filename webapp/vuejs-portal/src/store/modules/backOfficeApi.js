@@ -7,8 +7,7 @@ Vue.use(Vuex)
 
 const state = {
   messageList: [],
-  currentApi: '',
-  postId: 0
+  currentApi: ''
 }
 
 const mutations = {
@@ -20,17 +19,13 @@ const mutations = {
   },
   SET_CURRENT_API(state, api) {
     Vue.set(state, 'currentApi', api)
-  },
-  INCREMENT_POST_ID(state) {
-    state.postId++
   }
 }
 
 const getters = {
   messageList: state => state.messageList,
   currentApi: state => state.currentApi,
-  apiUrl: state => constants.hostUrl + state.currentApi,
-  postId: state => state.postId
+  apiUrl: state => constants.hostUrl + state.currentApi
 }
 
 const actions = {
@@ -43,12 +38,6 @@ const actions = {
           }),
           {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}
         ).then(response => {
-          if (this.$debug) {
-            console.log({...response.body})
-          }
-          if (this.$debug) {
-            console.log('TypeOf response.body : ' + typeof response.body)
-          }
           if (typeof response.body === 'string' && response.body.includes('login failed')) {
             dispatch('ui/setDialogStatus', {
               dialogId: 'loginDialog',
@@ -59,35 +48,31 @@ const actions = {
           }
           if (response.body.hasOwnProperty('_ERROR_MESSAGE_')) {
             commit('ADD_MESSAGE', {messageContent: response.body['_ERROR_MESSAGE_'], messageType: 'error'})
-            this._vm.flash(response.body['_ERROR_MESSAGE_'], 'error', {timeout: 0})
             reject(response)
           }
           if (response.body.hasOwnProperty('_ERROR_MESSAGE_LIST_')) {
             for (let errorMessage of response.body['_ERROR_MESSAGE_LIST_']) {
               commit('ADD_MESSAGE', {messageContent: errorMessage, messageType: 'error'})
-              this._vm.flash(errorMessage, 'error', {timeout: 0})
             }
             reject(response)
           }
           if (response.body.hasOwnProperty('_EVENT_MESSAGE_')) {
             commit('ADD_MESSAGE', {messageContent: response.body['_EVENT_MESSAGE_'], messageType: 'event'})
-            this._vm.flash(response.body['_EVENT_MESSAGE_'], 'success', 5000)
           }
           if (response.body.hasOwnProperty('_EVENT_MESSAGE_LIST_')) {
             for (let eventMessage of response.body['_EVENT_MESSAGE_LIST_']) {
               commit('ADD_MESSAGE', {messageContent: eventMessage, messageType: 'event'})
-              this._vm.flash(eventMessage, 'success', 5000)
             }
           }
           resolve(response)
         }, error => {
-          if (this.$debug) {
-            console.log(error)
-          }
           reject(error)
         })
       }, 0)
     })
+  },
+  addMessage({commit}, {messageContent, messageType}) {
+    commit('ADD_MESSAGE', {messageContent, messageType})
   },
   deleteMessage({commit}, {message}) {
     commit('DELETE_MESSAGE', {message})

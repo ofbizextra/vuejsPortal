@@ -17,25 +17,21 @@ const state = {
 }
 
 const mutations = {
-  SET_USERNAME: (state, username) => {
-    state.credentials.username = username
+  CHECK_FAILURE: (state) => {
+    state.isLoggedIn = false
+    state.pending = false
   },
-  SET_TOKEN: (state, token) => {
-    state.credentials.token = token
-  },
-  SET_PARTY_ID: (state, partyId) => {
-    state.credentials.partyId = partyId
-  },
-  LOGIN: (state) => {
-    state.pending = true
-  },
-  LOGIN_SUCCESS: (state, params) => {
+  CHECK_SUCCESS: (state) => {
     state.isLoggedIn = true
-    state.credentials.username = params.username
     state.pending = false
   },
   LOGIN_FAILURE: (state) => {
     state.isLoggedIn = false
+    state.pending = false
+  },
+  LOGIN_SUCCESS: (state, params) => {
+    state.isLoggedIn = true
+    state.credentials.username = params.username
     state.pending = false
   },
   LOGOUT: (state) => {
@@ -45,22 +41,12 @@ const mutations = {
     state.isLoggedIn = false
     state.pending = false
   },
-  CHECK: (state) => {
+  START_PENDING: (state) => {
     state.pending = true
-  },
-  CHECK_SUCCESS: (state) => {
-    state.isLoggedIn = true
-    state.pending = false
-  },
-  CHECK_FAILURE: (state) => {
-    state.isLoggedIn = false
-    state.pending = false
   }
 }
 
 const getters = {
-  username: state => state.credentials.username,
-  token: state => state.credentials.token,
   isLoggedIn: state => state.isLoggedIn,
   pending: (state) => () => {
     return state.pending
@@ -68,10 +54,10 @@ const getters = {
 }
 
 const actions = {
-  login({commit, rootGetters}, credentials) {
+  login({commit, dispatch, rootGetters}, credentials) {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
-        commit('LOGIN')
+        commit('START_PENDING')
         Vue.http.post(
           constants.hostUrl + rootGetters['backOfficeApi/currentApi'] + constants.login.path,
           queryString.stringify({
@@ -81,26 +67,22 @@ const actions = {
           }),
           {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}
         ).then(response => {
-          if (this.$debug) {
-            console.log(response)
-          }
           if ((typeof response.body === 'string' && response.body.includes('login successful')
             && !response.body._ERROR_MESSAGE_
             && !response.body._ERROR_MESSAGES_LIST_) || typeof response.body === 'object') {
             if (this.$debug) {
               console.log('login success')
             }
+            dispatch('backOfficeApi/addMessage', {messageContent: 'Login Successful', messageType: 'event'}, {root: true})
             commit('LOGIN_SUCCESS', credentials)
             resolve()
           } else {
             if (response.body._ERROR_MESSAGE_) {
-              if (this.$debug) {
-                console.log(response.body._ERROR_MESSAGE_)
-              }
+              dispatch('backOfficeApi/addMessage', {messageContent: response.body._ERROR_MESSAGE_, messageType: 'error'}, {root: true})
             }
             if (response.body._ERROR_MESSAGES_LIST_) {
-              if (this.$debug) {
-                console.log(response.body._ERROR_MESSAGES_LIST_)
+              for (let error in response.body._ERROR_MESSAGE_LIST_) {
+                dispatch('backOfficeApi/addMessage', {messageContent: error, messageType: 'error'}, {root: true})
               }
             }
             commit('LOGIN_FAILURE')
@@ -108,13 +90,11 @@ const actions = {
           }
         }, error => {
           if (error.body._ERROR_MESSAGE_) {
-            if (this.$debug) {
-              console.log(error.body._ERROR_MESSAGE_)
-            }
+            dispatch('backOfficeApi/addMessage', {messageContent: error.body._ERROR_MESSAGE_, messageType: 'error'}, {root: true})
           }
           if (error.body._ERROR_MESSAGES_LIST_) {
-            if (this.$debug) {
-              console.log(error.body._ERROR_MESSAGES_LIST_)
+            for (let error in error.body._ERROR_MESSAGE_LIST_) {
+              dispatch('backOfficeApi/addMessage', {messageContent: error, messageType: 'error'}, {root: true})
             }
           }
           commit('LOGIN_FAILURE')
@@ -126,7 +106,7 @@ const actions = {
   logout({commit}) {
     return new Promise((resolve) => {
       setTimeout(() => {
-        commit('LOGIN')
+        commit('START_PENDING')
         localStorage.removeItem('token')
         commit('LOGOUT')
         resolve()
@@ -136,6 +116,7 @@ const actions = {
   check({commit, rootGetters}) {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
+        commit('START_PENDING')
         Vue.http.post(
           constants.hostUrl + rootGetters['backOfficeApi/currentApi'] + constants.ajaxCheckLogin.path,
           queryString.stringify({
@@ -144,22 +125,13 @@ const actions = {
           if (response.body.includes('login successful')
             && !response.body._ERROR_MESSAGE_
             && !response.body._ERROR_MESSAGES_LIST_) {
-            if (this.$debug) {
-              console.log('login success')
-            }
             commit('CHECK_SUCCESS')
             resolve()
           } else {
-            if (this.$debug) {
-              console.log(response.body._ERROR_MESSAGE_)
-            }
             commit('CHECK_FAILURE')
             reject()
           }
-        }, error => {
-          if (this.$debug) {
-            console.log('error : ', error)
-          }
+        }, () => {
           commit('CHECK_FAILURE')
           reject()
         })

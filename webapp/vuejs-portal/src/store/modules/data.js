@@ -26,15 +26,6 @@ const mutations = {
       Vue.set(state.entities[data.entityName].list[data.primaryKey], key, data.data[key])
     })
   },
-  START_UPDATE: (state) => {
-    state.updatingCpt++
-  },
-  STOP_UPDATE: (state) => {
-      state.cpt++
-  },
-  INCREMENT_CPT1: (state) => {
-    state.cpt1++
-  },
   SET_WATCHER: (state, {watcherName, params}) => {
     Vue.set(state.watchers, watcherName, {...params})
   },
@@ -98,15 +89,9 @@ const actions = {
     })
   },
   setWatcher({commit}, data) {
-    if (this.$debug) {
-      console.log('data/setWatcher : ', data)
-    }
     commit('SET_WATCHER', data)
   },
   setWatcherAttributes({commit}, data) {
-    if (this.$debug) {
-      console.log('data/setWatcherAttributes : ', data)
-    }
     commit('SET_WATCHER_ATTRIBUTES', data)
   }
 }
