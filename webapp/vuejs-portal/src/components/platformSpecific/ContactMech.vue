@@ -23,14 +23,25 @@
           <v-divider></v-divider>
           <v-card-text>
             <v-row stretch dense>
-              <v-col cols="12" md="6" align-self="start">
+              <v-col cols="12" xl="6" align-self="start">
                 <v-list dense>
                   <v-list-item v-for="phoneNumber in telecomNumberList"
                                :key="phoneNumber.contactMech.contactMechId">
                     <v-tooltip top>
                       <template v-slot:activator="{ on }">
-                        <v-list-item-icon v-on="on">
-                          <v-icon id='mdi-phone' left>{{getIcon('mdi-phone')}}</v-icon>
+                        <v-list-item-icon>
+                          <table>
+                            <tr>
+                              <v-btn icon v-on="on">
+                                <v-icon id='mdi-phone' left>{{getIcon('mdi-phone')}}</v-icon>
+                              </v-btn>
+                            </tr>
+                            <tr v-if="editMode">
+                              <v-btn icon @click="removeContactMech(phoneNumber)">
+                                <v-icon id='mdi-delete' color="red">{{getIcon('mdi-delete')}}</v-icon>
+                              </v-btn>
+                            </tr>
+                          </table>
                         </v-list-item-icon>
                       </template>
                       <span>Telecom number</span>
@@ -60,23 +71,18 @@
                       </v-list-item-subtitle>
                       <v-list-item-subtitle v-if="editMode">
                         <v-select
-                          label="purposes"
-                          v-model="phoneNumber.purposes"
-                          :items="purposeListByType.TELECOM_NUMBER"
-                          deletable-chips
-                          chips
-                          hide-selected
-                          multiple
-                          item-text="description"
-                          item-value="contactMechPurposeTypeId">
+                            label="purposes"
+                            v-model="phoneNumber.purposes"
+                            :items="purposeListByType.TELECOM_NUMBER"
+                            deletable-chips
+                            chips
+                            hide-selected
+                            multiple
+                            item-text="description"
+                            item-value="contactMechPurposeTypeId">
                         </v-select>
                       </v-list-item-subtitle>
                     </v-list-item-content>
-                    <v-list-item-action v-if="editMode">
-                      <v-btn icon @click="removeContactMech(phoneNumber)">
-                        <v-icon id='mdi-delete' color="red">{{getIcon('mdi-delete')}}</v-icon>
-                      </v-btn>
-                    </v-list-item-action>
                   </v-list-item>
                   <v-list-item v-if="editMode">
                     <v-list-item-icon></v-list-item-icon>
@@ -118,15 +124,15 @@
                       </v-list-item-subtitle>
                       <v-list-item-subtitle v-if="editMode">
                         <v-select
-                          label="purposes"
-                          v-model="email.purposes"
-                          :items="purposeListByType.EMAIL_ADDRESS"
-                          deletable-chips
-                          chips
-                          hide-selected
-                          multiple
-                          item-text="description"
-                          item-value="contactMechPurposeTypeId">
+                            label="purposes"
+                            v-model="email.purposes"
+                            :items="purposeListByType.EMAIL_ADDRESS"
+                            deletable-chips
+                            chips
+                            hide-selected
+                            multiple
+                            item-text="description"
+                            item-value="contactMechPurposeTypeId">
                         </v-select>
                       </v-list-item-subtitle>
                     </v-list-item-content>
@@ -146,53 +152,19 @@
                     </v-list-item-content>
                   </v-list-item>
                   <v-divider inset v-if="emailAddressList.length > 0 || editMode"></v-divider>
-                  <div v-if="showMore">
-                    <v-list-item v-for="ipAddress in ipAddressList"
-                                 :key="ipAddress.contactMech.contactMechId">
-                      <v-list-item-icon>
-                        <v-tooltip top>
-                          <template v-slot:activator="{ on }">
-                            <v-icon id='mdi-descktop-tower' left v-on="on">{{getIcon('mdi-desktop-tower')}}</v-icon>
-                          </template>
-                          <span>IP address</span>
-                        </v-tooltip>
-                      </v-list-item-icon>
-                      <v-list-item-content>
-                        <v-list-item-title v-if="!editMode">
-                          {{ipAddress.contactMech.infoString}}
-                        </v-list-item-title>
-                        <v-list-item-title v-if="editMode">
-                          <v-row>
-                            <v-col>
-                              <v-text-field hide-details label="IP address"
-                                            v-model="ipAddress.contactMech.infoString"></v-text-field>
-                            </v-col>
-                          </v-row>
-                        </v-list-item-title>
-                        <v-list-item-subtitle v-if="ipAddress.partyContactMechPurposes.length > 0">
-                          <v-chip class="primary mr-2" x-small v-for="purpose in ipAddress.partyContactMechPurposes"
-                                  :key="purpose.contactMechId + '-' + purpose.contactMechPurpostTypeId">
-                            {{purpose.contactMechPurposeTypeId}}
-                          </v-chip>
-                        </v-list-item-subtitle>
-                      </v-list-item-content>
-                      <v-list-item-action v-if="editMode">
-                        <v-btn icon @click="removeContactMech(ipAddress)">
-                          <v-icon id='mdi-delete' color="red">{{getIcon('mdi-delete')}}</v-icon>
-                        </v-btn>
-                      </v-list-item-action>
-                    </v-list-item>
-                  </div>
-                  <v-list-item v-if="editMode && showMore">
-                    <v-list-item-icon></v-list-item-icon>
-                    <v-list-item-content>
-                      <v-list-item-subtitle @click="addIpAddress">
-                        <v-icon id='mdi-plus-circle' left>{{getIcon('mdi-plus-circle')}}</v-icon>
-                        Add IP address
-                      </v-list-item-subtitle>
-                    </v-list-item-content>
-                  </v-list-item>
-                  <v-divider inset v-if="(ipAddressList.length > 0 && showMore) || (editMode && showMore)"></v-divider>
+                </v-list>
+                <generic
+                    icon="mdi-desktop-tower"
+                    :contact-mech-list="ipAddressList"
+                    contact-mech-type-id="IP_ADDRESS"
+                    :edit-mode="editMode"
+                    label="IP address"
+                    :show-more="showMore"
+                    :purpose-list="purposeListByType.IP_ADDRESS"
+                    @removeContactMech="removeContactMech($event)"
+                    @addContactMech="addIpAddress"
+                ></generic>
+                <v-list dense>
                   <div v-if="showMore">
                     <v-list-item v-for="domainName in domainNameList"
                                  :key="domainName.contactMech.contactMechId">
@@ -271,15 +243,15 @@
                         </v-list-item-subtitle>
                         <v-list-item-subtitle v-if="editMode">
                           <v-select
-                            label="purposes"
-                            v-model="ldapAddress.purposes"
-                            :items="purposeListByType.LDAP_ADDRESS"
-                            deletable-chips
-                            chips
-                            hide-selected
-                            multiple
-                            item-text="description"
-                            item-value="contactMechPurposeTypeId">
+                              label="purposes"
+                              v-model="ldapAddress.purposes"
+                              :items="purposeListByType.LDAP_ADDRESS"
+                              deletable-chips
+                              chips
+                              hide-selected
+                              multiple
+                              item-text="description"
+                              item-value="contactMechPurposeTypeId">
                           </v-select>
                         </v-list-item-subtitle>
                       </v-list-item-content>
@@ -303,10 +275,9 @@
                              v-if="(ldapAddressList.length > 0 && showMore) || (showMore && editMode)"></v-divider>
                 </v-list>
               </v-col>
-              <v-col cols="12" md="6" align-self="start">
-                <v-list dense sel-label="postalAddr">
-                  <v-list-item v-for="postalAddress in postalAddressList"
-                               :key="postalAddress.contactMech.contactMechId">
+              <v-col cols="12" xl="6" align-self="start">
+                <v-list dense sel-label="postalAddrHeader">
+                  <v-list-item>
                     <v-list-item-icon>
                       <v-tooltip top>
                         <template v-slot:activator="{ on }">
@@ -315,6 +286,17 @@
                         <span>Postal address</span>
                       </v-tooltip>
                     </v-list-item-icon>
+                    ,
+                    <v-list-item-content>
+                      <v-list-item-title>
+                        Postal address
+                      </v-list-item-title>
+                    </v-list-item-content>
+                  </v-list-item>
+                </v-list>
+                <v-list dense sel-label="postalAddr">
+                  <v-list-item v-for="postalAddress in postalAddressList"
+                               :key="postalAddress.contactMech.contactMechId">
                     <v-list-item-content v-if="!editMode">
                       <v-list-item-title>
                         {{postalAddress.postalAddress.toName}} {{postalAddress.postalAddress.attnName}}
@@ -337,52 +319,56 @@
                     </v-list-item-content>
                     <v-list-item-content v-if="editMode">
                       <v-form class="ml-3" :lazy-validator="lazy">
-                        <v-row>
-                          <v-text-field hide-details name="toName" label="To Name"
-                                        :rules="forms.postalAddress.rules.toName"
-                                        v-model="postalAddress.postalAddress.toName" class="mr-4"></v-text-field>
-                          <v-text-field hide-details name="attentionName" label="Attention Name"
-                                        :rules="forms.postalAddress.rules.attentionName"
-                                        v-model="postalAddress.postalAddress.attnName"></v-text-field>
-                        </v-row>
-                        <v-row>
-                          <v-text-field hide-details name="addressLine1" label="Address Line 1 *"
-                                        :rules="forms.postalAddress.rules.addressLine1"
-                                        v-model="postalAddress.postalAddress.address1"></v-text-field>
-                        </v-row>
-                        <v-row>
-                          <v-text-field hide-details name="addressLine2" label="Address Line 2"
-                                        :rules="forms.postalAddress.rules.addressLine2"
-                                        v-model="postalAddress.postalAddress.address2"></v-text-field>
-                        </v-row>
-                        <v-row>
-                          <v-text-field hide-details name="city" label="City *"
-                                        v-model="postalAddress.postalAddress.city"
-                                        :rules="forms.postalAddress.rules.city" class="mr-4"></v-text-field>
-                          <v-text-field hide-details name="zipPostalCode" label="Zip/Postal Code *"
-                                        v-model="postalAddress.postalAddress.postalCode"
-                                        :rules="forms.postalAddress.rules.zipPostalCode" class="mr-4"></v-text-field>
-                        </v-row>
-                        <v-list-item-subtitle v-if="editMode">
-                          <v-select
-                            label="purposes"
-                            v-model="postalAddress.purposes"
-                            :items="purposeListByType.POSTAL_ADDRESS"
-                            deletable-chips
-                            chips
-                            hide-selected
-                            multiple
-                            item-text="description"
-                            item-value="contactMechPurposeTypeId">
-                          </v-select>
-                        </v-list-item-subtitle>
+                        <v-container>
+                          <v-row>
+                            <v-text-field hide-details name="toName" label="To Name"
+                                          :rules="forms.postalAddress.rules.toName"
+                                          v-model="postalAddress.postalAddress.toName" class="mr-4"></v-text-field>
+                            <v-text-field hide-details name="attentionName" label="Attention Name"
+                                          :rules="forms.postalAddress.rules.attentionName"
+                                          v-model="postalAddress.postalAddress.attnName"></v-text-field>
+                          </v-row>
+                          <v-row>
+                            <v-text-field hide-details name="addressLine1" label="Address Line 1 *"
+                                          :rules="forms.postalAddress.rules.addressLine1"
+                                          v-model="postalAddress.postalAddress.address1"></v-text-field>
+                          </v-row>
+                          <v-row>
+                            <v-text-field hide-details name="addressLine2" label="Address Line 2"
+                                          :rules="forms.postalAddress.rules.addressLine2"
+                                          v-model="postalAddress.postalAddress.address2"></v-text-field>
+                          </v-row>
+                          <v-row>
+                            <v-text-field hide-details name="city" label="City *"
+                                          v-model="postalAddress.postalAddress.city"
+                                          :rules="forms.postalAddress.rules.city" class="mr-4"></v-text-field>
+                            <v-text-field hide-details name="zipPostalCode" label="Zip/Postal Code *"
+                                          v-model="postalAddress.postalAddress.postalCode"
+                                          :rules="forms.postalAddress.rules.zipPostalCode" class="mr-4"></v-text-field>
+                          </v-row>
+                          <v-row>
+                            <v-list-item-subtitle v-if="editMode">
+                              <v-select
+                                  label="purposes"
+                                  v-model="postalAddress.purposes"
+                                  :items="purposeListByType.POSTAL_ADDRESS"
+                                  deletable-chips
+                                  chips
+                                  hide-selected
+                                  multiple
+                                  item-text="description"
+                                  item-value="contactMechPurposeTypeId">
+                              </v-select>
+                            </v-list-item-subtitle>
+                          </v-row>
+                          <v-row align-content="end">
+                            <v-btn icon @click="removeContactMech(postalAddress)">
+                              <v-icon id='mdi-delete' color="red">{{getIcon('mdi-delete')}}</v-icon>
+                            </v-btn>
+                          </v-row>
+                        </v-container>
                       </v-form>
                     </v-list-item-content>
-                    <v-list-item-action v-if="editMode">
-                      <v-btn icon @click="removeContactMech(postalAddress)">
-                        <v-icon id='mdi-delete' color="red">{{getIcon('mdi-delete')}}</v-icon>
-                      </v-btn>
-                    </v-list-item-action>
                   </v-list-item>
                   <v-list-item v-if="editMode">
                     <v-list-item-icon></v-list-item-icon>
@@ -439,7 +425,8 @@
                       </v-list-item-subtitle>
                     </v-list-item-content>
                   </v-list-item>
-                    <v-divider inset v-if="(internalPartyIdList.length > 0 && showMore) || (editMode && showMore)"></v-divider>
+                    <v-divider inset
+                               v-if="(internalPartyIdList.length > 0 && showMore) || (editMode && showMore)"></v-divider>
                     <div v-if="showMore">
                   <v-list-item v-for="webAddress in webAddressList"
                                :key="webAddress.contactMech.contactMechId">
@@ -471,15 +458,15 @@
                         </v-list-item-subtitle>
                         <v-list-item-subtitle v-if="editMode">
                           <v-select
-                            label="purposes"
-                            v-model="webAddress.purposes"
-                            :items="purposeListByType.WEB_ADDRESS"
-                            deletable-chips
-                            chips
-                            hide-selected
-                            multiple
-                            item-text="description"
-                            item-value="contactMechPurposeTypeId">
+                              label="purposes"
+                              v-model="webAddress.purposes"
+                              :items="purposeListByType.WEB_ADDRESS"
+                              deletable-chips
+                              chips
+                              hide-selected
+                              multiple
+                              item-text="description"
+                              item-value="contactMechPurposeTypeId">
                           </v-select>
                         </v-list-item-subtitle>
                   </v-list-item-content>
@@ -499,7 +486,8 @@
                       </v-list-item-subtitle>
                     </v-list-item-content>
                   </v-list-item>
-                    <v-divider inset v-if="(webAddressList.length > 0 && showMore) || (editMode && showMore)"></v-divider>
+                    <v-divider inset
+                               v-if="(webAddressList.length > 0 && showMore) || (editMode && showMore)"></v-divider>
                 <v-list-item v-for="ftpAddress in ftpAddressList"
                              :key="ftpAddress.contactMech.contactMechId">
                 <v-list-item-icon>
@@ -594,7 +582,8 @@
                   </v-list-item-subtitle>
                 </v-list-item-content>
               </v-list-item>
-                    <v-divider inset v-if="(ftpAddressList.length > 0 && showMore) || (editMode && showMore)"></v-divider>
+                    <v-divider inset
+                               v-if="(ftpAddressList.length > 0 && showMore) || (editMode && showMore)"></v-divider>
             </span>
                 </v-list>
               </v-col>
@@ -630,9 +619,12 @@
 
   import icons from '../../js/icons'
 
+  import Generic from './ContactMech/Generic'
+
   export default {
     name: "ContactMech",
     components: {
+      generic: Generic
     },
     props: ['props', 'updateStore'],
     data() {
