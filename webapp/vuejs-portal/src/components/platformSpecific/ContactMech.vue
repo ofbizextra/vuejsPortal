@@ -155,7 +155,7 @@
                 </v-list>
                 <generic
                     icon="mdi-desktop-tower"
-                    :contact-mech-list="ipAddressList"
+                    :contact-mech-list="contactsByType('IP_ADDRESS')"
                     contact-mech-type-id="IP_ADDRESS"
                     :edit-mode="editMode"
                     label="IP address"
@@ -164,116 +164,28 @@
                     @removeContactMech="removeContactMech($event)"
                     @addContactMech="addIpAddress"
                 ></generic>
-                <v-list dense>
-                  <div v-if="showMore">
-                    <v-list-item v-for="domainName in domainNameList"
-                                 :key="domainName.contactMech.contactMechId">
-                      <v-list-item-icon>
-                        <v-tooltip top>
-                          <template v-slot:activator="{ on }">
-                            <v-icon id='mdi-at' left v-on="on">{{getIcon('mdi-at')}}</v-icon>
-                          </template>
-                          <span>Domain Name</span>
-                        </v-tooltip>
-                      </v-list-item-icon>
-                      <v-list-item-content>
-                        <v-list-item-title v-if="!editMode">
-                          {{domainName.contactMech.infoString}}
-                        </v-list-item-title>
-                        <v-list-item-title v-if="editMode">
-                          <v-row>
-                            <v-col>
-                              <v-text-field hide-details label="Domain Name"
-                                            v-model="domainName.contactMech.infoString"></v-text-field>
-                            </v-col>
-                          </v-row>
-                        </v-list-item-title>
-                        <v-list-item-subtitle v-if="domainName.partyContactMechPurposes.length > 0">
-                          <v-chip class="primary mr-2" x-small v-for="purpose in domainName.partyContactMechPurposes"
-                                  :key="purpose.contactMechId + '-' + purpose.contactMechPurpostTypeId">
-                            {{purpose.contactMechPurposeTypeId}}
-                          </v-chip>
-                        </v-list-item-subtitle>
-                      </v-list-item-content>
-                      <v-list-item-action v-if="editMode">
-                        <v-btn icon @click="removeContactMech(domainName)">
-                          <v-icon id='mdi-delete' color="red">{{getIcon('mdi-delete')}}</v-icon>
-                        </v-btn>
-                      </v-list-item-action>
-                    </v-list-item>
-                  </div>
-                  <v-list-item v-if="editMode && showMore">
-                    <v-list-item-icon></v-list-item-icon>
-                    <v-list-item-content>
-                      <v-list-item-subtitle @click="addDomainName">
-                        <v-icon id='mdi-plus-circle' left>{{getIcon('mdi-plus-circle')}}</v-icon>
-                        Add domain name
-                      </v-list-item-subtitle>
-                    </v-list-item-content>
-                  </v-list-item>
-                  <v-divider inset v-if="(domainNameList.length > 0 && showMore) || (showMore && editMode)"></v-divider>
-                  <div v-if="showMore">
-                    <v-list-item v-for="ldapAddress in ldapAddressList"
-                                 :key="ldapAddress.contactMech.contactMechId">
-                      <v-list-item-icon>
-                        <v-tooltip top>
-                          <template v-slot:activator="{ on }">
-                            <v-icon id='mdi-file-cloud' left v-on="on">{{getIcon('mdi-file-cloud')}}</v-icon>
-                          </template>
-                          <span>LDAP address</span>
-                        </v-tooltip>
-                      </v-list-item-icon>
-                      <v-list-item-content>
-                        <v-list-item-title v-if="!editMode">
-                          {{ldapAddress.contactMech.infoString}}
-                        </v-list-item-title>
-                        <v-list-item-title v-if="editMode">
-                          <v-row>
-                            <v-col>
-                              <v-text-field hide-details label="LDAP address"
-                                            v-model="ldapAddress.contactMech.infoString"></v-text-field>
-                            </v-col>
-                          </v-row>
-                        </v-list-item-title>
-                        <v-list-item-subtitle v-if="ldapAddress.partyContactMechPurposes.length > 0 && !editMode">
-                          <v-chip class="primary mr-2" x-small v-for="purpose in ldapAddress.partyContactMechPurposes"
-                                  :key="purpose.contactMechId + '-' + purpose.contactMechPurposeTypeId">
-                            {{displayPurpose('LDAP_ADDRESS', purpose.contactMechPurposeTypeId)}}
-                          </v-chip>
-                        </v-list-item-subtitle>
-                        <v-list-item-subtitle v-if="editMode">
-                          <v-select
-                              label="purposes"
-                              v-model="ldapAddress.purposes"
-                              :items="purposeListByType.LDAP_ADDRESS"
-                              deletable-chips
-                              chips
-                              hide-selected
-                              multiple
-                              item-text="description"
-                              item-value="contactMechPurposeTypeId">
-                          </v-select>
-                        </v-list-item-subtitle>
-                      </v-list-item-content>
-                      <v-list-item-action v-if="editMode">
-                        <v-btn icon @click="removeContactMech(ldapAddress)">
-                          <v-icon id='mdi-delete' color="red">{{getIcon('mdi-delete')}}</v-icon>
-                        </v-btn>
-                      </v-list-item-action>
-                    </v-list-item>
-                  </div>
-                  <v-list-item v-if="editMode && showMore">
-                    <v-list-item-icon></v-list-item-icon>
-                    <v-list-item-content>
-                      <v-list-item-subtitle @click="addLdapAddress">
-                        <v-icon id='mdi-plus-circle' left>{{getIcon('mdi-plus-circle')}}</v-icon>
-                        Add LDAP address
-                      </v-list-item-subtitle>
-                    </v-list-item-content>
-                  </v-list-item>
-                  <v-divider inset
-                             v-if="(ldapAddressList.length > 0 && showMore) || (showMore && editMode)"></v-divider>
-                </v-list>
+                <generic
+                    icon="mdi-at"
+                    :contact-mech-list="contactsByType('DOMAIN_NAME')"
+                    contact-mech-type-id="DOMAIN_NAME"
+                    :edit-mode="editMode"
+                    label="Domain name"
+                    :show-more="showMore"
+                    :purpose-list="purposeListByType.DOMAIN_NAME"
+                    @removeContactMech="removeContactMech($event)"
+                    @addContactMech="addDomainName"
+                ></generic>
+                <generic
+                    icon="mdi-file-cloud"
+                    :contact-mech-list="contactsByType('LDAP_ADDRESS')"
+                    contact-mech-type-id="LDAP_ADDRESS"
+                    :edit-mode="editMode"
+                    label="LDAP address"
+                    :show-more="showMore"
+                    :purpose-list="purposeListByType.LDAP_ADDRESS"
+                    @removeContactMech="removeContactMech($event)"
+                    @addContactMech="addLdapAddress"
+                ></generic>
               </v-col>
               <v-col cols="12" xl="6" align-self="start">
                 <v-list dense sel-label="postalAddrHeader">
@@ -381,113 +293,31 @@
                   </v-list-item>
                   <v-divider inset v-if="postalAddressList.length > 0"></v-divider>
                   <span v-if="showMore">
-              <v-list-item v-for="internalNote in internalPartyIdList"
-                           :key="internalNote.contactMech.contactMechId">
-                <v-list-item-icon>
-                  <v-tooltip top>
-                    <template v-slot:activator="{ on }">
-                      <v-icon id='mdi-note-text' left v-on="on">{{getIcon('mdi-note-text')}}</v-icon>
-                    </template>
-                    <span>Internal note</span>
-                  </v-tooltip>
-                </v-list-item-icon>
-                <v-list-item-content>
-                  <v-list-item-title v-if="!editMode">
-                    {{internalNote.contactMech.infoString}}
-                  </v-list-item-title>
-                  <v-list-item-title v-if="editMode">
-                    <v-row>
-                      <v-col>
-                        <v-text-field hide-details label="Internal note"
-                                      v-model="internalNote.contactMech.infoString"></v-text-field>
-                      </v-col>
-                    </v-row>
-                  </v-list-item-title>
-                  <v-list-item-subtitle v-if="internalNote.partyContactMechPurposes.length > 0">
-                    <v-chip class="primary mr-2" x-small v-for="purpose in internalNote.partyContactMechPurposes"
-                            :key="purpose.contactMechId + '-' + purpose.contactMechPurpostTypeId">
-                          {{purpose.contactMechPurposeTypeId}}
-                    </v-chip>
-                  </v-list-item-subtitle>
-                </v-list-item-content>
-                <v-list-item-action v-if="editMode">
-                      <v-btn icon @click="removeContactMech(internalNote)">
-                        <v-icon id='mdi-delete' color="red">{{getIcon('mdi-delete')}}</v-icon>
-                      </v-btn>
-                    </v-list-item-action>
-              </v-list-item>
-                    <v-list-item v-if="editMode">
-                    <v-list-item-icon></v-list-item-icon>
-                    <v-list-item-content>
-                      <v-list-item-subtitle @click="addInternalPartyId">
-                        <v-icon id='mdi-plus-circle' left>{{getIcon('mdi-plus-circle')}}</v-icon>
-                        Add internal note
-                      </v-list-item-subtitle>
-                    </v-list-item-content>
-                  </v-list-item>
-                    <v-divider inset
-                               v-if="(internalPartyIdList.length > 0 && showMore) || (editMode && showMore)"></v-divider>
-                    <div v-if="showMore">
-                  <v-list-item v-for="webAddress in webAddressList"
-                               :key="webAddress.contactMech.contactMechId">
-                  <v-list-item-icon>
-                    <v-tooltip top>
-                      <template v-slot:activator="{ on }">
-                        <v-icon id='mdi-web' left v-on="on">{{getIcon('mdi-web')}}</v-icon>
-                      </template>
-                      <span>Web address</span>
-                    </v-tooltip>
-                  </v-list-item-icon>
-                  <v-list-item-content>
-                    <v-list-item-title v-if="!editMode">
-                      {{webAddress.contactMech.infoString}}
-                    </v-list-item-title>
-                    <v-list-item-title v-if="editMode">
-                      <v-row>
-                        <v-col>
-                          <v-text-field hide-details label="Web Address"
-                                        v-model="webAddress.contactMech.infoString"></v-text-field>
-                        </v-col>
-                      </v-row>
-                    </v-list-item-title>
-                    <v-list-item-subtitle v-if="webAddress.partyContactMechPurposes.length > 0 && !editMode">
-                          <v-chip class="primary mr-2" x-small v-for="purpose in webAddress.partyContactMechPurposes"
-                                  :key="purpose.contactMechId + '-' + purpose.contactMechPurposeTypeId">
-                            {{displayPurpose('WEB_ADDRESS', purpose.contactMechPurposeTypeId)}}
-                          </v-chip>
-                        </v-list-item-subtitle>
-                        <v-list-item-subtitle v-if="editMode">
-                          <v-select
-                              label="purposes"
-                              v-model="webAddress.purposes"
-                              :items="purposeListByType.WEB_ADDRESS"
-                              deletable-chips
-                              chips
-                              hide-selected
-                              multiple
-                              item-text="description"
-                              item-value="contactMechPurposeTypeId">
-                          </v-select>
-                        </v-list-item-subtitle>
-                  </v-list-item-content>
-                    <v-list-item-action v-if="editMode">
-                        <v-btn icon @click="removeContactMech(webAddress)">
-                          <v-icon id='mdi-delete' color="red">{{getIcon('mdi-delete')}}</v-icon>
-                        </v-btn>
-                      </v-list-item-action>
-                </v-list-item>
-                    </div>
-                    <v-list-item v-if="editMode">
-                    <v-list-item-icon></v-list-item-icon>
-                    <v-list-item-content>
-                      <v-list-item-subtitle @click="addWebAddress">
-                        <v-icon id='mdi-plus-circle' left>{{getIcon('mdi-plus-circle')}}</v-icon>
-                        Add web address
-                      </v-list-item-subtitle>
-                    </v-list-item-content>
-                  </v-list-item>
-                    <v-divider inset
-                               v-if="(webAddressList.length > 0 && showMore) || (editMode && showMore)"></v-divider>
+                  </span>
+                </v-list>
+                <generic
+                    icon="mdi-note-text"
+                    :contact-mech-list="contactsByType('INTERNAL_PARTYID')"
+                    contact-mech-type-id="INTERNAL_PARTYID"
+                    :edit-mode="editMode"
+                    label="Internal note"
+                    :show-more="showMore"
+                    :purpose-list="purposeListByType.INTERNAL_PARTYID"
+                    @removeContactMech="removeContactMech($event)"
+                    @addContactMech="addInternalPartyId"
+                ></generic>
+                <generic
+                    icon="mdi-web"
+                    :contact-mech-list="contactsByType('WEB_ADDRESS')"
+                    contact-mech-type-id="WEB_ADDRESS"
+                    :edit-mode="editMode"
+                    label="Web address"
+                    :show-more="showMore"
+                    :purpose-list="purposeListByType.WEB_ADDRESS"
+                    @removeContactMech="removeContactMech($event)"
+                    @addContactMech="addWebAddress"
+                ></generic>
+                <v-list dense>
                 <v-list-item v-for="ftpAddress in ftpAddressList"
                              :key="ftpAddress.contactMech.contactMechId">
                 <v-list-item-icon>
@@ -584,7 +414,6 @@
               </v-list-item>
                     <v-divider inset
                                v-if="(ftpAddressList.length > 0 && showMore) || (editMode && showMore)"></v-divider>
-            </span>
                 </v-list>
               </v-col>
             </v-row>
@@ -900,10 +729,7 @@
     },
     methods: {
       contactsByType(type) {
-        if (this.showMore) {
-          return this.dataSet.hasOwnProperty('valueMaps') ? [...this.dataSet.valueMaps, ...this.toCreate].filter(contact => contact.contactMech.contactMechTypeId === type) : []
-        }
-        return this.dataSet.hasOwnProperty('valueMaps') ? [...this.dataSet.valueMaps, ...this.toCreate].filter(contact => contact.contactMech.contactMechTypeId === type).splice(0, 1) : []
+        return this.dataSet.hasOwnProperty('valueMaps') ? [...this.dataSet.valueMaps, ...this.toCreate].filter(contact => contact.contactMech.contactMechTypeId === type) : []
       },
       countContactsByType(type) {
         return this.dataSet.hasOwnProperty('valueMaps') ? this.dataSet.valueMaps.filter(contact => contact.contactMech.contactMechTypeId === type).length : []

@@ -61,7 +61,7 @@ export default {
   'mdi-file-cloud': mdiFileCloud,
   'mdi-map-marker': mdiMapMarker,
   'mdi-note-text': mdiNoteText,
-  'mdi-text': mdiWeb,
+  'mdi-web': mdiWeb,
   'mdi-server': mdiServer,
 
 };
