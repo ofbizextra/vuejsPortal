@@ -25,75 +25,17 @@
             <v-row stretch dense>
               <v-col cols="12" xl="6" align-self="start">
                 <v-list dense>
-                  <v-list-item v-for="phoneNumber in telecomNumberList"
-                               :key="phoneNumber.contactMech.contactMechId">
-                    <v-tooltip top>
-                      <template v-slot:activator="{ on }">
-                        <v-list-item-icon>
-                          <table>
-                            <tr>
-                              <v-btn icon v-on="on">
-                                <v-icon id='mdi-phone' left>{{getIcon('mdi-phone')}}</v-icon>
-                              </v-btn>
-                            </tr>
-                            <tr v-if="editMode">
-                              <v-btn icon @click="removeContactMech(phoneNumber)">
-                                <v-icon id='mdi-delete' color="red">{{getIcon('mdi-delete')}}</v-icon>
-                              </v-btn>
-                            </tr>
-                          </table>
-                        </v-list-item-icon>
-                      </template>
-                      <span>Telecom number</span>
-                    </v-tooltip>
-                    <v-list-item-content>
-                      <v-list-item-title v-if="!editMode">
-                        {{`${phoneNumber.telecomNumber.countryCode || ''} ${phoneNumber.telecomNumber.areaCode || ''}
-                        ${phoneNumber.telecomNumber.contactNumber || ''} ${phoneNumber.telecomNumber.extension || ''}`}}
-                      </v-list-item-title>
-                      <v-list-item-title v-if="editMode">
-                        <v-row>
-                          <v-col class="col-3">
-                            <v-text-field class="ignore-css" hide-details label="Country code"
-                                          v-model="phoneNumber.telecomNumber.countryCode"></v-text-field>
-                          </v-col>
-                          <v-col class="col-9">
-                            <v-text-field class="ignore-css" hide-details label="Number"
-                                          v-model="phoneNumber.telecomNumber.contactNumber"></v-text-field>
-                          </v-col>
-                        </v-row>
-                      </v-list-item-title>
-                      <v-list-item-subtitle v-if="phoneNumber.partyContactMechPurposes.length > 0 && !editMode">
-                        <v-chip class="primary mr-2" x-small v-for="purpose in phoneNumber.partyContactMechPurposes"
-                                :key="purpose.contactMechId + '-' + purpose.contactMechPurposeTypeId">
-                          {{displayPurpose('TELECOM_NUMBER', purpose.contactMechPurposeTypeId)}}
-                        </v-chip>
-                      </v-list-item-subtitle>
-                      <v-list-item-subtitle v-if="editMode">
-                        <v-select
-                            label="purposes"
-                            v-model="phoneNumber.purposes"
-                            :items="purposeListByType.TELECOM_NUMBER"
-                            deletable-chips
-                            chips
-                            hide-selected
-                            multiple
-                            item-text="description"
-                            item-value="contactMechPurposeTypeId">
-                        </v-select>
-                      </v-list-item-subtitle>
-                    </v-list-item-content>
-                  </v-list-item>
-                  <v-list-item v-if="editMode">
-                    <v-list-item-icon></v-list-item-icon>
-                    <v-list-item-content>
-                      <v-list-item-subtitle @click="addTelecomNumber">
-                        <v-icon id='mdi-plus-circle' left>{{getIcon('mdi-plus-circle')}}</v-icon>
-                        Add telecom number
-                      </v-list-item-subtitle>
-                    </v-list-item-content>
-                  </v-list-item>
-                  <v-divider inset v-if="telecomNumberList.length > 0 || editMode"></v-divider>
+                  <telecom-number
+                      icon="mdi-phone"
+                      :contact-mech-list="contactsByType('TELECOM_NUMBER')"
+                      contact-mech-type-id="TELECOM_NUMBER"
+                      :edit-mode="editMode"
+                      label="Telecom number"
+                      :show-more="showMore"
+                      :purpose-list="purposeListByType.TELECOM_NUMBER"
+                      @removeContactMech="removeContactMech($event)"
+                      @addContactMech="addTelecomNumber"
+                  ></telecom-number>
                   <v-list-item v-for="email in emailAddressList"
                                :key="email.contactMech.contactMechId">
                     <v-list-item-icon>
@@ -442,18 +384,20 @@
   const updateEmailAddressUrl = '/partymgrfjs/control/updateEmailAddress'
   const updateFtpAddressUrl = '/partymgrfjs/control/updateFtpAddress'
   const deleteContactMechUrl = '/partymgrfjs/control/deleteContactMech'
-  const getContactmechPurposeTypeUrl = '/partymgrfjs/control/getContactmechPurposeType'
+  const getContactMechPurposeTypeUrl = '/partymgrfjs/control/getContactmechPurposeType'
   const createPartyContactMechPurposeUrl = '/partymgrfjs/control/createPartyContactMechPurpose'
   const expirePartyContactMechPurposeUrl = '/partymgrfjs/control/expirePartyContactMechPurpose'
 
   import icons from '../../js/icons'
 
   import Generic from './ContactMech/Generic'
+  import TelecomNumber from './ContactMech/TelecomNumber'
 
   export default {
     name: "ContactMech",
     components: {
-      generic: Generic
+      generic: Generic,
+      'telecom-number': TelecomNumber
     },
     props: ['props', 'updateStore'],
     data() {
@@ -463,11 +407,6 @@
         toDelete: [],
         editMode: false,
         showMore: false,
-        items: [
-          'item 1',
-          'item 2',
-          'item 3'
-        ],
         contactTypes: [
           "ELECTRONIC_ADDRESS",
           "POSTAL_ADDRESS",
@@ -1355,7 +1294,7 @@
     mounted() {
       this.updateDataSet()
       for (let type of this.contactTypes) {
-        this.$http.post(getContactmechPurposeTypeUrl, {
+        this.$http.post(getContactMechPurposeTypeUrl, {
           contactMechTypeId: type
         }).then(response => {
           this.purposeListByType[type] = response.body.purposeTypeList
