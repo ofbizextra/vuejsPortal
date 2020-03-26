@@ -1,5 +1,5 @@
 <template>
-  <v-flex id="vue-submit-field" text-center class="ma-2">
+  <v-row id="vue-submit-field" text-center class="ma-2">
     <v-btn
         raised
         dark
@@ -8,7 +8,7 @@
         :label="title"
         v-on:click.prevent="resolveEvents">{{title}}
     </v-btn>
-  </v-flex>
+  </v-row>
 </template>
 
 <script>
