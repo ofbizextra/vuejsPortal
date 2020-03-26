@@ -1,376 +1,229 @@
 <template>
-  <v-container grid-list-xs text-center>
-    <v-layout wrap justify-space-around>
-      <v-flex text-left stretch xs12>
-        <v-card>
-          <v-toolbar flat v-if="!editMode">
-            <v-toolbar-title>Contact mech "{{this.props.partyId}}"</v-toolbar-title>
-            <div class="flex-grow-1"></div>
-            <v-btn icon @click="toggleEdit">
-              <v-icon v-on="on" id='mdi-pencil'>{{getIcon('mdi-pencil')}}</v-icon>
-            </v-btn>
-          </v-toolbar>
-          <v-toolbar flat v-if="editMode">
-            <v-btn icon @click="toggleEdit">
-              <v-icon id='mdi-arrow-left'>{{getIcon('mdi-arrow-left')}}</v-icon>
-            </v-btn>
-            <v-toolbar-title>Edit contact mech</v-toolbar-title>
-            <div class="flex-grow-1"></div>
-            <v-btn icon @click="updateAll">
-              <v-icon id='mdi-check'>{{getIcon('mdi-check')}}</v-icon>
-            </v-btn>
-          </v-toolbar>
-          <v-divider></v-divider>
-          <v-card-text>
-            <v-row stretch dense>
-              <v-col cols="12" xl="6" align-self="start">
-                <v-list dense>
-                  <telecom-number
-                      icon="mdi-phone"
-                      :contact-mech-list="contactsByType('TELECOM_NUMBER')"
-                      contact-mech-type-id="TELECOM_NUMBER"
-                      :edit-mode="editMode"
-                      label="Telecom number"
-                      :show-more="showMore"
-                      :purpose-list="purposeListByType.TELECOM_NUMBER"
-                      @removeContactMech="removeContactMech($event)"
-                      @addContactMech="addTelecomNumber"
-                  ></telecom-number>
-                  <v-list-item v-for="email in emailAddressList"
-                               :key="email.contactMech.contactMechId">
-                    <v-list-item-icon>
-                      <v-tooltip top>
-                        <template v-slot:activator="{ on }">
-                          <v-icon id='mdi-email' left v-on="on">{{getIcon('mdi-email')}}</v-icon>
-                        </template>
-                        <span>Email address</span>
-                      </v-tooltip>
-                    </v-list-item-icon>
-                    <v-list-item-content>
-                      <v-list-item-title v-if="!editMode">
-                        {{email.contactMech.infoString}}
-                      </v-list-item-title>
-                      <v-list-item-title v-if="editMode">
-                        <v-row>
-                          <v-col>
-                            <v-text-field hide-details label="Email address"
-                                          v-model="email.contactMech.infoString"></v-text-field>
-                          </v-col>
-                        </v-row>
-                      </v-list-item-title>
-                      <v-list-item-subtitle v-if="email.partyContactMechPurposes.length > 0 && !editMode">
-                        <v-chip class="primary mr-2" x-small v-for="purpose in email.partyContactMechPurposes"
-                                :key="purpose.contactMechId + '-' + purpose.contactMechPurposeTypeId">
-                          {{displayPurpose('EMAIL_ADDRESS', purpose.contactMechPurposeTypeId)}}
-                        </v-chip>
-                      </v-list-item-subtitle>
-                      <v-list-item-subtitle v-if="editMode">
-                        <v-select
-                            label="purposes"
-                            v-model="email.purposes"
-                            :items="purposeListByType.EMAIL_ADDRESS"
-                            deletable-chips
-                            chips
-                            hide-selected
-                            multiple
-                            item-text="description"
-                            item-value="contactMechPurposeTypeId">
-                        </v-select>
-                      </v-list-item-subtitle>
-                    </v-list-item-content>
-                    <v-list-item-action v-if="editMode">
-                      <v-btn icon @click="removeContactMech(email)">
-                        <v-icon id='mdi-delete' color="red">{{getIcon('mdi-delete')}}</v-icon>
-                      </v-btn>
-                    </v-list-item-action>
-                  </v-list-item>
-                  <v-list-item v-if="editMode">
-                    <v-list-item-icon></v-list-item-icon>
-                    <v-list-item-content>
-                      <v-list-item-subtitle @click="addEmailAddress">
-                        <v-icon id='mdi-plus-circle' left>{{getIcon('mdi-plus-circle')}}</v-icon>
-                        Add email address
-                      </v-list-item-subtitle>
-                    </v-list-item-content>
-                  </v-list-item>
-                  <v-divider inset v-if="emailAddressList.length > 0 || editMode"></v-divider>
-                </v-list>
-                <generic
-                    icon="mdi-desktop-tower"
-                    :contact-mech-list="contactsByType('IP_ADDRESS')"
-                    contact-mech-type-id="IP_ADDRESS"
-                    :edit-mode="editMode"
-                    label="IP address"
-                    :show-more="showMore"
-                    :purpose-list="purposeListByType.IP_ADDRESS"
-                    @removeContactMech="removeContactMech($event)"
-                    @addContactMech="addIpAddress"
-                ></generic>
-                <generic
-                    icon="mdi-at"
-                    :contact-mech-list="contactsByType('DOMAIN_NAME')"
-                    contact-mech-type-id="DOMAIN_NAME"
-                    :edit-mode="editMode"
-                    label="Domain name"
-                    :show-more="showMore"
-                    :purpose-list="purposeListByType.DOMAIN_NAME"
-                    @removeContactMech="removeContactMech($event)"
-                    @addContactMech="addDomainName"
-                ></generic>
-                <generic
-                    icon="mdi-file-cloud"
-                    :contact-mech-list="contactsByType('LDAP_ADDRESS')"
-                    contact-mech-type-id="LDAP_ADDRESS"
-                    :edit-mode="editMode"
-                    label="LDAP address"
-                    :show-more="showMore"
-                    :purpose-list="purposeListByType.LDAP_ADDRESS"
-                    @removeContactMech="removeContactMech($event)"
-                    @addContactMech="addLdapAddress"
-                ></generic>
-              </v-col>
-              <v-col cols="12" xl="6" align-self="start">
-                <v-list dense sel-label="postalAddrHeader">
-                  <v-list-item>
-                    <v-list-item-icon>
-                      <v-tooltip top>
-                        <template v-slot:activator="{ on }">
-                          <v-icon id='mdi-map-marker' left v-on="on">{{getIcon('mdi-map-marker')}}</v-icon>
-                        </template>
-                        <span>Postal address</span>
-                      </v-tooltip>
-                    </v-list-item-icon>
-                    ,
-                    <v-list-item-content>
-                      <v-list-item-title>
-                        Postal address
-                      </v-list-item-title>
-                    </v-list-item-content>
-                  </v-list-item>
-                </v-list>
-                <v-list dense sel-label="postalAddr">
-                  <v-list-item v-for="postalAddress in postalAddressList"
-                               :key="postalAddress.contactMech.contactMechId">
-                    <v-list-item-content v-if="!editMode">
-                      <v-list-item-title>
-                        {{postalAddress.postalAddress.toName}} {{postalAddress.postalAddress.attnName}}
-                      </v-list-item-title>
-                      <div>
-                        {{postalAddress.postalAddress.address1}}
-                      </div>
-                      <div>
-                        {{postalAddress.postalAddress.address2}}
-                      </div>
-                      <div>
-                        {{postalAddress.postalAddress.city}}, {{postalAddress.postalAddress.postalCode}}
-                      </div>
-                      <v-list-item-subtitle v-if="postalAddress.partyContactMechPurposes.length > 0 && !editMode">
-                        <v-chip class="primary mr-2" x-small v-for="purpose in postalAddress.partyContactMechPurposes"
-                                :key="purpose.contactMechId + '-' + purpose.contactMechPurposeTypeId">
-                          {{displayPurpose('POSTAL_ADDRESS', purpose.contactMechPurposeTypeId)}}
-                        </v-chip>
-                      </v-list-item-subtitle>
-                    </v-list-item-content>
-                    <v-list-item-content v-if="editMode">
-                      <v-form class="ml-3" :lazy-validator="lazy">
-                        <v-container>
-                          <v-row>
-                            <v-text-field hide-details name="toName" label="To Name"
-                                          :rules="forms.postalAddress.rules.toName"
-                                          v-model="postalAddress.postalAddress.toName" class="mr-4"></v-text-field>
-                            <v-text-field hide-details name="attentionName" label="Attention Name"
-                                          :rules="forms.postalAddress.rules.attentionName"
-                                          v-model="postalAddress.postalAddress.attnName"></v-text-field>
-                          </v-row>
-                          <v-row>
-                            <v-text-field hide-details name="addressLine1" label="Address Line 1 *"
-                                          :rules="forms.postalAddress.rules.addressLine1"
-                                          v-model="postalAddress.postalAddress.address1"></v-text-field>
-                          </v-row>
-                          <v-row>
-                            <v-text-field hide-details name="addressLine2" label="Address Line 2"
-                                          :rules="forms.postalAddress.rules.addressLine2"
-                                          v-model="postalAddress.postalAddress.address2"></v-text-field>
-                          </v-row>
-                          <v-row>
-                            <v-text-field hide-details name="city" label="City *"
-                                          v-model="postalAddress.postalAddress.city"
-                                          :rules="forms.postalAddress.rules.city" class="mr-4"></v-text-field>
-                            <v-text-field hide-details name="zipPostalCode" label="Zip/Postal Code *"
-                                          v-model="postalAddress.postalAddress.postalCode"
-                                          :rules="forms.postalAddress.rules.zipPostalCode" class="mr-4"></v-text-field>
-                          </v-row>
-                          <v-row>
-                            <v-list-item-subtitle v-if="editMode">
-                              <v-select
-                                  label="purposes"
-                                  v-model="postalAddress.purposes"
-                                  :items="purposeListByType.POSTAL_ADDRESS"
-                                  deletable-chips
-                                  chips
-                                  hide-selected
-                                  multiple
-                                  item-text="description"
-                                  item-value="contactMechPurposeTypeId">
-                              </v-select>
-                            </v-list-item-subtitle>
-                          </v-row>
-                          <v-row align-content="end">
-                            <v-btn icon @click="removeContactMech(postalAddress)">
-                              <v-icon id='mdi-delete' color="red">{{getIcon('mdi-delete')}}</v-icon>
-                            </v-btn>
-                          </v-row>
-                        </v-container>
-                      </v-form>
-                    </v-list-item-content>
-                  </v-list-item>
-                  <v-list-item v-if="editMode">
-                    <v-list-item-icon></v-list-item-icon>
-                    <v-list-item-content>
-                      <v-list-item-subtitle sel-label="addPostalAddr" @click="addPostalAddress">
-                        <v-icon id='mdi-plus-circle' left>{{getIcon('mdi-plus-circle')}}</v-icon>
-                        Add postal address
-                      </v-list-item-subtitle>
-                    </v-list-item-content>
-                  </v-list-item>
-                  <v-divider inset v-if="postalAddressList.length > 0"></v-divider>
-                  <span v-if="showMore">
-                  </span>
-                </v-list>
-                <generic
-                    icon="mdi-note-text"
-                    :contact-mech-list="contactsByType('INTERNAL_PARTYID')"
-                    contact-mech-type-id="INTERNAL_PARTYID"
-                    :edit-mode="editMode"
-                    label="Internal note"
-                    :show-more="showMore"
-                    :purpose-list="purposeListByType.INTERNAL_PARTYID"
-                    @removeContactMech="removeContactMech($event)"
-                    @addContactMech="addInternalPartyId"
-                ></generic>
-                <generic
-                    icon="mdi-web"
-                    :contact-mech-list="contactsByType('WEB_ADDRESS')"
-                    contact-mech-type-id="WEB_ADDRESS"
-                    :edit-mode="editMode"
-                    label="Web address"
-                    :show-more="showMore"
-                    :purpose-list="purposeListByType.WEB_ADDRESS"
-                    @removeContactMech="removeContactMech($event)"
-                    @addContactMech="addWebAddress"
-                ></generic>
-                <v-list dense>
-                <v-list-item v-for="ftpAddress in ftpAddressList"
-                             :key="ftpAddress.contactMech.contactMechId">
-                <v-list-item-icon>
-                  <v-tooltip top>
-                    <template v-slot:activator="{ on }">
-                      <v-icon id='mdi-server' left v-on="on">{{getIcon('mdi-server')}}</v-icon>
-                    </template>
-                    <span>FTP server</span>
-                  </v-tooltip>
-                </v-list-item-icon>
-                <v-list-item-content v-if="!editMode">
-                  <v-list-item-title>
-                    {{ftpAddress.ftpAddress.hostname}}:{{ftpAddress.ftpAddress.port}}
-                  </v-list-item-title>
-                  <div>
-                    user: {{ftpAddress.ftpAddress.username}} - pass: {{ftpAddress.ftpAddress.ftpPassword}}
-                  </div>
-                  <div>
-                    {{ftpAddress.ftpAddress.filePath}} - {{ftpAddress.ftpAddress.defaultTimeout}}ms
-                  </div>
-                  <div>
-                    <v-row class="ml-1" justify="space-around">
-                      <v-checkbox class="ma-0 mr-1" hide-details small label="binary" :disabled="!editMode"
-                                  v-model="ftpAddress.ftpAddress.binaryTransfer"
-                                  true-value="Y" false-value="N"></v-checkbox>
-                      <v-checkbox class="ma-0 mr-1" hide-details small label="zip" :disabled="!editMode"
-                                  v-model="ftpAddress.ftpAddress.zipFile"
-                                  true-value="Y" false-value="N"></v-checkbox>
-                      <v-checkbox class="ma-0 mr-1" hide-details small label="passive" :disabled="!editMode"
-                                  v-model="ftpAddress.ftpAddress.passiveMode"
-                                  true-value="Y" false-value="N"></v-checkbox>
+  <v-card class="ma-0 pa-0">
+    <v-toolbar dense flat v-if="!editMode" class="ma-0 pa-0">
+      <v-toolbar-title>Contact mech "{{this.props.partyId}}"</v-toolbar-title>
+      <div class="flex-grow-1"></div>
+      <v-btn color="warning" icon @click="toggleEdit">
+        <v-icon v-on="on" id='mdi-pencil'>{{getIcon('mdi-pencil')}}</v-icon>
+      </v-btn>
+    </v-toolbar>
+    <v-toolbar dense flat v-if="editMode" class="ma-0 pa-0">
+      <v-btn color="error" icon @click="toggleEdit">
+        <v-icon id='mdi-arrow-left'>{{getIcon('mdi-arrow-left')}}</v-icon>
+      </v-btn>
+      <v-toolbar-title>Edit contact mech</v-toolbar-title>
+      <div class="flex-grow-1"></div>
+      <v-btn color="success" icon @click="updateAll">
+        <v-icon id='mdi-check'>{{getIcon('mdi-check')}}</v-icon>
+      </v-btn>
+    </v-toolbar>
+    <v-card-text class="mt-2 ma-0 pa-0">
+      <v-row stretch dense>
+        <v-col cols="12" lg="6" align-self="start">
+          <telecom-number
+              icon="mdi-phone"
+              :contact-mech-list="contactsByType('TELECOM_NUMBER')"
+              contact-mech-type-id="TELECOM_NUMBER"
+              :edit-mode="editMode"
+              label="Telecom number"
+              :show-more="showMore"
+              :purpose-list="purposeListByType.TELECOM_NUMBER"
+              @removeContactMech="removeContactMech($event)"
+              @addContactMech="addTelecomNumber"
+          ></telecom-number>
+          <email-address
+              icon="mdi-email"
+              :contact-mech-list="contactsByType('EMAIL_ADDRESS')"
+              contact-mech-type-id="EMAIL_ADDRESS"
+              :edit-mode="editMode"
+              label="Email address"
+              :show-more="showMore"
+              :purpose-list="purposeListByType.EMAIL_ADDRESS"
+              @removeContactMech="removeContactMech($event)"
+              @addContactMech="addEmailAddress"
+          >
+          </email-address>
+          <generic
+              icon="mdi-desktop-tower"
+              :contact-mech-list="contactsByType('IP_ADDRESS')"
+              contact-mech-type-id="IP_ADDRESS"
+              :edit-mode="editMode"
+              label="IP address"
+              :show-more="showMore"
+              :purpose-list="purposeListByType.IP_ADDRESS"
+              @removeContactMech="removeContactMech($event)"
+              @addContactMech="addIpAddress"
+          ></generic>
+          <generic
+              icon="mdi-at"
+              :contact-mech-list="contactsByType('DOMAIN_NAME')"
+              contact-mech-type-id="DOMAIN_NAME"
+              :edit-mode="editMode"
+              label="Domain name"
+              :show-more="showMore"
+              :purpose-list="purposeListByType.DOMAIN_NAME"
+              @removeContactMech="removeContactMech($event)"
+              @addContactMech="addDomainName"
+          ></generic>
+          <generic
+              icon="mdi-file-cloud"
+              :contact-mech-list="contactsByType('LDAP_ADDRESS')"
+              contact-mech-type-id="LDAP_ADDRESS"
+              :edit-mode="editMode"
+              label="LDAP address"
+              :show-more="showMore"
+              :purpose-list="purposeListByType.LDAP_ADDRESS"
+              @removeContactMech="removeContactMech($event)"
+              @addContactMech="addLdapAddress"
+          ></generic>
+        </v-col>
+        <v-col cols="12" lg="6" align-self="start">
+          <postal-address
+              icon="mdi-map-marker"
+              :contact-mech-list="contactsByType('POSTAL_ADDRESS')"
+              contact-mech-type-id="POSTAL_ADDRESS"
+              :edit-mode="editMode"
+              label="Postal address"
+              :show-more="showMore"
+              :purpose-list="purposeListByType.POSTAL_ADDRESS"
+              :rules="forms.postalAddress.rules"
+              @removeContactMech="removeContactMech($event)"
+              @addContactMech="addPostalAddress"
+          >
+          </postal-address>
+          <generic
+              icon="mdi-note-text"
+              :contact-mech-list="contactsByType('INTERNAL_PARTYID')"
+              contact-mech-type-id="INTERNAL_PARTYID"
+              :edit-mode="editMode"
+              label="Internal note"
+              :show-more="showMore"
+              :purpose-list="purposeListByType.INTERNAL_PARTYID"
+              @removeContactMech="removeContactMech($event)"
+              @addContactMech="addInternalPartyId"
+          ></generic>
+          <generic
+              icon="mdi-web"
+              :contact-mech-list="contactsByType('WEB_ADDRESS')"
+              contact-mech-type-id="WEB_ADDRESS"
+              :edit-mode="editMode"
+              label="Web address"
+              :show-more="showMore"
+              :purpose-list="purposeListByType.WEB_ADDRESS"
+              @removeContactMech="removeContactMech($event)"
+              @addContactMech="addWebAddress"
+          ></generic>
+          <v-list dense>
+            <v-list-item v-for="ftpAddress in ftpAddressList"
+                         :key="ftpAddress.contactMech.contactMechId">
+              <v-list-item-icon>
+                <v-tooltip top>
+                  <template v-slot:activator="{ on }">
+                    <v-icon id='mdi-server' left v-on="on">{{getIcon('mdi-server')}}</v-icon>
+                  </template>
+                  <span>FTP server</span>
+                </v-tooltip>
+              </v-list-item-icon>
+              <v-list-item-content v-if="!editMode">
+                <v-list-item-title>
+                  {{ftpAddress.ftpAddress.hostname}}:{{ftpAddress.ftpAddress.port}}
+                </v-list-item-title>
+                <div>
+                  user: {{ftpAddress.ftpAddress.username}} - pass: {{ftpAddress.ftpAddress.ftpPassword}}
+                </div>
+                <div>
+                  {{ftpAddress.ftpAddress.filePath}} - {{ftpAddress.ftpAddress.defaultTimeout}}ms
+                </div>
+                <div>
+                  <v-row class="ml-1" justify="space-around">
+                    <v-checkbox class="ma-0 mr-1" hide-details small label="binary" :disabled="!editMode"
+                                v-model="ftpAddress.ftpAddress.binaryTransfer"
+                                true-value="Y" false-value="N"></v-checkbox>
+                    <v-checkbox class="ma-0 mr-1" hide-details small label="zip" :disabled="!editMode"
+                                v-model="ftpAddress.ftpAddress.zipFile"
+                                true-value="Y" false-value="N"></v-checkbox>
+                    <v-checkbox class="ma-0 mr-1" hide-details small label="passive" :disabled="!editMode"
+                                v-model="ftpAddress.ftpAddress.passiveMode"
+                                true-value="Y" false-value="N"></v-checkbox>
                   </v-row>
-                  </div>
-                  <v-list-item-subtitle v-if="ftpAddress.partyContactMechPurposes.length > 0">
-                    <v-chip class="primary mr-2" x-small v-for="purpose in ftpAddress.partyContactMechPurposes"
-                            :key="purpose.contactMechId + '-' + purpose.contactMechPurpostTypeId">
-                      {{purpose.contactMechPurposeTypeId}}
-                    </v-chip>
-                  </v-list-item-subtitle>
-                </v-list-item-content>
-                <v-list-item-content v-if="editMode">
-                  <v-form class="ml-3" :lazy-validator="lazy">
-                    <v-row>
-                      <v-text-field hide-details name="hostname" label="Host name" class="mr-4"
-                                    :rules="forms.ftpAddress.rules.hostname"
-                                    v-model="ftpAddress.ftpAddress.hostname"></v-text-field>
-                      <v-text-field hide-details name="port" label="Port" class="" :rules="forms.ftpAddress.rules.port"
-                                    v-model="ftpAddress.ftpAddress.port"></v-text-field>
-                    </v-row>
-                    <v-row>
-                      <v-text-field hide-details name="username" label="User Name" class="mr-4"
-                                    :rules="forms.ftpAddress.rules.username"
-                                    v-model="ftpAddress.ftpAddress.username"></v-text-field>
-                      <v-text-field hide-details name="ftpPassword" label="Password"
-                                    :rules="forms.ftpAddress.rules.ftpPassword"
-                                    v-model="ftpAddress.ftpAddress.ftpPassword"></v-text-field>
-                    </v-row>
-                    <v-row>
-                      <v-text-field hide-details name="filePath" label="Path" class="mr-4"
-                                    :rules="forms.ftpAddress.rules.filePath"
-                                    v-model="ftpAddress.ftpAddress.filePath"></v-text-field>
-                      <v-text-field hide-details name="defaultTimeout" label="Path default timeout" class=""
-                                    :rules="forms.ftpAddress.rules.defaultTimeout"
-                                    v-model="ftpAddress.ftpAddress.defaultTimeout"></v-text-field>
-                    </v-row>
-                    <v-row>
-                      <v-checkbox class="ma-0 mr-1" name="binaryTransfer" label="Binary Transfert" trueValue="Y"
-                                  falseValue="N"
-                                  :rules="forms.ftpAddress.rules.binaryTransfer"
-                                  v-model="ftpAddress.ftpAddress.binaryTransfer"></v-checkbox>
-                      <v-checkbox class="ma-0 mr-1" name="zipFile" label="File compression" trueValue="Y" falseValue="N"
-                                  :rules="forms.ftpAddress.rules.zipFile"
-                                  v-model="ftpAddress.ftpAddress.zipFile"></v-checkbox>
-                      <v-checkbox class="ma-0 mr-1" name="passiveMode" label="Passive mode" trueValue="Y" falseValue="N"
-                                  :rules="forms.ftpAddress.rules.passiveMode"
-                                  v-model="ftpAddress.ftpAddress.passiveMode"></v-checkbox>
-                    </v-row>
-                  </v-form>
-                </v-list-item-content>
-                  <v-list-item-action v-if="editMode">
-                      <v-btn icon @click="removeContactMech(ftpAddress)">
-                        <v-icon id='mdi-delete' color="red">{{getIcon('mdi-delete')}}</v-icon>
-                      </v-btn>
-                    </v-list-item-action>
-              </v-list-item>
-              <v-list-item v-if="editMode">
-                <v-list-item-icon></v-list-item-icon>
-                <v-list-item-content>
-                  <v-list-item-subtitle @click="addFtpAddress">
-                    <v-icon id='mdi-plus-circle' left>{{getIcon('mdi-plus-circle')}}</v-icon>
-                    Add FTP address
-                  </v-list-item-subtitle>
-                </v-list-item-content>
-              </v-list-item>
-                    <v-divider inset
-                               v-if="(ftpAddressList.length > 0 && showMore) || (editMode && showMore)"></v-divider>
-                </v-list>
-              </v-col>
-            </v-row>
-            <v-row justify="center">
-              <v-btn sel-label="Show more" text @click="toggleShowMore" v-if="!showMore">Show more</v-btn>
-              <v-btn sel-label="Show less" text @click="toggleShowMore" v-if="showMore">Show less</v-btn>
-            </v-row>
-          </v-card-text>
-        </v-card>
-      </v-flex>
-    </v-layout>
-  </v-container>
+                </div>
+                <v-list-item-subtitle v-if="ftpAddress.partyContactMechPurposes.length > 0">
+                  <v-chip class="primary mr-2" x-small v-for="purpose in ftpAddress.partyContactMechPurposes"
+                          :key="purpose.contactMechId + '-' + purpose.contactMechPurpostTypeId">
+                    {{purpose.contactMechPurposeTypeId}}
+                  </v-chip>
+                </v-list-item-subtitle>
+              </v-list-item-content>
+              <v-list-item-content v-if="editMode">
+                <v-form class="ml-3" :lazy-validator="lazy">
+                  <v-row>
+                    <v-text-field hide-details name="hostname" label="Host name" class="mr-4"
+                                  :rules="forms.ftpAddress.rules.hostname"
+                                  v-model="ftpAddress.ftpAddress.hostname"></v-text-field>
+                    <v-text-field hide-details name="port" label="Port" class="" :rules="forms.ftpAddress.rules.port"
+                                  v-model="ftpAddress.ftpAddress.port"></v-text-field>
+                  </v-row>
+                  <v-row>
+                    <v-text-field hide-details name="username" label="User Name" class="mr-4"
+                                  :rules="forms.ftpAddress.rules.username"
+                                  v-model="ftpAddress.ftpAddress.username"></v-text-field>
+                    <v-text-field hide-details name="ftpPassword" label="Password"
+                                  :rules="forms.ftpAddress.rules.ftpPassword"
+                                  v-model="ftpAddress.ftpAddress.ftpPassword"></v-text-field>
+                  </v-row>
+                  <v-row>
+                    <v-text-field hide-details name="filePath" label="Path" class="mr-4"
+                                  :rules="forms.ftpAddress.rules.filePath"
+                                  v-model="ftpAddress.ftpAddress.filePath"></v-text-field>
+                    <v-text-field hide-details name="defaultTimeout" label="Path default timeout" class=""
+                                  :rules="forms.ftpAddress.rules.defaultTimeout"
+                                  v-model="ftpAddress.ftpAddress.defaultTimeout"></v-text-field>
+                  </v-row>
+                  <v-row>
+                    <v-checkbox class="ma-0 mr-1" name="binaryTransfer" label="Binary Transfert" trueValue="Y"
+                                falseValue="N"
+                                :rules="forms.ftpAddress.rules.binaryTransfer"
+                                v-model="ftpAddress.ftpAddress.binaryTransfer"></v-checkbox>
+                    <v-checkbox class="ma-0 mr-1" name="zipFile" label="File compression" trueValue="Y" falseValue="N"
+                                :rules="forms.ftpAddress.rules.zipFile"
+                                v-model="ftpAddress.ftpAddress.zipFile"></v-checkbox>
+                    <v-checkbox class="ma-0 mr-1" name="passiveMode" label="Passive mode" trueValue="Y" falseValue="N"
+                                :rules="forms.ftpAddress.rules.passiveMode"
+                                v-model="ftpAddress.ftpAddress.passiveMode"></v-checkbox>
+                  </v-row>
+                </v-form>
+              </v-list-item-content>
+              <v-list-item-action v-if="editMode">
+                <v-btn icon @click="removeContactMech(ftpAddress)">
+                  <v-icon id='mdi-delete' color="red">{{getIcon('mdi-delete')}}</v-icon>
+                </v-btn>
+              </v-list-item-action>
+            </v-list-item>
+            <v-list-item v-if="editMode">
+              <v-list-item-icon></v-list-item-icon>
+              <v-list-item-content>
+                <v-list-item-subtitle @click="addFtpAddress">
+                  <v-icon id='mdi-plus-circle' left>{{getIcon('mdi-plus-circle')}}</v-icon>
+                  Add FTP address
+                </v-list-item-subtitle>
+              </v-list-item-content>
+            </v-list-item>
+            <v-divider inset
+                       v-if="(ftpAddressList.length > 0 && showMore) || (editMode && showMore)"></v-divider>
+          </v-list>
+        </v-col>
+      </v-row>
+      <v-row justify="center">
+        <v-btn sel-label="Show more" text @click="toggleShowMore" v-if="!showMore">Show more</v-btn>
+        <v-btn sel-label="Show less" text @click="toggleShowMore" v-if="showMore">Show less</v-btn>
+      </v-row>
+    </v-card-text>
+  </v-card>
 </template>
 
 <script>
+
+  import PostalAddress from './ContactMech/PostalAddress'
 
   const getContactMechUrl = '/partymgrfjs/control/getcontactmech'
   const createEmailAddressUrl = '/partymgrfjs/control/createEmailAddress'
@@ -387,17 +240,19 @@
   const getContactMechPurposeTypeUrl = '/partymgrfjs/control/getContactmechPurposeType'
   const createPartyContactMechPurposeUrl = '/partymgrfjs/control/createPartyContactMechPurpose'
   const expirePartyContactMechPurposeUrl = '/partymgrfjs/control/expirePartyContactMechPurpose'
-
   import icons from '../../js/icons'
 
   import Generic from './ContactMech/Generic'
   import TelecomNumber from './ContactMech/TelecomNumber'
+  import EmailAddress from './ContactMech/EmailAddress'
 
   export default {
     name: "ContactMech",
     components: {
-      generic: Generic,
-      'telecom-number': TelecomNumber
+      PostalAddress,
+      Generic,
+      TelecomNumber,
+      EmailAddress
     },
     props: ['props', 'updateStore'],
     data() {

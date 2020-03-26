@@ -7,26 +7,18 @@
       </v-toolbar-title>
     </v-toolbar>
     <v-list dense class="ma-0 pa-0">
-      <v-list-item v-for="phoneNumber in contactMechList"
-                   :key="phoneNumber.contactMech.contactMechId">
+      <v-list-item v-for="email in contactMechList"
+                   :key="email.contactMech.contactMechId">
         <v-list-item-content>
           <v-list-item-title v-if="!editMode">
-            {{display(phoneNumber)}}
+            {{email.contactMech.infoString}}
           </v-list-item-title>
           <v-list-item-title v-if="editMode">
-            <v-row class="ma-0 pa-0">
-              <v-col class="col-3 ma-0 pa-0">
-                <v-text-field class="ignore-css" hide-details label="Country code"
-                              v-model="phoneNumber.telecomNumber.countryCode"></v-text-field>
-              </v-col>
-              <v-col class="col-9 ma-0 pa-0">
-                <v-text-field class="ignore-css" hide-details label="Number"
-                              v-model="phoneNumber.telecomNumber.contactNumber"></v-text-field>
-              </v-col>
-            </v-row>
+            <v-text-field hide-details label="Email address"
+                          v-model="email.contactMech.infoString"></v-text-field>
           </v-list-item-title>
-          <v-list-item-subtitle v-if="phoneNumber.partyContactMechPurposes.length > 0 && !editMode">
-            <v-chip class="primary mr-2" x-small v-for="purpose in phoneNumber.partyContactMechPurposes"
+          <v-list-item-subtitle v-if="email.partyContactMechPurposes.length > 0 && !editMode">
+            <v-chip class="primary mr-2" x-small v-for="purpose in email.partyContactMechPurposes"
                     :key="purpose.contactMechId + '-' + purpose.contactMechPurposeTypeId">
               {{purpose.contactMechPurposeTypeId}}
             </v-chip>
@@ -34,7 +26,7 @@
           <v-list-item-subtitle v-if="editMode">
             <v-select
                 label="purposes"
-                v-model="phoneNumber.purposes"
+                v-model="email.purposes"
                 :items="purposeList"
                 multiple
                 item-text="description"
@@ -42,8 +34,8 @@
             </v-select>
           </v-list-item-subtitle>
           <v-list-item-subtitle v-if="editMode" class="d-flex flex-row-reverse">
-            <v-btn @click="removeContactMech(phoneNumber)" color="error">
-              <v-icon id='mdi-delete' >{{getIcon('mdi-delete')}}</v-icon>
+            <v-btn @click="removeContactMech(email)" color="error">
+              <v-icon id='mdi-delete'>{{getIcon('mdi-delete')}}</v-icon>
               expire
             </v-btn>
           </v-list-item-subtitle>
@@ -51,10 +43,10 @@
       </v-list-item>
       <v-list-item v-if="editMode">
         <v-list-item-content>
-          <v-list-item-subtitle  class="d-flex justify-center">
+          <v-list-item-subtitle class="d-flex justify-center">
             <v-btn color="secondary" @click="addContactMech">
               <v-icon id='mdi-plus-circle' left>{{getIcon('mdi-plus-circle')}}</v-icon>
-              Add telecom number
+              Add email address
             </v-btn>
           </v-list-item-subtitle>
         </v-list-item-content>
@@ -67,11 +59,8 @@
   import icons from '../../../js/icons'
 
   export default {
-    name: "TelecomNumber",
+    name: "EmailAddress",
     props: ['contactMechList', 'editMode', 'icon', 'label', 'contactMechTypeId', 'showMore', 'purposeList'],
-    computed: {
-
-    },
     methods: {
       addContactMech() {
         this.$emit('addContactMech')
@@ -81,10 +70,6 @@
       },
       getIcon(icon) {
         return icons.hasOwnProperty(icon) ? icons[icon] : null
-      },
-      display(phoneNumber) {
-        return `${phoneNumber.telecomNumber.countryCode || ''} ${phoneNumber.telecomNumber.areaCode || ''}
-          ${phoneNumber.telecomNumber.contactNumber || ''} ${phoneNumber.telecomNumber.extension || ''}`
       }
     }
   }
