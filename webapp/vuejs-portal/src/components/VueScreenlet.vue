@@ -9,7 +9,7 @@
         </v-btn>
       </v-toolbar>
       <v-expand-transition>
-        <v-card :id="collapsibleAreaId" v-show="!collapsed">
+        <v-card tile :id="collapsibleAreaId" v-show="!collapsed">
           <v-card-text class="pa-1">
             <div
                 v-for="(component, key) in props.children"

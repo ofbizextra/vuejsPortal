@@ -1,5 +1,5 @@
 <template>
-  <v-card tile class="ma-0 pa-0">
+  <v-card tile class="ma-1">
     <v-toolbar tile dark color="primary" dense flat v-if="!editMode" class="ma-0 pa-0">
       <v-toolbar-title class="title">Contact mech "{{this.props.partyId}}"</v-toolbar-title>
       <div class="flex-grow-1"></div>
@@ -17,7 +17,7 @@
         <v-icon id='mdi-check'>{{getIcon('mdi-check')}}</v-icon>
       </v-btn>
     </v-toolbar>
-    <v-card-text class="mt-2 ma-0 pa-0">
+    <v-card-text class="pa-1">
       <v-row stretch dense>
         <v-col cols="12" lg="6" align-self="start">
           <telecom-number
