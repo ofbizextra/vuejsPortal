@@ -1,19 +1,19 @@
 <template>
-  <v-card class="ma-0 pa-0">
-    <v-toolbar dense flat v-if="!editMode" class="ma-0 pa-0">
-      <v-toolbar-title>Contact mech "{{this.props.partyId}}"</v-toolbar-title>
+  <v-card tile class="ma-0 pa-0">
+    <v-toolbar tile dark color="primary" dense flat v-if="!editMode" class="ma-0 pa-0">
+      <v-toolbar-title class="title">Contact mech "{{this.props.partyId}}"</v-toolbar-title>
       <div class="flex-grow-1"></div>
-      <v-btn color="warning" icon @click="toggleEdit">
+      <v-btn icon @click="toggleEdit">
         <v-icon v-on="on" id='mdi-pencil'>{{getIcon('mdi-pencil')}}</v-icon>
       </v-btn>
     </v-toolbar>
-    <v-toolbar dense flat v-if="editMode" class="ma-0 pa-0">
-      <v-btn color="error" icon @click="toggleEdit">
+    <v-toolbar tile dark color="primary" dense flat v-if="editMode" class="ma-0 pa-0">
+      <v-btn icon @click="toggleEdit">
         <v-icon id='mdi-arrow-left'>{{getIcon('mdi-arrow-left')}}</v-icon>
       </v-btn>
       <v-toolbar-title>Edit contact mech</v-toolbar-title>
       <div class="flex-grow-1"></div>
-      <v-btn color="success" icon @click="updateAll">
+      <v-btn icon @click="updateAll">
         <v-icon id='mdi-check'>{{getIcon('mdi-check')}}</v-icon>
       </v-btn>
     </v-toolbar>
@@ -113,104 +113,19 @@
               @removeContactMech="removeContactMech($event)"
               @addContactMech="addWebAddress"
           ></generic>
-          <v-list dense>
-            <v-list-item v-for="ftpAddress in ftpAddressList"
-                         :key="ftpAddress.contactMech.contactMechId">
-              <v-list-item-icon>
-                <v-tooltip top>
-                  <template v-slot:activator="{ on }">
-                    <v-icon id='mdi-server' left v-on="on">{{getIcon('mdi-server')}}</v-icon>
-                  </template>
-                  <span>FTP server</span>
-                </v-tooltip>
-              </v-list-item-icon>
-              <v-list-item-content v-if="!editMode">
-                <v-list-item-title>
-                  {{ftpAddress.ftpAddress.hostname}}:{{ftpAddress.ftpAddress.port}}
-                </v-list-item-title>
-                <div>
-                  user: {{ftpAddress.ftpAddress.username}} - pass: {{ftpAddress.ftpAddress.ftpPassword}}
-                </div>
-                <div>
-                  {{ftpAddress.ftpAddress.filePath}} - {{ftpAddress.ftpAddress.defaultTimeout}}ms
-                </div>
-                <div>
-                  <v-row class="ml-1" justify="space-around">
-                    <v-checkbox class="ma-0 mr-1" hide-details small label="binary" :disabled="!editMode"
-                                v-model="ftpAddress.ftpAddress.binaryTransfer"
-                                true-value="Y" false-value="N"></v-checkbox>
-                    <v-checkbox class="ma-0 mr-1" hide-details small label="zip" :disabled="!editMode"
-                                v-model="ftpAddress.ftpAddress.zipFile"
-                                true-value="Y" false-value="N"></v-checkbox>
-                    <v-checkbox class="ma-0 mr-1" hide-details small label="passive" :disabled="!editMode"
-                                v-model="ftpAddress.ftpAddress.passiveMode"
-                                true-value="Y" false-value="N"></v-checkbox>
-                  </v-row>
-                </div>
-                <v-list-item-subtitle v-if="ftpAddress.partyContactMechPurposes.length > 0">
-                  <v-chip class="primary mr-2" x-small v-for="purpose in ftpAddress.partyContactMechPurposes"
-                          :key="purpose.contactMechId + '-' + purpose.contactMechPurpostTypeId">
-                    {{purpose.contactMechPurposeTypeId}}
-                  </v-chip>
-                </v-list-item-subtitle>
-              </v-list-item-content>
-              <v-list-item-content v-if="editMode">
-                <v-form class="ml-3" :lazy-validator="lazy">
-                  <v-row>
-                    <v-text-field hide-details name="hostname" label="Host name" class="mr-4"
-                                  :rules="forms.ftpAddress.rules.hostname"
-                                  v-model="ftpAddress.ftpAddress.hostname"></v-text-field>
-                    <v-text-field hide-details name="port" label="Port" class="" :rules="forms.ftpAddress.rules.port"
-                                  v-model="ftpAddress.ftpAddress.port"></v-text-field>
-                  </v-row>
-                  <v-row>
-                    <v-text-field hide-details name="username" label="User Name" class="mr-4"
-                                  :rules="forms.ftpAddress.rules.username"
-                                  v-model="ftpAddress.ftpAddress.username"></v-text-field>
-                    <v-text-field hide-details name="ftpPassword" label="Password"
-                                  :rules="forms.ftpAddress.rules.ftpPassword"
-                                  v-model="ftpAddress.ftpAddress.ftpPassword"></v-text-field>
-                  </v-row>
-                  <v-row>
-                    <v-text-field hide-details name="filePath" label="Path" class="mr-4"
-                                  :rules="forms.ftpAddress.rules.filePath"
-                                  v-model="ftpAddress.ftpAddress.filePath"></v-text-field>
-                    <v-text-field hide-details name="defaultTimeout" label="Path default timeout" class=""
-                                  :rules="forms.ftpAddress.rules.defaultTimeout"
-                                  v-model="ftpAddress.ftpAddress.defaultTimeout"></v-text-field>
-                  </v-row>
-                  <v-row>
-                    <v-checkbox class="ma-0 mr-1" name="binaryTransfer" label="Binary Transfert" trueValue="Y"
-                                falseValue="N"
-                                :rules="forms.ftpAddress.rules.binaryTransfer"
-                                v-model="ftpAddress.ftpAddress.binaryTransfer"></v-checkbox>
-                    <v-checkbox class="ma-0 mr-1" name="zipFile" label="File compression" trueValue="Y" falseValue="N"
-                                :rules="forms.ftpAddress.rules.zipFile"
-                                v-model="ftpAddress.ftpAddress.zipFile"></v-checkbox>
-                    <v-checkbox class="ma-0 mr-1" name="passiveMode" label="Passive mode" trueValue="Y" falseValue="N"
-                                :rules="forms.ftpAddress.rules.passiveMode"
-                                v-model="ftpAddress.ftpAddress.passiveMode"></v-checkbox>
-                  </v-row>
-                </v-form>
-              </v-list-item-content>
-              <v-list-item-action v-if="editMode">
-                <v-btn icon @click="removeContactMech(ftpAddress)">
-                  <v-icon id='mdi-delete' color="red">{{getIcon('mdi-delete')}}</v-icon>
-                </v-btn>
-              </v-list-item-action>
-            </v-list-item>
-            <v-list-item v-if="editMode">
-              <v-list-item-icon></v-list-item-icon>
-              <v-list-item-content>
-                <v-list-item-subtitle @click="addFtpAddress">
-                  <v-icon id='mdi-plus-circle' left>{{getIcon('mdi-plus-circle')}}</v-icon>
-                  Add FTP address
-                </v-list-item-subtitle>
-              </v-list-item-content>
-            </v-list-item>
-            <v-divider inset
-                       v-if="(ftpAddressList.length > 0 && showMore) || (editMode && showMore)"></v-divider>
-          </v-list>
+          <ftp-address
+              icon="mdi-server"
+              :contact-mech-list="contactsByType('FTP_ADDRESS')"
+              contact-mech-type-id="FTP_ADDRESS"
+              :edit-mode="editMode"
+              label="FTP address"
+              :show-more="showMore"
+              :purpose-list="purposeListByType.FTP_ADDRESS"
+              :rules="forms.ftpAddress.rules"
+              @removeContactMech="removeContactMech($event)"
+              @addContactMech="addFtpAddress"
+          >
+          </ftp-address>
         </v-col>
       </v-row>
       <v-row justify="center">
@@ -245,10 +160,12 @@
   import Generic from './ContactMech/Generic'
   import TelecomNumber from './ContactMech/TelecomNumber'
   import EmailAddress from './ContactMech/EmailAddress'
+  import FtpAddress from './ContactMech/FtpAddress'
 
   export default {
     name: "ContactMech",
     components: {
+      FtpAddress,
       PostalAddress,
       Generic,
       TelecomNumber,

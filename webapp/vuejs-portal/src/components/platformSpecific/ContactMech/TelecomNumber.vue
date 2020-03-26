@@ -26,12 +26,12 @@
             </v-row>
           </v-list-item-title>
           <v-list-item-subtitle v-if="phoneNumber.partyContactMechPurposes.length > 0 && !editMode">
-            <v-chip class="primary mr-2" x-small v-for="purpose in phoneNumber.partyContactMechPurposes"
+            <v-chip class="accent mr-2" x-small v-for="purpose in phoneNumber.partyContactMechPurposes"
                     :key="purpose.contactMechId + '-' + purpose.contactMechPurposeTypeId">
               {{purpose.contactMechPurposeTypeId}}
             </v-chip>
           </v-list-item-subtitle>
-          <v-list-item-subtitle v-if="editMode">
+          <v-list-item-subtitle v-if="editMode && purposeList.length > 0">
             <v-select
                 label="purposes"
                 v-model="phoneNumber.purposes"

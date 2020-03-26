@@ -22,7 +22,7 @@
             </v-row>
           </v-list-item-title>
           <v-list-item-subtitle v-if="contactMech.partyContactMechPurposes.length > 0 && !editMode">
-            <v-chip class="primary mr-2" x-small v-for="purpose in contactMech.partyContactMechPurposes"
+            <v-chip class="accent mr-2" x-small v-for="purpose in contactMech.partyContactMechPurposes"
                     :key="purpose.contactMechId + '-' + purpose.contactMechPurpostTypeId">
               {{purpose.contactMechPurposeTypeId}}
             </v-chip>

@@ -23,9 +23,9 @@
             {{postalAddress.postalAddress.city}}, {{postalAddress.postalAddress.postalCode}}
           </div>
           <v-list-item-subtitle v-if="postalAddress.partyContactMechPurposes.length > 0 && !editMode">
-            <v-chip class="primary mr-2" x-small v-for="purpose in postalAddress.partyContactMechPurposes"
+            <v-chip class="accent mr-2" x-small v-for="purpose in postalAddress.partyContactMechPurposes"
                     :key="purpose.contactMechId + '-' + purpose.contactMechPurposeTypeId">
-              {{displayPurpose('POSTAL_ADDRESS', purpose.contactMechPurposeTypeId)}}
+              {{purpose.contactMechPurposeTypeId}}
             </v-chip>
           </v-list-item-subtitle>
         </v-list-item-content>
@@ -57,7 +57,7 @@
                               v-model="postalAddress.postalAddress.postalCode"
                               :rules="rules.zipPostalCode" class="mr-4"></v-text-field>
               </v-row>
-              <v-list-item-subtitle v-if="editMode">
+              <v-list-item-subtitle v-if="editMode && purposeList.length > 0">
                 <v-select
                     label="purposes"
                     v-model="postalAddress.purposes"
@@ -68,7 +68,7 @@
                 </v-select>
               </v-list-item-subtitle>
               <v-list-item-subtitle v-if="editMode" class="d-flex flex-row-reverse">
-                <v-btn @click="removeContactMech(email)" color="error">
+                <v-btn @click="removeContactMech(postalAddress)" color="error">
                   <v-icon id='mdi-delete'>{{getIcon('mdi-delete')}}</v-icon>
                   expire
                 </v-btn>
