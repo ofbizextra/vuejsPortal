@@ -28,7 +28,7 @@
           <v-list-item-subtitle v-if="phoneNumber.partyContactMechPurposes.length > 0 && !editMode">
             <v-chip class="accent mr-2" x-small v-for="purpose in phoneNumber.partyContactMechPurposes"
                     :key="purpose.contactMechId + '-' + purpose.contactMechPurposeTypeId">
-              {{purpose.contactMechPurposeTypeId}}
+              {{getPurposeDescription(purpose.contactMechPurposeTypeId)}}
             </v-chip>
           </v-list-item-subtitle>
           <v-list-item-subtitle v-if="editMode && purposeList.length > 0">
@@ -85,7 +85,10 @@
       display(phoneNumber) {
         return `${phoneNumber.telecomNumber.countryCode || ''} ${phoneNumber.telecomNumber.areaCode || ''}
           ${phoneNumber.telecomNumber.contactNumber || ''} ${phoneNumber.telecomNumber.extension || ''}`
-      }
+      },
+      getPurposeDescription(contactMechPurposeTypeId) {
+        return this.purposeList.filter(purpose => purpose.contactMechPurposeTypeId === contactMechPurposeTypeId)[0].description
+      },
     }
   }
 </script>

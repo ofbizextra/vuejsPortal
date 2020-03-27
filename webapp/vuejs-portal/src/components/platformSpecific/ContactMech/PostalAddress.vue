@@ -25,7 +25,7 @@
           <v-list-item-subtitle v-if="postalAddress.partyContactMechPurposes.length > 0 && !editMode">
             <v-chip class="accent mr-2" x-small v-for="purpose in postalAddress.partyContactMechPurposes"
                     :key="purpose.contactMechId + '-' + purpose.contactMechPurposeTypeId">
-              {{purpose.contactMechPurposeTypeId}}
+              {{getPurposeDescription(purpose.contactMechPurposeTypeId)}}
             </v-chip>
           </v-list-item-subtitle>
         </v-list-item-content>
@@ -105,7 +105,10 @@
       },
       getIcon(icon) {
         return icons.hasOwnProperty(icon) ? icons[icon] : null
-      }
+      },
+      getPurposeDescription(contactMechPurposeTypeId) {
+        return this.purposeList.filter(purpose => purpose.contactMechPurposeTypeId === contactMechPurposeTypeId)[0].description
+      },
     }
   }
 </script>

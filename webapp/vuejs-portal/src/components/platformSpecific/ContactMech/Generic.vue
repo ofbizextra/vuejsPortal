@@ -30,7 +30,7 @@
           <v-list-item-subtitle v-if="contactMech.partyContactMechPurposes.length > 0 && !editMode">
             <v-chip class="accent mr-2" x-small v-for="purpose in contactMech.partyContactMechPurposes"
                     :key="purpose.contactMechId + '-' + purpose.contactMechPurpostTypeId">
-              {{purpose.contactMechPurposeTypeId}}
+              {{getPurposeDescription(purpose.contactMechPurposeTypeId)}}
             </v-chip>
           </v-list-item-subtitle>
           <v-list-item-subtitle v-if="editMode && purposeList.length > 0">
@@ -70,7 +70,10 @@
       },
       getIcon(icon) {
         return icons.hasOwnProperty(icon) ? icons[icon] : null
-      }
+      },
+      getPurposeDescription(contactMechPurposeTypeId) {
+        return this.purposeList.filter(purpose => purpose.contactMechPurposeTypeId === contactMechPurposeTypeId)[0].description
+      },
     }
   }
 </script>
