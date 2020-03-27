@@ -165,8 +165,8 @@
       <v-row justify="center">
         <v-btn sel-label="Show more" text @click="toggleShowMore" v-if="!showMore">Show more</v-btn>
         <v-btn sel-label="Show less" text @click="toggleShowMore" v-if="showMore">Show less</v-btn>
-        <v-btn sel-label="Show old" text @click="toggleShowOld" v-if="!showOld">Show old</v-btn>
-        <v-btn sel-label="Hide old" text @click="toggleShowOld" v-if="showOld">Hide old</v-btn>
+        <v-btn sel-label="Show old" text @click="toggleShowOld" v-if="!showOld && !editMode">Show old</v-btn>
+        <v-btn sel-label="Hide old" text @click="toggleShowOld" v-if="showOld && !editMode">Hide old</v-btn>
       </v-row>
     </v-card-text>
   </v-card>
