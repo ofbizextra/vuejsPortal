@@ -5,8 +5,14 @@
       <v-toolbar-title>
         {{label}}
       </v-toolbar-title>
+      <v-spacer></v-spacer>
+      <v-btn v-if="editMode" small icon sel-label="sel-label-add" @click="addContactMech">
+        <v-icon small>
+          {{getIcon('mdi-plus-circle')}}
+        </v-icon>
+      </v-btn>
     </v-toolbar>
-    <v-list dense class="ma-0 pa-0" sel-label="sel-label" >
+    <v-list dense class="ma-0 pa-0" sel-label="sel-label">
       <v-list-item v-for="contactMech in contactMechList"
                    :key="contactMech.contactMech.contactMechId">
         <v-list-item-content>
@@ -39,18 +45,8 @@
           </v-list-item-subtitle>
           <v-list-item-subtitle v-if="editMode" class="d-flex flex-row-reverse">
             <v-btn @click="removeContactMech(contactMech)" color="error">
-              <v-icon id='mdi-delete' >{{getIcon('mdi-delete')}}</v-icon>
+              <v-icon id='mdi-delete'>{{getIcon('mdi-delete')}}</v-icon>
               expire
-            </v-btn>
-          </v-list-item-subtitle>
-        </v-list-item-content>
-      </v-list-item>
-      <v-list-item v-if="editMode">
-        <v-list-item-content>
-          <v-list-item-subtitle  class="d-flex justify-center">
-            <v-btn color="secondary" sel-label="sel-label-add" @click="addContactMech">
-              <v-icon left>{{getIcon('mdi-plus-circle')}}</v-icon>
-              Add {{label}}
             </v-btn>
           </v-list-item-subtitle>
         </v-list-item-content>
@@ -64,7 +60,7 @@
 
   export default {
     name: "Generic",
-    props: ['contactMechList', 'editMode', 'icon', 'label', 'sel-label', 'sel-label-add','contactMechTypeId', 'showMore', 'purposeList'],
+    props: ['contactMechList', 'editMode', 'icon', 'label', 'sel-label', 'sel-label-add', 'contactMechTypeId', 'showMore', 'purposeList'],
     methods: {
       addContactMech() {
         this.$emit('addContactMech')
