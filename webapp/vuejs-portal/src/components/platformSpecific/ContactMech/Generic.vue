@@ -6,7 +6,7 @@
         {{label}}
       </v-toolbar-title>
     </v-toolbar>
-    <v-list dense class="ma-0 pa-0" :sel-label="sel-label" >
+    <v-list dense class="ma-0 pa-0" sel-label="sel-label" >
       <v-list-item v-for="contactMech in contactMechList"
                    :key="contactMech.contactMech.contactMechId">
         <v-list-item-content>
@@ -48,7 +48,7 @@
       <v-list-item v-if="editMode">
         <v-list-item-content>
           <v-list-item-subtitle  class="d-flex justify-center">
-            <v-btn color="secondary" :sel-label="sel-label-add" @click="addContactMech">
+            <v-btn color="secondary" sel-label="sel-label-add" @click="addContactMech">
               <v-icon left>{{getIcon('mdi-plus-circle')}}</v-icon>
               Add {{label}}
             </v-btn>

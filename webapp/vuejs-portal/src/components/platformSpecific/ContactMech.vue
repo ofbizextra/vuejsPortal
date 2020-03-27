@@ -147,29 +147,12 @@
 </template>
 
 <script>
-
-  import PostalAddress from './ContactMech/PostalAddress'
-
-  const getContactMechUrl = '/partymgrfjs/control/getcontactmech'
-  const createEmailAddressUrl = '/partymgrfjs/control/createEmailAddress'
-  const createPostalAddressUrl = '/partymgrfjs/control/createPostalAddress'
-  const createTelecomNumberUrl = '/partymgrfjs/control/createTelecomNumber'
-  const createContactMech = '/partymgrfjs/control/createContactMech'
-  const createFtpAddressUrl = '/partymgrfjs/control/createFtpAddress'
-  const updateContactMechUrl = '/partymgrfjs/control/updateContactMech'
-  const updatePostalAddressUrl = '/partymgrfjs/control/updatePostalAddress'
-  const updateTelecomNumberUrl = '/partymgrfjs/control/updateTelecomNumber'
-  const updateEmailAddressUrl = '/partymgrfjs/control/updateEmailAddress'
-  const updateFtpAddressUrl = '/partymgrfjs/control/updateFtpAddress'
-  const deleteContactMechUrl = '/partymgrfjs/control/deleteContactMech'
-  const getContactMechPurposeTypeUrl = '/partymgrfjs/control/getContactmechPurposeType'
-  const createPartyContactMechPurposeUrl = '/partymgrfjs/control/createPartyContactMechPurpose'
-  const expirePartyContactMechPurposeUrl = '/partymgrfjs/control/expirePartyContactMechPurpose'
   import icons from '../../js/icons'
 
   import Generic from './ContactMech/Generic'
   import TelecomNumber from './ContactMech/TelecomNumber'
   import EmailAddress from './ContactMech/EmailAddress'
+  import PostalAddress from './ContactMech/PostalAddress'
   import FtpAddress from './ContactMech/FtpAddress'
 
   export default {
@@ -390,62 +373,50 @@
       partyId() {
         return this.props.partyId
       },
-      contactMechList() {
-        return this.dataSet.hasOwnProperty('valueMaps') ? [...this.dataSet.valueMaps, ...this.toCreate] : []
+      getContactMechUrl() {
+        return this.props.configParam.hasOwnProperty('getContactMechUrl') ? this.props.configParam.getContactMechUrl : ''
       },
-      telecomNumberList() {
-        if (this.showMore) {
-          return this.dataSet.hasOwnProperty('valueMaps') ? [...this.dataSet.valueMaps, ...this.toCreate].filter(contact => contact.contactMech.contactMechTypeId === 'TELECOM_NUMBER') : []
-        }
-        return this.dataSet.hasOwnProperty('valueMaps') ? [...this.dataSet.valueMaps.filter(contact => contact.contactMech.contactMechTypeId === 'TELECOM_NUMBER').splice(0, 1), ...this.toCreate.filter(contact => contact.contactMech.contactMechTypeId === 'TELECOM_NUMBER')] : []
+      createContactMechUrl() {
+        return this.props.configParam.hasOwnProperty('createContactMechUrl') ? this.props.configParam.createContactMechUrl : ''
       },
-      emailAddressList() {
-        if (this.showMore) {
-          return this.dataSet.hasOwnProperty('valueMaps') ? [...this.dataSet.valueMaps, ...this.toCreate].filter(contact => contact.contactMech.contactMechTypeId === 'EMAIL_ADDRESS') : []
-        }
-        return this.dataSet.hasOwnProperty('valueMaps') ? [...this.dataSet.valueMaps.filter(contact => contact.contactMech.contactMechTypeId === 'EMAIL_ADDRESS').splice(0, 1), ...this.toCreate.filter(contact => contact.contactMech.contactMechTypeId === 'EMAIL_ADDRESS')] : []
+      createTelecomNumberUrl() {
+        return this.props.configParam.hasOwnProperty('createTelecomNumberUrl') ? this.props.configParam.createTelecomNumberUrl : ''
       },
-      postalAddressList() {
-        if (this.showMore) {
-          return this.dataSet.hasOwnProperty('valueMaps') ? [...this.dataSet.valueMaps, ...this.toCreate].filter(contact => contact.contactMech.contactMechTypeId === 'POSTAL_ADDRESS') : []
-        }
-        return this.dataSet.hasOwnProperty('valueMaps') ? [...this.dataSet.valueMaps.filter(contact => contact.contactMech.contactMechTypeId === 'POSTAL_ADDRESS').splice(0, 1), ...this.toCreate.filter(contact => contact.contactMech.contactMechTypeId === 'POSTAL_ADDRESS')] : []
+      createEmailAddressUrl() {
+        return this.props.configParam.hasOwnProperty('createEmailAddressUrl') ? this.props.configParam.createEmailAddressUrl : ''
       },
-      ftpAddressList() {
-        if (this.showMore) {
-          return this.dataSet.hasOwnProperty('valueMaps') ? [...this.dataSet.valueMaps, ...this.toCreate].filter(contact => contact.contactMech.contactMechTypeId === 'FTP_ADDRESS') : []
-        }
-        return this.dataSet.hasOwnProperty('valueMaps') ? [...this.dataSet.valueMaps.filter(contact => contact.contactMech.contactMechTypeId === 'FTP_ADDRESS').splice(0, 1), ...this.toCreate.filter(contact => contact.contactMech.contactMechTypeId === 'FTP_ADDRESS')] : []
+      createPostalAddressUrl() {
+        return this.props.configParam.hasOwnProperty('createPostalAddressUrl') ? this.props.configParam.createPostalAddressUrl : ''
       },
-      ipAddressList() {
-        if (this.showMore) {
-          return this.dataSet.hasOwnProperty('valueMaps') ? [...this.dataSet.valueMaps, ...this.toCreate].filter(contact => contact.contactMech.contactMechTypeId === 'IP_ADDRESS') : []
-        }
-        return this.dataSet.hasOwnProperty('valueMaps') ? [...this.dataSet.valueMaps.filter(contact => contact.contactMech.contactMechTypeId === 'IP_ADDRESS').splice(0, 1), ...this.toCreate.filter(contact => contact.contactMech.contactMechTypeId === 'IP_ADDRESS')] : []
+      createFtpAddressUrl() {
+        return this.props.configParam.hasOwnProperty('createFtpAddressUrl') ? this.props.configParam.createFtpAddressUrl : ''
       },
-      webAddressList() {
-        if (this.showMore) {
-          return this.dataSet.hasOwnProperty('valueMaps') ? [...this.dataSet.valueMaps, ...this.toCreate].filter(contact => contact.contactMech.contactMechTypeId === 'WEB_ADDRESS') : []
-        }
-        return this.dataSet.hasOwnProperty('valueMaps') ? [...this.dataSet.valueMaps.filter(contact => contact.contactMech.contactMechTypeId === 'WEB_ADDRESS').splice(0, 1), ...this.toCreate.filter(contact => contact.contactMech.contactMechTypeId === 'WEB_ADDRESS')] : []
+      updateContactMechUrl() {
+        return this.props.configParam.hasOwnProperty('updateContactMechUrl') ? this.props.configParam.updateContactMechUrl : ''
       },
-      internalPartyIdList() {
-        if (this.showMore) {
-          return this.dataSet.hasOwnProperty('valueMaps') ? [...this.dataSet.valueMaps, ...this.toCreate].filter(contact => contact.contactMech.contactMechTypeId === 'INTERNAL_PARTYID') : []
-        }
-        return this.dataSet.hasOwnProperty('valueMaps') ? [...this.dataSet.valueMaps.filter(contact => contact.contactMech.contactMechTypeId === 'INTERNAL_PARTYID').splice(0, 1), ...this.toCreate.filter(contact => contact.contactMech.contactMechTypeId === 'INTERNAL_PARTYID')] : []
+      updateTelecomNumberUrl() {
+        return this.props.configParam.hasOwnProperty('updateTelecomNumberUrl') ? this.props.configParam.updateTelecomNumberUrl : ''
       },
-      domainNameList() {
-        if (this.showMore) {
-          return this.dataSet.hasOwnProperty('valueMaps') ? [...this.dataSet.valueMaps, ...this.toCreate].filter(contact => contact.contactMech.contactMechTypeId === 'DOMAIN_NAME') : []
-        }
-        return this.dataSet.hasOwnProperty('valueMaps') ? [...this.dataSet.valueMaps.filter(contact => contact.contactMech.contactMechTypeId === 'DOMAIN_NAME').splice(0, 1), ...this.toCreate.filter(contact => contact.contactMech.contactMechTypeId === 'DOMAIN_NAME')] : []
+      updateEmailAddressUrl() {
+        return this.props.configParam.hasOwnProperty('updateEmailAddressUrl') ? this.props.configParam.updateEmailAddressUrl : ''
       },
-      ldapAddressList() {
-        if (this.showMore) {
-          return this.dataSet.hasOwnProperty('valueMaps') ? [...this.dataSet.valueMaps, ...this.toCreate].filter(contact => contact.contactMech.contactMechTypeId === 'LDAP_ADDRESS') : []
-        }
-        return this.dataSet.hasOwnProperty('valueMaps') ? [...this.dataSet.valueMaps.filter(contact => contact.contactMech.contactMechTypeId === 'LDAP_ADDRESS').splice(0, 1), ...this.toCreate.filter(contact => contact.contactMech.contactMechTypeId === 'LDAP_ADDRESS')] : []
+      updatePostalAddressUrl() {
+        return this.props.configParam.hasOwnProperty('updatePostalAddressUrl') ? this.props.configParam.updatePostalAddressUrl : ''
+      },
+      updateFtpAddressUrl() {
+        return this.props.configParam.hasOwnProperty('updateFtpAddressUrl') ? this.props.configParam.updateFtpAddressUrl : ''
+      },
+      deleteContactMechUrl() {
+        return this.props.configParam.hasOwnProperty('deleteContactMechUrl') ? this.props.configParam.deleteContactMechUrl : ''
+      },
+      getContactMechPurposeTypeUrl() {
+        return this.props.configParam.hasOwnProperty('getContactMechPurposeTypeUrl') ? this.props.configParam.getContactMechPurposeTypeUrl : ''
+      },
+      createContactMechPurposeUrl() {
+        return this.props.configParam.hasOwnProperty('createContactMechPurposeUrl') ? this.props.configParam.createContactMechPurposeUrl : ''
+      },
+      expireContactMechPurposeUrl() {
+        return this.props.configParam.hasOwnProperty('expireContactMechPurposeUrl') ? this.props.configParam.expireContactMechPurposeUrl : ''
       },
     },
     methods: {
@@ -461,7 +432,7 @@
       updateDataSet() {
         return new Promise((resolve, reject) => {
           setTimeout(() => {
-            this.$http.post(getContactMechUrl, {partyId: this.partyId}).then(
+            this.$http.post(this.getContactMechUrl, {partyId: this.partyId}).then(
               result => {
                 this.dataSet = result.body
                 resolve()
@@ -472,144 +443,6 @@
             )
           }, 0)
         })
-      },
-      createElectronicAddress() {
-        this.$http.post(createContactMech, {
-          contactMechTypeId: 'ELECTRONIC_ADDRESS',
-          partyId: this.partyId,
-          infoString: this.forms.electronicAddress.fields.email,
-          allowSolicitation: this.forms.electronicAddress.fields.allowSolicitation
-        }).then(
-          () => {
-            this.updateDataSet()
-          }
-        )
-      },
-      createPostalAddress() {
-        this.$http.post(createPostalAddressUrl, {
-          contactMechTypeId: 'POSTAL_ADDRESS',
-          partyId: this.partyId,
-          toName: this.forms.postalAddress.fields.toName,
-          attnName: this.forms.postalAddress.fields.attentionName,
-          address1: this.forms.postalAddress.fields.addressLine1,
-          address2: this.forms.postalAddress.fields.addressLine2,
-          city: this.forms.postalAddress.fields.city,
-          stateProvinceGeoId: this.forms.postalAddress.fields.stateProvince,
-          postalCode: this.forms.postalAddress.fields.zipPostalCode,
-          countryGeoId: this.forms.postalAddress.fields.country,
-          allowSolicitation: this.forms.postalAddress.fields.allowSolicitation
-        }).then(
-          () => {
-            this.updateDataSet()
-          },
-        )
-      },
-      createTelecomNumber() {
-        this.$http.post(createTelecomNumberUrl, {
-          contactMechTypeId: 'TELECOM_NUMBER',
-          partyId: this.partyId,
-          countryCode: this.forms.phoneNumber.fields.countryCode,
-          areaCode: this.forms.phoneNumber.fields.areaCode,
-          contactNumber: this.forms.phoneNumber.fields.contactNumber,
-          extension: this.forms.phoneNumber.fields.extension,
-          allowSolicitation: this.forms.phoneNumber.fields.allowSolicitation
-        }).then(
-          () => {
-            this.updateDataSet()
-          }
-        )
-      },
-      createEmailAddress() {
-        this.$http.post(createEmailAddressUrl, {
-          contactMechTypeId: 'EMAIL_ADDRESS',
-          partyId: this.partyId,
-          emailAddress: this.forms.emailAddress.fields.emailAddress,
-          allowSolicitation: this.forms.emailAddress.fields.allowSolicitation
-        }).then(
-          () => {
-            this.updateDataSet()
-          }
-        )
-      },
-      createIpAddress() {
-        this.$http.post(createContactMech, {
-          contactMechTypeId: 'IP_ADDRESS',
-          partyId: this.partyId,
-          infoString: this.forms.ipAddress.fields.ipAddress,
-          allowSolicitation: this.forms.ipAddress.fields.allowSolicitation
-        }).then(
-          () => {
-            this.updateDataSet()
-          }
-        )
-      },
-      createDomain() {
-        this.$http.post(createContactMech, {
-          contactMechTypeId: 'DOMAIN_NAME',
-          partyId: this.partyId,
-          infoString: this.forms.domain.fields.domain,
-          allowSolicitation: this.forms.domain.fields.allowSolicitation
-        }).then(
-          () => {
-            this.updateDataSet()
-          }
-        )
-      },
-      createWebAddress() {
-        this.$http.post(createContactMech, {
-          contactMechTypeId: 'WEB_ADDRESS',
-          partyId: this.partyId,
-          infoString: this.forms.webAddress.fields.webAddress,
-          allowSolicitation: this.forms.webAddress.fields.allowSolicitation
-        }).then(
-          () => {
-            this.updateDataSet()
-          }
-        )
-      },
-      createInternalNote() {
-        this.$http.post(createContactMech, {
-          contactMechTypeId: 'INTERNAL_PARTYID',
-          partyId: this.partyId,
-          infoString: this.forms.internalNote.fields.internalNote,
-          allowSolicitation: this.forms.internalNote.fields.allowSolicitation
-        }).then(
-          () => {
-            this.updateDataSet()
-          }
-        )
-      },
-      createFtpAddress() {
-        this.$http.post(createFtpAddressUrl, {
-          contactMechTypeId: 'FTP_ADDRESS',
-          partyId: this.partyId,
-          hostname: this.forms.ftpAddress.fields.hostname,
-          port: this.forms.ftpAddress.fields.port,
-          username: this.forms.ftpAddress.fields.username,
-          ftpPassword: this.forms.ftpAddress.fields.ftpPassword,
-          binaryTransfer: this.forms.ftpAddress.fields.binaryTransfer,
-          filePath: this.forms.ftpAddress.fields.filePath,
-          zipFile: this.forms.ftpAddress.fields.zipFile,
-          passiveMode: this.forms.ftpAddress.fields.passiveMode,
-          defaultTimeout: this.forms.ftpAddress.fields.defaultTimeout,
-          allowSolicitation: this.forms.ftpAddress.fields.allowSolicitation
-        }).then(
-          () => {
-            this.updateDataSet()
-          }
-        )
-      },
-      createLdapAddress() {
-        this.$http.post(createContactMech, {
-          contactMechTypeId: 'LDAP_ADDRESS',
-          partyId: this.partyId,
-          infoString: this.forms.ldapAddress.fields.ldapAddress,
-          allowSolicitation: this.forms.ldapAddress.fields.allowSolicitation
-        }).then(
-          () => {
-            this.updateDataSet()
-          }
-        )
       },
       addEmailAddress() {
         this.toCreate.push({
@@ -773,7 +606,7 @@
               // do update
               promises.push(new Promise((resolve, reject) => {
                 setTimeout(() => {
-                  this.$http.post(updatePostalAddressUrl, {
+                  this.$http.post(this.updatePostalAddressUrl, {
                     contactMechId: contactMech.contactMech.contactMechId,
                     contactMechTypeId: contactMech.contactMech.contactMechTypeId,
                     partyId: this.partyId,
@@ -798,7 +631,7 @@
               // do update
               promises.push(new Promise((resolve, reject) => {
                 setTimeout(() => {
-                  this.$http.post(updateTelecomNumberUrl, {
+                  this.$http.post(this.updateTelecomNumberUrl, {
                     contactMechId: contactMech.contactMech.contactMechId,
                     contactMechTypeId: contactMech.contactMech.contactMechTypeId,
                     partyId: this.partyId,
@@ -819,7 +652,7 @@
               // do update
               promises.push(new Promise((resolve, reject) => {
                 setTimeout(() => {
-                  this.$http.post(updateEmailAddressUrl, {
+                  this.$http.post(this.updateEmailAddressUrl, {
                     contactMechId: contactMech.contactMech.contactMechId,
                     contactMechTypeId: contactMech.contactMech.contactMechTypeId,
                     partyId: this.partyId,
@@ -839,7 +672,7 @@
               // do update
               promises.push(new Promise((resolve, reject) => {
                 setTimeout(() => {
-                  this.$http.post(updateFtpAddressUrl, {
+                  this.$http.post(this.updateFtpAddressUrl, {
                     contactMechId: contactMech.contactMech.contactMechId,
                     contactMechTypeId: contactMech.contactMech.contactMechTypeId,
                     partyId: this.partyId,
@@ -867,7 +700,7 @@
               // do update
               promises.push(new Promise((resolve, reject) => {
                 setTimeout(() => {
-                  this.$http.post(updateContactMechUrl, {
+                  this.$http.post(this.updateContactMechUrl, {
                     contactMechId: contactMech.contactMech.contactMechId,
                     contactMechTypeId: contactMech.contactMech.contactMechTypeId,
                     partyId: this.partyId,
@@ -891,7 +724,7 @@
               // do creation
               promises.push(new Promise((resolve, reject) => {
                 setTimeout(() => {
-                  this.$http.post(createPostalAddressUrl, {
+                  this.$http.post(this.createPostalAddressUrl, {
                     contactMechTypeId: 'POSTAL_ADDRESS',
                     partyId: this.partyId,
                     toName: contactMech.postalAddress.toName,
@@ -915,7 +748,7 @@
               // do creation
               promises.push(new Promise((resolve, reject) => {
                 setTimeout(() => {
-                  this.$http.post(createTelecomNumberUrl, {
+                  this.$http.post(this.createTelecomNumberUrl, {
                     contactMechTypeId: 'TELECOM_NUMBER',
                     partyId: this.partyId,
                     countryCode: contactMech.telecomNumber.countryCode,
@@ -935,7 +768,7 @@
               // do creation
               promises.push(new Promise((resolve, reject) => {
                 setTimeout(() => {
-                  this.$http.post(createEmailAddressUrl, {
+                  this.$http.post(this.createEmailAddressUrl, {
                     contactMechTypeId: 'EMAIL_ADDRESS',
                     partyId: this.partyId,
                     emailAddress: contactMech.contactMech.infoString,
@@ -954,7 +787,7 @@
               // do creation
               promises.push(new Promise((resolve, reject) => {
                 setTimeout(() => {
-                  this.$http.post(createFtpAddressUrl, {
+                  this.$http.post(this.createFtpAddressUrl, {
                     contactMechTypeId: 'FTP_ADDRESS',
                     partyId: this.partyId,
                     hostname: contactMech.ftpAddress.hostname,
@@ -981,7 +814,7 @@
               // do creation
               promises.push(new Promise((resolve, reject) => {
                 setTimeout(() => {
-                  this.$http.post(createContactMech, {
+                  this.$http.post(this.createContactMechUrl, {
                     contactMechTypeId: contactMech.contactMech.contactMechTypeId,
                     partyId: this.partyId,
                     infoString: contactMech.contactMech.infoString,
@@ -1001,7 +834,7 @@
         for (let contactMechId of this.toDelete) {
           promises.push(new Promise((resolve, reject) => {
             setTimeout(() => {
-              this.$http.post(deleteContactMechUrl, {
+              this.$http.post(this.deleteContactMechUrl, {
                 contactMechId: contactMechId,
                 partyId: this.partyId
               }).then(
@@ -1024,7 +857,7 @@
                 promises.push(
                   new Promise((resolve, reject) => {
                     setTimeout(() => {
-                      this.$http.post(createPartyContactMechPurposeUrl, {
+                      this.$http.post(this.createContactMechPurposeUrl, {
                         contactMechId: contactMech.contactMech.contactMechId,
                         contactMechPurposeTypeId: purpose,
                         partyId: contactMech.partyContactMech.partyId,
@@ -1047,7 +880,7 @@
                 promises.push(
                   new Promise((resolve, reject) => {
                     setTimeout(() => {
-                      this.$http.post(expirePartyContactMechPurposeUrl, {
+                      this.$http.post(this.expireContactMechPurposeUrl, {
                         contactMechId: contactMech.contactMech.contactMechId,
                         partyId: contactMech.partyContactMech.partyId,
                         fromDate: this.formatDate(purpose.fromDate),
@@ -1076,7 +909,7 @@
     mounted() {
       this.updateDataSet()
       for (let type of this.contactTypes) {
-        this.$http.post(getContactMechPurposeTypeUrl, {
+        this.$http.post(this.getContactMechPurposeTypeUrl, {
           contactMechTypeId: type
         }).then(response => {
           this.purposeListByType[type] = response.body.purposeTypeList
