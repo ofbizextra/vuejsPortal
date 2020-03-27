@@ -1,7 +1,7 @@
 <template>
   <v-container fluid class="mb-2 ma-0 pa-0">
     <v-toolbar dark color="primary" flat height="30px" class="ma-0 pa-0">
-      <v-icon left v-on="on">{{getIcon(icon)}}</v-icon>
+      <v-icon left>{{getIcon(icon)}}</v-icon>
       <v-toolbar-title>
         {{label}}
       </v-toolbar-title>

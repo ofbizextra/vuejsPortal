@@ -4,7 +4,7 @@
       <v-toolbar-title class="title">Contact mech "{{this.props.partyId}}"</v-toolbar-title>
       <div class="flex-grow-1"></div>
       <v-btn icon @click="toggleEdit">
-        <v-icon v-on="on" id='mdi-pencil'>{{getIcon('mdi-pencil')}}</v-icon>
+        <v-icon id='mdi-pencil'>{{getIcon('mdi-pencil')}}</v-icon>
       </v-btn>
     </v-toolbar>
     <v-toolbar tile dark color="primary" dense flat v-if="editMode" class="ma-0 pa-0">
@@ -13,8 +13,32 @@
       </v-btn>
       <v-toolbar-title>Edit contact mech</v-toolbar-title>
       <div class="flex-grow-1"></div>
-      <v-btn icon @click="updateAll">
-        <v-icon id='mdi-check'>{{getIcon('mdi-check')}}</v-icon>
+      <v-dialog v-model="confirmDialog" persistent v-if="toDelete.length !== 0" max-width="600px">
+        <template v-slot:activator="{on}">
+          <v-btn icon v-on="on">
+            <v-icon>{{getIcon('mdi-check')}}</v-icon>
+          </v-btn>
+        </template>
+        <v-card>
+          <v-card-title>
+            Are you sure ?
+          </v-card-title>
+          <v-card-text>
+            <p>
+              {{toDelete.length}} contact{{toDelete.length > 1 ? 's' : ''}} will be expired.
+            </p>
+            <p>
+              Are you sure you want to proceed ?
+            </p>
+          </v-card-text>
+          <v-card-actions class="d-flex flex-row-reverse">
+            <v-btn color="success" class="ma-1" @click="updateAll">Confirm expiration</v-btn>
+            <v-btn color="error" class="ma-1" @click="toggleEdit">Cancel changes</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+      <v-btn icon @click="updateAll" v-if="toDelete.length === 0">
+        <v-icon>{{getIcon('mdi-check')}}</v-icon>
       </v-btn>
     </v-toolbar>
     <v-card-text class="pa-1">
@@ -366,7 +390,8 @@
             },
           },
         },
-        lazy: false
+        lazy: false,
+        confirmDialog: false
       }
     },
     computed: {
@@ -582,6 +607,7 @@
         return `${d.getFullYear()}-${d.getMonth() < 9 ? '0' : ''}${d.getMonth() + 1}-${d.getDate() < 10 ? '0' : ''}${d.getDate()} ${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}.${d.getMilliseconds()}`
       },
       toggleEdit() {
+        this.confirmDialog = false
         if (this.editMode) {
           this.updateDataSet()
           this.toCreate = []
@@ -599,6 +625,7 @@
         this.$store.dispatch('ui/incrementUpdateCpt')
       },
       updateAll() {
+        this.confirmDialog = false
         let promises = []
         for (let contactMech of this.dataSet.valueMaps) {
           switch (contactMech.contactMech.contactMechTypeId) {
