@@ -6,7 +6,7 @@
         {{label}}
       </v-toolbar-title>
     </v-toolbar>
-    <v-list dense class="ma-0 pa-0">
+    <v-list dense class="ma-0 pa-0" sel-label="phoneNumber">
       <v-list-item v-for="phoneNumber in contactMechList"
                    :key="phoneNumber.contactMech.contactMechId">
         <v-list-item-content>
@@ -16,11 +16,11 @@
           <v-list-item-title v-if="editMode">
             <v-row class="ma-0 pa-0">
               <v-col class="col-3 ma-0 pa-0">
-                <v-text-field class="ignore-css" hide-details label="Country code"
+                <v-text-field class="ignore-css" hide-details id="Country code"
                               v-model="phoneNumber.telecomNumber.countryCode"></v-text-field>
               </v-col>
               <v-col class="col-9 ma-0 pa-0">
-                <v-text-field class="ignore-css" hide-details label="Number"
+                <v-text-field class="ignore-css" hide-details id="Number"
                               v-model="phoneNumber.telecomNumber.contactNumber"></v-text-field>
               </v-col>
             </v-row>
@@ -52,7 +52,7 @@
       <v-list-item v-if="editMode">
         <v-list-item-content>
           <v-list-item-subtitle  class="d-flex justify-center">
-            <v-btn color="secondary" @click="addContactMech">
+            <v-btn color="secondary" sel-label="addTelecomNumber" @click="addContactMech">
               <v-icon id='mdi-plus-circle' left>{{getIcon('mdi-plus-circle')}}</v-icon>
               Add telecom number
             </v-btn>

@@ -6,7 +6,7 @@
         {{label}}
       </v-toolbar-title>
     </v-toolbar>
-    <v-list dense class="ma-0 pa-0">
+    <v-list dense class="ma-0 pa-0" sel-label="email">
       <v-list-item v-for="email in contactMechList"
                    :key="email.contactMech.contactMechId">
         <v-list-item-content>
@@ -14,7 +14,7 @@
             {{email.contactMech.infoString}}
           </v-list-item-title>
           <v-list-item-title v-if="editMode">
-            <v-text-field hide-details label="Email address"
+            <v-text-field hide-details id="emailAddr" label="Email address"
                           v-model="email.contactMech.infoString"></v-text-field>
           </v-list-item-title>
           <v-list-item-subtitle v-if="email.partyContactMechPurposes.length > 0 && !editMode">
@@ -44,7 +44,7 @@
       <v-list-item v-if="editMode">
         <v-list-item-content>
           <v-list-item-subtitle class="d-flex justify-center">
-            <v-btn color="secondary" @click="addContactMech">
+            <v-btn color="secondary" sel-label="addEmailAddr" @click="addContactMech">
               <v-icon id='mdi-plus-circle' left>{{getIcon('mdi-plus-circle')}}</v-icon>
               Add email address
             </v-btn>

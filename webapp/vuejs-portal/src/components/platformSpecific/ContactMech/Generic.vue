@@ -6,7 +6,7 @@
         {{label}}
       </v-toolbar-title>
     </v-toolbar>
-    <v-list dense class="ma-0 pa-0">
+    <v-list dense class="ma-0 pa-0" :sel-label="sel-label" >
       <v-list-item v-for="contactMech in contactMechList"
                    :key="contactMech.contactMech.contactMechId">
         <v-list-item-content>
@@ -16,7 +16,7 @@
           <v-list-item-title v-if="editMode">
             <v-row>
               <v-col>
-                <v-text-field hide-details :label="label"
+                <v-text-field hide-details id="infoString" :label="label"
                               v-model="contactMech.contactMech.infoString"></v-text-field>
               </v-col>
             </v-row>
@@ -48,7 +48,7 @@
       <v-list-item v-if="editMode">
         <v-list-item-content>
           <v-list-item-subtitle  class="d-flex justify-center">
-            <v-btn color="secondary" @click="addContactMech">
+            <v-btn color="secondary" :sel-label="sel-label-add" @click="addContactMech">
               <v-icon left>{{getIcon('mdi-plus-circle')}}</v-icon>
               Add {{label}}
             </v-btn>
@@ -64,7 +64,7 @@
 
   export default {
     name: "Generic",
-    props: ['contactMechList', 'editMode', 'icon', 'label', 'contactMechTypeId', 'showMore', 'purposeList'],
+    props: ['contactMechList', 'editMode', 'icon', 'label', 'sel-label', 'sel-label-add','contactMechTypeId', 'showMore', 'purposeList'],
     methods: {
       addContactMech() {
         this.$emit('addContactMech')
