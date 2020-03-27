@@ -9,7 +9,7 @@
     <v-list dense class="ma-0 pa-0" sel-label="phoneNumber">
       <v-list-item v-for="phoneNumber in contactMechList"
                    :key="phoneNumber.contactMech.contactMechId">
-        <v-list-item-content>
+        <v-list-item-content :class="phoneNumber.partyContactMech.hasOwnProperty('thruDate') && phoneNumber.partyContactMech.thruDate ? 'grey--text' : ''">
           <v-list-item-title v-if="!editMode">
             {{display(phoneNumber)}}
           </v-list-item-title>
@@ -32,6 +32,11 @@
                 {{getPurposeDescription(purpose.contactMechPurposeTypeId)}}
               </v-chip>
             </v-row>
+          </v-list-item-subtitle>
+          <v-list-item-subtitle v-if="phoneNumber.partyContactMech.hasOwnProperty('thruDate') && phoneNumber.partyContactMech.thruDate">
+            <v-chip class="secondary mr-1 mb-1" x-small>
+              {{'Expired since :  ' + parseDate(phoneNumber.partyContactMech.thruDate)}}
+            </v-chip>
           </v-list-item-subtitle>
           <v-list-item-subtitle v-if="editMode && purposeList.length > 0">
             <v-select
@@ -91,6 +96,9 @@
       getPurposeDescription(contactMechPurposeTypeId) {
         return this.purposeList.filter(purpose => purpose.contactMechPurposeTypeId === contactMechPurposeTypeId)[0].description
       },
+      parseDate(timestamp) {
+        return new Date(parseInt(timestamp)).toLocaleDateString() + ' - ' + new Date(parseInt(timestamp)).toLocaleTimeString()
+      }
     }
   }
 </script>

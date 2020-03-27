@@ -15,7 +15,7 @@
     <v-list dense class="ma-0 pa-0" sel-label="sel-label">
       <v-list-item v-for="contactMech in contactMechList"
                    :key="contactMech.contactMech.contactMechId">
-        <v-list-item-content>
+        <v-list-item-content :class="contactMech.partyContactMech.hasOwnProperty('thruDate') && contactMech.partyContactMech.thruDate ? 'grey--text' : ''">
           <v-list-item-title v-if="!editMode">
             {{contactMech.contactMech.infoString}}
           </v-list-item-title>
@@ -34,6 +34,11 @@
                 {{getPurposeDescription(purpose.contactMechPurposeTypeId)}}
               </v-chip>
             </v-row>
+          </v-list-item-subtitle>
+          <v-list-item-subtitle v-if="contactMech.partyContactMech.hasOwnProperty('thruDate') && contactMech.partyContactMech.thruDate">
+              <v-chip class="secondary mr-1 mb-1" x-small>
+                {{'Expired since :  ' + parseDate(contactMech.partyContactMech.thruDate)}}
+              </v-chip>
           </v-list-item-subtitle>
           <v-list-item-subtitle v-if="editMode && purposeList.length > 0">
             <v-select
@@ -76,6 +81,9 @@
       getPurposeDescription(contactMechPurposeTypeId) {
         return this.purposeList.filter(purpose => purpose.contactMechPurposeTypeId === contactMechPurposeTypeId)[0].description
       },
+      parseDate(timestamp) {
+        return new Date(parseInt(timestamp)).toLocaleDateString() + ' - ' + new Date(parseInt(timestamp)).toLocaleTimeString()
+      }
     }
   }
 </script>

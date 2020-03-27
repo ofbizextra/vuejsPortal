@@ -9,7 +9,7 @@
     <v-list dense sel-label="postalAddr" class="ma-0 pa-0">
       <v-list-item v-for="postalAddress in contactMechList"
                    :key="postalAddress.contactMech.contactMechId">
-        <v-list-item-content v-if="!editMode">
+        <v-list-item-content :class="postalAddress.partyContactMech.hasOwnProperty('thruDate') && postalAddress.partyContactMech.thruDate ? 'grey--text' : ''" v-if="!editMode">
           <v-list-item-title>
             {{postalAddress.postalAddress.toName}} {{postalAddress.postalAddress.attnName}}
           </v-list-item-title>
@@ -29,6 +29,11 @@
                 {{getPurposeDescription(purpose.contactMechPurposeTypeId)}}
               </v-chip>
             </v-row>
+          </v-list-item-subtitle>
+          <v-list-item-subtitle v-if="postalAddress.partyContactMech.hasOwnProperty('thruDate') && postalAddress.partyContactMech.thruDate">
+            <v-chip class="secondary mr-1 mb-1" x-small>
+              {{'Expired since :  ' + parseDate(postalAddress.partyContactMech.thruDate)}}
+            </v-chip>
           </v-list-item-subtitle>
         </v-list-item-content>
         <v-list-item-content v-if="editMode">
@@ -111,6 +116,9 @@
       getPurposeDescription(contactMechPurposeTypeId) {
         return this.purposeList.filter(purpose => purpose.contactMechPurposeTypeId === contactMechPurposeTypeId)[0].description
       },
+      parseDate(timestamp) {
+        return new Date(parseInt(timestamp)).toLocaleDateString() + ' - ' + new Date(parseInt(timestamp)).toLocaleTimeString()
+      }
     }
   }
 </script>

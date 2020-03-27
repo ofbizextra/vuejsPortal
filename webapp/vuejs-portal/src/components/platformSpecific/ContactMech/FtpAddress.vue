@@ -9,7 +9,7 @@
     <v-list dense class="ma-0 pa-0" sel-label="ftpAddr">
       <v-list-item v-for="ftpAddress in contactMechList"
                    :key="ftpAddress.contactMech.contactMechId">
-        <v-list-item-content v-if="!editMode">
+        <v-list-item-content :class="ftpAddress.partyContactMech.hasOwnProperty('thruDate') && ftpAddress.partyContactMech.thruDate ? 'grey--text' : ''" v-if="!editMode">
           <v-list-item-title>
             {{ftpAddress.ftpAddress.hostname}}:{{ftpAddress.ftpAddress.port}}
           </v-list-item-title>
@@ -39,6 +39,11 @@
                 {{getPurposeDescription(purpose.contactMechPurposeTypeId)}}
               </v-chip>
             </v-row>
+          </v-list-item-subtitle>
+          <v-list-item-subtitle v-if="ftpAddress.partyContactMech.hasOwnProperty('thruDate') && ftpAddress.partyContactMech.thruDate">
+            <v-chip class="secondary mr-1 mb-1" x-small>
+              {{'Expired since :  ' + parseDate(ftpAddress.partyContactMech.thruDate)}}
+            </v-chip>
           </v-list-item-subtitle>
         </v-list-item-content>
         <v-list-item-content v-if="editMode">
@@ -130,6 +135,9 @@
       getPurposeDescription(contactMechPurposeTypeId) {
         return this.purposeList.filter(purpose => purpose.contactMechPurposeTypeId === contactMechPurposeTypeId)[0].description
       },
+      parseDate(timestamp) {
+        return new Date(parseInt(timestamp)).toLocaleDateString() + ' - ' + new Date(parseInt(timestamp)).toLocaleTimeString()
+      }
     }
   }
 </script>
