@@ -734,7 +734,8 @@
                     city: contactMech.postalAddress.city,
                     postalCode: contactMech.postalAddress.postalCode,
                   }).then(
-                    () => {
+                    (response) => {
+                      contactMech.contactMech.contactMechId = response.body.contactMechId
                       resolve()
                     },
                     () => {
@@ -754,7 +755,8 @@
                     countryCode: contactMech.telecomNumber.countryCode,
                     contactNumber: contactMech.telecomNumber.contactNumber,
                   }).then(
-                    () => {
+                    (response) => {
+                      contactMech.contactMech.contactMechId = response.body.contactMechId
                       resolve()
                     },
                     () => {
@@ -773,7 +775,8 @@
                     partyId: this.partyId,
                     emailAddress: contactMech.contactMech.infoString,
                   }).then(
-                    () => {
+                    (response) => {
+                      contactMech.contactMech.contactMechId = response.body.contactMechId
                       resolve()
                     },
                     () => {
@@ -800,7 +803,8 @@
                     zipFile: contactMech.ftpAddress.zipFile,
                     passiveMode: contactMech.ftpAddress.passiveMode,
                   }).then(
-                    () => {
+                    (response) => {
+                      contactMech.contactMech.contactMechId = response.body.contactMechId
                       resolve()
                     },
                     () => {
@@ -819,7 +823,8 @@
                     partyId: this.partyId,
                     infoString: contactMech.contactMech.infoString,
                   }).then(
-                    () => {
+                    (response) => {
+                      contactMech.contactMech.contactMechId = response.body.contactMechId
                       resolve()
                     },
                     () => {
@@ -897,6 +902,29 @@
                   })
                 )
               }
+            }
+          }
+          for (let contactMech of this.toCreate) {
+            for (let purpose of contactMech.purposes) {
+              // do post createPurpose
+              promises.push(
+                new Promise((resolve, reject) => {
+                  setTimeout(() => {
+                    this.$http.post(this.createContactMechPurposeUrl, {
+                      contactMechId: contactMech.contactMech.contactMechId,
+                      contactMechPurposeTypeId: purpose,
+                      partyId: contactMech.contactMech.partyId,
+                    }).then(
+                      () => {
+                        resolve()
+                      },
+                      () => {
+                        reject()
+                      }
+                    )
+                  }, 0)
+                })
+              )
             }
           }
           Promise.all(promises).then(() => {
