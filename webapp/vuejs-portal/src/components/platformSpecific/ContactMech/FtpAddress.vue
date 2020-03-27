@@ -33,10 +33,12 @@
             </v-row>
           </div>
           <v-list-item-subtitle v-if="ftpAddress.partyContactMechPurposes.length > 0">
-            <v-chip class="accent mr-2" x-small v-for="purpose in ftpAddress.partyContactMechPurposes"
-                    :key="purpose.contactMechPurposeTypeId">
-              {{getPurposeDescription(purpose.contactMechPurposeTypeId)}}
-            </v-chip>
+            <v-row class="ma-0 pa-0">
+              <v-chip class="accent mr-1 mb-1" x-small v-for="purpose in ftpAddress.partyContactMechPurposes"
+                      :key="purpose.contactMechId + '-' + purpose.contactMechPurposeTypeId">
+                {{getPurposeDescription(purpose.contactMechPurposeTypeId)}}
+              </v-chip>
+            </v-row>
           </v-list-item-subtitle>
         </v-list-item-content>
         <v-list-item-content v-if="editMode">

@@ -23,10 +23,12 @@
             {{postalAddress.postalAddress.city}}, {{postalAddress.postalAddress.postalCode}}
           </div>
           <v-list-item-subtitle v-if="postalAddress.partyContactMechPurposes.length > 0 && !editMode">
-            <v-chip class="accent mr-2" x-small v-for="purpose in postalAddress.partyContactMechPurposes"
-                    :key="purpose.contactMechId + '-' + purpose.contactMechPurposeTypeId">
-              {{getPurposeDescription(purpose.contactMechPurposeTypeId)}}
-            </v-chip>
+            <v-row class="ma-0 pa-0">
+              <v-chip class="accent mr-1 mb-1" x-small v-for="purpose in postalAddress.partyContactMechPurposes"
+                      :key="purpose.contactMechId + '-' + purpose.contactMechPurposeTypeId">
+                {{getPurposeDescription(purpose.contactMechPurposeTypeId)}}
+              </v-chip>
+            </v-row>
           </v-list-item-subtitle>
         </v-list-item-content>
         <v-list-item-content v-if="editMode">

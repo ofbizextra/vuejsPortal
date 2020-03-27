@@ -18,10 +18,12 @@
                           v-model="email.contactMech.infoString"></v-text-field>
           </v-list-item-title>
           <v-list-item-subtitle v-if="email.partyContactMechPurposes.length > 0 && !editMode">
-            <v-chip class="accent mr-2" x-small v-for="purpose in email.partyContactMechPurposes"
-                    :key="purpose.contactMechId + '-' + purpose.contactMechPurposeTypeId">
-              {{getPurposeDescription(purpose.contactMechPurposeTypeId)}}
-            </v-chip>
+            <v-row class="ma-0 pa-0">
+              <v-chip class="accent mr-1 mb-1" x-small v-for="purpose in email.partyContactMechPurposes"
+                      :key="purpose.contactMechId + '-' + purpose.contactMechPurposeTypeId">
+                {{getPurposeDescription(purpose.contactMechPurposeTypeId)}}
+              </v-chip>
+            </v-row>
           </v-list-item-subtitle>
           <v-list-item-subtitle v-if="editMode && purposeList.length > 0">
             <v-select
