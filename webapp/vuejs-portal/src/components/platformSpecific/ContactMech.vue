@@ -165,6 +165,8 @@
       <v-row justify="center">
         <v-btn sel-label="Show more" text @click="toggleShowMore" v-if="!showMore">Show more</v-btn>
         <v-btn sel-label="Show less" text @click="toggleShowMore" v-if="showMore">Show less</v-btn>
+        <v-btn sel-label="Show old" text @click="toggleShowOld" v-if="!showOld">Show old</v-btn>
+        <v-btn sel-label="Hide old" text @click="toggleShowOld" v-if="showOld">Hide old</v-btn>
       </v-row>
     </v-card-text>
   </v-card>
@@ -196,6 +198,7 @@
         toDelete: [],
         editMode: false,
         showMore: false,
+        showOld: false,
         contactTypes: [
           "ELECTRONIC_ADDRESS",
           "POSTAL_ADDRESS",
@@ -457,7 +460,7 @@
       updateDataSet() {
         return new Promise((resolve, reject) => {
           setTimeout(() => {
-            this.$http.post(this.getContactMechUrl, {partyId: this.partyId}).then(
+            this.$http.post(this.getContactMechUrl, {partyId: this.partyId, showOld: this.showOld ? 'true' : 'false'}).then(
               result => {
                 this.dataSet = result.body
                 resolve()
@@ -612,16 +615,25 @@
           this.updateDataSet()
           this.toCreate = []
           this.toDelete = []
+          this.editMode = !this.editMode
         } else {
-          for (let contactMech of this.dataSet.valueMaps) {
-            this.$set(contactMech, 'purposes', contactMech.partyContactMechPurposes.map(purpose => purpose.contactMechPurposeTypeId))
-          }
+          this.showOld = false
+          this.updateDataSet().then(() => {
+            for (let contactMech of this.dataSet.valueMaps) {
+              this.$set(contactMech, 'purposes', contactMech.partyContactMechPurposes.map(purpose => purpose.contactMechPurposeTypeId))
+            }
+            this.editMode = !this.editMode
+          })
         }
-        this.editMode = !this.editMode
         this.$store.dispatch('ui/incrementUpdateCpt')
       },
       toggleShowMore() {
         this.showMore = !this.showMore
+        this.$store.dispatch('ui/incrementUpdateCpt')
+      },
+      toggleShowOld() {
+        this.showOld = !this.showOld
+        this.updateDataSet()
         this.$store.dispatch('ui/incrementUpdateCpt')
       },
       updateAll() {
