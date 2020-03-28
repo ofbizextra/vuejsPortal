@@ -6,7 +6,7 @@
         {{label}}
       </v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn v-if="editMode && contactMechList.length === 0" small icon :sel-label="selLabelAdd" @click="addContactMech">
+      <v-btn v-if="editMode && contactMechList.length === 0" small icon sel-label="addTelecomNumber" @click="addContactMech">
         <v-icon>
           {{getIcon('mdi-plus-circle')}}
         </v-icon>
