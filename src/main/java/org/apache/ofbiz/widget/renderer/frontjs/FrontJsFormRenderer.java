@@ -1901,7 +1901,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
             formName = FormRenderer.getCurrentFormName(modelForm, context);
         }
         String imgSrc = "";
-        List<String> targetParameterList = lookupField.getTargetParameterList();
+        List<String> targetParameterList = lookupField.getTargetParameterList(context);
         /* OH 13.12.2019 simplification for targetParameter
         // FIXME: refactor using the StringUtils methods
         StringBuilder targetParameterIter = new StringBuilder();
