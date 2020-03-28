@@ -1,7 +1,7 @@
 <template>
   <v-card tile class="ma-1">
-    <v-toolbar tile dark color="primary" dense flat v-if="!editMode" class="ma-0 pa-0">
-      <v-toolbar-title class="title">Contact mech "{{this.props.partyId}}"</v-toolbar-title>
+    <v-toolbar tile dark color="primary" dense flat v-if="!editMode" class="ma-0 pa-0 screenlet-title-bar">
+      <v-toolbar-title class="title">{{getUiLabel('contactMechTitle')}} "{{this.props.partyId}}"</v-toolbar-title>
       <div class="flex-grow-1"></div>
       <v-btn icon @click="toggleEdit">
         <v-icon id='mdi-pencil'>{{getIcon('mdi-pencil')}}</v-icon>
@@ -16,7 +16,7 @@
       <v-dialog v-model="confirmDialog" persistent v-if="toDelete.length !== 0" max-width="600px">
         <template v-slot:activator="{on}">
           <v-btn icon v-on="on">
-            <v-icon>{{getIcon('mdi-check')}}</v-icon>
+            <v-icon id='mdi-check'>{{getIcon('mdi-check')}}</v-icon>
           </v-btn>
         </template>
         <v-card>
@@ -38,7 +38,7 @@
         </v-card>
       </v-dialog>
       <v-btn icon @click="updateAll" v-if="toDelete.length === 0">
-        <v-icon>{{getIcon('mdi-check')}}</v-icon>
+        <v-icon id='mdi-check'>{{getIcon('mdi-check')}}</v-icon>
       </v-btn>
     </v-toolbar>
     <v-card-text class="pa-1">
@@ -456,6 +456,9 @@
       },
       getIcon(icon) {
         return icons.hasOwnProperty(icon) ? icons[icon] : null
+      },
+      getUiLabel(label) {
+        return this.props.uiLabel.hasOwnProperty(label) ? this.props.uiLabel[label] : label
       },
       updateDataSet() {
         return new Promise((resolve, reject) => {

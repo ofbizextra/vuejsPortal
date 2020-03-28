@@ -1,21 +1,21 @@
 <template>
-  <v-container fluid class="mb-2 ma-0 pa-0">
+  <v-container fluid class="mb-2 ma-0 pa-0" v-if="editMode || contactMechList.length > 0">
     <v-toolbar dark color="primary" flat height="30px" class="ma-0 pa-0">
       <v-icon left>{{getIcon(icon)}}</v-icon>
       <v-toolbar-title>
         {{label}}
       </v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn v-if="editMode" small icon sel-label="sel-label-add" @click="addContactMech">
-        <v-icon small>
+      <v-btn v-if="editMode && contactMechList.length === 0" small icon :sel-label="selLabelAdd" @click="addContactMech">
+        <v-icon>
           {{getIcon('mdi-plus-circle')}}
         </v-icon>
       </v-btn>
     </v-toolbar>
-    <v-list dense class="ma-0 pa-0" sel-label="sel-label">
+    <v-list dense class="ma-0 pa-0" :sel-label="selLabel">
       <v-list-item v-for="contactMech in contactMechList"
                    :key="contactMech.contactMech.contactMechId">
-        <v-list-item-content :class="contactMech.partyContactMech.hasOwnProperty('thruDate') && contactMech.partyContactMech.thruDate ? 'grey--text' : ''">
+        <v-list-item-content :class="thruDate(contactMech) ? 'grey--text' : ''">
           <v-list-item-title v-if="!editMode">
             {{contactMech.contactMech.infoString}}
           </v-list-item-title>
@@ -35,7 +35,7 @@
               </v-chip>
             </v-row>
           </v-list-item-subtitle>
-          <v-list-item-subtitle v-if="contactMech.partyContactMech.hasOwnProperty('thruDate') && contactMech.partyContactMech.thruDate">
+          <v-list-item-subtitle v-if="thruDate(contactMech)">
               <v-chip class="secondary mr-1 mb-1" x-small>
                 {{'Expired since :  ' + parseDate(contactMech.partyContactMech.thruDate)}}
               </v-chip>
@@ -58,6 +58,16 @@
           </v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
+      <v-list-item v-if="editMode && contactMechList.length > 0">
+        <v-list-item-content>
+          <v-list-item-subtitle class="d-flex justify-center">
+            <v-btn color="secondary" sel-label="addEmailAddr" @click="addContactMech">
+              <v-icon id='mdi-plus-circle' left>{{getIcon('mdi-plus-circle')}}</v-icon>
+              Add {{label}}
+            </v-btn>
+          </v-list-item-subtitle>
+        </v-list-item-content>
+      </v-list-item>
     </v-list>
   </v-container>
 </template>
@@ -67,7 +77,7 @@
 
   export default {
     name: "Generic",
-    props: ['contactMechList', 'editMode', 'icon', 'label', 'sel-label', 'sel-label-add', 'contactMechTypeId', 'showMore', 'purposeList'],
+    props: ['contactMechList', 'editMode', 'icon', 'label', 'selLabel', 'selLabelAdd', 'contactMechTypeId', 'showMore', 'purposeList'],
     methods: {
       addContactMech() {
         this.$emit('addContactMech')
@@ -83,6 +93,9 @@
       },
       parseDate(timestamp) {
         return new Date(parseInt(timestamp)).toLocaleDateString() + ' - ' + new Date(parseInt(timestamp)).toLocaleTimeString()
+      },
+      thruDate(contactMech){
+          return contactMech.hasOwnProperty('partyContactMech') && contactMech.partyContactMech.hasOwnProperty('thruDate') && contactMech.partyContactMech.thruDate
       }
     }
   }

@@ -1,15 +1,21 @@
 <template>
-  <v-container fluid class="mb-2 ma-0 pa-0">
+  <v-container fluid class="mb-2 ma-0 pa-0" v-if="editMode || contactMechList.length > 0">
     <v-toolbar dark color="primary" flat height="30px" class="ma-0 pa-0">
       <v-icon left>{{getIcon(icon)}}</v-icon>
       <v-toolbar-title>
         {{label}}
       </v-toolbar-title>
+      <v-spacer></v-spacer>
+      <v-btn v-if="editMode && contactMechList.length === 0" small icon :sel-label="selLabelAdd" @click="addContactMech">
+        <v-icon>
+          {{getIcon('mdi-plus-circle')}}
+        </v-icon>
+      </v-btn>
     </v-toolbar>
-    <v-list dense class="ma-0 pa-0" sel-label="email">
+    <v-list dense class="ma-0 pa-0" sel-label="emailAddr">
       <v-list-item  v-for="email in contactMechList"
                    :key="email.contactMech.contactMechId">
-        <v-list-item-content :class="email.partyContactMech.hasOwnProperty('thruDate') && email.partyContactMech.thruDate ? 'grey--text' : ''">
+        <v-list-item-content :class="thruDate(email) ? 'grey--text' : ''">
           <v-list-item-title v-if="!editMode">
             {{email.contactMech.infoString}}
           </v-list-item-title>
@@ -25,7 +31,7 @@
               </v-chip>
             </v-row>
           </v-list-item-subtitle>
-          <v-list-item-subtitle v-if="email.partyContactMech.hasOwnProperty('thruDate') && email.partyContactMech.thruDate">
+          <v-list-item-subtitle v-if="thruDate(email)">
             <v-chip class="secondary mr-1 mb-1" x-small>
               {{'Expired since :  ' + parseDate(email.partyContactMech.thruDate)}}
             </v-chip>
@@ -48,7 +54,7 @@
           </v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
-      <v-list-item v-if="editMode">
+      <v-list-item v-if="editMode && contactMechList.length > 0">
         <v-list-item-content>
           <v-list-item-subtitle class="d-flex justify-center">
             <v-btn color="secondary" sel-label="addEmailAddr" @click="addContactMech">
@@ -83,6 +89,9 @@
       },
       parseDate(timestamp) {
         return new Date(parseInt(timestamp)).toLocaleDateString() + ' - ' + new Date(parseInt(timestamp)).toLocaleTimeString()
+      },
+      thruDate(contactMech){
+          return contactMech.hasOwnProperty('partyContactMech') && contactMech.partyContactMech.hasOwnProperty('thruDate') && contactMech.partyContactMech.thruDate
       }
     }
   }

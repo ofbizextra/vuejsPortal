@@ -1,10 +1,16 @@
 <template>
-  <v-container fluid class="mb-2 ma-0 pa-0">
+  <v-container fluid class="mb-2 ma-0 pa-0" v-if="editMode || contactMechList.length > 0">
     <v-toolbar dark color="primary" flat height="30px" class="ma-0 pa-0">
       <v-icon left>{{getIcon(icon)}}</v-icon>
       <v-toolbar-title>
         {{label}}
       </v-toolbar-title>
+      <v-spacer></v-spacer>
+      <v-btn v-if="editMode && contactMechList.length === 0" small icon :sel-label="selLabelAdd" @click="addContactMech">
+        <v-icon>
+          {{getIcon('mdi-plus-circle')}}
+        </v-icon>
+      </v-btn>
     </v-toolbar>
     <v-list dense class="ma-0 pa-0" sel-label="ftpAddr">
       <v-list-item v-for="ftpAddress in contactMechList"
@@ -102,7 +108,7 @@
           </v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
-      <v-list-item v-if="editMode">
+      <v-list-item v-if="editMode && contactMechList.length > 0">
         <v-list-item-content>
           <v-list-item-subtitle  class="d-flex justify-center">
             <v-btn color="secondary" sel-label="addFtpAddr" @click="addContactMech">
