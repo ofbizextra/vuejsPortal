@@ -46,18 +46,20 @@ const actions = {
             this._vm.$modal.show('login')
             reject(response)
           }
-          if (!hideErrorMessage) {
             if (response.body.hasOwnProperty('_ERROR_MESSAGE_')) {
-              commit('ADD_MESSAGE', {messageContent: response.body['_ERROR_MESSAGE_'], messageType: 'error'})
-              reject(response)
-            }
-            if (response.body.hasOwnProperty('_ERROR_MESSAGE_LIST_')) {
-              for (let errorMessage of response.body['_ERROR_MESSAGE_LIST_']) {
-                commit('ADD_MESSAGE', {messageContent: errorMessage, messageType: 'error'})
+              if (!hideErrorMessage) {
+                commit('ADD_MESSAGE', {messageContent: response.body['_ERROR_MESSAGE_'], messageType: 'error'})
               }
               reject(response)
             }
-          }
+            if (response.body.hasOwnProperty('_ERROR_MESSAGE_LIST_')) {
+              if (!hideErrorMessage) {
+                for (let errorMessage of response.body['_ERROR_MESSAGE_LIST_']) {
+                  commit('ADD_MESSAGE', {messageContent: errorMessage, messageType: 'error'})
+                }
+              }
+              reject(response)
+            }
           if (!hideEventMessage) {
             if (response.body.hasOwnProperty('_EVENT_MESSAGE_')) {
               commit('ADD_MESSAGE', {messageContent: response.body['_EVENT_MESSAGE_'], messageType: 'event'})
