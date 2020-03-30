@@ -175,6 +175,7 @@
 </template>
 
 <script>
+  import constants from '../../js/constants'
   import icons from '../../js/icons'
 
   import Generic from './ContactMech/Generic'
@@ -195,6 +196,7 @@
     props: ['props', 'updateStore'],
     data() {
       return {
+        constants: constants,
         dataSet: {},
         toCreate: [],
         toDelete: [],
@@ -465,7 +467,14 @@
       updateDataSet() {
         return new Promise((resolve, reject) => {
           setTimeout(() => {
-            this.$http.post(this.getContactMechUrl, {partyId: this.partyId, showOld: this.showOld ? 'true' : 'false'}).then(
+            this.$store.dispatch('backOfficeApi/doPost', {
+              uri: this.getContactMechUrl,
+              params: {
+                partyId: this.partyId,
+                showOld: this.showOld ? 'true' : 'false'
+              },
+              hideEventMessage: true
+            }).then(
               result => {
                 this.dataSet = result.body
                 resolve()
@@ -650,16 +659,20 @@
               // do update
               promises.push(new Promise((resolve, reject) => {
                 setTimeout(() => {
-                  this.$http.post(this.updatePostalAddressUrl, {
-                    contactMechId: contactMech.contactMech.contactMechId,
-                    contactMechTypeId: contactMech.contactMech.contactMechTypeId,
-                    partyId: this.partyId,
-                    toName: contactMech.postalAddress.toName,
-                    attnName: contactMech.postalAddress.attnName,
-                    address1: contactMech.postalAddress.address1,
-                    address2: contactMech.postalAddress.address2,
-                    city: contactMech.postalAddress.city,
-                    postalCode: contactMech.postalAddress.postalCode
+                  this.$store.dispatch('backOfficeApi/doPost', {
+                    uri: this.updatePostalAddressUrl,
+                    params: {
+                      contactMechId: contactMech.contactMech.contactMechId,
+                      contactMechTypeId: contactMech.contactMech.contactMechTypeId,
+                      partyId: this.partyId,
+                      toName: contactMech.postalAddress.toName,
+                      attnName: contactMech.postalAddress.attnName,
+                      address1: contactMech.postalAddress.address1,
+                      address2: contactMech.postalAddress.address2,
+                      city: contactMech.postalAddress.city,
+                      postalCode: contactMech.postalAddress.postalCode
+                    },
+                    hideEventMessage: true
                   }).then(
                     () => {
                       resolve()
@@ -675,12 +688,16 @@
               // do update
               promises.push(new Promise((resolve, reject) => {
                 setTimeout(() => {
-                  this.$http.post(this.updateTelecomNumberUrl, {
-                    contactMechId: contactMech.contactMech.contactMechId,
-                    contactMechTypeId: contactMech.contactMech.contactMechTypeId,
-                    partyId: this.partyId,
-                    countryCode: contactMech.telecomNumber.countryCode,
-                    contactNumber: contactMech.telecomNumber.contactNumber
+                  this.$store.dispatch('backOfficeApi/doPost', {
+                    uri: this.updateTelecomNumberUrl,
+                    params: {
+                      contactMechId: contactMech.contactMech.contactMechId,
+                      contactMechTypeId: contactMech.contactMech.contactMechTypeId,
+                      partyId: this.partyId,
+                      countryCode: contactMech.telecomNumber.countryCode,
+                      contactNumber: contactMech.telecomNumber.contactNumber
+                    },
+                    hideEventMessage: true
                   }).then(
                     () => {
                       resolve()
@@ -696,11 +713,15 @@
               // do update
               promises.push(new Promise((resolve, reject) => {
                 setTimeout(() => {
-                  this.$http.post(this.updateEmailAddressUrl, {
-                    contactMechId: contactMech.contactMech.contactMechId,
-                    contactMechTypeId: contactMech.contactMech.contactMechTypeId,
-                    partyId: this.partyId,
-                    emailAddress: contactMech.contactMech.infoString
+                  this.$store.dispatch('backOfficeApi/doPost', {
+                    uri: this.updateEmailAddressUrl,
+                    params: {
+                      contactMechId: contactMech.contactMech.contactMechId,
+                      contactMechTypeId: contactMech.contactMech.contactMechTypeId,
+                      partyId: this.partyId,
+                      emailAddress: contactMech.contactMech.infoString
+                    },
+                    hideEventMessage: true
                   }).then(
                     () => {
                       resolve()
@@ -716,19 +737,23 @@
               // do update
               promises.push(new Promise((resolve, reject) => {
                 setTimeout(() => {
-                  this.$http.post(this.updateFtpAddressUrl, {
-                    contactMechId: contactMech.contactMech.contactMechId,
-                    contactMechTypeId: contactMech.contactMech.contactMechTypeId,
-                    partyId: this.partyId,
-                    hostname: contactMech.ftpAddress.hostname,
-                    port: contactMech.ftpAddress.port,
-                    username: contactMech.ftpAddress.username,
-                    ftpPassword: contactMech.ftpAddress.ftpPassword,
-                    filePath: contactMech.ftpAddress.filePath,
-                    defaultTimeout: contactMech.ftpAddress.defaultTimeout,
-                    binaryTransfer: contactMech.ftpAddress.binaryTransfer,
-                    zipFile: contactMech.ftpAddress.zipFile,
-                    passiveMode: contactMech.ftpAddress.passiveMode,
+                  this.$store.dispatch('backOfficeApi/doPost', {
+                    uri: this.updateFtpAddressUrl,
+                    params: {
+                      contactMechId: contactMech.contactMech.contactMechId,
+                      contactMechTypeId: contactMech.contactMech.contactMechTypeId,
+                      partyId: this.partyId,
+                      hostname: contactMech.ftpAddress.hostname,
+                      port: contactMech.ftpAddress.port,
+                      username: contactMech.ftpAddress.username,
+                      ftpPassword: contactMech.ftpAddress.ftpPassword,
+                      filePath: contactMech.ftpAddress.filePath,
+                      defaultTimeout: contactMech.ftpAddress.defaultTimeout,
+                      binaryTransfer: contactMech.ftpAddress.binaryTransfer,
+                      zipFile: contactMech.ftpAddress.zipFile,
+                      passiveMode: contactMech.ftpAddress.passiveMode,
+                    },
+                    hideEventMessage: true
                   }).then(
                     () => {
                       resolve()
@@ -744,11 +769,15 @@
               // do update
               promises.push(new Promise((resolve, reject) => {
                 setTimeout(() => {
-                  this.$http.post(this.updateContactMechUrl, {
-                    contactMechId: contactMech.contactMech.contactMechId,
-                    contactMechTypeId: contactMech.contactMech.contactMechTypeId,
-                    partyId: this.partyId,
-                    infoString: contactMech.contactMech.infoString
+                  this.$store.dispatch('backOfficeApi/doPost', {
+                    uri: this.updateContactMechUrl,
+                    params: {
+                      contactMechId: contactMech.contactMech.contactMechId,
+                      contactMechTypeId: contactMech.contactMech.contactMechTypeId,
+                      partyId: this.partyId,
+                      infoString: contactMech.contactMech.infoString
+                    },
+                    hideEventMessage: true
                   }).then(
                     () => {
                       resolve()
@@ -768,15 +797,19 @@
               // do creation
               promises.push(new Promise((resolve, reject) => {
                 setTimeout(() => {
-                  this.$http.post(this.createPostalAddressUrl, {
-                    contactMechTypeId: 'POSTAL_ADDRESS',
-                    partyId: this.partyId,
-                    toName: contactMech.postalAddress.toName,
-                    attnName: contactMech.postalAddress.attnName,
-                    address1: contactMech.postalAddress.address1,
-                    address2: contactMech.postalAddress.address2,
-                    city: contactMech.postalAddress.city,
-                    postalCode: contactMech.postalAddress.postalCode,
+                  this.$store.dispatch('backOfficeApi/doPost', {
+                    uri: this.createPostalAddressUrl,
+                    params: {
+                      contactMechTypeId: 'POSTAL_ADDRESS',
+                      partyId: this.partyId,
+                      toName: contactMech.postalAddress.toName,
+                      attnName: contactMech.postalAddress.attnName,
+                      address1: contactMech.postalAddress.address1,
+                      address2: contactMech.postalAddress.address2,
+                      city: contactMech.postalAddress.city,
+                      postalCode: contactMech.postalAddress.postalCode,
+                    },
+                    hideEventMessage: false
                   }).then(
                     (response) => {
                       contactMech.contactMech.contactMechId = response.body.contactMechId
@@ -793,11 +826,15 @@
               // do creation
               promises.push(new Promise((resolve, reject) => {
                 setTimeout(() => {
-                  this.$http.post(this.createTelecomNumberUrl, {
-                    contactMechTypeId: 'TELECOM_NUMBER',
-                    partyId: this.partyId,
-                    countryCode: contactMech.telecomNumber.countryCode,
-                    contactNumber: contactMech.telecomNumber.contactNumber,
+                  this.$store.dispatch('backOfficeApi/doPost', {
+                    uri: this.createTelecomNumberUrl,
+                    params: {
+                      contactMechTypeId: 'TELECOM_NUMBER',
+                      partyId: this.partyId,
+                      countryCode: contactMech.telecomNumber.countryCode,
+                      contactNumber: contactMech.telecomNumber.contactNumber,
+                    },
+                    hideEventMessage: false
                   }).then(
                     (response) => {
                       contactMech.contactMech.contactMechId = response.body.contactMechId
@@ -814,10 +851,14 @@
               // do creation
               promises.push(new Promise((resolve, reject) => {
                 setTimeout(() => {
-                  this.$http.post(this.createEmailAddressUrl, {
-                    contactMechTypeId: 'EMAIL_ADDRESS',
-                    partyId: this.partyId,
-                    emailAddress: contactMech.contactMech.infoString,
+                  this.$store.dispatch('backOfficeApi/doPost', {
+                    uri: this.createEmailAddressUrl,
+                    params: {
+                      contactMechTypeId: 'EMAIL_ADDRESS',
+                      partyId: this.partyId,
+                      emailAddress: contactMech.contactMech.infoString,
+                    },
+                    hideEventMessage: false
                   }).then(
                     (response) => {
                       contactMech.contactMech.contactMechId = response.body.contactMechId
@@ -834,18 +875,22 @@
               // do creation
               promises.push(new Promise((resolve, reject) => {
                 setTimeout(() => {
-                  this.$http.post(this.createFtpAddressUrl, {
-                    contactMechTypeId: 'FTP_ADDRESS',
-                    partyId: this.partyId,
-                    hostname: contactMech.ftpAddress.hostname,
-                    port: contactMech.ftpAddress.port,
-                    username: contactMech.ftpAddress.username,
-                    ftpPassword: contactMech.ftpAddress.ftpPassword,
-                    filePath: contactMech.ftpAddress.filePath,
-                    defaultTimeout: contactMech.ftpAddress.defaultTimeout,
-                    binaryTransfer: contactMech.ftpAddress.binaryTransfer,
-                    zipFile: contactMech.ftpAddress.zipFile,
-                    passiveMode: contactMech.ftpAddress.passiveMode,
+                  this.$store.dispatch('backOfficeApi/doPost', {
+                    uri: this.createFtpAddressUrl,
+                    params: {
+                      contactMechTypeId: 'FTP_ADDRESS',
+                      partyId: this.partyId,
+                      hostname: contactMech.ftpAddress.hostname,
+                      port: contactMech.ftpAddress.port,
+                      username: contactMech.ftpAddress.username,
+                      ftpPassword: contactMech.ftpAddress.ftpPassword,
+                      filePath: contactMech.ftpAddress.filePath,
+                      defaultTimeout: contactMech.ftpAddress.defaultTimeout,
+                      binaryTransfer: contactMech.ftpAddress.binaryTransfer,
+                      zipFile: contactMech.ftpAddress.zipFile,
+                      passiveMode: contactMech.ftpAddress.passiveMode,
+                    },
+                    hideEventMessage: false
                   }).then(
                     (response) => {
                       contactMech.contactMech.contactMechId = response.body.contactMechId
@@ -862,10 +907,14 @@
               // do creation
               promises.push(new Promise((resolve, reject) => {
                 setTimeout(() => {
-                  this.$http.post(this.createContactMechUrl, {
-                    contactMechTypeId: contactMech.contactMech.contactMechTypeId,
-                    partyId: this.partyId,
-                    infoString: contactMech.contactMech.infoString,
+                  this.$store.dispatch('backOfficeApi/doPost', {
+                    uri: this.createContactMechUrl,
+                    params: {
+                      contactMechTypeId: contactMech.contactMech.contactMechTypeId,
+                      partyId: this.partyId,
+                      infoString: contactMech.contactMech.infoString,
+                    },
+                    hideEventMessage: false
                   }).then(
                     (response) => {
                       contactMech.contactMech.contactMechId = response.body.contactMechId
@@ -883,9 +932,13 @@
         for (let contactMechId of this.toDelete) {
           promises.push(new Promise((resolve, reject) => {
             setTimeout(() => {
-              this.$http.post(this.deleteContactMechUrl, {
-                contactMechId: contactMechId,
-                partyId: this.partyId
+              this.$store.dispatch('backOfficeApi/doPost', {
+                uri: this.deleteContactMechUrl,
+                params: {
+                  contactMechId: contactMechId,
+                  partyId: this.partyId
+                },
+                hideEventMessage: false
               }).then(
                 () => {
                   resolve()
@@ -906,10 +959,14 @@
                 promises.push(
                   new Promise((resolve, reject) => {
                     setTimeout(() => {
-                      this.$http.post(this.createContactMechPurposeUrl, {
-                        contactMechId: contactMech.contactMech.contactMechId,
-                        contactMechPurposeTypeId: purpose,
-                        partyId: contactMech.partyContactMech.partyId,
+                      this.$store.dispatch('backOfficeApi/doPost', {
+                        uri: this.createContactMechPurposeUrl,
+                        params: {
+                          contactMechId: contactMech.contactMech.contactMechId,
+                          contactMechPurposeTypeId: purpose,
+                          partyId: contactMech.partyContactMech.partyId,
+                        },
+                        hideEventMessage: true
                       }).then(
                         () => {
                           resolve()
@@ -929,11 +986,15 @@
                 promises.push(
                   new Promise((resolve, reject) => {
                     setTimeout(() => {
-                      this.$http.post(this.expireContactMechPurposeUrl, {
-                        contactMechId: contactMech.contactMech.contactMechId,
-                        partyId: contactMech.partyContactMech.partyId,
-                        fromDate: this.formatDate(purpose.fromDate),
-                        contactMechPurposeTypeId: purpose.contactMechPurposeTypeId
+                      this.$store.dispatch('backOfficeApi/doPost', {
+                        uri: this.expireContactMechPurposeUrl,
+                        params: {
+                          contactMechId: contactMech.contactMech.contactMechId,
+                          partyId: contactMech.partyContactMech.partyId,
+                          fromDate: this.formatDate(purpose.fromDate),
+                          contactMechPurposeTypeId: purpose.contactMechPurposeTypeId
+                        },
+                        hideEventMessage: true
                       }).then(
                         () => {
                           resolve()
@@ -954,10 +1015,14 @@
               promises.push(
                 new Promise((resolve, reject) => {
                   setTimeout(() => {
-                    this.$http.post(this.createContactMechPurposeUrl, {
-                      contactMechId: contactMech.contactMech.contactMechId,
-                      contactMechPurposeTypeId: purpose,
-                      partyId: contactMech.contactMech.partyId,
+                    this.$store.dispatch('backOfficeApi/doPost', {
+                      uri: this.createContactMechPurposeUrl,
+                      params: {
+                        contactMechId: contactMech.contactMech.contactMechId,
+                        contactMechPurposeTypeId: purpose,
+                        partyId: contactMech.contactMech.partyId,
+                      },
+                      hideEventMessage: true
                     }).then(
                       () => {
                         resolve()
@@ -981,8 +1046,12 @@
     mounted() {
       this.updateDataSet()
       for (let type of this.contactTypes) {
-        this.$http.post(this.getContactMechPurposeTypeUrl, {
-          contactMechTypeId: type
+        this.$store.dispatch('backOfficeApi/doPost', {
+          uri: this.getContactMechPurposeTypeUrl,
+          params: {
+            contactMechTypeId: type
+          },
+          hideEventMessage: true
         }).then(response => {
           this.purposeListByType[type] = response.body.purposeTypeList
         })

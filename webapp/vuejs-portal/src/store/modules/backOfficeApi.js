@@ -33,9 +33,7 @@ const actions = {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         Vue.http.post(uri,
-          queryString.stringify({
-            ...params
-          }),
+          queryString.stringify({...params}),
           {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}
         ).then(response => {
           if (typeof response.body === 'string' && response.body.includes('login failed')) {
