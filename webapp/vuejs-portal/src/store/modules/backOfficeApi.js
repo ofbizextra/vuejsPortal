@@ -29,7 +29,7 @@ const getters = {
 }
 
 const actions = {
-  doPost({commit, dispatch}, {uri, params}) {
+  doPost({commit, dispatch}, {uri, params, hideEventMessage, hideErrorMessage}) {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         Vue.http.post(uri,
@@ -46,22 +46,26 @@ const actions = {
             this._vm.$modal.show('login')
             reject(response)
           }
-          if (response.body.hasOwnProperty('_ERROR_MESSAGE_')) {
-            commit('ADD_MESSAGE', {messageContent: response.body['_ERROR_MESSAGE_'], messageType: 'error'})
-            reject(response)
-          }
-          if (response.body.hasOwnProperty('_ERROR_MESSAGE_LIST_')) {
-            for (let errorMessage of response.body['_ERROR_MESSAGE_LIST_']) {
-              commit('ADD_MESSAGE', {messageContent: errorMessage, messageType: 'error'})
+          if (!hideErrorMessage) {
+            if (response.body.hasOwnProperty('_ERROR_MESSAGE_')) {
+              commit('ADD_MESSAGE', {messageContent: response.body['_ERROR_MESSAGE_'], messageType: 'error'})
+              reject(response)
             }
-            reject(response)
+            if (response.body.hasOwnProperty('_ERROR_MESSAGE_LIST_')) {
+              for (let errorMessage of response.body['_ERROR_MESSAGE_LIST_']) {
+                commit('ADD_MESSAGE', {messageContent: errorMessage, messageType: 'error'})
+              }
+              reject(response)
+            }
           }
-          if (response.body.hasOwnProperty('_EVENT_MESSAGE_')) {
-            commit('ADD_MESSAGE', {messageContent: response.body['_EVENT_MESSAGE_'], messageType: 'event'})
-          }
-          if (response.body.hasOwnProperty('_EVENT_MESSAGE_LIST_')) {
-            for (let eventMessage of response.body['_EVENT_MESSAGE_LIST_']) {
-              commit('ADD_MESSAGE', {messageContent: eventMessage, messageType: 'event'})
+          if (!hideEventMessage) {
+            if (response.body.hasOwnProperty('_EVENT_MESSAGE_')) {
+              commit('ADD_MESSAGE', {messageContent: response.body['_EVENT_MESSAGE_'], messageType: 'event'})
+            }
+            if (response.body.hasOwnProperty('_EVENT_MESSAGE_LIST_')) {
+              for (let eventMessage of response.body['_EVENT_MESSAGE_LIST_']) {
+                commit('ADD_MESSAGE', {messageContent: eventMessage, messageType: 'event'})
+              }
             }
           }
           resolve(response)
