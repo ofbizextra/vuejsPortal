@@ -127,7 +127,7 @@
 
   export default {
     name: "FtpAddress",
-    props: ['contactMechList', 'editMode', 'icon', 'label', 'contactMechTypeId', 'showMore', 'purposeList', 'rules'],
+    props: ['contactMechList', 'editMode', 'icon', 'label', 'contactMechTypeId', 'showMore', 'purposeList', 'rules', 'lazy'],
     methods: {
       addContactMech() {
         this.$emit('addContactMech')

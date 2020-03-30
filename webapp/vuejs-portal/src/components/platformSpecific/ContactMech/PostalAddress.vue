@@ -108,7 +108,7 @@
 
   export default {
     name: "PostalAddress",
-    props: ['contactMechList', 'editMode', 'icon', 'label', 'contactMechTypeId', 'showMore', 'purposeList', 'rules'],
+    props: ['contactMechList', 'editMode', 'icon', 'label', 'contactMechTypeId', 'showMore', 'purposeList', 'rules', 'lazy'],
     methods: {
       addContactMech() {
         this.$emit('addContactMech')

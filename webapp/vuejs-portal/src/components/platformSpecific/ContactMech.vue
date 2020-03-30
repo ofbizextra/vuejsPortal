@@ -117,6 +117,7 @@
               :show-more="showMore"
               :purpose-list="purposeListByType.POSTAL_ADDRESS"
               :rules="forms.postalAddress.rules"
+              :lazy="lazy"
               @removeContactMech="removeContactMech($event)"
               @addContactMech="addPostalAddress"
           >
@@ -156,6 +157,7 @@
               :show-more="showMore"
               :purpose-list="purposeListByType.FTP_ADDRESS"
               :rules="forms.ftpAddress.rules"
+              :lazy="lazy"
               @removeContactMech="removeContactMech($event)"
               @addContactMech="addFtpAddress"
           >
