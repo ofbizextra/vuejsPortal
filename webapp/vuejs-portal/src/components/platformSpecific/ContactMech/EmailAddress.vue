@@ -87,7 +87,7 @@
         }
       },
       mustBeDisplayed() {
-        return this.editMode || this.filteredContactMechList.length > 0
+        return (this.editMode && this.showLessList.mode !== 'never') || this.filteredContactMechList.length > 0
       }
     },
     methods: {
