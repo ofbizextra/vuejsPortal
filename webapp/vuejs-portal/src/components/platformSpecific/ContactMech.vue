@@ -52,7 +52,7 @@
               label="Telecom number"
               :show-more="showMore"
               :purpose-list="purposeListByType.TELECOM_NUMBER"
-              :show-less-list="defaultDisplay.TELECOM_NUMBER"
+              :show-less-list="displayParam.TELECOM_NUMBER"
               @removeContactMech="removeContactMech($event)"
               @addContactMech="addTelecomNumber"
           ></telecom-number>
@@ -64,7 +64,7 @@
               label="Email address"
               :show-more="showMore"
               :purpose-list="purposeListByType.EMAIL_ADDRESS"
-              :show-less-list="defaultDisplay.EMAIL_ADDRESS"
+              :show-less-list="displayParam.EMAIL_ADDRESS"
               @removeContactMech="removeContactMech($event)"
               @addContactMech="addEmailAddress"
           >
@@ -79,7 +79,7 @@
               sel-label-add="addIpAddr"
               :show-more="showMore"
               :purpose-list="purposeListByType.IP_ADDRESS"
-              :show-less-list="defaultDisplay.IP_ADDRESS"
+              :show-less-list="displayParam.IP_ADDRESS"
               @removeContactMech="removeContactMech($event)"
               @addContactMech="addIpAddress"
           ></generic>
@@ -93,7 +93,7 @@
               sel-label-add="addDomainName"
               :show-more="showMore"
               :purpose-list="purposeListByType.DOMAIN_NAME"
-              :show-less-list="defaultDisplay.DOMAIN_NAME"
+              :show-less-list="displayParam.DOMAIN_NAME"
               @removeContactMech="removeContactMech($event)"
               @addContactMech="addDomainName"
           ></generic>
@@ -107,7 +107,7 @@
               sel-label-add="addLdapAddr"
               :show-more="showMore"
               :purpose-list="purposeListByType.LDAP_ADDRESS"
-              :show-less-list="defaultDisplay.LDAP_ADDRESS"
+              :show-less-list="displayParam.LDAP_ADDRESS"
               @removeContactMech="removeContactMech($event)"
               @addContactMech="addLdapAddress"
           ></generic>
@@ -121,7 +121,7 @@
               label="Postal address"
               :show-more="showMore"
               :purpose-list="purposeListByType.POSTAL_ADDRESS"
-              :show-less-list="defaultDisplay.POSTAL_ADDRESS"
+              :show-less-list="displayParam.POSTAL_ADDRESS"
               :rules="forms.postalAddress.rules"
               :lazy="lazy"
               @removeContactMech="removeContactMech($event)"
@@ -138,7 +138,7 @@
               sel-label-add="addintNote"
               :show-more="showMore"
               :purpose-list="purposeListByType.INTERNAL_PARTYID"
-              :show-less-list="defaultDisplay.INTERNAL_PARTYID"
+              :show-less-list="displayParam.INTERNAL_PARTYID"
               @removeContactMech="removeContactMech($event)"
               @addContactMech="addInternalPartyId"
           ></generic>
@@ -152,7 +152,7 @@
               sel-label-add="addWebAddr"
               :show-more="showMore"
               :purpose-list="purposeListByType.WEB_ADDRESS"
-              :show-less-list="defaultDisplay.WEB_ADDRESS"
+              :show-less-list="displayParam.WEB_ADDRESS"
               @removeContactMech="removeContactMech($event)"
               @addContactMech="addWebAddress"
           ></generic>
@@ -164,7 +164,7 @@
               label="FTP address"
               :show-more="showMore"
               :purpose-list="purposeListByType.FTP_ADDRESS"
-              :show-less-list="defaultDisplay.FTP_ADDRESS"
+              :show-less-list="displayParam.FTP_ADDRESS"
               :rules="forms.ftpAddress.rules"
               :lazy="lazy"
               @removeContactMech="removeContactMech($event)"
@@ -513,6 +513,9 @@
       expireContactMechPurposeUrl() {
         return this.props.configParam.hasOwnProperty('expireContactMechPurposeUrl') ? this.props.configParam.expireContactMechPurposeUrl : ''
       },
+      displayParam() {
+        return this.props.hasOwnProperty('displayParam') ? this.props.displayParam : this.defaultDisplay
+      }
     },
     methods: {
       contactsByType(type) {
