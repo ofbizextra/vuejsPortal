@@ -13,10 +13,10 @@
       </v-btn>
       <v-toolbar-title>Edit contact mech</v-toolbar-title>
       <div class="flex-grow-1"></div>
-      <v-dialog v-model="confirmDialog" persistent v-if="toDelete.length !== 0" max-width="600px">
+      <v-dialog v-model="confirmDialog" persistent v-if="toDelete.length !== 0 && modified" max-width="600px">
         <template v-slot:activator="{on}">
           <v-btn icon v-on="on">
-            <v-icon id='mdi-check'>{{getIcon('mdi-check')}}</v-icon>
+            <v-icon color="green" id='mdi-check'>{{getIcon('mdi-check')}}</v-icon>
           </v-btn>
         </template>
         <v-card>
@@ -37,8 +37,8 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
-      <v-btn icon @click="updateAll" v-if="toDelete.length === 0">
-        <v-icon id='mdi-check'>{{getIcon('mdi-check')}}</v-icon>
+      <v-btn icon @click="updateAll" v-if="toDelete.length === 0 && modified">
+        <v-icon color="green" id='mdi-check'>{{getIcon('mdi-check')}}</v-icon>
       </v-btn>
     </v-toolbar>
     <v-card-text class="pa-1">
@@ -207,6 +207,7 @@
       return {
         constants: constants,
         dataSet: {},
+        defaultDataSet: {},
         toCreate: [],
         toDelete: [],
         editMode: false,
@@ -515,6 +516,9 @@
       },
       displayParam() {
         return this.props.hasOwnProperty('displayParam') ? this.props.displayParam : this.defaultDisplay
+      },
+      modified() {
+        return JSON.stringify(this.dataSet) !== this.defaultDataSet || this.toCreate.length > 0 || this.toDelete.length > 0
       }
     },
     methods: {
@@ -702,6 +706,7 @@
             for (let contactMech of this.dataSet.valueMaps) {
               this.$set(contactMech, 'purposes', contactMech.partyContactMechPurposes.map(purpose => purpose.contactMechPurposeTypeId))
             }
+            this.defaultDataSet = JSON.stringify(this.dataSet)
             this.editMode = !this.editMode
           })
         }
