@@ -52,6 +52,7 @@
               label="Telecom number"
               :show-more="showMore"
               :purpose-list="purposeListByType.TELECOM_NUMBER"
+              :show-less-list="defaultDisplay.TELECOM_NUMBER"
               @removeContactMech="removeContactMech($event)"
               @addContactMech="addTelecomNumber"
           ></telecom-number>
@@ -63,6 +64,7 @@
               label="Email address"
               :show-more="showMore"
               :purpose-list="purposeListByType.EMAIL_ADDRESS"
+              :show-less-list="defaultDisplay.EMAIL_ADDRESS"
               @removeContactMech="removeContactMech($event)"
               @addContactMech="addEmailAddress"
           >
@@ -77,6 +79,7 @@
               sel-label-add="addIpAddr"
               :show-more="showMore"
               :purpose-list="purposeListByType.IP_ADDRESS"
+              :show-less-list="defaultDisplay.IP_ADDRESS"
               @removeContactMech="removeContactMech($event)"
               @addContactMech="addIpAddress"
           ></generic>
@@ -90,6 +93,7 @@
               sel-label-add="addDomainName"
               :show-more="showMore"
               :purpose-list="purposeListByType.DOMAIN_NAME"
+              :show-less-list="defaultDisplay.DOMAIN_NAME"
               @removeContactMech="removeContactMech($event)"
               @addContactMech="addDomainName"
           ></generic>
@@ -103,6 +107,7 @@
               sel-label-add="addLdapAddr"
               :show-more="showMore"
               :purpose-list="purposeListByType.LDAP_ADDRESS"
+              :show-less-list="defaultDisplay.LDAP_ADDRESS"
               @removeContactMech="removeContactMech($event)"
               @addContactMech="addLdapAddress"
           ></generic>
@@ -116,6 +121,7 @@
               label="Postal address"
               :show-more="showMore"
               :purpose-list="purposeListByType.POSTAL_ADDRESS"
+              :show-less-list="defaultDisplay.POSTAL_ADDRESS"
               :rules="forms.postalAddress.rules"
               :lazy="lazy"
               @removeContactMech="removeContactMech($event)"
@@ -132,6 +138,7 @@
               sel-label-add="addintNote"
               :show-more="showMore"
               :purpose-list="purposeListByType.INTERNAL_PARTYID"
+              :show-less-list="defaultDisplay.INTERNAL_PARTYID"
               @removeContactMech="removeContactMech($event)"
               @addContactMech="addInternalPartyId"
           ></generic>
@@ -145,6 +152,7 @@
               sel-label-add="addWebAddr"
               :show-more="showMore"
               :purpose-list="purposeListByType.WEB_ADDRESS"
+              :show-less-list="defaultDisplay.WEB_ADDRESS"
               @removeContactMech="removeContactMech($event)"
               @addContactMech="addWebAddress"
           ></generic>
@@ -156,6 +164,7 @@
               label="FTP address"
               :show-more="showMore"
               :purpose-list="purposeListByType.FTP_ADDRESS"
+              :show-less-list="defaultDisplay.FTP_ADDRESS"
               :rules="forms.ftpAddress.rules"
               :lazy="lazy"
               @removeContactMech="removeContactMech($event)"
@@ -165,8 +174,8 @@
         </v-col>
       </v-row>
       <v-row justify="center">
-        <v-btn sel-label="Show more" text @click="toggleShowMore" v-if="!showMore">Show more</v-btn>
-        <v-btn sel-label="Show less" text @click="toggleShowMore" v-if="showMore">Show less</v-btn>
+        <v-btn sel-label="Show more" text @click="toggleShowMore" v-if="!showMore && !editMode">Show more</v-btn>
+        <v-btn sel-label="Show less" text @click="toggleShowMore" v-if="showMore && !editMode">Show less</v-btn>
         <v-btn sel-label="Show old" text @click="toggleShowOld" v-if="!showOld && !editMode">Show old</v-btn>
         <v-btn sel-label="Hide old" text @click="toggleShowOld" v-if="showOld && !editMode">Hide old</v-btn>
       </v-row>
@@ -398,7 +407,61 @@
           },
         },
         lazy: false,
-        confirmDialog: false
+        confirmDialog: false,
+        defaultDisplay: {
+          //  mode:
+          //    count: display the n first contact
+          //    purposes: display contacts that have at least 1 purposes included in 'purposes' array
+          //    none: don't display in showLess mode
+          //    never: never display in showLess nor showMore mods
+          //  count: number of contact to display in 'count' mod
+          //  purposes: list of purposes that should be displayed in 'purposes' mod
+          POSTAL_ADDRESS: {
+            mode: 'purposes',
+            count: 1,
+            purposes: ['SHIPPING_LOCATION']
+          },
+          TELECOM_NUMBER: {
+            mode: 'purposes',
+            count: 1,
+            purposes: ['PHONE_WORK']
+          },
+          EMAIL_ADDRESS: {
+            mode: 'purposes',
+            count: 1,
+            purposes: ['PRIMARY_EMAIL']
+          },
+          IP_ADDRESS: {
+            mode: 'never',
+            count: 1,
+            purposes: []
+          },
+          DOMAIN_NAME: {
+            mode: 'none',
+            count: 1,
+            purposes: []
+          },
+          WEB_ADDRESS: {
+            mode: 'purposes',
+            count: 1,
+            purposes: ['PRIMARY_WEB_URL']
+          },
+          INTERNAL_PARTYID: {
+            mode: 'count',
+            count: 1,
+            purposes: []
+          },
+          FTP_ADDRESS: {
+            mode: 'never',
+            count: 1,
+            purposes: []
+          },
+          LDAP_ADDRESS: {
+            mode: 'never',
+            count: 1,
+            purposes: []
+          }
+        }
       }
     },
     computed: {

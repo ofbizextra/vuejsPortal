@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid class="mb-2 ma-0 pa-0" v-if="editMode || contactMechList.length > 0">
+  <v-container fluid class="mb-2 ma-0 pa-0" v-if="mustBeDisplayed">
     <v-toolbar dark color="primary" flat height="30px" class="ma-0 pa-0">
       <v-icon left>{{getIcon(icon)}}</v-icon>
       <v-toolbar-title>
@@ -13,7 +13,7 @@
       </v-btn>
     </v-toolbar>
     <v-list dense class="ma-0 pa-0" :sel-label="selLabel">
-      <v-list-item v-for="contactMech in contactMechList"
+      <v-list-item v-for="contactMech in filteredContactMechList"
                    :key="contactMech.contactMech.contactMechId">
         <v-list-item-content :class="thruDate(contactMech) ? 'grey--text' : ''">
           <v-list-item-title v-if="!editMode">
@@ -77,7 +77,23 @@
 
   export default {
     name: "Generic",
-    props: ['contactMechList', 'editMode', 'icon', 'label', 'selLabel', 'selLabelAdd', 'contactMechTypeId', 'showMore', 'purposeList'],
+    props: ['contactMechList', 'editMode', 'icon', 'label', 'selLabel', 'selLabelAdd', 'contactMechTypeId', 'showMore', 'purposeList', 'showLessList'],
+    computed: {
+      filteredContactMechList() {
+        if (this.showLessList.mode === 'never') {
+          return []
+        } else if (this.showLessList.mode === 'none' && !this.showMore) {
+          return []
+        } else if (this.showLessList.mode === 'purposes' && !this.showMore && !this.editMode) {
+          return this.contactMechList.filter(contactMech => contactMech.partyContactMechPurposes.find(purpose => this.showLessList.purposes.includes(purpose.contactMechPurposeTypeId)))
+        } else {
+          return !this.showMore && this.showLessList.mode === 'count' && this.showLessList.count > 0 && !this.editMode ? this.contactMechList.slice(0, this.showLessList.count) : this.contactMechList
+        }
+      },
+      mustBeDisplayed() {
+        return this.editMode || this.filteredContactMechList.length > 0
+      }
+    },
     methods: {
       addContactMech() {
         this.$emit('addContactMech')
