@@ -87,7 +87,7 @@
       filteredContactMechList() {
         if (this.showLessList.mode === 'never') {
           return []
-        } else if (this.showLessList.mode === 'none' && !this.showMore) {
+        } else if (this.showLessList.mode === 'none' && !this.showMore && !this.editMode) {
           return []
         } else if (this.showLessList.mode === 'purposes' && !this.showMore && !this.editMode) {
           return this.contactMechList.filter(contactMech => contactMech.partyContactMechPurposes.find(purpose => this.showLessList.purposes.includes(purpose.contactMechPurposeTypeId)))
