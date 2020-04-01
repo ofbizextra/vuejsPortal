@@ -355,21 +355,12 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
         ModelScreenWidget.Menu tabMenu = screenlet.getTabMenu();
         ModelScreenWidget.Menu navMenu = screenlet.getNavigationMenu();
         ModelScreenWidget.Form navForm = screenlet.getNavigationForm();
-        String expandToolTip = "";
-        String collapseToolTip = "";
-        if (collapsible) {
-            Map<String, Object> uiLabelMap = UtilGenerics.cast(context.get("uiLabelMap"));
-            if (uiLabelMap != null) {
-                expandToolTip = (String) uiLabelMap.get("CommonExpand");
-                collapseToolTip = (String) uiLabelMap.get("CommonCollapse");
-            }
-        }
 
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("title", title);
         parameters.put("name", screenlet.getName());
         parameters.put("collapsible", collapsible);
-        parameters.put("saveCollapsed", screenlet.saveCollapsed());
+        if (screenlet.saveCollapsed()) parameters.put("saveCollapsed", true);
         if (UtilValidate.isNotEmpty (screenlet.getId(context))) {
             parameters.put("id", screenlet.getId(context));
             parameters.put("collapsibleAreaId", screenlet.getId(context) + "_col");
@@ -378,10 +369,6 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
             parameters.put("id", "screenlet_" + screenLetsIdCounter);
             parameters.put("collapsibleAreaId","screenlet_" + screenLetsIdCounter + "_col");
             screenLetsIdCounter++;
-        }
-        if (collapsible) {
-            parameters.put("expandToolTip", expandToolTip);
-            parameters.put("collapseToolTip", collapseToolTip);
         }
         if (UtilValidate.isNotEmpty(screenlet.padded())) {
             Debug.logWarning("screenlet attribute padded is used in screenlet with title="+title+
@@ -404,6 +391,8 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
                 //   it's more easy for a frontJs component to manage attributes than sub-components
                 parameters.put("navMenu", getMenuOutput(writer, context, navMenu.getModelMenu(context)));
             } else if (navForm != null) {
+                Debug.logWarning("navigation-form is used in screenlet with title="+title+
+                        " it's not manage by VueJs screenlet component", module);
                 parameters.put("navForm",renderScreenletPaginateMenu(writer, context, navForm));
             }
         }
@@ -429,12 +418,14 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
     public void renderScreenletSubWidget(Appendable writer, Map<String, Object> context, ModelScreenWidget subWidget, ModelScreenWidget.Screenlet screenlet) throws GeneralException, IOException  {
         subWidget.renderWidgetString(writer, context, this);
         // currently NavigationForm included in screenlet bar is not managed, maybe in future it will be necessary to add something like
-        //   if (subWidget.equals(screenlet.getNavigationForm())) { ...
+        //   if (subWidget.equals(screenlet.getNavigationForm())) { ...   (see field renderPagination in FrontJsFormRenderer)
     }
     public void renderScreenletEnd(Appendable writer, Map<String, Object> context, ModelScreenWidget.Screenlet screenlet) throws IOException {
         this.output.popScreen("ScreenletEnd");
     }
 
+    // not yet used, (no use case in screens.xml using FrontJsRenderer)
+    //  need to be review before using, use method renderNextPrev from FrontJsFormRenderer to know which attribute is needed (renderNextPrev is used)
     protected Map<String, Object> renderScreenletPaginateMenu(Appendable writer, Map<String, Object> context, ModelScreenWidget.Form form) throws IOException {
         HttpServletResponse response = (HttpServletResponse) context.get("response");
         HttpServletRequest request = (HttpServletRequest) context.get("request");
@@ -466,16 +457,6 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
         // if this is all there seems to be (if listSize < 0, then size is unknown)
         if (actualPageSize >= listSize && listSize >= 0) {
             return null;
-        }
-
-        // needed for the "Page" and "rows" labels
-        Map<String, String> uiLabelMap = UtilGenerics.cast(context.get("uiLabelMap"));
-        String ofLabel = "";
-        if (uiLabelMap == null) {
-            Debug.logWarning("Could not find uiLabelMap in context", module);
-        } else {
-            ofLabel = uiLabelMap.get("CommonOf");
-            ofLabel = ofLabel.toLowerCase(Locale.getDefault());
         }
 
         // for legacy support, the viewSizeParam is VIEW_SIZE and viewIndexParam is VIEW_INDEX when the fields are "viewSize" and "viewIndex"
@@ -554,7 +535,6 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("lowIndex", Paginator.getLowIndex(context));
         parameters.put("actualPageSize", actualPageSize);
-        parameters.put("ofLabel", ofLabel);
         parameters.put("listSize", listSize);
         parameters.put("paginateLastStyle", modelForm.getPaginateLastStyle());
         parameters.put("lastLinkUrl", lastLinkUrl);
@@ -572,34 +552,32 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
         //this.output.putScreen("ScreenletPaginateMenu", parameters);
     }
 
+    // Currently not used, PortalPage are manage directly by the specifics VueJs component Portal
+    //  in future, portalPage should be deprecated because could be create some security issues and it's possible
+    //             to manage same look and functionalities with screen and a dedicated sub-component in webtools
     public void renderPortalPageBegin(Appendable writer, Map<String, Object> context, ModelScreenWidget.PortalPage portalPage) throws GeneralException, IOException {
         String portalPageId = portalPage.getActualPortalPageId(context);
         String originalPortalPageId = portalPage.getOriginalPortalPageId(context);
         String confMode = portalPage.getConfMode(context);
 
-        Map<String, String> uiLabelMap = UtilGenerics.cast(context.get("uiLabelMap"));
-        String addColumnLabel = "";
-        String addColumnHint = "";
-        if (uiLabelMap == null) {
-            Debug.logWarning("Could not find uiLabelMap in context", module);
-        } else {
-            addColumnLabel = uiLabelMap.get("CommonAddColumn");
-            addColumnHint = uiLabelMap.get("CommonAddAColumnToThisPortalPage");
+        if ("stop".equals("stop")) {
+            throw new IOException("Render FrontJsScreen : include-portal-page is used in a screen and it's not yet implemented"
+                               + "  portalPageId="+ portalPageId);
         }
 
         Map<String, Object> cb = new HashMap<>();
         cb.put("originalPortalPageId", originalPortalPageId);
         cb.put("portalPageId", portalPageId);
         cb.put("confMode", confMode);
-        cb.put("addColumnLabel", addColumnLabel);
-        cb.put("addColumnHint", addColumnHint);
         this.output.pushScreen("PortalPageBegin", cb);
     }
 
+    // CF renderPortalPageBegin
     public void renderPortalPageEnd(Appendable writer, Map<String, Object> context, ModelScreenWidget.PortalPage portalPage) throws GeneralException, IOException {
         this.output.popScreen("PortalPageEnd");
     }
 
+    // CF renderPortalPageBegin
     public void renderPortalPageColumnBegin(Appendable writer, Map<String, Object> context, ModelScreenWidget.PortalPage portalPage, GenericValue portalPageColumn) throws GeneralException, IOException {
         String portalPageId = portalPage.getActualPortalPageId(context);
         String originalPortalPageId = portalPage.getOriginalPortalPageId(context);
@@ -607,26 +585,6 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
         String columnWidthPercentage = portalPageColumn.getString("columnWidthPercentage");
         String columnWidthPixels = portalPageColumn.getString("columnWidthPixels");
         String confMode = portalPage.getConfMode(context);
-
-        Map<String, String> uiLabelMap = UtilGenerics.cast(context.get("uiLabelMap"));
-        String delColumnLabel = "";
-        String delColumnHint = "";
-        String addPortletLabel = "";
-        String addPortletHint = "";
-        String colWidthLabel = "";
-        String setColumnSizeHint = "";
-
-        if (uiLabelMap == null) {
-            Debug.logWarning("Could not find uiLabelMap in context", module);
-        } else {
-            delColumnLabel = uiLabelMap.get("CommonDeleteColumn");
-            delColumnHint = uiLabelMap.get("CommonDeleteThisColumn");
-
-            addPortletLabel = uiLabelMap.get("CommonAddAPortlet");
-            addPortletHint = uiLabelMap.get("CommonAddPortletToPage");
-            colWidthLabel = uiLabelMap.get("CommonWidth");
-            setColumnSizeHint = uiLabelMap.get("CommonSetColumnWidth");
-        }
 
         Map<String, Object> cb = new HashMap<>();
         cb.put("originalPortalPageId", originalPortalPageId);
@@ -638,80 +596,45 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
             cb.put("width", columnWidthPercentage + "%");
         }
         cb.put("confMode", confMode);
-        cb.put("delColumnLabel", delColumnLabel);
-        cb.put("delColumnHint", delColumnHint);
-        cb.put("addPortletLabel", addPortletLabel);
-        cb.put("addPortletHint", addPortletHint);
-        cb.put("colWidthLabel", colWidthLabel);
-        cb.put("setColumnSizeHint", setColumnSizeHint);
         this.output.pushScreen("PortalPageColumnBegin", cb);
     }
 
+    // CF renderPortalPageBegin
     public void renderPortalPageColumnEnd(Appendable writer, Map<String, Object> context, ModelScreenWidget.PortalPage portalPage, GenericValue portalPageColumn) throws GeneralException, IOException {
         this.output.popScreen("PortalPageColumnEnd");
     }
 
+    // Used for a workaround for showPortlet uri to renderer only one portlet
+    //    will be remove when portalPage should be deprecated and "classical" screen used
     public void renderPortalPagePortletBegin(Appendable writer, Map<String, Object> context, ModelScreenWidget.PortalPage portalPage, GenericValue portalPortlet) throws GeneralException, IOException {
         String portalPageId = portalPage.getActualPortalPageId(context);
-        //String originalPortalPageId = portalPage.getOriginalPortalPageId(context);
         String portalPortletId = portalPortlet.getString("portalPortletId");
         String portletSeqId = portalPortlet.getString("portletSeqId");
-        //String columnSeqId = portalPortlet.getString("columnSeqId");
-        //String confMode = portalPage.getConfMode(context);
-        //String editFormName = portalPortlet.getString("editFormName");
-        //String editFormLocation = portalPortlet.getString("editFormLocation");
 
-//        String prevPortletId = (String) context.get("prevPortletId");
-//        String prevPortletSeqId = (String) context.get("prevPortletSeqId");
-//        String nextPortletId = (String) context.get("nextPortletId");
-//        String nextPortletSeqId = (String) context.get("nextPortletSeqId");
-//        String prevColumnSeqId = (String) context.get("prevColumnSeqId");
-//        String nextColumnSeqId = (String) context.get("nextColumnSeqId");
-
-//        Map<String, String> uiLabelMap = UtilGenerics.cast(context.get("uiLabelMap"));
-//        String delPortletHint = "";
-//        String editAttributeHint = "";
-//        if (uiLabelMap == null) {
-//            Debug.logWarning("Could not find uiLabelMap in context", module);
-//        } else {
-//            delPortletHint = uiLabelMap.get("CommonDeleteThisPortlet");
-//            editAttributeHint = uiLabelMap.get("CommonEditPortletAttributes");
-//        }
-
-        Map<String, Object> cb = new HashMap<>();
-//        cb.put("originalPortalPageId", originalPortalPageId);
-        cb.put("portalPageId", portalPageId);
-        cb.put("portalPortletId", portalPortletId);
-        cb.put("portletSeqId", portletSeqId);
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("portalPageId", portalPageId);
+        parameters.put("portalPortletId", portalPortletId);
+        parameters.put("portletSeqId", portletSeqId);
         if (portalPortlet.containsKey("watcherName")){
-            cb.put("watcherName", portalPortlet.get("watcherName"));
+            parameters.put("watcherName", portalPortlet.get("watcherName"));
         }
-//        cb.put("prevPortletId", prevPortletId);
-//        cb.put("prevPortletSeqId", prevPortletSeqId);
-//        cb.put("nextPortletId", nextPortletId);
-//        cb.put("nextPortletSeqId", nextPortletSeqId);
-//        cb.put("columnSeqId", columnSeqId);
-//        cb.put("prevColumnSeqId", prevColumnSeqId);
-//        cb.put("nextColumnSeqId", nextColumnSeqId);
-//        cb.put("delPortletHint", delPortletHint);
-//        cb.put("editAttributeHint", editAttributeHint);
-//        cb.put("confMode", confMode);
-        this.output.pushScreen("PortalPagePortletBegin", cb);
+        this.output.pushScreen("PortalPagePortletBegin", parameters);
     }
 
+    // Used for a workaround for showPortlet uri to renderer only one portlet
+    //    will be remove when portalPage should be deprecated and "classical" screen used
     public void renderPortalPagePortletEnd(Appendable writer, Map<String, Object> context, ModelScreenWidget.PortalPage portalPage, GenericValue portalPortlet) throws GeneralException, IOException {
         this.output.popScreen("PortalPagePortletEnd");
     }
 
+    // Used for a workaround for showPortlet uri to renderer only one portlet
+    //    will be remove when portalPage should be deprecated and "classical" screen used
     public void renderPortalPagePortletBody(Appendable writer, Map<String, Object> context, ModelScreenWidget.PortalPage portalPage, GenericValue portalPortlet) throws GeneralException, IOException {
         String portalPortletId = portalPortlet.getString("portalPortletId");
         String portletSeqId = portalPortlet.getString("portletSeqId");
         String screenName = portalPortlet.getString("screenName");
         String screenLocation = portalPortlet.getString("screenLocation");
-//  in showPortlet Screen      <set field="currentAreaId" value="${parameters.portalPortletId}-${parameters.portletSeqId}"/>
-//    so do the same thing
         context.put("currentAreaId", portalPortletId + "-" + portletSeqId);
-
 
         ModelScreen modelScreen = null;
         if (UtilValidate.isNotEmpty(screenName) && UtilValidate.isNotEmpty(screenLocation)) {
@@ -730,21 +653,22 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
         }
     }
 
+    // not yet used, (no use case in screens.xml using FrontJsRenderer) but will be used soon to define row and column in screen like in portal
     @Override
     public void renderColumnContainer(Appendable writer, Map<String, Object> context, ColumnContainer columnContainer) throws IOException {
         String id = columnContainer.getId(context);
         String style = columnContainer.getStyle(context);
-        Map<String, Object> cb = new HashMap<>();
-        cb.put("id", id);
-        cb.put("style", style);
-        this.output.putScreen("ColumnContainerBegin", cb);
+        Map<String, Object> parameters = new HashMap<>();
+        if (parameters.containsKey("id")) parameters.put("id", id);
+        if (parameters.containsKey("style")) parameters.put("style", style);
+        this.output.putScreen("ColumnContainerBegin", parameters);
         for (ModelScreenWidget.Column column : columnContainer.getColumns()) {
             id = column.getId(context);
             style = column.getStyle(context);
-            cb = new HashMap<>();
-            cb.put("id", id);
-            cb.put("style", style);
-            this.output.putScreen("ColumnBegin", cb);
+            parameters = new HashMap<>();
+            if (parameters.containsKey("id")) parameters.put("id", id);
+            if (parameters.containsKey("style")) parameters.put("style", style);
+            this.output.putScreen("ColumnBegin", parameters);
             for (ModelScreenWidget subWidget : column.getSubWidgets()) {
                 try {
                     subWidget.renderWidgetString(writer, context, this);
@@ -752,17 +676,9 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
                     throw new IOException(e);
                 }
             }
-            this.output.putScreen("ColumnEnd", cb);
+            this.output.putScreen("ColumnEnd", parameters);
         }
-        this.output.putScreen("ColumnContainerEnd", cb);
+        this.output.putScreen("ColumnContainerEnd", parameters);
     }
 
-    // This is a util method to get the style from a property file
-    public static String getFoStyle(String styleName) {
-        String value = UtilProperties.getPropertyValue("fo-styles", styleName);
-        if (value.equals(styleName)) {
-            return "";
-        }
-        return value;
-    }
 }
