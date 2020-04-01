@@ -42,23 +42,23 @@ under the License.
         <response name="success" type="view" value="successLogin"/>
         <response name="error" type="view" value="errorLogin"/>
     </request-map>
-    <request-map uri="getUserPreference"> 
+    <request-map uri="getUserPreference">
         <security https="true" auth="true" />
         <event type="service" invoke="getUserPreference" />
         <response name="success" type="request" value="json" />
         <response name="error" type="request" value="json" />
     </request-map>
-    <request-map uri="applicationMenu"> 
+    <request-map uri="applicationMenu">
         <security https="true" auth="true" />
         <response name="success" type="view" value="applicationMenu" />
     </request-map>
-    <request-map uri="portalPageDetail"> 
+    <request-map uri="portalPageDetail">
         <security https="true" auth="true" />
         <event type="service" invoke="portalPageDetail" />
         <response name="success" type="request" value="json" />
         <response name="error" type="request" value="json" />
     </request-map>
-    <request-map uri="showPortletFj"> 
+    <request-map uri="showPortletFj">
         <security https="true" auth="true" />
         <response name="success" type="view" value="showPortletFj" />
     </request-map>
