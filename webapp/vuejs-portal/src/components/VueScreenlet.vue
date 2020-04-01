@@ -54,7 +54,7 @@
         return this.collapsed ? this.mdiArrowExpandDown : this.mdiArrowCollapseUp
       },
       collapseToolTip() {
-        return this.props.attributes.hasOwnProperty('collapseToolTip') ? this.props.attributes.collapseToolTip : ''
+        return ''
       },
       collapsible() {
         return this.props.attributes.hasOwnProperty('collapsible') && this.props.attributes.collapsible
@@ -63,7 +63,10 @@
         return this.props.attributes.hasOwnProperty('collapsibleAreaId') ? this.props.attributes.collapsibleAreaId : ''
       },
       expandToolTip() {
-        return this.props.attributes.hasOwnProperty('expandToolTip') ? this.props.attributes.expandToolTip : ''
+        return ''
+      },
+      saveCollapsed() { // TODO to be used to manage it, needed a common uri to post the save
+          return this.props.attributes.hasOwnProperty('collapsible')
       },
       headerChildren() {
         return this.props.children.filter(component => ['Menu'].includes(component.name))
@@ -100,7 +103,7 @@
       title() {
         return this.props.attributes.hasOwnProperty('title') ? this.props.attributes.title : ''
       },
-      toolTip() {
+      toolTip() { // TODO manage tooltips with commonUiLabel, not with attributes (no more sent)
         if (this.collapsed) {
           return this.expandToolTip
         } else {
