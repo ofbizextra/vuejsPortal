@@ -8,6 +8,7 @@ export default {
   ajaxCheckLogin: {path: '/ajaxCheckLogin', tokenRequired: false},
   portalPageDetail: {path: '/portalPageDetail', tokenRequired: false},
   showPortlet: {path: '/showPortletFj', tokenRequired: false},
+  getCommonUiLabel: 'https://localhost:8443/partymgrfjs/control/getCommonUiLabel',
 
   blockUi: true,
 

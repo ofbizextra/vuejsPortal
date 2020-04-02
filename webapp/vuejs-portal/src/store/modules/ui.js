@@ -17,7 +17,8 @@ const state = {
   watchers: {},
   updateCpt: 0,
   collapsibleStatus: {},
-  dialogStatus: {}
+  dialogStatus: {},
+  uiLabels: {}
 }
 
 const mutations = {
@@ -67,6 +68,9 @@ const mutations = {
   },
   SET_DIALOG_STATUS: (state, {dialogId, dialogStatus}) => {
     Vue.set(state.dialogStatus, dialogId, dialogStatus)
+  },
+  SET_UI_LABELS: (state, uiLabels) => {
+    Vue.set(state, 'uiLabels', uiLabels)
   }
 }
 
@@ -118,7 +122,13 @@ const getters = {
       return state.dialogStatus.hasOwnProperty(dialogId) ? state.dialogStatus[dialogId] : false
     }
   },
-  dialogs: state => state.dialogStatus
+  dialogs: state => state.dialogStatus,
+  uiLabels: state => state.uiLabels,
+  uiLabel(state) {
+    return function (uiLabel) {
+      return state.uiLabels.hasOwnProperty(uiLabel) ? state.dialogStatus[uiLabel] : false
+    }
+  }
 }
 
 const actions = {
@@ -271,6 +281,12 @@ const actions = {
     for (let dialogId of Object.keys(getters.dialogs)) {
       commit('SET_DIALOG_STATUS', {dialogId, dialogStatus: false})
     }
+  },
+  setUiLabels({commit, dispatch}) {
+    dispatch('backOfficeApi/doPost', {uri: constants.getCommonUiLabel}, {root: true})
+      .then(response => {
+        commit('SET_UI_LABELS', response.body.commonUiLabel)
+      })
   }
 }
 
