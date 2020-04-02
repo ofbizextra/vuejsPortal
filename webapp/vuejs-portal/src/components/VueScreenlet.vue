@@ -4,9 +4,14 @@
         <v-toolbar-title class="title">{{title}}</v-toolbar-title>
         <v-spacer></v-spacer>
         <vue-nav-menu v-if="navMenu" :props="navMenu" :updateStore="updateStore"></vue-nav-menu>
-        <v-btn id="toggleCollapse" icon v-if="collapsible" @click="toggle">
-          <v-icon>{{ collapseIcon }}</v-icon>
-        </v-btn>
+        <v-tooltip top>
+          <template v-slot:activator="{ on }">
+            <v-btn id="toggleCollapse" icon v-if="collapsible" @click="toggle" v-on="on">
+              <v-icon>{{ collapseIcon }}</v-icon>
+            </v-btn>
+          </template>
+          <span>{{toolTip}}</span>
+        </v-tooltip>
       </v-toolbar>
       <v-expand-transition>
         <v-card tile :id="collapsibleAreaId" v-show="!collapsed">
@@ -42,7 +47,8 @@
     },
     computed: {
       ...mapGetters({
-        collapsibleStatus: 'ui/collapsibleStatus'
+        collapsibleStatus: 'ui/collapsibleStatus',
+        uiLabels: 'ui/uiLabels'
       }),
       bodyChildren() {
         return this.props.children.filter(component => !['Menu', 'ScreenletSubWidget'].includes(component.name))
@@ -54,7 +60,7 @@
         return this.collapsed ? this.mdiArrowExpandDown : this.mdiArrowCollapseUp
       },
       collapseToolTip() {
-        return ''
+        return this.uiLabels.hasOwnProperty('collapseToolTip') ? this.uiLabels.collapseToolTip : ''
       },
       collapsible() {
         return this.props.attributes.hasOwnProperty('collapsible') && this.props.attributes.collapsible
@@ -63,7 +69,7 @@
         return this.props.attributes.hasOwnProperty('collapsibleAreaId') ? this.props.attributes.collapsibleAreaId : ''
       },
       expandToolTip() {
-        return ''
+        return this.uiLabels.hasOwnProperty('expandToolTip') ? this.uiLabels.expandToolTip : ''
       },
       saveCollapsed() { // TODO to be used to manage it, needed a common uri to post the save
           return this.props.attributes.hasOwnProperty('collapsible')
@@ -103,7 +109,7 @@
       title() {
         return this.props.attributes.hasOwnProperty('title') ? this.props.attributes.title : ''
       },
-      toolTip() { // TODO manage tooltips with commonUiLabel, not with attributes (no more sent)
+      toolTip() {
         if (this.collapsed) {
           return this.expandToolTip
         } else {
