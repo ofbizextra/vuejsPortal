@@ -52,7 +52,7 @@ import freemarker.template.utility.StandardCompress;
 
 public class FrontJsScreenViewHandler extends AbstractViewHandler {
 
-    public static final String module = FrontJsScreenViewHandler.class.getName();
+    public static final String MODULE = FrontJsScreenViewHandler.class.getName();
 
     protected ServletContext servletContext = null;
 
@@ -120,7 +120,7 @@ public class FrontJsScreenViewHandler extends AbstractViewHandler {
 
             writer.flush();
         } catch (TemplateException e) {
-            Debug.logError(e, "Error initializing screen renderer", module);
+            Debug.logError(e, "Error initializing screen renderer", MODULE);
             throw new ViewHandlerException(e.getMessage());
         } catch (IOException e) {
             throw new ViewHandlerException("Error in the response writer/output stream: " + e.toString(), e);

@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
@@ -35,7 +34,6 @@ import org.apache.ofbiz.base.util.GeneralException;
 import org.apache.ofbiz.base.util.UtilGenerics;
 import org.apache.ofbiz.base.util.UtilHttp;
 import org.apache.ofbiz.base.util.UtilMisc;
-import org.apache.ofbiz.base.util.UtilProperties;
 import org.apache.ofbiz.base.util.UtilValidate;
 import org.apache.ofbiz.entity.GenericValue;
 import org.apache.ofbiz.webapp.control.RequestHandler;
@@ -58,7 +56,7 @@ import org.apache.ofbiz.widget.renderer.VisualTheme;
 import org.xml.sax.SAXException;
 
 public class FrontJsScreenRenderer implements ScreenStringRenderer {
-    public static final String module = FrontJsScreenRenderer.class.getName();
+    public static final String MODULE = FrontJsScreenRenderer.class.getName();
     private FrontJsOutput output;
     private String rendererName;
     private int screenLetsIdCounter = 1; // not really usable because most of time FrontJsRenderer is call for just a screenlet,
@@ -106,7 +104,7 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
         }
         if (UtilValidate.isNotEmpty(container.getStyle(context))) {
             Debug.logWarning("style property is used (="+container.getStyle(context)+
-                             ") in container with id="+containerId+" it's not manage by FrontFjRenderer", module);
+                             ") in container with id="+containerId+" it's not manage by FrontFjRenderer", MODULE);
             parameters.put("style", container.getStyle(context));
         }
         this.output.pushScreen("ContainerOpen", parameters);
@@ -134,17 +132,17 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
         Map<String, Object> attributes = new HashMap<>();
         if (UtilValidate.isNotEmpty(separator.getId(context))) {
             Debug.logWarning("separator id is used (="+separator.getId(context)+
-                             ")  it's not manage by FrontFjRenderer", module);
+                             ")  it's not manage by FrontFjRenderer", MODULE);
             attributes.put("id", separator.getId(context));
         }
         if (UtilValidate.isNotEmpty(separator.getName())) {
             Debug.logWarning("separator name is used (="+separator.getName()+
-                             ")  it's not manage by FrontFjRenderer", module);
+                             ")  it's not manage by FrontFjRenderer", MODULE);
             attributes.put("name", separator.getName());
         }
         if (UtilValidate.isNotEmpty(separator.getStyle(context))) {
             Debug.logWarning("separator style is used (="+separator.getStyle(context)+
-                             ")  it's not manage by FrontFjRenderer", module);
+                             ")  it's not manage by FrontFjRenderer", MODULE);
             attributes.put("style", separator.getStyle(context));
         }
         this.output.putScreen("HorizontalSeparator", attributes);
@@ -287,7 +285,7 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
         String enableEditValue = (String)context.get(enableEditName);
 
         if (Debug.verboseOn()) {
-            Debug.logVerbose("directEditRequest:" + editRequest, module);
+            Debug.logVerbose("directEditRequest:" + editRequest, MODULE);
         }
 
         Map<String, Object> parameters = new HashMap<>();
@@ -365,14 +363,14 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
             parameters.put("id", screenlet.getId(context));
             parameters.put("collapsibleAreaId", screenlet.getId(context) + "_col");
         } else {
-            if (collapsible) Debug.logWarning("Screenlet collapsible without an id", module);
+            if (collapsible) Debug.logWarning("Screenlet collapsible without an id", MODULE);
             parameters.put("id", "screenlet_" + screenLetsIdCounter);
             parameters.put("collapsibleAreaId","screenlet_" + screenLetsIdCounter + "_col");
             screenLetsIdCounter++;
         }
         if (UtilValidate.isNotEmpty(screenlet.padded())) {
             Debug.logWarning("screenlet attribute padded is used in screenlet with title="+title+
-                    "  it's not manage by FrontFjRenderer", module);
+                    "  it's not manage by FrontFjRenderer", MODULE);
             parameters.put("padded", screenlet.padded());
         }
         parameters.put("collapsed", collapsed);
@@ -392,7 +390,7 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
                 parameters.put("navMenu", getMenuOutput(writer, context, navMenu.getModelMenu(context)));
             } else if (navForm != null) {
                 Debug.logWarning("navigation-form is used in screenlet with title="+title+
-                        " it's not manage by VueJs screenlet component", module);
+                        " it's not manage by VueJs screenlet component", MODULE);
                 parameters.put("navForm",renderScreenletPaginateMenu(writer, context, navForm));
             }
         }
@@ -642,14 +640,14 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
                 modelScreen = ScreenFactory.getScreenFromLocation(screenLocation, screenName);
             } catch (IOException | SAXException | ParserConfigurationException e) {
                 String errMsg = "Error rendering portlet ID [" + portalPortletId + "]: " + e.toString();
-                Debug.logError(e, errMsg, module);
+                Debug.logError(e, errMsg, MODULE);
                 throw new RuntimeException(errMsg);
             }
         }
         if (writer != null && context != null) {
             modelScreen.renderScreenString(writer, context, this);
         } else {
-            Debug.logError("Null on some Path: writer" + writer + ", context: " + context, module);
+            Debug.logError("Null on some Path: writer" + writer + ", context: " + context, MODULE);
         }
     }
 

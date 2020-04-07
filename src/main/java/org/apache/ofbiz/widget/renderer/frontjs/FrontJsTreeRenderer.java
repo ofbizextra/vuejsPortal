@@ -42,7 +42,7 @@ import org.apache.ofbiz.widget.renderer.TreeStringRenderer;
 
 public class FrontJsTreeRenderer implements TreeStringRenderer {
 
-    public static final String module = FrontJsTreeRenderer.class.getName();
+    public static final String MODULE = FrontJsTreeRenderer.class.getName();
     private FrontJsOutput output;
     FrontJsTreeRenderer(FrontJsOutput output) {
         this.output = output;

@@ -101,7 +101,7 @@ import com.ibm.icu.util.Calendar;
 public final class FrontJsFormRenderer implements FormStringRenderer {
     private static final String NOT_YET_SUPPORTED = "Not yet supported";
     //private static final Map<String, Object> NOT_YET_SUPPORTED_M = UtilMisc.toMap("userMessage", "Not yet supported");
-    public static final String module = MacroFormRenderer.class.getName();
+    public static final String MODULE = MacroFormRenderer.class.getName();
     private FrontJsOutput output;
     private final UtilCodec.SimpleEncoder internalEncoder;
     private final RequestHandler rh;
@@ -157,7 +157,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
             try {
                 modelEntity = entityModelReader.getModelEntity(entityName);
             } catch (GenericEntityException e) {
-                Debug.logError(e, module);
+                Debug.logError(e, MODULE);
             }
             if (modelEntity == null) {
                 throw new IllegalArgumentException("Error finding Entity with name " + entityName
@@ -197,7 +197,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
             try {
                 size = Integer.parseInt(displayField.getSize());
             } catch (NumberFormatException nfe) {
-                Debug.logError(nfe, "Error reading size of a field fieldName=" + displayField.getModelFormField().getFieldName() + " FormName= " + displayField.getModelFormField().getModelForm().getName(), module);
+                Debug.logError(nfe, "Error reading size of a field fieldName=" + displayField.getModelFormField().getFieldName() + " FormName= " + displayField.getModelFormField().getModelForm().getName(), MODULE);
             }
         }
         if (UtilValidate.isNotEmpty(description) && size > 0 && description.length() > size) {
@@ -507,7 +507,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
             try {
                 step = Integer.parseInt(stepString);
             } catch (IllegalArgumentException e) {
-                Debug.logWarning("Invalid value for step property for field[" + paramName + "] with input-methodtime-dropdown" + " Found Value [" + stepString + "]  " + e.getMessage(), module);
+                Debug.logWarning("Invalid value for step property for field[" + paramName + "] with input-methodtime-dropdown" + " Found Value [" + stepString + "]  " + e.getMessage(), MODULE);
             }
             timeValues.append("[");
             for (int i = 0; i <= 59;) {
@@ -521,7 +521,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         }
         Map<String, String> uiLabelMap = UtilGenerics.cast(context.get("uiLabelMap"));
         if (uiLabelMap == null) {
-            Debug.logWarning("Could not find uiLabelMap in context", module);
+            Debug.logWarning("Could not find uiLabelMap in context", MODULE);
         }
         String localizedInputTitle = "", localizedIconTitle = "";
         // whether the date field is short form, yyyy-mm-dd
@@ -610,7 +610,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
                 cal = Calendar.getInstance();
                 cal.setTime(defaultTimestamp);
             } catch (IllegalArgumentException e) {
-                Debug.logWarning("Form widget field [" + paramName + "] with input-methodtime-dropdownwas not able to understand the default time [" + defaultDateTimeString + "]. The parsing error was: " + e.getMessage(), module);
+                Debug.logWarning("Form widget field [" + paramName + "] with input-methodtime-dropdownwas not able to understand the default time [" + defaultDateTimeString + "]. The parsing error was: " + e.getMessage(), MODULE);
             }
             timeHourName = UtilHttp.makeCompositeParam(paramName, "hour");
             if (cal != null) {
@@ -720,7 +720,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
             try {
                 textSize = Integer.parseInt(dropDownField.getTextSize());
             } catch (NumberFormatException nfe) {
-                Debug.logError(nfe, "Error reading size of a field fieldName=" + dropDownField.getModelFormField().getFieldName() + " FormName= " + dropDownField.getModelFormField().getModelForm().getName(), module);
+                Debug.logError(nfe, "Error reading size of a field fieldName=" + dropDownField.getModelFormField().getFieldName() + " FormName= " + dropDownField.getModelFormField().getModelForm().getName(), MODULE);
             }
             if (textSize > 0 && UtilValidate.isNotEmpty(currentValue) && currentValue.length() > textSize) {
                 currentValue = currentValue.substring(0, textSize - 8) + "..." + currentValue.substring(currentValue.length() - 5);
@@ -1317,7 +1317,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
             try {
                 modelEntity = entityModelReader.getModelEntity(defaultEntityName);
             } catch (GenericEntityException e) {
-                Debug.logError(e, module);
+                Debug.logError(e, MODULE);
             }
             if (modelEntity == null) {
                 throw new IllegalArgumentException("Error finding Entity with name " + defaultEntityName
@@ -1738,7 +1738,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         String conditionGroup = modelFormField.getConditionGroup();
         Map<String, String> uiLabelMap = UtilGenerics.cast(context.get("uiLabelMap"));
         if (uiLabelMap == null) {
-            Debug.logWarning("Could not find uiLabelMap in context", module);
+            Debug.logWarning("Could not find uiLabelMap in context", MODULE);
         }
         String localizedInputTitle = "", localizedIconTitle = "";
         String className = "";
@@ -1938,7 +1938,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         if (uiLabelMap != null) {
             clearText = (String) uiLabelMap.get("CommonClear");
         } else {
-            Debug.logWarning("Could not find uiLabelMap in context", module);
+            Debug.logWarning("Could not find uiLabelMap in context", MODULE);
         }
         Boolean showDescription = lookupField.getShowDescription();
         if (showDescription == null) {
@@ -2025,7 +2025,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
             targetService = "${targetService}";
         }
         if (UtilValidate.isEmpty(targetService) && updateAreas == null) {
-            Debug.logWarning("Cannot paginate because TargetService is empty for the form: " + modelForm.getName(), module);
+            Debug.logWarning("Cannot paginate because TargetService is empty for the form: " + modelForm.getName(), MODULE);
             return;
         }
         // get the parameterized pagination index and size fields
@@ -2043,7 +2043,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         String pageLabel = "";
         String commonDisplaying = "";
         if (uiLabelMap == null) {
-            Debug.logWarning("Could not find uiLabelMap in context", module);
+            Debug.logWarning("Could not find uiLabelMap in context", MODULE);
         } else {
             pageLabel = uiLabelMap.get("CommonPage");
             Map<String, Integer> messageMap = UtilMisc.toMap("lowCount", lowIndex + 1, "highCount", lowIndex + actualPageSize, "total", Integer.valueOf(listSize));
@@ -2453,7 +2453,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         }
         String paginateTarget = modelForm.getPaginateTarget(context);
         if (paginateTarget.isEmpty() && updateAreas == null) {
-            Debug.logWarning("Cannot sort because the paginate target URL is empty for the form: " + modelForm.getName(), module);
+            Debug.logWarning("Cannot sort because the paginate target URL is empty for the form: " + modelForm.getName(), MODULE);
             return;
         }
         String oldSortField = modelForm.getSortField(context);

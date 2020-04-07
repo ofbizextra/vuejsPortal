@@ -47,7 +47,7 @@ import org.apache.ofbiz.widget.renderer.VisualTheme;
 
 public class FrontJsMenuRenderer implements MenuStringRenderer {
 
-    public static final String module = FrontJsMenuRenderer.class.getName();
+    public static final String MODULE = FrontJsMenuRenderer.class.getName();
     private final HttpServletRequest request;
     private final HttpServletResponse response;
     private FrontJsOutput output;
