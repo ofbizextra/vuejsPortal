@@ -94,7 +94,7 @@ under the License.
                              <parameter param-name="returnField" />
                              <parameter param-name="displayFields" />
                              <parameter param-name="autocompleteOptions" />
-                           </vuejs></html> 
+                           </vuejs></html>
                        </platform-specific>
                     </widgets>
                 </section>
@@ -203,6 +203,17 @@ under the License.
                              <decorator-section-include name="search-results"/>
                     </fail-widgets>
                 </section>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="login">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleLogin" />
+            </actions>
+            <widgets>
+                <include-screen name="MinimalActions" location="component://common/widget/CommonScreens.xml"/>
+                <include-screen name="login" location="component://flatgreyfjs/widget/CommonScreens.xml"/>
             </widgets>
         </section>
     </screen>
