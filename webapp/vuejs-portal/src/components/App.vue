@@ -19,7 +19,7 @@
       let api = pathname.substring(0, pathname.indexOf('/', 1)) + '/control'
       let webapp = pathname.substring(pathname.lastIndexOf('/') + 1, pathname.length)
       this.$store.dispatch('backOfficeApi/setApi', api)
-      this.$store.dispatch('ui/setUiLabels')
+      this.$store.dispatch('ui/setUiLabels', api)
       this.$store.dispatch('login/check').then(() => {
         if (webapp === 'showPortalPage') {
           let search = window.location.search.split('?').join('')

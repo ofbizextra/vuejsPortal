@@ -282,8 +282,8 @@ const actions = {
       commit('SET_DIALOG_STATUS', {dialogId, dialogStatus: false})
     }
   },
-  setUiLabels({commit, dispatch}) {
-    dispatch('backOfficeApi/doPost', {uri: constants.getCommonUiLabel}, {root: true})
+  setUiLabels({commit, dispatch}, api) {
+    dispatch('backOfficeApi/doPost', {uri: constants.hostUrl + api + constants.getCommonUiLabel}, {root: true})
       .then(response => {
         commit('SET_UI_LABELS', response.body.commonUiLabel)
       })

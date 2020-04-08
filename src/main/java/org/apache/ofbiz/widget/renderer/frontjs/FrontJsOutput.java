@@ -28,7 +28,7 @@ import org.apache.ofbiz.base.util.UtilGenerics;
 import org.apache.ofbiz.base.util.UtilMisc;
 
 public class FrontJsOutput {
-    public static final String module = FrontJsOutput.class.getName();
+    public static final String MODULE = FrontJsOutput.class.getName();
 
 
     Map<String, Object> output = new HashMap<>();

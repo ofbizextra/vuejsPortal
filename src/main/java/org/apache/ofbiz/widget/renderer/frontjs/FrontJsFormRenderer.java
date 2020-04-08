@@ -100,8 +100,7 @@ import com.ibm.icu.util.Calendar;
 
 public final class FrontJsFormRenderer implements FormStringRenderer {
     private static final String NOT_YET_SUPPORTED = "Not yet supported";
-    //private static final Map<String, Object> NOT_YET_SUPPORTED_M = UtilMisc.toMap("userMessage", "Not yet supported");
-    public static final String module = MacroFormRenderer.class.getName();
+    public static final String MODULE = MacroFormRenderer.class.getName();
     private FrontJsOutput output;
     private final UtilCodec.SimpleEncoder internalEncoder;
     private final RequestHandler rh;
@@ -124,16 +123,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
     public void setRenderPagination(boolean renderPagination) {
         this.renderPagination = renderPagination;
     }
-    /*
-        public boolean getRenderPagination() {
-            return this.renderPagination;
-        }
 
-
-        private void executeMacro(Appendable writer, String macro) {
-            this.output.add(macro, NOT_YET_SUPPORTED);
-        }
-    */
     private String encode(String value, ModelFormField modelFormField, Map<String, Object> context) {
         if (UtilValidate.isEmpty(value)) {
             return value;
@@ -157,7 +147,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
             try {
                 modelEntity = entityModelReader.getModelEntity(entityName);
             } catch (GenericEntityException e) {
-                Debug.logError(e, module);
+                Debug.logError(e, MODULE);
             }
             if (modelEntity == null) {
                 throw new IllegalArgumentException("Error finding Entity with name " + entityName
@@ -176,9 +166,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
             return;
         }
         Map<String, Object> attributes = new HashMap<>();
-
         attributes.put("text", labelText);
-
         this.output.putScreen("Label", attributes);
     }
 
@@ -190,24 +178,24 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         String imageLocation = displayField.getImageLocation(context);
         String title = "";
         String name = modelFormField.getName();
-        // manage by frontJs, so now size attribute is sent
-        /*
+        Map<String, Object> attributes = new HashMap<>();
         Integer size = Integer.valueOf("0");
         if (UtilValidate.isNotEmpty(displayField.getSize())) {
             try {
                 size = Integer.parseInt(displayField.getSize());
             } catch (NumberFormatException nfe) {
-                Debug.logError(nfe, "Error reading size of a field fieldName=" + displayField.getModelFormField().getFieldName() + " FormName= " + displayField.getModelFormField().getModelForm().getName(), module);
+                Debug.logError(nfe, "Error reading size of a field fieldName=" + displayField.getModelFormField().getFieldName() + " FormName= " + displayField.getModelFormField().getModelForm().getName(), MODULE);
             }
+            Debug.logWarning("displayField attribute size is used in form with name="+modelFormField.getModelForm().getName() +
+                    "  it's not manage by FrontFjRenderer", MODULE);
+            attributes.put("size", displayField.getSize());
         }
-        if (UtilValidate.isNotEmpty(description) && size > 0 && description.length() > size) {
-            title = description;
-            description = description.substring(0, size - 8) + "..." + description.substring(description.length() - 5);
-        }
-        */
-        String size = displayField.getSize();
+//        not yet use case for this, but substring should be done on vuejs
+//        if (UtilValidate.isNotEmpty(description) && size > 0 && description.length() > size) {
+//            title = description;
+//            description = description.substring(0, size - 8) + "..." + description.substring(description.length() - 5);
+//        }
 
-        Map<String, Object> attributes = new HashMap<>();
         if ("single".equals(modelFormField.getModelForm().getType())) this.addTitle(attributes, modelFormField, context);
         attributes.put("formName", displayField.getModelFormField().getModelForm().getName());
         attributes.put("description", encodeDoubleQuotes(description));
@@ -218,10 +206,13 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
             attributes.put("inPlaceEditor", true);
             String url = inPlaceEditor.getUrl(context);
             attributes.put("url", url);
-            String savingText = inPlaceEditor.getSavingText();
-            attributes.put("savingText", savingText);
             Map<String, Object> fieldMap = inPlaceEditor.getFieldMap(context);
             attributes.put("fieldMap", fieldMap);
+            if (UtilValidate.isNotEmpty(inPlaceEditor.getSavingText())) {
+                Debug.logWarning("displayField in-place-editor saving-text attribute is used in form with name="+modelFormField.getModelForm().getName() +
+                        "  it's not manage by FrontFjRenderer", MODULE);
+                attributes.put("savingText", inPlaceEditor.getSavingText());
+            }
         }
 
         if (UtilValidate.isNotEmpty(type)) attributes.put("type", type);
@@ -244,73 +235,61 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
 
     public void renderHyperlinkField(Appendable writer, Map<String, Object> context, HyperlinkField hyperlinkField) {
         ModelFormField modelFormField = hyperlinkField.getModelFormField();
-        HashMap<String, Object> cb = new HashMap<>();
-        cb.put("updateArea", hyperlinkField.getTarget(context));
+        HashMap<String, Object> attributes = new HashMap<>();
         if (!hyperlinkField.getTarget(context).isEmpty()) {
-            cb.put("target", hyperlinkField.getTarget(context));
+            attributes.put("target", hyperlinkField.getTarget(context));
         }
         if (!hyperlinkField.getTargetWindow(context).isEmpty()) {
-            cb.put("targetWindow", hyperlinkField.getTargetWindow(context));
+            attributes.put("targetWindow", hyperlinkField.getTargetWindow(context));
         }
         Map<String, String> parameterMap = hyperlinkField.getParameterMap(context, modelFormField.getEntityName(), modelFormField.getServiceName());
         if (!parameterMap.isEmpty()) {
-            cb.put("parameterMap", parameterMap);
+            attributes.put("parameterMap", parameterMap);
         }
-        String style = modelFormField.getWidgetStyle();
-        cb.put("style", style);
-        cb.put("requestConfirmation", hyperlinkField.getRequestConfirmation());
-        cb.put("confirmationMessage", hyperlinkField.getConfirmationMsg(context));
-        cb.put("imgSrc", hyperlinkField.getImageLocation(context));
-        cb.put("imgTitle", hyperlinkField.getImageTitle(context));
-        cb.put("urlMode", hyperlinkField.getUrlMode());
-        cb.put("linkType", hyperlinkField.getLinkType());
+        if (UtilValidate.isNotEmpty(modelFormField.getWidgetStyle())) attributes.put("style", modelFormField.getWidgetStyle());
+        if (UtilValidate.isNotEmpty(hyperlinkField.getRequestConfirmation()))
+                attributes.put("requestConfirmation", hyperlinkField.getRequestConfirmation());
+        if (UtilValidate.isNotEmpty(hyperlinkField.getConfirmationMsg(context)))
+                attributes.put("confirmationMessage", hyperlinkField.getConfirmationMsg(context));
+        if (UtilValidate.isNotEmpty(hyperlinkField.getImageLocation(context)))
+                attributes.put("imgSrc", hyperlinkField.getImageLocation(context));
+        if (UtilValidate.isNotEmpty(hyperlinkField.getImageTitle(context)))
+                attributes.put("imgTitle", hyperlinkField.getImageTitle(context));
+        if (UtilValidate.isNotEmpty(hyperlinkField.getUrlMode()))
+                attributes.put("urlMode", hyperlinkField.getUrlMode());
+        if (UtilValidate.isNotEmpty(hyperlinkField.getLinkType()))
+            attributes.put("linkType", hyperlinkField.getLinkType());
         List<ModelForm.UpdateArea> updateAreas = modelFormField.getOnClickUpdateAreas();
         if (!updateAreas.isEmpty()) {
             List<Map<String, Object>> updateAreasList = new ArrayList<>();
             for (ModelForm.UpdateArea updateArea : updateAreas) {
                 updateAreasList.add(updateArea.toMap(context));
             }
-            cb.put("updateAreas", updateAreasList);
+            attributes.put("updateAreas", updateAreasList);
         }
-        cb.put("description", hyperlinkField.getDescription(context));
+        attributes.put("description", hyperlinkField.getDescription(context));
         String value = modelFormField.getEntry(context);
-//        if (hyperlinkField.getDescription().toString().contains("${") && !hyperlinkField.getDescription().toString().contains("uiLabel")) {
         if (hyperlinkField.getDescription(context).equals(value)) {
             String key = modelFormField.getName();
-//            String value = hyperlinkField.getDescription(context);
-            this.output.putScreen("HyperlinkField", cb, key, value);
+            this.output.putScreen("HyperlinkField", attributes, key, value);
         } else {
-            this.output.putScreen("HyperlinkField", cb);
+            this.output.putScreen("HyperlinkField", attributes);
         }
-        // hyperlinkField.getTarget(context)  //=> get target portlet
-        // hyperlinkField.getParameterMap(context, hyperlinkField.getModelFormField().getEntityName(), hyperlinkField.getModelFormField().getServiceName()) //=> get entityFieldName and value
-        /*this.request.setAttribute("image", hyperlinkField.getImageLocation(context));
-        ModelFormField modelFormField = hyperlinkField.getModelFormField();
-        String encodedAlternate = encode(hyperlinkField.getAlternate(context), modelFormField, context);
-        String encodedImageTitle = encode(hyperlinkField.getImageTitle(context), modelFormField, context);
-        this.request.setAttribute("alternate", encodedAlternate);
-        this.request.setAttribute("imageTitle", encodedImageTitle);
-        this.request.setAttribute("descriptionSize", hyperlinkField.getSize());
-        this.request.setAttribute("id", hyperlinkField.getId(context));
-        this.request.setAttribute("width", hyperlinkField.getWidth());
-        this.request.setAttribute("height", hyperlinkField.getHeight());
-        makeHyperlinkByType(writer, hyperlinkField.getLinkType(), modelFormField.getWidgetStyle(), hyperlinkField.getUrlMode(), hyperlinkField.getTarget(context),
-                hyperlinkField.getParameterMap(context, modelFormField.getEntityName(), modelFormField.getServiceName()),
-                hyperlinkField.getDescription(context), hyperlinkField.getTargetWindow(context),
-                hyperlinkField.getConfirmation(context), modelFormField, this.request, this.response, context);
-        this.appendTooltip(cb, context, modelFormField);
-        this.request.removeAttribute("image");
-        this.request.removeAttribute("descriptionSize");
-        */
     }
 
-    public void renderMenuField(Appendable writer, Map<String, Object> context, MenuField menuField) {
-        this.output.putScreen("MenuField", new HashMap<String, Object>());
-        /*
-        menuField.renderFieldString(writer, context, null);
-        */
+    public void renderMenuField(Appendable writer, Map<String, Object> context, MenuField menuField) throws IOException {
+        throw new IOException("FrontJsRender: include-menu field, not yet implemented in form for form name="
+                + menuField.getModelFormField().getModelForm().getName());
+        //menuField.renderFieldString(writer, context, null);
+        //this.output.putScreen("MenuField", new HashMap<String, Object>());
     }
 
+    /**
+     * With frontJs, it's better to have title field attributes as field attributes not in an other element at the same level.
+     * @param attributes
+     * @param modelFormField
+     * @param context
+     */
     private void addTitle(Map<String, Object> attributes, ModelFormField modelFormField, Map<String, Object> context) {
         attributes.put("fieldTitle", modelFormField.getTitle(context));
         if (UtilValidate.isNotEmpty(modelFormField.getTitleStyle())) attributes.put("titlestyle", modelFormField.getTitleStyle());
@@ -331,53 +310,17 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         }
     }
 
-    public void renderTextField(Appendable writer, Map<String, Object> context, TextField textField) {
+    public void renderTextField(Appendable writer, Map<String, Object> context, TextField textField) throws IOException {
         ModelFormField modelFormField = textField.getModelFormField();
         String name = modelFormField.getParameterName(context);
         String className = "";
-        String alert = "false";
-        String mask = "";
-        String placeholder = textField.getPlaceholder(context);
-        if (UtilValidate.isNotEmpty(modelFormField.getWidgetStyle())) {
-            className = modelFormField.getWidgetStyle();
-            if (modelFormField.shouldBeRed(context)) {
-                alert = "true";
-            }
-        }
         String value = modelFormField.getEntry(context, textField.getDefaultValue(context));
         Integer textSize = textField.getSize();
         Integer maxlength = -1;
         if (textField.getMaxlength() != null) {
             maxlength = textField.getMaxlength();
         }
-        String event = modelFormField.getEvent();
-        String action = modelFormField.getAction(context);
         String id = modelFormField.getCurrentContainerId(context);
-        String clientAutocomplete = "false";
-        //check for required field style on single forms
-        if ("single".equals(modelFormField.getModelForm().getType()) && modelFormField.getRequiredField()) {
-            String requiredStyle = modelFormField.getRequiredFieldStyle();
-            if (UtilValidate.isEmpty(requiredStyle)) {
-                requiredStyle = "required";
-            }
-            if (UtilValidate.isEmpty(className)) {
-                className = requiredStyle;
-            } else {
-                className = requiredStyle + " " + className;
-            }
-        }
-        List<ModelForm.UpdateArea> updateAreas = modelFormField.getOnChangeUpdateAreas();
-        boolean ajaxEnabled = updateAreas != null && this.javaScriptEnabled;
-        if (textField.getClientAutocompleteField() || ajaxEnabled) {
-            clientAutocomplete = "true";
-        }
-        if (UtilValidate.isNotEmpty(textField.getMask())) {
-            mask = textField.getMask();
-        }
-        String ajaxUrl = createAjaxParamsFromUpdateAreas(updateAreas, "", context);
-        boolean disabled = textField.getDisabled();
-        boolean readonly = textField.getReadonly();
-        String tabindex = modelFormField.getTabindex();
         String formName = textField.getModelFormField().getModelForm().getName();
 
         Map<String, Object> attributes = new HashMap<>();
@@ -385,36 +328,16 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         attributes.put("formName", formName);
         attributes.put("name", name);
         attributes.put("value", value);
-        if (UtilValidate.isNotEmpty(className))          attributes.put("className", className);
-        if (UtilValidate.isNotEmpty(alert))              attributes.put("alert", alert);
-        if (UtilValidate.isNotEmpty(textSize))           attributes.put("textSize", textSize);
+        attributes.put("textSize", textSize); // not manage by frontJs
         if (maxlength > -1)                              attributes.put("maxlength", maxlength);
         if (UtilValidate.isNotEmpty(id))                 attributes.put("id", id);
-        if (UtilValidate.isNotEmpty(event))              attributes.put("event", event);
-        if (UtilValidate.isNotEmpty(action))             attributes.put("action", action);
-        if (UtilValidate.isNotEmpty(disabled))           attributes.put("disabled", disabled);
-        if (UtilValidate.isNotEmpty(readonly))           attributes.put("readonly", readonly);
-        if (UtilValidate.isNotEmpty(clientAutocomplete)) attributes.put("clientAutocomplete", clientAutocomplete);
-        if (UtilValidate.isNotEmpty(ajaxUrl))            attributes.put("ajaxUrl", ajaxUrl);
-        if (UtilValidate.isNotEmpty(ajaxEnabled))        attributes.put("ajaxEnabled", ajaxEnabled);
-        if (UtilValidate.isNotEmpty(mask))               attributes.put("mask", mask);
-        if (UtilValidate.isNotEmpty(placeholder))        attributes.put("placeholder", placeholder);
-        if (UtilValidate.isNotEmpty(tabindex))           attributes.put("tabindex", tabindex);
-        attributes.put("delegatorName", ((HttpSession)context.get("session")).getAttribute("delegatorName").toString());
+        if (UtilValidate.isNotEmpty(textField.getMask())) attributes.put("mask", textField.getMask());
         this.appendTooltip(attributes, context, modelFormField);
         this.addAsterisks(attributes, context, modelFormField);
         this.output.putScreen("TextField", attributes, name, value);
-    }
 
-    public void renderTextareaField(Appendable writer, Map<String, Object> context, TextareaField textareaField) {
-        String fieldName = null;
-        String fieldValue = null;
-        ModelFormField modelFormField = textareaField.getModelFormField();
-        String name = modelFormField.getParameterName(context);
-        Integer cols = textareaField.getCols();
-        Integer rows = textareaField.getRows();
-        String id = modelFormField.getCurrentContainerId(context);
-        String className = "";
+        // All not manage attributes
+        // First attribute alert and className generate only a warning
         String alert = "false";
         if (UtilValidate.isNotEmpty(modelFormField.getWidgetStyle())) {
             className = modelFormField.getWidgetStyle();
@@ -434,29 +357,52 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
                 className = requiredStyle + " " + className;
             }
         }
-        String visualEditorEnable = "";
-        String buttons = "";
-        if (textareaField.getVisualEditorEnable()) {
-            visualEditorEnable = "true";
-            buttons = textareaField.getVisualEditorButtons(context);
-            if (UtilValidate.isEmpty(buttons)) {
-                buttons = "maxi";
-            }
+        if (UtilValidate.isNotEmpty(className) || "true".equals(alert)) {
+            Debug.logWarning("textField with alert or class attribute is used for field name="+name+
+                    " in form with name="+formName +
+                    "  it's not manage by FrontFjRenderer", MODULE);
+            if (UtilValidate.isNotEmpty(className))          attributes.put("className", className);
+            if ("true".equals(alert))                        attributes.put("alert", alert);
         }
-        String readonly = "";
-        if (textareaField.isReadOnly()) {
-            readonly = "readonly";
+        // Second attributes list, generate an error
+        String placeholder = textField.getPlaceholder(context);
+        List<ModelForm.UpdateArea> updateAreas = modelFormField.getOnChangeUpdateAreas();
+        String event = modelFormField.getEvent();
+        String action = modelFormField.getAction(context);
+        String ajaxUrl = createAjaxParamsFromUpdateAreas(updateAreas, "", context);
+        boolean disabled = textField.getDisabled();
+        boolean readonly = textField.getReadonly();
+        String tabindex = modelFormField.getTabindex();
+        if (disabled || readonly || !textField.getClientAutocompleteField()
+                     || UtilValidate.isNotEmpty(event) || UtilValidate.isNotEmpty(action)
+                     || UtilValidate.isNotEmpty(placeholder) || UtilValidate.isNotEmpty(tabindex)) {
+
+            if (UtilValidate.isNotEmpty(event))              attributes.put("event", event);
+            if (UtilValidate.isNotEmpty(action))             attributes.put("action", action);
+            if (! textField.getClientAutocompleteField())    attributes.put("clientAutocomplete", "false"); //the default value is true
+            if (UtilValidate.isNotEmpty(ajaxUrl))            attributes.put("ajaxUrl", ajaxUrl);
+            if (UtilValidate.isNotEmpty(placeholder))        attributes.put("placeholder", placeholder);
+            if (UtilValidate.isNotEmpty(tabindex))           attributes.put("tabindex", tabindex);
+            if (disabled)                                    attributes.put("disabled", disabled);
+            if (readonly)                                    attributes.put("readonly", readonly);
+            throw new IOException("FrontJsRender: a attribute is not yet implemented for text-field name=" + name
+                    + " in form for form name=" + modelFormField.getModelForm().getName()
+                    + " attribute is one of : disabled("+disabled+"), readonly("+readonly
+                    + "), !clientAutocomplete("+!textField.getClientAutocompleteField()+"), event("+event
+                    + "), action("+action+"), updateAreas("+updateAreas+"), ajaxUrl("+ajaxUrl+"), placeholder("+placeholder
+                    + "), tabindex("+tabindex+")");
+
         }
-        Map<String, Object> userLogin = UtilGenerics.cast(context.get("userLogin"));
-        String language = "en";
-        if (userLogin != null) {
-            language = UtilValidate.isEmpty((String) userLogin.get("lastLocale")) ? "en" : (String) userLogin.get("lastLocale");
-        }
+    }
+
+    public void renderTextareaField(Appendable writer, Map<String, Object> context, TextareaField textareaField) throws IOException {
+        ModelFormField modelFormField = textareaField.getModelFormField();
+        String name = modelFormField.getParameterName(context);
+        String id = modelFormField.getCurrentContainerId(context);
         Integer maxlength = -1;
         if (textareaField.getMaxlength() != null) {
             maxlength = textareaField.getMaxlength();
         }
-        String tabindex = modelFormField.getTabindex();
         String value = modelFormField.getEntry(context, textareaField.getDefaultValue(context));
         String formName = modelFormField.getModelForm().getName();
         Map<String, Object> attributes = new HashMap<>();
@@ -465,22 +411,80 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         attributes.put("formName", formName);
         attributes.put("name", name);
         attributes.put("value", value);
-        if (UtilValidate.isNotEmpty(className))          attributes.put("className", className);
-        if (UtilValidate.isNotEmpty(alert))              attributes.put("alert", alert);
-        if (UtilValidate.isNotEmpty(cols))               attributes.put("cols", cols);
-        if (UtilValidate.isNotEmpty(rows))               attributes.put("rows", rows);
         if (maxlength > -1)                              attributes.put("maxlength", maxlength);
         if (UtilValidate.isNotEmpty(id))                 attributes.put("id", id);
-        if (UtilValidate.isNotEmpty(readonly))           attributes.put("readonly", readonly);
-        if (UtilValidate.isNotEmpty(visualEditorEnable)) attributes.put("visualEditorEnable", visualEditorEnable);
-        if (UtilValidate.isNotEmpty(language))             attributes.put("language", language);
-        if (UtilValidate.isNotEmpty(buttons))           attributes.put("disabled", buttons);
-        if (UtilValidate.isNotEmpty(tabindex))           attributes.put("tabindex", tabindex);
         this.appendTooltip(attributes, context, modelFormField);
         this.addAsterisks(attributes, context, modelFormField);
         this.output.putScreen("TextAreaField", attributes, name, value);
+
+        // All not manage attributes
+        // First attribute alert and className generate only a warning
+        String className = "";
+        String alert = "false";
+        if (UtilValidate.isNotEmpty(modelFormField.getWidgetStyle())) {
+            className = modelFormField.getWidgetStyle();
+            if (modelFormField.shouldBeRed(context)) {
+                alert = "true";
+            }
+        }
+            //check for required field style on single forms
+        if ("single".equals(modelFormField.getModelForm().getType()) && modelFormField.getRequiredField()) {
+            String requiredStyle = modelFormField.getRequiredFieldStyle();
+            if (UtilValidate.isEmpty(requiredStyle)) {
+                requiredStyle = "required";
+            }
+            if (UtilValidate.isEmpty(className)) {
+                className = requiredStyle;
+            } else {
+                className = requiredStyle + " " + className;
+            }
+        }
+        if (UtilValidate.isNotEmpty(className) || "true".equals(alert)) {
+            Debug.logWarning("textAreaField with alert or class attribute is used for field name="+name+
+                    " in form with name="+formName +
+                    "  it's not manage by FrontFjRenderer", MODULE);
+            if (UtilValidate.isNotEmpty(className))          attributes.put("className", className);
+            if ("true".equals(alert))                        attributes.put("alert", alert);
+        }
+
+        // cols and rows are always present because they have default value
+        attributes.put("cols", textareaField.getCols()); // default value 60
+        attributes.put("rows", textareaField.getRows()); // default value 2
+        if (textareaField.getCols() != 60 || textareaField.getRows() !=2 ) {
+            Debug.logWarning("textAreaField with cols or/and rows attribute is used for field name="+name+
+                    " in form with name="+formName +
+                    "  it's not manage by FrontFjRenderer", MODULE);
+        }
+
+        if (textareaField.getVisualEditorEnable()) {
+            attributes.put("visualEditorEnable", "true");
+            if (UtilValidate.isNotEmpty(textareaField.getVisualEditorButtons(context))) {
+                attributes.put("disabled", textareaField.getVisualEditorButtons(context));
+            } else {
+                attributes.put("disabled", "maxi");
+            }
+        }
+        String tabindex = modelFormField.getTabindex();
+        if (textareaField.isReadOnly() || textareaField.getVisualEditorEnable()
+                ||  UtilValidate.isNotEmpty(tabindex)) {
+
+            Map<String, Object> userLogin = UtilGenerics.cast(context.get("userLogin"));
+            String language = "en";
+            if (userLogin != null) {
+                language = UtilValidate.isEmpty((String) userLogin.get("lastLocale")) ? "en" : (String) userLogin.get("lastLocale");
+            }
+            attributes.put("language", language);
+            if (textareaField.isReadOnly())        attributes.put("readonly", "readonly");
+            if (UtilValidate.isNotEmpty(tabindex)) attributes.put("tabindex", tabindex);
+            throw new IOException("FrontJsRender: a attribute is not yet implemented for textArea-field name=" + name
+                    + " in form for form name=" + modelFormField.getModelForm().getName()
+                    + " attribute is one of : readonly("+textareaField.isReadOnly()
+                    + "), visualEditorEnable("+textareaField.getVisualEditorEnable()
+                    + "), editorButtons("+textareaField.getVisualEditorButtons(context)+"), tabindex("+tabindex+")");
+        }
     }
 
+// OHE point of review, to be continue
     public void renderDateTimeField(Appendable writer, Map<String, Object> context, DateTimeField dateTimeField) {
         String fieldName = null;
         String fieldValue = null;
@@ -507,7 +511,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
             try {
                 step = Integer.parseInt(stepString);
             } catch (IllegalArgumentException e) {
-                Debug.logWarning("Invalid value for step property for field[" + paramName + "] with input-methodtime-dropdown" + " Found Value [" + stepString + "]  " + e.getMessage(), module);
+                Debug.logWarning("Invalid value for step property for field[" + paramName + "] with input-methodtime-dropdown" + " Found Value [" + stepString + "]  " + e.getMessage(), MODULE);
             }
             timeValues.append("[");
             for (int i = 0; i <= 59;) {
@@ -521,7 +525,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         }
         Map<String, String> uiLabelMap = UtilGenerics.cast(context.get("uiLabelMap"));
         if (uiLabelMap == null) {
-            Debug.logWarning("Could not find uiLabelMap in context", module);
+            Debug.logWarning("Could not find uiLabelMap in context", MODULE);
         }
         String localizedInputTitle = "", localizedIconTitle = "";
         // whether the date field is short form, yyyy-mm-dd
@@ -610,7 +614,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
                 cal = Calendar.getInstance();
                 cal.setTime(defaultTimestamp);
             } catch (IllegalArgumentException e) {
-                Debug.logWarning("Form widget field [" + paramName + "] with input-methodtime-dropdownwas not able to understand the default time [" + defaultDateTimeString + "]. The parsing error was: " + e.getMessage(), module);
+                Debug.logWarning("Form widget field [" + paramName + "] with input-methodtime-dropdownwas not able to understand the default time [" + defaultDateTimeString + "]. The parsing error was: " + e.getMessage(), MODULE);
             }
             timeHourName = UtilHttp.makeCompositeParam(paramName, "hour");
             if (cal != null) {
@@ -720,7 +724,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
             try {
                 textSize = Integer.parseInt(dropDownField.getTextSize());
             } catch (NumberFormatException nfe) {
-                Debug.logError(nfe, "Error reading size of a field fieldName=" + dropDownField.getModelFormField().getFieldName() + " FormName= " + dropDownField.getModelFormField().getModelForm().getName(), module);
+                Debug.logError(nfe, "Error reading size of a field fieldName=" + dropDownField.getModelFormField().getFieldName() + " FormName= " + dropDownField.getModelFormField().getModelForm().getName(), MODULE);
             }
             if (textSize > 0 && UtilValidate.isNotEmpty(currentValue) && currentValue.length() > textSize) {
                 currentValue = currentValue.substring(0, textSize - 8) + "..." + currentValue.substring(currentValue.length() - 5);
@@ -1317,7 +1321,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
             try {
                 modelEntity = entityModelReader.getModelEntity(defaultEntityName);
             } catch (GenericEntityException e) {
-                Debug.logError(e, module);
+                Debug.logError(e, MODULE);
             }
             if (modelEntity == null) {
                 throw new IllegalArgumentException("Error finding Entity with name " + defaultEntityName
@@ -1738,7 +1742,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         String conditionGroup = modelFormField.getConditionGroup();
         Map<String, String> uiLabelMap = UtilGenerics.cast(context.get("uiLabelMap"));
         if (uiLabelMap == null) {
-            Debug.logWarning("Could not find uiLabelMap in context", module);
+            Debug.logWarning("Could not find uiLabelMap in context", MODULE);
         }
         String localizedInputTitle = "", localizedIconTitle = "";
         String className = "";
@@ -1938,7 +1942,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         if (uiLabelMap != null) {
             clearText = (String) uiLabelMap.get("CommonClear");
         } else {
-            Debug.logWarning("Could not find uiLabelMap in context", module);
+            Debug.logWarning("Could not find uiLabelMap in context", MODULE);
         }
         Boolean showDescription = lookupField.getShowDescription();
         if (showDescription == null) {
@@ -2025,7 +2029,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
             targetService = "${targetService}";
         }
         if (UtilValidate.isEmpty(targetService) && updateAreas == null) {
-            Debug.logWarning("Cannot paginate because TargetService is empty for the form: " + modelForm.getName(), module);
+            Debug.logWarning("Cannot paginate because TargetService is empty for the form: " + modelForm.getName(), MODULE);
             return;
         }
         // get the parameterized pagination index and size fields
@@ -2043,7 +2047,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         String pageLabel = "";
         String commonDisplaying = "";
         if (uiLabelMap == null) {
-            Debug.logWarning("Could not find uiLabelMap in context", module);
+            Debug.logWarning("Could not find uiLabelMap in context", MODULE);
         } else {
             pageLabel = uiLabelMap.get("CommonPage");
             Map<String, Integer> messageMap = UtilMisc.toMap("lowCount", lowIndex + 1, "highCount", lowIndex + actualPageSize, "total", Integer.valueOf(listSize));
@@ -2453,7 +2457,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         }
         String paginateTarget = modelForm.getPaginateTarget(context);
         if (paginateTarget.isEmpty() && updateAreas == null) {
-            Debug.logWarning("Cannot sort because the paginate target URL is empty for the form: " + modelForm.getName(), module);
+            Debug.logWarning("Cannot sort because the paginate target URL is empty for the form: " + modelForm.getName(), MODULE);
             return;
         }
         String oldSortField = modelForm.getSortField(context);

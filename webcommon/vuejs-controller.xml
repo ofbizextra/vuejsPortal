@@ -77,6 +77,7 @@ under the License.
 
 
     <!-- View Mappings -->
+    <view-map name="login"             type="screen"        page="component://vuejs-portal/widget/CommonScreens.xml#login"/>
     <view-map name="vuejsStart"        type="screen"        page="component://vuejs-portal/widget/CommonScreens.xml#VuejsStart"/>
     <view-map name="showPortalPageFj"  type="screen"        page="component://vuejs-portal/widget/CommonScreens.xml#ShowPortalPageFj"/>
     <view-map name="successLogin"      type="screen"        page="component://vuejs-portal/widget/CommonScreens.xml#successLogin"/>

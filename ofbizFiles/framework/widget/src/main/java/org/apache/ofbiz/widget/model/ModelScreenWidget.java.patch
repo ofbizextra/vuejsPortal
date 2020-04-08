@@ -42,7 +42,7 @@ index 58ec24ff5d..d14a52bffb 100644
 +                screenStringRenderer.renderVueJs(writer, context, this);
 +            } catch (IOException e) {
 +                String errMsg = "Error rendering vue-js in screen named [" + getModelScreen().getName() + "]: " + e.toString();
-+                Debug.logError(e, errMsg, module);
++                Debug.logError(e, errMsg, MODULE);
 +                throw new RuntimeException(errMsg);
 +            }
 +        }
@@ -177,7 +177,7 @@ index 58ec24ff5d..d14a52bffb 100644
 +    ListIterator <GenericValue>attributesIterator = null;
 +    if (portletAttributes.size()>0) {
 +        putAttributes = true;
-+        Debug.logInfo("portletAttributes="+portletAttributes, module);
++        Debug.logInfo("portletAttributes="+portletAttributes, MODULE);
 +        attributesIterator = portletAttributes.listIterator();
 +        while (attributesIterator.hasNext()) {
 +            GenericValue attribute = attributesIterator.next();
@@ -201,7 +201,7 @@ index 58ec24ff5d..d14a52bffb 100644
 +//End modification FrontJs POC, add portletId and portletSeqId to be able to do a include-portal which will do a include-portlet
              } catch (IOException | GenericEntityException e) {
                  String errMsg = "Error rendering PortalPage with portalPageId [" + getId(context) + "]: " + e.toString();
-                 Debug.logError(e, errMsg, module);
+                 Debug.logError(e, errMsg, MODULE);
 @@ -2051,6 +2198,41 @@ public abstract class ModelScreenWidget extends ModelWidget {
          public FlexibleStringExpander getConfModeExdr() {
              return confModeExdr;
