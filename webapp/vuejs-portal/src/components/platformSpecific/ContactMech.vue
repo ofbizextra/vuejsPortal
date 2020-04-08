@@ -49,10 +49,10 @@
               :contact-mech-list="contactsByType('TELECOM_NUMBER')"
               contact-mech-type-id="TELECOM_NUMBER"
               :edit-mode="editMode"
-              label="Telecom number"
+              :label="label('TELECOM_NUMBER')"
               :show-more="showMore"
               :purpose-list="purposeListByType.TELECOM_NUMBER"
-              :show-less-list="displayParam.TELECOM_NUMBER"
+              :show-less-list="displayParams.TELECOM_NUMBER"
               @removeContactMech="removeContactMech($event)"
               @addContactMech="addTelecomNumber"
           ></telecom-number>
@@ -61,10 +61,10 @@
               :contact-mech-list="contactsByType('EMAIL_ADDRESS')"
               contact-mech-type-id="EMAIL_ADDRESS"
               :edit-mode="editMode"
-              label="Email address"
+              :label="label('EMAIL_ADDRESS')"
               :show-more="showMore"
               :purpose-list="purposeListByType.EMAIL_ADDRESS"
-              :show-less-list="displayParam.EMAIL_ADDRESS"
+              :show-less-list="displayParams.EMAIL_ADDRESS"
               @removeContactMech="removeContactMech($event)"
               @addContactMech="addEmailAddress"
           >
@@ -74,12 +74,12 @@
               :contact-mech-list="contactsByType('IP_ADDRESS')"
               contact-mech-type-id="IP_ADDRESS"
               :edit-mode="editMode"
-              label="IP address"
+              :label="label('IP_ADDRESS')"
               sel-label="ipAddr"
               sel-label-add="addIpAddr"
               :show-more="showMore"
               :purpose-list="purposeListByType.IP_ADDRESS"
-              :show-less-list="displayParam.IP_ADDRESS"
+              :show-less-list="displayParams.IP_ADDRESS"
               @removeContactMech="removeContactMech($event)"
               @addContactMech="addIpAddress"
           ></generic>
@@ -88,12 +88,12 @@
               :contact-mech-list="contactsByType('DOMAIN_NAME')"
               contact-mech-type-id="DOMAIN_NAME"
               :edit-mode="editMode"
-              label="Domain name"
+              :label="label('DOMAIN_NAME')"
               sel-label="domainName"
               sel-label-add="addDomainName"
               :show-more="showMore"
               :purpose-list="purposeListByType.DOMAIN_NAME"
-              :show-less-list="displayParam.DOMAIN_NAME"
+              :show-less-list="displayParams.DOMAIN_NAME"
               @removeContactMech="removeContactMech($event)"
               @addContactMech="addDomainName"
           ></generic>
@@ -102,12 +102,12 @@
               :contact-mech-list="contactsByType('LDAP_ADDRESS')"
               contact-mech-type-id="LDAP_ADDRESS"
               :edit-mode="editMode"
-              label="LDAP address"
+              :label="label('LDAP_ADDRESS')"
               sel-label="ldapAddr"
               sel-label-add="addLdapAddr"
               :show-more="showMore"
               :purpose-list="purposeListByType.LDAP_ADDRESS"
-              :show-less-list="displayParam.LDAP_ADDRESS"
+              :show-less-list="displayParams.LDAP_ADDRESS"
               @removeContactMech="removeContactMech($event)"
               @addContactMech="addLdapAddress"
           ></generic>
@@ -118,10 +118,10 @@
               :contact-mech-list="contactsByType('POSTAL_ADDRESS')"
               contact-mech-type-id="POSTAL_ADDRESS"
               :edit-mode="editMode"
-              label="Postal address"
+              :label="label('POSTAL_ADDRESS')"
               :show-more="showMore"
               :purpose-list="purposeListByType.POSTAL_ADDRESS"
-              :show-less-list="displayParam.POSTAL_ADDRESS"
+              :show-less-list="displayParams.POSTAL_ADDRESS"
               :rules="forms.postalAddress.rules"
               :lazy="lazy"
               @removeContactMech="removeContactMech($event)"
@@ -133,12 +133,12 @@
               :contact-mech-list="contactsByType('INTERNAL_PARTYID')"
               contact-mech-type-id="INTERNAL_PARTYID"
               :edit-mode="editMode"
-              label="Internal note"
+              :label="label('INTERNAL_PARTYID')"
               sel-label="intNote"
               sel-label-add="addintNote"
               :show-more="showMore"
               :purpose-list="purposeListByType.INTERNAL_PARTYID"
-              :show-less-list="displayParam.INTERNAL_PARTYID"
+              :show-less-list="displayParams.INTERNAL_PARTYID"
               @removeContactMech="removeContactMech($event)"
               @addContactMech="addInternalPartyId"
           ></generic>
@@ -147,12 +147,12 @@
               :contact-mech-list="contactsByType('WEB_ADDRESS')"
               contact-mech-type-id="WEB_ADDRESS"
               :edit-mode="editMode"
-              label="Web address"
+              :label="label('WEB_ADDRESS')"
               sel-label="webAddr"
               sel-label-add="addWebAddr"
               :show-more="showMore"
               :purpose-list="purposeListByType.WEB_ADDRESS"
-              :show-less-list="displayParam.WEB_ADDRESS"
+              :show-less-list="displayParams.WEB_ADDRESS"
               @removeContactMech="removeContactMech($event)"
               @addContactMech="addWebAddress"
           ></generic>
@@ -161,10 +161,10 @@
               :contact-mech-list="contactsByType('FTP_ADDRESS')"
               contact-mech-type-id="FTP_ADDRESS"
               :edit-mode="editMode"
-              label="FTP address"
+              :label="label('FTP_ADDRESS')"
               :show-more="showMore"
               :purpose-list="purposeListByType.FTP_ADDRESS"
-              :show-less-list="displayParam.FTP_ADDRESS"
+              :show-less-list="displayParams.FTP_ADDRESS"
               :rules="forms.ftpAddress.rules"
               :lazy="lazy"
               @removeContactMech="removeContactMech($event)"
@@ -186,6 +186,8 @@
 <script>
   import constants from '../../js/constants'
   import icons from '../../js/icons'
+
+  import {mapGetters} from 'vuex'
 
   import Generic from './ContactMech/Generic'
   import TelecomNumber from './ContactMech/TelecomNumber'
@@ -466,56 +468,59 @@
       }
     },
     computed: {
+      ...mapGetters({
+        uiLabel: 'ui/uiLabel'
+      }),
       partyId() {
         return this.props.partyId
       },
       getContactMechUrl() {
-        return this.props.configParam.hasOwnProperty('getContactMechUrl') ? this.props.configParam.getContactMechUrl : ''
+        return this.props.configParams.hasOwnProperty('getContactMechUrl') ? this.props.configParams.getContactMechUrl : ''
       },
       createContactMechUrl() {
-        return this.props.configParam.hasOwnProperty('createContactMechUrl') ? this.props.configParam.createContactMechUrl : ''
+        return this.props.configParams.hasOwnProperty('createContactMechUrl') ? this.props.configParams.createContactMechUrl : ''
       },
       createTelecomNumberUrl() {
-        return this.props.configParam.hasOwnProperty('createTelecomNumberUrl') ? this.props.configParam.createTelecomNumberUrl : ''
+        return this.props.configParams.hasOwnProperty('createTelecomNumberUrl') ? this.props.configParams.createTelecomNumberUrl : ''
       },
       createEmailAddressUrl() {
-        return this.props.configParam.hasOwnProperty('createEmailAddressUrl') ? this.props.configParam.createEmailAddressUrl : ''
+        return this.props.configParams.hasOwnProperty('createEmailAddressUrl') ? this.props.configParams.createEmailAddressUrl : ''
       },
       createPostalAddressUrl() {
-        return this.props.configParam.hasOwnProperty('createPostalAddressUrl') ? this.props.configParam.createPostalAddressUrl : ''
+        return this.props.configParams.hasOwnProperty('createPostalAddressUrl') ? this.props.configParams.createPostalAddressUrl : ''
       },
       createFtpAddressUrl() {
-        return this.props.configParam.hasOwnProperty('createFtpAddressUrl') ? this.props.configParam.createFtpAddressUrl : ''
+        return this.props.configParams.hasOwnProperty('createFtpAddressUrl') ? this.props.configParams.createFtpAddressUrl : ''
       },
       updateContactMechUrl() {
-        return this.props.configParam.hasOwnProperty('updateContactMechUrl') ? this.props.configParam.updateContactMechUrl : ''
+        return this.props.configParams.hasOwnProperty('updateContactMechUrl') ? this.props.configParams.updateContactMechUrl : ''
       },
       updateTelecomNumberUrl() {
-        return this.props.configParam.hasOwnProperty('updateTelecomNumberUrl') ? this.props.configParam.updateTelecomNumberUrl : ''
+        return this.props.configParams.hasOwnProperty('updateTelecomNumberUrl') ? this.props.configParams.updateTelecomNumberUrl : ''
       },
       updateEmailAddressUrl() {
-        return this.props.configParam.hasOwnProperty('updateEmailAddressUrl') ? this.props.configParam.updateEmailAddressUrl : ''
+        return this.props.configParams.hasOwnProperty('updateEmailAddressUrl') ? this.props.configParams.updateEmailAddressUrl : ''
       },
       updatePostalAddressUrl() {
-        return this.props.configParam.hasOwnProperty('updatePostalAddressUrl') ? this.props.configParam.updatePostalAddressUrl : ''
+        return this.props.configParams.hasOwnProperty('updatePostalAddressUrl') ? this.props.configParams.updatePostalAddressUrl : ''
       },
       updateFtpAddressUrl() {
-        return this.props.configParam.hasOwnProperty('updateFtpAddressUrl') ? this.props.configParam.updateFtpAddressUrl : ''
+        return this.props.configParams.hasOwnProperty('updateFtpAddressUrl') ? this.props.configParams.updateFtpAddressUrl : ''
       },
       deleteContactMechUrl() {
-        return this.props.configParam.hasOwnProperty('deleteContactMechUrl') ? this.props.configParam.deleteContactMechUrl : ''
+        return this.props.configParams.hasOwnProperty('deleteContactMechUrl') ? this.props.configParams.deleteContactMechUrl : ''
       },
       getContactMechPurposeTypeUrl() {
-        return this.props.configParam.hasOwnProperty('getContactMechPurposeTypeUrl') ? this.props.configParam.getContactMechPurposeTypeUrl : ''
+        return this.props.configParams.hasOwnProperty('getContactMechPurposeTypeUrl') ? this.props.configParams.getContactMechPurposeTypeUrl : ''
       },
       createContactMechPurposeUrl() {
-        return this.props.configParam.hasOwnProperty('createContactMechPurposeUrl') ? this.props.configParam.createContactMechPurposeUrl : ''
+        return this.props.configParams.hasOwnProperty('createContactMechPurposeUrl') ? this.props.configParams.createContactMechPurposeUrl : ''
       },
       expireContactMechPurposeUrl() {
-        return this.props.configParam.hasOwnProperty('expireContactMechPurposeUrl') ? this.props.configParam.expireContactMechPurposeUrl : ''
+        return this.props.configParams.hasOwnProperty('expireContactMechPurposeUrl') ? this.props.configParams.expireContactMechPurposeUrl : ''
       },
-      displayParam() {
-        return this.props.hasOwnProperty('displayParam') ? this.props.displayParam : this.defaultDisplay
+      displayParams() {
+        return this.props.hasOwnProperty('displayParams') ? this.props.displayParams : this.defaultDisplay
       },
       modified() {
         return JSON.stringify(this.dataSet) !== this.defaultDataSet || this.toCreate.length > 0 || this.toDelete.length > 0
@@ -532,7 +537,10 @@
         return icons.hasOwnProperty(icon) ? icons[icon] : null
       },
       getUiLabel(label) {
-        return this.props.uiLabel.hasOwnProperty(label) ? this.props.uiLabel[label] : label
+        return this.props.uiLabels.hasOwnProperty(label) ? this.props.uiLabels[label] : label
+      },
+      label(contactMechTypeId) {
+        return this.uiLabel(contactMechTypeId)
       },
       updateDataSet() {
         return new Promise((resolve, reject) => {

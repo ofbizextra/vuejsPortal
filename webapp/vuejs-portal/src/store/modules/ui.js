@@ -126,7 +126,7 @@ const getters = {
   uiLabels: state => state.uiLabels,
   uiLabel(state) {
     return function (uiLabel) {
-      return state.uiLabels.hasOwnProperty(uiLabel) ? state.dialogStatus[uiLabel] : false
+      return state.uiLabels.hasOwnProperty(uiLabel) ? state.uiLabels[uiLabel] : ''
     }
   }
 }
