@@ -367,33 +367,30 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         // Second attributes list, generate an error
         String placeholder = textField.getPlaceholder(context);
         List<ModelForm.UpdateArea> updateAreas = modelFormField.getOnChangeUpdateAreas();
-        String clientAutocomplete = "false";
         String event = modelFormField.getEvent();
         String action = modelFormField.getAction(context);
-        boolean ajaxEnabled = updateAreas != null && this.javaScriptEnabled;
-        if (textField.getClientAutocompleteField() || ajaxEnabled) {
-            clientAutocomplete = "true";
-        }
         String ajaxUrl = createAjaxParamsFromUpdateAreas(updateAreas, "", context);
         boolean disabled = textField.getDisabled();
         boolean readonly = textField.getReadonly();
         String tabindex = modelFormField.getTabindex();
-        if (disabled || readonly || "true".equals(clientAutocomplete)
+        if (disabled || readonly || !textField.getClientAutocompleteField()
                      || UtilValidate.isNotEmpty(event) || UtilValidate.isNotEmpty(action)
                      || UtilValidate.isNotEmpty(placeholder) || UtilValidate.isNotEmpty(tabindex)) {
 
             if (UtilValidate.isNotEmpty(event))              attributes.put("event", event);
             if (UtilValidate.isNotEmpty(action))             attributes.put("action", action);
-            if (UtilValidate.isNotEmpty(clientAutocomplete)) attributes.put("clientAutocomplete", clientAutocomplete);
+            if (! textField.getClientAutocompleteField())    attributes.put("clientAutocomplete", "false"); //the default value is true
             if (UtilValidate.isNotEmpty(ajaxUrl))            attributes.put("ajaxUrl", ajaxUrl);
-            if (UtilValidate.isNotEmpty(ajaxEnabled))        attributes.put("ajaxEnabled", ajaxEnabled);
             if (UtilValidate.isNotEmpty(placeholder))        attributes.put("placeholder", placeholder);
             if (UtilValidate.isNotEmpty(tabindex))           attributes.put("tabindex", tabindex);
             if (disabled)                                    attributes.put("disabled", disabled);
             if (readonly)                                    attributes.put("readonly", readonly);
             throw new IOException("FrontJsRender: a attribute is not yet implemented for text-field name=" + name
                     + " in form for form name=" + modelFormField.getModelForm().getName()
-                    + " attribute is one of : disable, readonly, event, action, updateAreas, ajaxUrl, placeholder, tabindex");
+                    + " attribute is one of : disabled("+disabled+"), readonly("+readonly
+                    + "), !clientAutocomplete("+!textField.getClientAutocompleteField()+"), event("+event
+                    + "), action("+action+"), updateAreas("+updateAreas+"), ajaxUrl("+ajaxUrl+"), placeholder("+placeholder
+                    + "), tabindex("+tabindex+")");
 
         }
     }
@@ -481,7 +478,9 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
             if (UtilValidate.isNotEmpty(tabindex)) attributes.put("tabindex", tabindex);
             throw new IOException("FrontJsRender: a attribute is not yet implemented for textArea-field name=" + name
                     + " in form for form name=" + modelFormField.getModelForm().getName()
-                    + " attribute is one of : readonly, visualEditorEnable, editorButtons, tabindex");
+                    + " attribute is one of : readonly("+textareaField.isReadOnly()
+                    + "), visualEditorEnable("+textareaField.getVisualEditorEnable()
+                    + "), editorButtons("+textareaField.getVisualEditorButtons(context)+"), tabindex("+tabindex+")");
         }
     }
 
