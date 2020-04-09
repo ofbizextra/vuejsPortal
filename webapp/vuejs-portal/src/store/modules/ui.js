@@ -126,7 +126,7 @@ const getters = {
   uiLabels: state => state.uiLabels,
   uiLabel(state) {
     return function (uiLabel) {
-      return state.uiLabels.hasOwnProperty(uiLabel) ? state.uiLabels[uiLabel] : ''
+      return state.uiLabels.hasOwnProperty(uiLabel) ? state.uiLabels[uiLabel] : uiLabel
     }
   }
 }
@@ -285,7 +285,7 @@ const actions = {
   setUiLabels({commit, dispatch}, api) {
     dispatch('backOfficeApi/doPost', {uri: constants.hostUrl + api + constants.getCommonUiLabel}, {root: true})
       .then(response => {
-        commit('SET_UI_LABELS', response.body.commonUiLabel)
+        commit('SET_UI_LABELS', response.body.commonUiLabels)
       })
   }
 }

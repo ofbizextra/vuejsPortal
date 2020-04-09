@@ -27,15 +27,8 @@ vuejsUiLabel = [:]
 vuejsUiLabel.expandToolTip   = uiLabelMap["CommonExpand"]   // screenletExpand
 vuejsUiLabel.collapseToolTip = uiLabelMap["CommonCollapse"] // screenletCollapse
 vuejsUiLabel.ofLabel         = uiLabelMap["CommonOf"]       // pagination
-vuejsUiLabel.TELECOM_NUMBER = "TELECOM_NUMBER"       // pagination
-vuejsUiLabel.EMAIL_ADDRESS = "EMAIL_ADDRESS"       // pagination
-vuejsUiLabel.POSTAL_ADDRESS = "POSTAL_ADDRESS"       // pagination
-vuejsUiLabel.IP_ADDRESS = "IP_ADDRESS"       // pagination
-vuejsUiLabel.DOMAIN_NAME = "DOMAIN_NAME"       // pagination
-vuejsUiLabel.LDAP_ADDRESS = "LDAP_ADDRESS"       // pagination
-vuejsUiLabel.INTERNAL_PARTYID = "INTERNAL_PARTYID"       // pagination
-vuejsUiLabel.WEB_ADDRESS = "WEB_ADDRESS"       // pagination
-vuejsUiLabel.FTP_ADDRESS = "FTP_ADDRESS"       // pagination
-vuejsUiLabel.expire = 'invalider'
-request.setAttribute("commonUiLabel", vuejsUiLabel)
+vuejsUiLabel.cancel          = uiLabelMap.CommonCancel
+vuejsUiLabel.expire          = uiLabelMap.CommonExpire
+vuejsUiLabel.showAll         = uiLabelMap.CommonShowAll
+request.setAttribute("commonUiLabels", vuejsUiLabel)
 return "success"

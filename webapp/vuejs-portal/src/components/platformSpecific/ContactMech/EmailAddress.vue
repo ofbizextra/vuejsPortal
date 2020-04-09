@@ -3,7 +3,7 @@
     <v-toolbar dark color="primary" flat height="30px" class="ma-0 pa-0">
       <v-icon left>{{getIcon(icon)}}</v-icon>
       <v-toolbar-title>
-        {{getLabel(contactMechTypeId)}}
+        {{label}}
       </v-toolbar-title>
       <v-spacer></v-spacer>
       <v-btn v-if="editMode && contactMechList.length === 0" small icon sel-label="addEmailAddr" @click="addContactMech">
@@ -49,7 +49,7 @@
           <v-list-item-subtitle v-if="editMode" class="d-flex flex-row-reverse">
             <v-btn @click="removeContactMech(email)" color="error">
               <v-icon id='mdi-delete'>{{getIcon('mdi-delete')}}</v-icon>
-              {{getLabel('expire')}}
+              {{uiLabel('expire')}}
             </v-btn>
           </v-list-item-subtitle>
         </v-list-item-content>
@@ -74,10 +74,10 @@
 
   export default {
     name: "EmailAddress",
-    props: ['contactMechList', 'editMode', 'icon', 'contactMechTypeId', 'showMore', 'purposeList', 'showLessList'],
+    props: ['contactMechList', 'editMode', 'icon', 'label', 'contactMechTypeId', 'showMore', 'purposeList', 'showLessList'],
     computed: {
       ...mapGetters({
-        label: 'ui/uiLabel'
+        uiLabel: 'ui/uiLabel'
       }),
       filteredContactMechList() {
         if (this.showLessList.mode === 'never') {
@@ -104,8 +104,8 @@
       getIcon(icon) {
         return icons.hasOwnProperty(icon) ? icons[icon] : null
       },
-      getLabel(id) {
-        return this.label(id)
+      uiLabel(id) {
+        return this.uiLabel(id)
       },
       getPurposeDescription(contactMechPurposeTypeId) {
         return this.purposeList.filter(purpose => purpose.contactMechPurposeTypeId === contactMechPurposeTypeId)[0].description
