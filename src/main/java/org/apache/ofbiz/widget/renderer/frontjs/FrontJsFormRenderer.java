@@ -310,10 +310,42 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         }
     }
 
+    private void addAlertAndClass(Map<String, Object> attributes, ModelFormField modelFormField, Map<String, Object> context) {
+        String name = modelFormField.getParameterName(context);
+        String formName = modelFormField.getModelForm().getName();
+        // First attribute alert and className generate only a warning
+        String className = "";
+        String alert = "false";
+        if (UtilValidate.isNotEmpty(modelFormField.getWidgetStyle())) {
+            className = modelFormField.getWidgetStyle();
+            if (modelFormField.shouldBeRed(context)) {
+                alert = "true";
+            }
+        }
+        //check for required field style on single forms
+        if ("single".equals(modelFormField.getModelForm().getType()) && modelFormField.getRequiredField()) {
+            String requiredStyle = modelFormField.getRequiredFieldStyle();
+            if (UtilValidate.isEmpty(requiredStyle)) {
+                requiredStyle = "required";
+            }
+            if (UtilValidate.isEmpty(className)) {
+                className = requiredStyle;
+            } else {
+                className = requiredStyle + " " + className;
+            }
+        }
+        if (UtilValidate.isNotEmpty(className) || "true".equals(alert)) {
+            Debug.logWarning("Field with alert or class attribute is used for field name="+name+
+                    " in form with name="+formName +
+                    "  it's not manage by FrontFjRenderer", MODULE);
+            if (UtilValidate.isNotEmpty(className))          attributes.put("className", className);
+            if ("true".equals(alert))                        attributes.put("alert", alert);
+        }
+    }
+
     public void renderTextField(Appendable writer, Map<String, Object> context, TextField textField) throws IOException {
         ModelFormField modelFormField = textField.getModelFormField();
         String name = modelFormField.getParameterName(context);
-        String className = "";
         String value = modelFormField.getEntry(context, textField.getDefaultValue(context));
         Integer textSize = textField.getSize();
         Integer maxlength = -1;
@@ -338,32 +370,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
 
         // All not manage attributes
         // First attribute alert and className generate only a warning
-        String alert = "false";
-        if (UtilValidate.isNotEmpty(modelFormField.getWidgetStyle())) {
-            className = modelFormField.getWidgetStyle();
-            if (modelFormField.shouldBeRed(context)) {
-                alert = "true";
-            }
-        }
-        //check for required field style on single forms
-        if ("single".equals(modelFormField.getModelForm().getType()) && modelFormField.getRequiredField()) {
-            String requiredStyle = modelFormField.getRequiredFieldStyle();
-            if (UtilValidate.isEmpty(requiredStyle)) {
-                requiredStyle = "required";
-            }
-            if (UtilValidate.isEmpty(className)) {
-                className = requiredStyle;
-            } else {
-                className = requiredStyle + " " + className;
-            }
-        }
-        if (UtilValidate.isNotEmpty(className) || "true".equals(alert)) {
-            Debug.logWarning("textField with alert or class attribute is used for field name="+name+
-                    " in form with name="+formName +
-                    "  it's not manage by FrontFjRenderer", MODULE);
-            if (UtilValidate.isNotEmpty(className))          attributes.put("className", className);
-            if ("true".equals(alert))                        attributes.put("alert", alert);
-        }
+        this.addAlertAndClass(attributes, modelFormField, context);
         // Second attributes list, generate an error
         String placeholder = textField.getPlaceholder(context);
         List<ModelForm.UpdateArea> updateAreas = modelFormField.getOnChangeUpdateAreas();
@@ -419,34 +426,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
 
         // All not manage attributes
         // First attribute alert and className generate only a warning
-        String className = "";
-        String alert = "false";
-        if (UtilValidate.isNotEmpty(modelFormField.getWidgetStyle())) {
-            className = modelFormField.getWidgetStyle();
-            if (modelFormField.shouldBeRed(context)) {
-                alert = "true";
-            }
-        }
-            //check for required field style on single forms
-        if ("single".equals(modelFormField.getModelForm().getType()) && modelFormField.getRequiredField()) {
-            String requiredStyle = modelFormField.getRequiredFieldStyle();
-            if (UtilValidate.isEmpty(requiredStyle)) {
-                requiredStyle = "required";
-            }
-            if (UtilValidate.isEmpty(className)) {
-                className = requiredStyle;
-            } else {
-                className = requiredStyle + " " + className;
-            }
-        }
-        if (UtilValidate.isNotEmpty(className) || "true".equals(alert)) {
-            Debug.logWarning("textAreaField with alert or class attribute is used for field name="+name+
-                    " in form with name="+formName +
-                    "  it's not manage by FrontFjRenderer", MODULE);
-            if (UtilValidate.isNotEmpty(className))          attributes.put("className", className);
-            if ("true".equals(alert))                        attributes.put("alert", alert);
-        }
-
+        this.addAlertAndClass(attributes, modelFormField, context);
         // cols and rows are always present because they have default value
         attributes.put("cols", textareaField.getCols()); // default value 60
         attributes.put("rows", textareaField.getRows()); // default value 2
