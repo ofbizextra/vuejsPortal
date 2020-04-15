@@ -19,7 +19,7 @@
       <template v-slot:activator="{ on }">
         <v-text-field
             v-model="date"
-            label="date"
+            :label="uiLabel('date')"
             prepend-icon="mdi-event"
             :rules="rules"
             :hide-details="noRules"
@@ -42,7 +42,7 @@
       <template v-slot:activator="{ on }">
         <v-text-field
             v-model="time"
-            label="time"
+            :label="uiLabel('time')"
             prepend-icon="mdi-event"
             :rules="rules"
             :hide-details="noRules"
@@ -74,7 +74,8 @@
     computed: {
       ...mapGetters({
         getForm: 'form/form',
-        getDataFromForm: 'form/fieldInForm'
+        getDataFromForm: 'form/fieldInForm',
+        uiLabel: 'ui/uiLabel'
       }),
       config() {
         return {
@@ -132,6 +133,11 @@
       },
       value() {
         return this.props.attributes.hasOwnProperty('value') ? this.props.attributes.value.split('.')[0] : ''
+      }
+    },
+    methods: {
+      uiLabel(label) {
+        return this.uiLabel(label)
       }
     }
     ,

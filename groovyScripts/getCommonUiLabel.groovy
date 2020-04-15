@@ -24,11 +24,14 @@ uiLabelMap = UtilProperties.getResourceBundleMap("CommonUiLabels", locale)
 
 //Debug.logInfo("DEBUG request: ${request}", "FindContactMechPuroseType.groovy")
 vuejsUiLabel = [:]
-vuejsUiLabel.expandToolTip   = uiLabelMap["CommonExpand"]   // screenletExpand
-vuejsUiLabel.collapseToolTip = uiLabelMap["CommonCollapse"] // screenletCollapse
-vuejsUiLabel.ofLabel         = uiLabelMap["CommonOf"]       // pagination
 vuejsUiLabel.cancel          = uiLabelMap.CommonCancel
+vuejsUiLabel.collapseToolTip = uiLabelMap["CommonCollapse"] // screenletCollapse
+vuejsUiLabel.date            = uiLabelMap.CommonDate
+
+vuejsUiLabel.expandToolTip   = uiLabelMap["CommonExpand"]   // screenletExpand
 vuejsUiLabel.expire          = uiLabelMap.CommonExpire
+vuejsUiLabel.ofLabel         = uiLabelMap["CommonOf"]       // pagination
 vuejsUiLabel.showAll         = uiLabelMap.CommonShowAll
+vuejsUiLabel.time            = uiLabelMap.CommonTime
 request.setAttribute("commonUiLabels", vuejsUiLabel)
 return "success"
