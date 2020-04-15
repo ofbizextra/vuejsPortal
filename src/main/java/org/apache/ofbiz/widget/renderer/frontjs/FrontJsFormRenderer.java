@@ -464,173 +464,31 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         }
     }
 
-// OHE point of review, to be continue
-    public void renderDateTimeField(Appendable writer, Map<String, Object> context, DateTimeField dateTimeField) {
-        String fieldName = null;
-        String fieldValue = null;
+    public void renderDateTimeField(Appendable writer, Map<String, Object> context, DateTimeField dateTimeField) throws IOException {
         ModelFormField modelFormField = dateTimeField.getModelFormField();
-        String paramName = modelFormField.getParameterName(context);
-        String defaultDateTimeString = dateTimeField.getDefaultDateTimeString(context);
-        String className = "";
-        String alert = "false";
-        String name = "";
-        String formattedMask = "";
-        String event = modelFormField.getEvent();
-        String action = modelFormField.getAction(context);
-        if (UtilValidate.isNotEmpty(modelFormField.getWidgetStyle())) {
-            className = modelFormField.getWidgetStyle();
-            if (modelFormField.shouldBeRed(context)) {
-                alert = "true";
-            }
-        }
-        boolean useTimeDropDown = "time-dropdown".equals(dateTimeField.getInputMethod());
-        String stepString = dateTimeField.getStep();
-        int step = 1;
-        StringBuilder timeValues = new StringBuilder();
-        if (useTimeDropDown && UtilValidate.isNotEmpty(step)) {
-            try {
-                step = Integer.parseInt(stepString);
-            } catch (IllegalArgumentException e) {
-                Debug.logWarning("Invalid value for step property for field[" + paramName + "] with input-methodtime-dropdown" + " Found Value [" + stepString + "]  " + e.getMessage(), MODULE);
-            }
-            timeValues.append("[");
-            for (int i = 0; i <= 59;) {
-                if (i != 0) {
-                    timeValues.append(", ");
-                }
-                timeValues.append(i);
-                i += step;
-            }
-            timeValues.append("]");
-        }
-        Map<String, String> uiLabelMap = UtilGenerics.cast(context.get("uiLabelMap"));
-        if (uiLabelMap == null) {
-            Debug.logWarning("Could not find uiLabelMap in context", MODULE);
-        }
-        String localizedInputTitle = "", localizedIconTitle = "";
-        // whether the date field is short form, yyyy-mm-dd
-        boolean shortDateInput = ("date".equals(dateTimeField.getType()) || useTimeDropDown);
-        if (useTimeDropDown) {
-            name = UtilHttp.makeCompositeParam(paramName, "date");
-        } else {
-            name = paramName;
-        }
-        // the default values for a timestamp
-        int size = 25;
-        int maxlength = 30;
-        if (shortDateInput) {
-            size = maxlength = 10;
-            if (uiLabelMap != null) {
-                localizedInputTitle = uiLabelMap.get("CommonFormatDate");
-            }
-        } else if ("time".equals(dateTimeField.getType())) {
-            size = maxlength = 8;
-            if (uiLabelMap != null) {
-                localizedInputTitle = uiLabelMap.get("CommonFormatTime");
-            }
-        } else {
-            if (uiLabelMap != null) {
-                localizedInputTitle = uiLabelMap.get("CommonFormatDateTime");
-            }
-        }
-        /*
-         * FIXME: Using a builder here is a hack. Replace the builder with appropriate code.
-         */
-        ModelFormFieldBuilder builder = new ModelFormFieldBuilder(modelFormField);
-        boolean memEncodeOutput = modelFormField.getEncodeOutput();
-        if (useTimeDropDown) {
-            // If time-dropdown deactivate encodingOutput for found hour and minutes
-            // FIXME: Encoding should be controlled by the renderer, not by the model.
-            builder.setEncodeOutput(false);
-        }
-        // FIXME: modelFormField.getEntry ignores shortDateInput when converting Date objects to Strings.
-        if (useTimeDropDown) {
-            builder.setEncodeOutput(memEncodeOutput);
-        }
-        modelFormField = builder.build();
-        String contextValue = modelFormField.getEntry(context, dateTimeField.getDefaultValue(context));
-        String value = contextValue;
-        if (UtilValidate.isNotEmpty(value)) {
-            if (value.length() > maxlength) {
-                value = value.substring(0, maxlength);
-            }
-        }
+        String name = modelFormField.getParameterName(context);;
+        String formName = modelFormField.getModelForm().getName();
         String id = modelFormField.getCurrentContainerId(context);
-        ModelForm modelForm = modelFormField.getModelForm();
-        String formName = FormRenderer.getCurrentFormName(modelForm, context);
-        String timeDropdown = dateTimeField.getInputMethod();
-        String timeDropdownParamName = "";
-        String classString = "";
-        boolean isTwelveHour = false;
-        String timeHourName = "";
-        int hour2 = 0, hour1 = 0, minutes = 0;
-        String timeMinutesName = "";
-        String amSelected = "", pmSelected = "", ampmName = "";
-        String compositeType = "";
-        // search for a localized label for the icon
-        if (uiLabelMap != null) {
-            localizedIconTitle = uiLabelMap.get("CommonViewCalendar");
-        }
-        if (!"time".equals(dateTimeField.getType())) {
-            String tempParamName;
-            if (useTimeDropDown) {
-                tempParamName = UtilHttp.makeCompositeParam(paramName, "date");
-            } else {
-                tempParamName = paramName;
-            }
-            timeDropdownParamName = tempParamName;
-            defaultDateTimeString = UtilHttp.encodeBlanks(modelFormField.getEntry(context, defaultDateTimeString));
-        }
-        // if we have an input method of time-dropdown, then render two
-        // dropdowns
-        if (useTimeDropDown) {
-            className = modelFormField.getWidgetStyle();
-            classString = (className != null ? className : "");
-            isTwelveHour = "12".equals(dateTimeField.getClock());
-            // set the Calendar to the default time of the form or now()
-            Calendar cal = null;
-            try {
-                Timestamp defaultTimestamp = Timestamp.valueOf(contextValue);
-                cal = Calendar.getInstance();
-                cal.setTime(defaultTimestamp);
-            } catch (IllegalArgumentException e) {
-                Debug.logWarning("Form widget field [" + paramName + "] with input-methodtime-dropdownwas not able to understand the default time [" + defaultDateTimeString + "]. The parsing error was: " + e.getMessage(), MODULE);
-            }
-            timeHourName = UtilHttp.makeCompositeParam(paramName, "hour");
-            if (cal != null) {
-                int hour = cal.get(Calendar.HOUR_OF_DAY);
-                hour2 = hour;
-                if (hour == 0) {
-                    hour = 12;
-                }
-                if (hour > 12) {
-                    hour -= 12;
-                }
-                hour1 = hour;
-                minutes = cal.get(Calendar.MINUTE);
-            }
-            timeMinutesName = UtilHttp.makeCompositeParam(paramName, "minutes");
-            compositeType = UtilHttp.makeCompositeParam(paramName, "compositeType");
-            // if 12 hour clock, write the AM/PM selector
-            if (isTwelveHour) {
-                amSelected = ((cal != null && cal.get(Calendar.AM_PM) == Calendar.AM) ? "selected" : "");
-                pmSelected = ((cal != null && cal.get(Calendar.AM_PM) == Calendar.PM) ? "selected" : "");
-                ampmName = UtilHttp.makeCompositeParam(paramName, "ampm");
-            }
-        }
-        //check for required field style on single forms
-        if ("single".equals(modelFormField.getModelForm().getType()) && modelFormField.getRequiredField()) {
-            String requiredStyle = modelFormField.getRequiredFieldStyle();
-            if (UtilValidate.isEmpty(requiredStyle)) {
-                requiredStyle = "required";
-            }
-            if (UtilValidate.isEmpty(className)) {
-                className = requiredStyle;
-            } else {
-                className = requiredStyle + " " + className;
-            }
-        }
+        Map<String, Object> attributes = new HashMap<>();
+
+        String contextValue = modelFormField.getEntry(context, dateTimeField.getDefaultValue(context));
+
+        attributes.put("formName", formName);
+        attributes.put("name", name);
+        attributes.put("value", contextValue);
+        if ("12".equals(dateTimeField.getClock())) attributes.put("isTwelveHour", "Y");
+        if (UtilValidate.isNotEmpty(id))           attributes.put("id", id); // not yet used in vuejs, waiting use case
+        this.addAsterisks(attributes, context, modelFormField);
+        this.appendTooltip(attributes, context, modelFormField);
+        this.output.putScreen("DateTimeField", attributes, name, contextValue);
+
+        // All not-manage attributes
+        // First attribute alert and className generate only a warning
+        this.addAlertAndClass(attributes, modelFormField, context);
+        // second: mask=, nothing to do currently because with material design it's managed
+        /*
         String mask = dateTimeField.getMask();
+        String formattedMask = "";
         if ("Y".equals(mask)) {
             if ("date".equals(dateTimeField.getType())) {
                 formattedMask = "9999-99-99";
@@ -639,54 +497,40 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
             } else if ("timestamp".equals(dateTimeField.getType())) {
                 formattedMask = "9999-99-99 99:99:99";
             }
+            attributes.put("formattedMask", formattedMask);
         }
+        */
+        // third, warning, with material design it's always text and "dropdown", so put a warning
+        //      to check if current management is correct for field where it's used
+        if ("time-dropdown".equals(dateTimeField.getInputMethod()) || !"1".equals(dateTimeField.getStep()) ) {
+            Debug.logWarning("date-time Field with time-dropdown or/and step attribute is used for field name="+name+
+                    " in form with name="+formName +
+                    "  it's not manage by FrontFjRenderer", MODULE);
+        }
+        //last, list of attributes which generate error if present because not manage and should be.
+        FlexibleStringExpander defaultValue = dateTimeField.getDefaultValue();
+        String event = modelFormField.getEvent();
+        String action = modelFormField.getAction(context);
         String tabindex = modelFormField.getTabindex();
-        Map<String, Object> cb = new HashMap<>();
-        if ("single".equals(modelFormField.getModelForm().getType())) this.addTitle(cb, modelFormField, context);
-        cb.put("name", name);
-        cb.put("className", className);
-        cb.put("alert", alert);
-        cb.put("value", value);
-        cb.put("title", localizedInputTitle);
-        cb.put("size", size);
-        cb.put("maxlength", maxlength);
-        cb.put("step", step);
-        cb.put("timeValues", timeValues.toString());
-        cb.put("id", id);
-        cb.put("event", event);
-        cb.put("action", action);
-        cb.put("dateType", dateTimeField.getType());
-        cb.put("shortDateInput", shortDateInput);
-        cb.put("timeDropdownParamName", timeDropdownParamName);
-        cb.put("defaultDateTimeString", defaultDateTimeString);
-        cb.put("localizedIconTitle", localizedIconTitle);
-        cb.put("timeDropdown", timeDropdown);
-        cb.put("timeHourName", timeHourName);
-        cb.put("classString", classString);
-        cb.put("hour1", hour1);
-        cb.put("hour2", hour2);
-        cb.put("timeMinutesName", timeMinutesName);
-        cb.put("minutes", minutes);
-        cb.put("isTwelveHour", isTwelveHour);
-        cb.put("ampmName", ampmName);
-        cb.put("amSelected", amSelected);
-        cb.put("pmSelected", pmSelected);
-        cb.put("compositeType", compositeType);
-        cb.put("formName", formName);
-        cb.put("mask", formattedMask);
-        cb.put("tabindex", tabindex);
-        fieldName = name;
-        fieldValue = value;
-//        Map<String, Object> data = new HashMap<>();
-//        Map<String, Object> pointer = output.getRecordPointer(context);
-//        pointer.put("field", name);
-//        data.put("recordPointer", pointer);
-//        cb.put("data", data);
-        this.addAsterisks(cb, context, modelFormField);
-        this.appendTooltip(cb, context, modelFormField);
-        this.output.putScreen("DateTimeField", cb, fieldName, fieldValue);
+        if (! "timestamp".equals(dateTimeField.getType())
+                     || UtilValidate.isNotEmpty(event) || UtilValidate.isNotEmpty(action)
+                     || UtilValidate.isNotEmpty(defaultValue) || UtilValidate.isNotEmpty(tabindex)) {
+
+            attributes.put("dateType", dateTimeField.getType());
+            if (UtilValidate.isNotEmpty(event))              attributes.put("event", event);
+            if (UtilValidate.isNotEmpty(action))             attributes.put("action", action);
+            if (UtilValidate.isNotEmpty(tabindex))           attributes.put("tabindex", tabindex);
+            if (UtilValidate.isNotEmpty(defaultValue))       attributes.put("defaultDateTimeString",
+                                                     dateTimeField.getDefaultDateTimeString(context));
+            throw new IOException("FrontJsRender: a attribute is not yet implemented for date-time-field name=" + name
+                    + " in form for form name=" + modelFormField.getModelForm().getName()
+                    + " attribute is one of : dateType("+dateTimeField.getType()
+                    + "), defaultValue("+dateTimeField.getDefaultDateTimeString(context)
+                    + "), event("+event + "), action("+action + "), tabindex("+tabindex+")");
+        }
     }
 
+ // OHE point of review, to be continue
     public void renderDropDownField(Appendable writer, Map<String, Object> context, DropDownField dropDownField) {
         String fieldName = null;
         String fieldValue = null;
