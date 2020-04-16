@@ -3,7 +3,7 @@
     <v-toolbar dark color="primary" flat height="30px" class="ma-0 pa-0">
       <v-icon left>{{getIcon(icon)}}</v-icon>
       <v-toolbar-title>
-        {{label}}
+        {{ctmUiLabel(this.contactMechTypeId)}}
       </v-toolbar-title>
       <v-spacer></v-spacer>
       <v-btn v-if="editMode && contactMechList.length === 0" small icon :sel-label="selLabelAdd" @click="addContactMech">
@@ -22,7 +22,7 @@
           <v-list-item-title v-if="editMode">
             <v-row>
               <v-col>
-                <v-text-field hide-details id="infoString" :label="label"
+                <v-text-field hide-details id="infoString" :label="ctmUiLabel(contactMechTypeId)"
                               v-model="contactMech.contactMech.infoString"></v-text-field>
               </v-col>
             </v-row>
@@ -37,12 +37,12 @@
           </v-list-item-subtitle>
           <v-list-item-subtitle v-if="thruDate(contactMech)">
               <v-chip class="secondary mr-1 mb-1" x-small>
-                {{'Expired since :  ' + parseDate(contactMech.partyContactMech.thruDate)}}
+                {{ctmUiLabel('effectiveThru') + parseDate(contactMech.partyContactMech.thruDate)}}
               </v-chip>
           </v-list-item-subtitle>
           <v-list-item-subtitle v-if="editMode && purposeList.length > 0">
             <v-select
-                label="purposes"
+                :label="ctmUiLabel('contactPurposes')"
                 v-model="contactMech.purposes"
                 :items="purposeList"
                 multiple
@@ -53,7 +53,7 @@
           <v-list-item-subtitle v-if="editMode" class="d-flex flex-row-reverse">
             <v-btn @click="removeContactMech(contactMech)" color="error">
               <v-icon id='mdi-delete'>{{getIcon('mdi-delete')}}</v-icon>
-              expire
+              {{uiLabel('expire')}}
             </v-btn>
           </v-list-item-subtitle>
         </v-list-item-content>
@@ -63,7 +63,7 @@
           <v-list-item-subtitle class="d-flex justify-center">
             <v-btn color="secondary" sel-label="addEmailAddr" @click="addContactMech">
               <v-icon id='mdi-plus-circle' left>{{getIcon('mdi-plus-circle')}}</v-icon>
-              Add {{label}}
+              {{uiLabel('add')}} {{ctmUiLabel(this.contactMechTypeId)}}
             </v-btn>
           </v-list-item-subtitle>
         </v-list-item-content>
@@ -74,11 +74,15 @@
 
 <script>
   import icons from '../../../js/icons'
+  import {mapGetters} from 'vuex'
 
   export default {
     name: "Generic",
-    props: ['contactMechList', 'editMode', 'icon', 'label', 'selLabel', 'selLabelAdd', 'contactMechTypeId', 'showMore', 'purposeList', 'showLessList'],
+    props: ['contactMechList', 'editMode', 'icon', 'uiLabels', 'selLabel', 'selLabelAdd', 'contactMechTypeId', 'showMore', 'purposeList', 'showLessList'],
     computed: {
+      ...mapGetters({
+        commonUiLabel: 'ui/uiLabel'
+      }),
       filteredContactMechList() {
         if (this.showLessList.mode === 'never') {
           return []
@@ -103,6 +107,12 @@
       },
       getIcon(icon) {
         return icons.hasOwnProperty(icon) ? icons[icon] : null
+      },
+      uiLabel(label){
+          return this.commonUiLabel(label)
+      },
+      ctmUiLabel(label) {
+        return this.uiLabels.hasOwnProperty(label) ? this.uiLabels[label] : label
       },
       getPurposeDescription(contactMechPurposeTypeId) {
         return this.purposeList.filter(purpose => purpose.contactMechPurposeTypeId === contactMechPurposeTypeId)[0].description

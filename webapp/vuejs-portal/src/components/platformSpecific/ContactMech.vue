@@ -4,14 +4,24 @@
       <v-toolbar-title class="title">{{ctmUiLabel('contactMechTitle')}} "{{this.props.partyId}}"</v-toolbar-title>
       <div class="flex-grow-1"></div>
       <v-btn icon @click="toggleEdit">
-        <v-icon id='mdi-pencil'>{{getIcon('mdi-pencil')}}</v-icon>
+        <v-tooltip bottom>
+          <template v-slot:activator="{ on }">
+            <v-icon v-on="on" id='mdi-pencil'>{{getIcon('mdi-pencil')}}</v-icon>
+          </template>
+          <span>{{ctmUiLabel('EditContactMech')}}</span>
+        </v-tooltip>
       </v-btn>
     </v-toolbar>
     <v-toolbar tile dark color="primary" dense flat v-if="editMode" class="ma-0 pa-0">
       <v-btn icon @click="toggleEdit">
-        <v-icon id='mdi-arrow-left'>{{getIcon('mdi-arrow-left')}}</v-icon>
+        <v-tooltip bottom>
+          <template v-slot:activator="{ on }">
+            <v-icon v-on="on" id='mdi-arrow-left'>{{getIcon('mdi-arrow-left')}}</v-icon>
+          </template>
+          <span>{{uiLabel('cancelAll')}}</span>
+        </v-tooltip>
       </v-btn>
-      <v-toolbar-title>Edit contact mech</v-toolbar-title>
+      <v-toolbar-title>{{ctmUiLabel('EditContactMech')}}</v-toolbar-title>
       <div class="flex-grow-1"></div>
       <v-dialog v-model="confirmDialog" persistent v-if="toDelete.length !== 0 && modified" max-width="600px">
         <template v-slot:activator="{on}">
@@ -21,18 +31,15 @@
         </template>
         <v-card>
           <v-card-title>
-            Are you sure ?
+            {{uiLabel('confirmDelete')}}
           </v-card-title>
           <v-card-text>
             <p>
-              {{toDelete.length}} contact{{toDelete.length > 1 ? 's' : ''}} will be expired.
-            </p>
-            <p>
-              Are you sure you want to proceed ?
+              {{uiLabel('expire')}} {{toDelete.length}} {{ctmUiLabel('contactMechs')}}.
             </p>
           </v-card-text>
           <v-card-actions class="d-flex flex-row-reverse">
-            <v-btn color="success" class="ma-1" @click="updateAll">Confirm expiration</v-btn>
+            <v-btn color="success" class="ma-1" @click="updateAll">{{uiLabel('confirmButton')}}</v-btn>
             <v-btn color="error" class="ma-1" @click="toggleEdit">{{uiLabel('cancel')}}</v-btn>
           </v-card-actions>
         </v-card>
@@ -49,7 +56,7 @@
               :contact-mech-list="contactsByType('TELECOM_NUMBER')"
               contact-mech-type-id="TELECOM_NUMBER"
               :edit-mode="editMode"
-              :label="ctmUiLabel('TELECOM_NUMBER')"
+              :uiLabels="uiLabels"
               :show-more="showMore"
               :purpose-list="purposeListByType.TELECOM_NUMBER"
               :show-less-list="displayParams.TELECOM_NUMBER"
@@ -61,7 +68,7 @@
               :contact-mech-list="contactsByType('EMAIL_ADDRESS')"
               contact-mech-type-id="EMAIL_ADDRESS"
               :edit-mode="editMode"
-              :label="ctmUiLabel('EMAIL_ADDRESS')"
+              :uiLabels="uiLabels"
               :show-more="showMore"
               :purpose-list="purposeListByType.EMAIL_ADDRESS"
               :show-less-list="displayParams.EMAIL_ADDRESS"
@@ -74,7 +81,7 @@
               :contact-mech-list="contactsByType('IP_ADDRESS')"
               contact-mech-type-id="IP_ADDRESS"
               :edit-mode="editMode"
-              :label="ctmUiLabel('IP_ADDRESS')"
+              :uiLabels="uiLabels"
               sel-label="ipAddr"
               sel-label-add="addIpAddr"
               :show-more="showMore"
@@ -88,7 +95,7 @@
               :contact-mech-list="contactsByType('DOMAIN_NAME')"
               contact-mech-type-id="DOMAIN_NAME"
               :edit-mode="editMode"
-              :label="ctmUiLabel('DOMAIN_NAME')"
+              :uiLabels="uiLabels"
               sel-label="domainName"
               sel-label-add="addDomainName"
               :show-more="showMore"
@@ -102,7 +109,7 @@
               :contact-mech-list="contactsByType('LDAP_ADDRESS')"
               contact-mech-type-id="LDAP_ADDRESS"
               :edit-mode="editMode"
-              :label="ctmUiLabel('LDAP_ADDRESS')"
+              :uiLabels="uiLabels"
               sel-label="ldapAddr"
               sel-label-add="addLdapAddr"
               :show-more="showMore"
@@ -118,7 +125,7 @@
               :contact-mech-list="contactsByType('POSTAL_ADDRESS')"
               contact-mech-type-id="POSTAL_ADDRESS"
               :edit-mode="editMode"
-              :label="ctmUiLabel('POSTAL_ADDRESS')"
+              :uiLabels="uiLabels"
               :show-more="showMore"
               :purpose-list="purposeListByType.POSTAL_ADDRESS"
               :show-less-list="displayParams.POSTAL_ADDRESS"
@@ -133,7 +140,7 @@
               :contact-mech-list="contactsByType('INTERNAL_PARTYID')"
               contact-mech-type-id="INTERNAL_PARTYID"
               :edit-mode="editMode"
-              :label="ctmUiLabel('INTERNAL_PARTYID')"
+              :uiLabels="uiLabels"
               sel-label="intNote"
               sel-label-add="addintNote"
               :show-more="showMore"
@@ -147,7 +154,7 @@
               :contact-mech-list="contactsByType('WEB_ADDRESS')"
               contact-mech-type-id="WEB_ADDRESS"
               :edit-mode="editMode"
-              :label="ctmUiLabel('WEB_ADDRESS')"
+              :uiLabels="uiLabels"
               sel-label="webAddr"
               sel-label-add="addWebAddr"
               :show-more="showMore"
@@ -161,7 +168,7 @@
               :contact-mech-list="contactsByType('FTP_ADDRESS')"
               contact-mech-type-id="FTP_ADDRESS"
               :edit-mode="editMode"
-              :label="ctmUiLabel('FTP_ADDRESS')"
+              :uiLabels="uiLabels"
               :show-more="showMore"
               :purpose-list="purposeListByType.FTP_ADDRESS"
               :show-less-list="displayParams.FTP_ADDRESS"
@@ -175,9 +182,9 @@
       </v-row>
       <v-row justify="center">
         <v-btn sel-label="Show more" text @click="toggleShowMore" v-if="!showMore && !editMode">{{uiLabel('showAll')}}</v-btn>
-        <v-btn sel-label="Show less" text @click="toggleShowMore" v-if="showMore && !editMode">Show less</v-btn>
-        <v-btn sel-label="Show old" text @click="toggleShowOld" v-if="!showOld && !editMode">Show old</v-btn>
-        <v-btn sel-label="Hide old" text @click="toggleShowOld" v-if="showOld && !editMode">Hide old</v-btn>
+        <v-btn sel-label="Show less" text @click="toggleShowMore" v-if="showMore && !editMode">{{uiLabel('summary')}}</v-btn>
+        <v-btn sel-label="Show old" text @click="toggleShowOld" v-if="!showOld && !editMode">{{ctmUiLabel('showOld')}}</v-btn>
+        <v-btn sel-label="Hide old" text @click="toggleShowOld" v-if="showOld && !editMode">{{ctmUiLabel('hideOld')}}</v-btn>
       </v-row>
     </v-card-text>
   </v-card>
@@ -240,19 +247,6 @@
           "LDAP_ADDRESS": []
         },
         forms: {
-          electronicAddress: {
-            valid: true,
-            fields: {
-              email: '',
-              allowSolicitation: 'N'
-            },
-            rules: {
-              email: [
-                v => !!v || 'E-mail is required',
-                v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
-              ]
-            },
-          },
           postalAddress: {
             valid: true,
             fields: {
@@ -270,15 +264,15 @@
               toName: [],
               attentionName: [],
               addressLine1: [
-                v => !!v || 'Address is required',
+                v => !!v ||  this.uiLabel('required'),
               ],
               addressLine2: [],
               city: [
-                v => !!v || 'City is required',
+                v => !!v || this.uiLabel('required'),
               ],
               stateProvince: [],
               zipPostalCode: [
-                v => !!v || 'Zip/Postal Code is required',
+                v => !!v || this.uiLabel('required'),
               ],
               countryCode: [],
               allowSolicitation: []
@@ -297,7 +291,7 @@
               countryCode: [],
               areaCode: [],
               contactNumber: [
-                v => !!v || 'Contact number is required',
+                v => !!v || this.uiLabel('required'),
               ],
               extension: [],
               allowSolicitation: []
@@ -311,8 +305,8 @@
             },
             rules: {
               emailAddress: [
-                v => !!v || 'E-mail is required',
-                v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
+                v => !!v || this.ctmUiLabel('emailAddressRequired'),
+                v => /.+@.+\..+/.test(v) || this.ctmUiLabel('emailAddressNotFormattedCorrectly'),
               ]
             },
           },
@@ -324,7 +318,7 @@
             },
             rules: {
               ipAddress: [
-                v => !!v || 'Ip address is required',
+                v => !!v || this.uiLabel('required'),
                 v => /.+\..+\..+\..+/.test(v) || 'Ip address must be valid (ex: 124.75.24.66)',
               ]
             },
@@ -337,7 +331,7 @@
             },
             rules: {
               domain: [
-                v => !!v || 'Ip address is required',
+                v => !!v || this.uiLabel('required'),
                 v => /.+\..+/.test(v) || 'Domain must be valid (ex: my-domain.com)',
               ]
             },
@@ -350,7 +344,7 @@
             },
             rules: {
               webAddress: [
-                v => !!v || 'Ip address is required',
+                v => !!v || this.uiLabel('required'),
                 v => /.+\..+/.test(v) || 'Domain must be valid (ex: www.my-example.com)',
               ]
             },
@@ -363,7 +357,7 @@
             },
             rules: {
               internalNote: [
-                v => !!v || 'Ip address is required',
+                v => !!v || this.uiLabel('required'),
               ]
             },
           },
@@ -383,7 +377,7 @@
             },
             rules: {
               hostname: [
-                v => !!v || 'Hostname is required',
+                v => !!v || this.uiLabel('required'),
               ],
               port: [],
               username: [],
@@ -404,7 +398,7 @@
             },
             rules: {
               ldapAddress: [
-                v => !!v || 'LDAP address is required',
+                v => !!v || this.uiLabel('required'),
               ]
             },
           },
@@ -473,6 +467,9 @@
       }),
       partyId() {
         return this.props.partyId
+      },
+      uiLabels() {
+        return this.props.uiLabels
       },
       getContactMechUrl() {
         return this.props.configParams.hasOwnProperty('getContactMechUrl') ? this.props.configParams.getContactMechUrl : ''

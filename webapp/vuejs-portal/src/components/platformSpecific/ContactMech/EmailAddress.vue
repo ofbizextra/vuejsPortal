@@ -3,7 +3,7 @@
     <v-toolbar dark color="primary" flat height="30px" class="ma-0 pa-0">
       <v-icon left>{{getIcon(icon)}}</v-icon>
       <v-toolbar-title>
-        {{label}}
+        {{ctmUiLabel('EMAIL_ADDRESS')}}
       </v-toolbar-title>
       <v-spacer></v-spacer>
       <v-btn v-if="editMode && contactMechList.length === 0" small icon sel-label="addEmailAddr" @click="addContactMech">
@@ -20,7 +20,7 @@
             {{email.contactMech.infoString}}
           </v-list-item-title>
           <v-list-item-title v-if="editMode">
-            <v-text-field hide-details id="emailAddr" label="Email address"
+            <v-text-field hide-details id="emailAddr" :label="ctmUiLabel('EMAIL_ADDRESS')"
                           v-model="email.contactMech.infoString"></v-text-field>
           </v-list-item-title>
           <v-list-item-subtitle v-if="email.partyContactMechPurposes.length > 0 && !editMode">
@@ -33,12 +33,12 @@
           </v-list-item-subtitle>
           <v-list-item-subtitle v-if="thruDate(email)">
             <v-chip class="secondary mr-1 mb-1" x-small>
-              {{'Expired since :  ' + parseDate(email.partyContactMech.thruDate)}}
+              {{ctmUiLabel('effectiveThru') + parseDate(email.partyContactMech.thruDate)}}
             </v-chip>
           </v-list-item-subtitle>
           <v-list-item-subtitle v-if="editMode && purposeList.length > 0">
             <v-select
-                label="purposes"
+                :label="ctmUiLabel('contactPurposes')"
                 v-model="email.purposes"
                 :items="purposeList"
                 multiple
@@ -59,7 +59,7 @@
           <v-list-item-subtitle class="d-flex justify-center">
             <v-btn color="secondary" sel-label="addEmailAddr" @click="addContactMech">
               <v-icon id='mdi-plus-circle' left>{{getIcon('mdi-plus-circle')}}</v-icon>
-              Add email address
+              {{uiLabel('add')}} {{ctmUiLabel('EMAIL_ADDRESS')}}
             </v-btn>
           </v-list-item-subtitle>
         </v-list-item-content>
@@ -74,7 +74,7 @@
 
   export default {
     name: "EmailAddress",
-    props: ['contactMechList', 'editMode', 'icon', 'label', 'contactMechTypeId', 'showMore', 'purposeList', 'showLessList'],
+    props: ['contactMechList', 'editMode', 'icon', 'uiLabels', 'contactMechTypeId', 'showMore', 'purposeList', 'showLessList'],
     computed: {
       ...mapGetters({
         uiLabel: 'ui/uiLabel'
@@ -106,6 +106,9 @@
       },
       uiLabel(id) {
         return this.uiLabel(id)
+      },
+      ctmUiLabel(label) {
+        return this.uiLabels.hasOwnProperty(label) ? this.uiLabels[label] : label
       },
       getPurposeDescription(contactMechPurposeTypeId) {
         return this.purposeList.filter(purpose => purpose.contactMechPurposeTypeId === contactMechPurposeTypeId)[0].description

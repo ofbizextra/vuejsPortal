@@ -3,7 +3,7 @@
     <v-toolbar dark color="primary" flat height="30px" class="ma-0 pa-0">
       <v-icon left>{{getIcon(icon)}}</v-icon>
       <v-toolbar-title>
-        {{label}}
+        {{ctmUiLabel('TELECOM_NUMBER')}}
       </v-toolbar-title>
       <v-spacer></v-spacer>
       <v-btn v-if="editMode && contactMechList.length === 0" small icon sel-label="addTelecomNumber" @click="addContactMech">
@@ -23,11 +23,11 @@
           <v-list-item-title v-if="editMode">
             <v-row class="ma-0 pa-0">
               <v-col class="col-3 ma-0 pa-0">
-                <v-text-field class="ignore-css" hide-details id="countryCode" label="Country code"
+                <v-text-field class="ignore-css" hide-details id="countryCode" :label="ctmUiLabel('countryCode')"
                               v-model="phoneNumber.telecomNumber.countryCode"></v-text-field>
               </v-col>
               <v-col class="col-9 ma-0 pa-0">
-                <v-text-field class="ignore-css" hide-details id="number" label="Number"
+                <v-text-field class="ignore-css" hide-details id="number" :label="ctmUiLabel('phoneNumber')"
                               v-model="phoneNumber.telecomNumber.contactNumber"></v-text-field>
               </v-col>
             </v-row>
@@ -42,12 +42,12 @@
           </v-list-item-subtitle>
           <v-list-item-subtitle v-if="thruDate(phoneNumber)">
             <v-chip class="secondary mr-1 mb-1" x-small>
-              {{'Expired since :  ' + parseDate(phoneNumber.partyContactMech.thruDate)}}
+              {{ctmUiLabel('effectiveThru') + parseDate(phoneNumber.partyContactMech.thruDate)}}
             </v-chip>
           </v-list-item-subtitle>
           <v-list-item-subtitle v-if="editMode && purposeList.length > 0">
             <v-select
-                label="purposes"
+                :label="ctmUiLabel('contactPurposes')"
                 v-model="phoneNumber.purposes"
                 :items="purposeList"
                 multiple
@@ -58,7 +58,7 @@
           <v-list-item-subtitle v-if="editMode" class="d-flex flex-row-reverse">
             <v-btn @click="removeContactMech(phoneNumber)" color="error">
               <v-icon id='mdi-delete' >{{getIcon('mdi-delete')}}</v-icon>
-              expire
+              {{uiLabel('expire')}}
             </v-btn>
           </v-list-item-subtitle>
         </v-list-item-content>
@@ -68,7 +68,7 @@
           <v-list-item-subtitle  class="d-flex justify-center">
             <v-btn color="secondary" sel-label="addTelecomNumber" @click="addContactMech">
               <v-icon id='mdi-plus-circle' left>{{getIcon('mdi-plus-circle')}}</v-icon>
-              Add telecom number
+              {{uiLabel('add')}} {{ctmUiLabel('TELECOM_NUMBER')}}
             </v-btn>
           </v-list-item-subtitle>
         </v-list-item-content>
@@ -79,11 +79,15 @@
 
 <script>
   import icons from '../../../js/icons'
+  import {mapGetters} from 'vuex'
 
   export default {
     name: "TelecomNumber",
-    props: ['contactMechList', 'editMode', 'icon', 'label', 'contactMechTypeId', 'showMore', 'purposeList', 'showLessList'],
+    props: ['contactMechList', 'editMode', 'icon', 'uiLabels', 'contactMechTypeId', 'showMore', 'purposeList', 'showLessList'],
     computed: {
+      ...mapGetters({
+        commonUiLabel: 'ui/uiLabel'
+      }),
       filteredContactMechList() {
         if (this.showLessList.mode === 'never') {
           return []
@@ -108,6 +112,12 @@
       },
       getIcon(icon) {
         return icons.hasOwnProperty(icon) ? icons[icon] : null
+      },
+      uiLabel(label){
+          return this.commonUiLabel(label)
+      },
+      ctmUiLabel(label) {
+        return this.uiLabels.hasOwnProperty(label) ? this.uiLabels[label] : label
       },
       display(phoneNumber) {
         return `${phoneNumber.telecomNumber.countryCode || ''} ${phoneNumber.telecomNumber.areaCode || ''}

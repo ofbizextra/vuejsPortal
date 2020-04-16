@@ -3,7 +3,7 @@
     <v-toolbar dark color="primary" flat height="30px" class="ma-0 pa-0">
       <v-icon left>{{getIcon(icon)}}</v-icon>
       <v-toolbar-title>
-        {{label}}
+        {{ctmUiLabel('FTP_ADDRESS')}}
       </v-toolbar-title>
       <v-spacer></v-spacer>
       <v-btn v-if="editMode && contactMechList.length === 0" small icon sel-label="addFtpAddr" @click="addContactMech">
@@ -48,51 +48,56 @@
           </v-list-item-subtitle>
           <v-list-item-subtitle v-if="ftpAddress.partyContactMech.hasOwnProperty('thruDate') && ftpAddress.partyContactMech.thruDate">
             <v-chip class="secondary mr-1 mb-1" x-small>
-              {{'Expired since :  ' + parseDate(ftpAddress.partyContactMech.thruDate)}}
+              {{ctmUiLabel('effectiveThru') + parseDate(ftpAddress.partyContactMech.thruDate)}}
             </v-chip>
           </v-list-item-subtitle>
         </v-list-item-content>
         <v-list-item-content v-if="editMode">
           <v-form class="ml-3" :lazy-validator="lazy">
             <v-row class="ma-0 pa-0">
-              <v-text-field hide-details id="hostname" label="Host name" class="mr-4"
+              <v-tooltip top>
+                <template v-slot:activator="{ on }">
+                  <v-text-field hide-details id="hostname" v-on="on" :label="ctmUiLabel('hostname')" class="mr-4"
                             :rules="rules.hostname"
                             v-model="ftpAddress.ftpAddress.hostname"></v-text-field>
-              <v-text-field hide-details id="port" label="Port" class="" :rules="rules.port"
+                </template>
+                <span>{{ctmUiLabel('hostnameMustContainProtocol')}} (ftp://, sftp://, ftps://...)</span>
+              </v-tooltip>
+              <v-text-field hide-details id="port" :label="ctmUiLabel('port')" class="" :rules="rules.port"
                             v-model="ftpAddress.ftpAddress.port"></v-text-field>
             </v-row>
             <v-row class="ma-0 pa-0">
-              <v-text-field hide-details id="username" label="User Name" class="mr-4"
+              <v-text-field hide-details id="username" :label="ctmUiLabel('username')" class="mr-4"
                             :rules="rules.username"
                             v-model="ftpAddress.ftpAddress.username"></v-text-field>
-              <v-text-field hide-details id="ftpPassword" label="Password"
+              <v-text-field hide-details id="ftpPassword" :label="ctmUiLabel('password')"
                             :rules="rules.ftpPassword"
                             v-model="ftpAddress.ftpAddress.ftpPassword"></v-text-field>
             </v-row>
             <v-row class="ma-0 pa-0">
-              <v-text-field hide-details id="filePath" label="Path" class="mr-4"
+              <v-text-field hide-details id="filePath" :label="ctmUiLabel('path')" class="mr-4"
                             :rules="rules.filePath"
                             v-model="ftpAddress.ftpAddress.filePath"></v-text-field>
-              <v-text-field hide-details id="defaultTimeout" label="Path default timeout" class=""
+              <v-text-field hide-details id="defaultTimeout" :label="ctmUiLabel('defaultTimeout')" class=""
                             :rules="rules.defaultTimeout"
                             v-model="ftpAddress.ftpAddress.defaultTimeout"></v-text-field>
             </v-row>
             <v-row class="ma-0 pa-0">
-              <v-checkbox class="ma-0 mr-1" id="binaryTransfer" label="Binary Transfert" trueValue="Y"
+              <v-checkbox class="ma-0 mr-1" id="binaryTransfer" :label="ctmUiLabel('binaryTransfer')" trueValue="Y"
                           falseValue="N"
                           :rules="rules.binaryTransfer"
                           v-model="ftpAddress.ftpAddress.binaryTransfer"></v-checkbox>
-              <v-checkbox class="ma-0 mr-1" id="zipFile" label="File compression" trueValue="Y" falseValue="N"
+              <v-checkbox class="ma-0 mr-1" id="zipFile" :label="ctmUiLabel('zipFile')" trueValue="Y" falseValue="N"
                           :rules="rules.zipFile"
                           v-model="ftpAddress.ftpAddress.zipFile"></v-checkbox>
-              <v-checkbox class="ma-0 mr-1" id="passiveMode" label="Passive mode" trueValue="Y" falseValue="N"
+              <v-checkbox class="ma-0 mr-1" id="passiveMode" :label="ctmUiLabel('passiveMode')" trueValue="Y" falseValue="N"
                           :rules="rules.passiveMode"
                           v-model="ftpAddress.ftpAddress.passiveMode"></v-checkbox>
             </v-row>
           </v-form>
           <v-list-item-subtitle v-if="editMode && purposeList.length > 0">
             <v-select
-                label="purposes"
+                :label="ctmUiLabel('contactPurposes')"
                 v-model="ftpAddress.purposes"
                 :items="purposeList"
                 multiple
@@ -103,7 +108,7 @@
           <v-list-item-subtitle v-if="editMode" class="d-flex flex-row-reverse">
             <v-btn @click="removeContactMech(ftpAddress)" color="error">
               <v-icon id='mdi-delete'>{{getIcon('mdi-delete')}}</v-icon>
-              expire
+              {{uiLabel('expire')}}
             </v-btn>
           </v-list-item-subtitle>
         </v-list-item-content>
@@ -113,7 +118,7 @@
           <v-list-item-subtitle  class="d-flex justify-center">
             <v-btn color="secondary" sel-label="addFtpAddr" @click="addContactMech">
               <v-icon left>{{getIcon('mdi-plus-circle')}}</v-icon>
-              Add {{label}}
+              {{uiLabel('add')}} {{ctmUiLabel('FTP_ADDRESS')}}
             </v-btn>
           </v-list-item-subtitle>
         </v-list-item-content>
@@ -124,11 +129,15 @@
 
 <script>
   import icons from '../../../js/icons'
+  import {mapGetters} from 'vuex'
 
   export default {
     name: "FtpAddress",
-    props: ['contactMechList', 'editMode', 'icon', 'label', 'contactMechTypeId', 'showMore', 'purposeList', 'rules', 'lazy', 'showLessList'],
+    props: ['contactMechList', 'editMode', 'icon', 'uiLabels', 'contactMechTypeId', 'showMore', 'purposeList', 'rules', 'lazy', 'showLessList'],
     computed: {
+      ...mapGetters({
+        commonUiLabel: 'ui/uiLabel'
+      }),
       filteredContactMechList() {
         if (this.showLessList.mode === 'never') {
           return []
@@ -153,6 +162,12 @@
       },
       getIcon(icon) {
         return icons.hasOwnProperty(icon) ? icons[icon] : null
+      },
+      uiLabel(label){
+          return this.commonUiLabel(label)
+      },
+      ctmUiLabel(label) {
+        return this.uiLabels.hasOwnProperty(label) ? this.uiLabels[label] : label
       },
       getPurposeDescription(contactMechPurposeTypeId) {
         return this.purposeList.filter(purpose => purpose.contactMechPurposeTypeId === contactMechPurposeTypeId)[0].description

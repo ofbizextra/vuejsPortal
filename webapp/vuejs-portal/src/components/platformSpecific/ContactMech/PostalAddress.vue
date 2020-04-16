@@ -3,7 +3,7 @@
     <v-toolbar dark color="primary" flat height="30px" class="ma-0 pa-0">
       <v-icon left>{{getIcon(icon)}}</v-icon>
       <v-toolbar-title>
-        {{label}}
+        {{ctmUiLabel('POSTAL_ADDRESS')}}
       </v-toolbar-title>
       <v-spacer></v-spacer>
       <v-btn v-if="editMode && contactMechList.length === 0" small icon sel-label="addPostalAddr" @click="addContactMech">
@@ -38,41 +38,39 @@
           </v-list-item-subtitle>
           <v-list-item-subtitle v-if="postalAddress.partyContactMech.hasOwnProperty('thruDate') && postalAddress.partyContactMech.thruDate">
             <v-chip class="secondary mr-1 mb-1" x-small>
-              {{'Expired since :  ' + parseDate(postalAddress.partyContactMech.thruDate)}}
+              {{ctmUiLabel('effectiveThru') + parseDate(postalAddress.partyContactMech.thruDate)}}
             </v-chip>
           </v-list-item-subtitle>
         </v-list-item-content>
         <v-list-item-content v-if="editMode">
           <v-form :lazy-validator="lazy">
               <v-row class="ma-0 pa-0">
-                <v-text-field hide-details id="toName" label="To Name"
+                <v-text-field hide-details id="toName" :label="ctmUiLabel('toName')"
                               :rules="rules.toName"
                               v-model="postalAddress.postalAddress.toName" class="mr-4"></v-text-field>
-                <v-text-field hide-details id="attentionName" label="Attention Name"
+                <v-text-field hide-details id="attentionName" :label="ctmUiLabel('attentionName')"
                               :rules="rules.attentionName"
                               v-model="postalAddress.postalAddress.attnName"></v-text-field>
               </v-row>
               <v-row class="ma-0 pa-0">
-                <v-text-field hide-details id="addressLine1" label="Address Line 1 *"
+                <v-text-field hide-details id="addressLine1" :label="addressLine1"
                               :rules="rules.addressLine1"
                               v-model="postalAddress.postalAddress.address1"></v-text-field>
-              </v-row>
-              <v-row class="ma-0 pa-0">
-                <v-text-field hide-details id="addressLine2" label="Address Line 2"
+                <v-text-field hide-details id="addressLine2" :label="ctmUiLabel('addressLine2')"
                               :rules="rules.addressLine2"
                               v-model="postalAddress.postalAddress.address2"></v-text-field>
               </v-row>
               <v-row class="ma-0 pa-0">
-                <v-text-field hide-details id="city" label="City *"
+                <v-text-field hide-details id="city" :label="city"
                               v-model="postalAddress.postalAddress.city"
                               :rules="rules.city" class="mr-4"></v-text-field>
-                <v-text-field hide-details id="zipPostalCode" label="Zip/Postal Code *"
+                <v-text-field hide-details id="zipPostalCode" :label="zipCode"
                               v-model="postalAddress.postalAddress.postalCode"
                               :rules="rules.zipPostalCode" class="mr-4"></v-text-field>
               </v-row>
               <v-list-item-subtitle v-if="editMode && purposeList.length > 0">
                 <v-select
-                    label="purposes"
+                    :label="ctmUiLabel('contactPurposes')"
                     v-model="postalAddress.purposes"
                     :items="purposeList"
                     multiple
@@ -83,7 +81,7 @@
               <v-list-item-subtitle v-if="editMode" class="d-flex flex-row-reverse">
                 <v-btn @click="removeContactMech(postalAddress)" color="error">
                   <v-icon id='mdi-delete'>{{getIcon('mdi-delete')}}</v-icon>
-                  expire
+                  {{uiLabel('expire')}}
                 </v-btn>
               </v-list-item-subtitle>
           </v-form>
@@ -94,7 +92,7 @@
           <v-list-item-subtitle class="d-flex justify-center">
             <v-btn color="secondary" sel-label="addPostalAddr" @click="addContactMech">
               <v-icon id='mdi-plus-circle' left>{{getIcon('mdi-plus-circle')}}</v-icon>
-              Add postal address
+              {{uiLabel('add')}} {{ctmUiLabel('POSTAL_ADDRESS')}}
             </v-btn>
           </v-list-item-subtitle>
         </v-list-item-content>
@@ -105,11 +103,15 @@
 
 <script>
   import icons from '../../../js/icons'
+  import {mapGetters} from 'vuex'
 
   export default {
     name: "PostalAddress",
-    props: ['contactMechList', 'editMode', 'icon', 'label', 'contactMechTypeId', 'showMore', 'purposeList', 'rules', 'lazy', 'showLessList'],
+    props: ['contactMechList', 'editMode', 'icon', 'uiLabels', 'contactMechTypeId', 'showMore', 'purposeList', 'rules', 'lazy', 'showLessList'],
     computed: {
+      ...mapGetters({
+        commonUiLabel: 'ui/uiLabel'
+      }),
       filteredContactMechList() {
         if (this.showLessList.mode === 'never') {
           return []
@@ -123,6 +125,15 @@
       },
       mustBeDisplayed() {
         return (this.editMode && this.showLessList.mode !== 'never') || this.filteredContactMechList.length > 0
+      },
+      addressLine1(){
+          return this.ctmUiLabel('addressLine1') + " *"
+      },
+      city(){
+          return this.ctmUiLabel('city') + " *"
+      },
+      zipCode(){
+          return this.ctmUiLabel('zipCode') + " *"
       }
     },
     methods: {
@@ -134,6 +145,12 @@
       },
       getIcon(icon) {
         return icons.hasOwnProperty(icon) ? icons[icon] : null
+      },
+      uiLabel(label){
+          return this.commonUiLabel(label)
+      },
+      ctmUiLabel(label) {
+        return this.uiLabels.hasOwnProperty(label) ? this.uiLabels[label] : label
       },
       getPurposeDescription(contactMechPurposeTypeId) {
         return this.purposeList.filter(purpose => purpose.contactMechPurposeTypeId === contactMechPurposeTypeId)[0].description

@@ -22,16 +22,25 @@ import org.apache.ofbiz.base.util.Debug
 
 uiLabelMap = UtilProperties.getResourceBundleMap("CommonUiLabels", locale)
 
-//Debug.logInfo("DEBUG request: ${request}", "FindContactMechPuroseType.groovy")
 vuejsUiLabel = [:]
+vuejsUiLabel.add             = uiLabelMap.CommonAdd
 vuejsUiLabel.cancel          = uiLabelMap.CommonCancel
+vuejsUiLabel.cancelAll       = uiLabelMap.CommonCancelAll
 vuejsUiLabel.collapseToolTip = uiLabelMap["CommonCollapse"] // screenletCollapse
+vuejsUiLabel.confirmButton   = uiLabelMap.FormFieldTitle_confirmButton
+vuejsUiLabel.confirmDelete   = uiLabelMap.CommonConfirmDelete
 vuejsUiLabel.date            = uiLabelMap.CommonDate
 
-vuejsUiLabel.expandToolTip   = uiLabelMap["CommonExpand"]   // screenletExpand
+vuejsUiLabel.expandToolTip   = uiLabelMap.CommonExpand      // screenletExpand
 vuejsUiLabel.expire          = uiLabelMap.CommonExpire
-vuejsUiLabel.ofLabel         = uiLabelMap["CommonOf"]       // pagination
+//FormFieldTitle_expireButton
+vuejsUiLabel.ofLabel         = uiLabelMap.CommonOf          // pagination CommonRequired
+vuejsUiLabel.required        = uiLabelMap.CommonRequired
 vuejsUiLabel.showAll         = uiLabelMap.CommonShowAll
+vuejsUiLabel.summary         = uiLabelMap.CommonSummary
 vuejsUiLabel.time            = uiLabelMap.CommonTime
 request.setAttribute("commonUiLabels", vuejsUiLabel)
 return "success"
+
+//<set field="uiLabels.CommonCreate" value="${uiLabelMap.CommonCreate}"/>
+
