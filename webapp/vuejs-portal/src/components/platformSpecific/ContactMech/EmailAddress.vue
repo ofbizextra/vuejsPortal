@@ -33,7 +33,7 @@
           </v-list-item-subtitle>
           <v-list-item-subtitle v-if="thruDate(email)">
             <v-chip class="secondary mr-1 mb-1" x-small>
-              {{ctmUiLabel('effectiveThru') + parseDate(email.partyContactMech.thruDate)}}
+              {{ctmUiLabel('effectiveThru')}}  {{parseDate(email.partyContactMech.thruDate)}}
             </v-chip>
           </v-list-item-subtitle>
           <v-list-item-subtitle v-if="editMode && purposeList.length > 0">

@@ -48,7 +48,7 @@
           </v-list-item-subtitle>
           <v-list-item-subtitle v-if="ftpAddress.partyContactMech.hasOwnProperty('thruDate') && ftpAddress.partyContactMech.thruDate">
             <v-chip class="secondary mr-1 mb-1" x-small>
-              {{ctmUiLabel('effectiveThru') + parseDate(ftpAddress.partyContactMech.thruDate)}}
+              {{ctmUiLabel('effectiveThru')}}  {{parseDate(ftpAddress.partyContactMech.thruDate)}}
             </v-chip>
           </v-list-item-subtitle>
         </v-list-item-content>

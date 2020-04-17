@@ -1,4 +1,4 @@
-// todo compare size and description.size and tronque
+// TODO compare size and description.size and tronque
 <template>
   <div id="vue-display-field">
     <table v-if="fieldTitle">
