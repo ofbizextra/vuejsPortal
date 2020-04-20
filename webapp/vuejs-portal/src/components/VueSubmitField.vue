@@ -98,7 +98,7 @@
               }, 0)
             })
           case 'submit':
-            return this.submit()
+            return this.submit(updateArea)
           default:
             return new Promise((resolve) => {
               setTimeout(() => {
@@ -134,7 +134,17 @@
           params: (updateArea.hasOwnProperty('parameterMap') && Object.keys(updateArea.parameterMap).length > 0) ? updateArea.parameterMap : this.form
         })
       },
-      submit() {
+      submit(updateArea) {
+        if (updateArea.areaTarget === 'put') {
+          let uri = this.getDataFromForm({formId: this.props.attributes.formName, key: 'linkUrl'})
+          let regexKey = /{(\w+)}/
+          let regexReplace = /{\w+}/
+          uri = uri.replace(regexReplace, this.form[regexKey.exec(uri)[1]])
+          return this.$store.dispatch('backOfficeApi/doPut', {
+            uri: uri,
+            params: this.form
+          })
+        }
         return this.$store.dispatch('backOfficeApi/doPost', {
           uri: this.getDataFromForm({formId: this.props.attributes.formName, key: 'linkUrl'}),
           params: this.form
