@@ -616,13 +616,14 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         // All not-manage attributes
         // First attribute alert and className generate only a warning
         this.addAlertAndClass(cb, modelFormField, context);
+        //if (dropDownField.getAllowEmpty()) cb.put("allowEmpty", "Y"); TODO test what is manage
         //Second, list of attributes which generate error if present because not manage and should be.
         String noCurrentSelectedKey = dropDownField.getNoCurrentSelectedKey(context);
         String event = modelFormField.getEvent();
         String action = modelFormField.getAction(context);
         String tabindex = modelFormField.getTabindex();
         String conditionGroup = modelFormField.getConditionGroup();
-       if (dropDownField.getAllowEmpty() || dropDownField.getAllowMultiple()
+       if ( dropDownField.getAllowMultiple()
                      || UtilValidate.isNotEmpty(noCurrentSelectedKey)
                      || ! "selected".equals(dropDownField.getCurrent())
                      || dropDownField.getOtherFieldSize() > 0
@@ -632,7 +633,6 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
                      || UtilValidate.isNotEmpty(tabindex) || UtilValidate.isNotEmpty(conditionGroup)) {
 
             if (UtilValidate.isNotEmpty(noCurrentSelectedKey)) cb.put("noCurrentSelectedKey", noCurrentSelectedKey);
-            if (dropDownField.getAllowEmpty()) cb.put("allowEmpty", "Y");
             if (dropDownField.getAllowMultiple()) cb.put("multiple", "multiple");
             if (! "selected".equals(dropDownField.getCurrent())) cb.put("dDFCurrent", dropDownField.getCurrent());
             if (UtilValidate.isNotEmpty(currentValue) && "first-in-list".equals(dropDownField.getCurrent())) {
@@ -645,10 +645,9 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
             if (UtilValidate.isNotEmpty(action))             cb.put("action", action);
             if (UtilValidate.isNotEmpty(tabindex))           cb.put("tabindex", tabindex);
             if (UtilValidate.isNotEmpty(conditionGroup))     cb.put("conditionGroup", conditionGroup);
-            throw new IOException("FrontJsRender: a attribute is not yet implemented for date-time-field name=" + name
+            throw new IOException("FrontJsRender: a attribute is not yet implemented for drop-down-field name=" + name
                     + " in form for form name=" + modelFormField.getModelForm().getName()
-                    + " attribute is one of : allow-empty("+dropDownField.getAllowEmpty()
-                    + "), noCurrentSelectedKey("+noCurrentSelectedKey
+                    + " attribute is one of : noCurrentSelectedKey("+noCurrentSelectedKey
                     + "), allow-multiple("+dropDownField.getAllowMultiple()
                     + "), current("+dropDownField.getCurrent()
                     + "), size("+dropDownField.getSize()
