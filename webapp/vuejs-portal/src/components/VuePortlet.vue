@@ -44,7 +44,10 @@
         return this.props.hasOwnProperty('children') ? this.props.children : []
       },
       getParams() {
-        return this.$store.getters['data/watcher'](this.watcherName)
+        if (this.watcherName) {
+          return this.$store.getters['data/watcher'](this.watcherName)
+        }
+        return {}
       },
       isPosted() {
         return this.props.hasOwnProperty('attributes')
