@@ -3,14 +3,14 @@
     <v-toolbar tile dark color="primary" dense flat v-if="!editMode" class="ma-0 pa-0 screenlet-title-bar">
       <v-toolbar-title class="title">{{ctmUiLabel('contactMechTitle')}} "{{this.props.partyId}}"</v-toolbar-title>
       <div class="flex-grow-1"></div>
-      <v-btn icon @click="toggleEdit">
-        <v-tooltip bottom>
-          <template v-slot:activator="{ on }">
+      <v-tooltip bottom>
+        <template v-slot:activator="{ on }">
+          <v-btn icon @click="toggleEdit">
             <v-icon v-on="on" id='mdi-pencil'>{{getIcon('mdi-pencil')}}</v-icon>
-          </template>
-          <span>{{ctmUiLabel('EditContactMech')}}</span>
-        </v-tooltip>
-      </v-btn>
+          </v-btn>
+        </template>
+        <span>{{ctmUiLabel('EditContactMech')}}</span>
+      </v-tooltip>
     </v-toolbar>
     <v-toolbar tile dark color="primary" dense flat v-if="editMode" class="ma-0 pa-0">
       <v-btn icon @click="toggleEdit">
@@ -181,10 +181,14 @@
         </v-col>
       </v-row>
       <v-row justify="center">
-        <v-btn sel-label="Show more" text @click="toggleShowMore" v-if="!showMore && !editMode">{{uiLabel('showAll')}}</v-btn>
-        <v-btn sel-label="Show less" text @click="toggleShowMore" v-if="showMore && !editMode">{{uiLabel('summary')}}</v-btn>
-        <v-btn sel-label="Show old" text @click="toggleShowOld" v-if="!showOld && !editMode">{{ctmUiLabel('showOld')}}</v-btn>
-        <v-btn sel-label="Hide old" text @click="toggleShowOld" v-if="showOld && !editMode">{{ctmUiLabel('hideOld')}}</v-btn>
+        <v-btn sel-label="Show more" text @click="toggleShowMore" v-if="!showMore && !editMode">{{uiLabel('showAll')}}
+        </v-btn>
+        <v-btn sel-label="Show less" text @click="toggleShowMore" v-if="showMore && !editMode">{{uiLabel('summary')}}
+        </v-btn>
+        <v-btn sel-label="Show old" text @click="toggleShowOld" v-if="!showOld && !editMode">{{ctmUiLabel('showOld')}}
+        </v-btn>
+        <v-btn sel-label="Hide old" text @click="toggleShowOld" v-if="showOld && !editMode">{{ctmUiLabel('hideOld')}}
+        </v-btn>
       </v-row>
     </v-card-text>
   </v-card>
@@ -264,7 +268,7 @@
               toName: [],
               attentionName: [],
               addressLine1: [
-                v => !!v ||  this.uiLabel('required'),
+                v => !!v || this.uiLabel('required'),
               ],
               addressLine2: [],
               city: [
