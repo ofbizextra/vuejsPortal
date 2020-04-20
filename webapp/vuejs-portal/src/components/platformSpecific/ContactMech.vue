@@ -525,7 +525,15 @@
     },
     methods: {
       contactsByType(type) {
-        return this.dataSet.hasOwnProperty('valueMaps') ? [...this.dataSet.valueMaps, ...this.toCreate].filter(contact => contact.contactMech.contactMechTypeId === type) : []
+        return this.dataSet.hasOwnProperty('valueMaps') ? [...this.dataSet.valueMaps, ...this.toCreate].filter(contact => contact.contactMech.contactMechTypeId === type).sort((a, b) => {
+          if (a.contactMech.contactMechId < b.contactMech.contactMechId) {
+            return -1
+          }
+          if (a.contactMech.contactMechId > b.contactMech.contactMechId) {
+            return 1
+          }
+          return 0
+        }) : []
       },
       countContactsByType(type) {
         return this.dataSet.hasOwnProperty('valueMaps') ? this.dataSet.valueMaps.filter(contact => contact.contactMech.contactMechTypeId === type).length : []
