@@ -530,19 +530,14 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         }
     }
 
- // OHE point of review, to be continue
-    public void renderDropDownField(Appendable writer, Map<String, Object> context, DropDownField dropDownField) {
-        String fieldName = null;
-        String fieldValue = null;
+    public void renderDropDownField(Appendable writer, Map<String, Object> context, DropDownField dropDownField) throws IOException {
         ModelFormField modelFormField = dropDownField.getModelFormField();
         ModelForm modelForm = modelFormField.getModelForm();
+        String id = modelFormField.getCurrentContainerId(context);
+        String name = modelFormField.getName();
+        String formName = modelForm.getName();
         String currentValue = modelFormField.getEntry(context);
-        String conditionGroup = modelFormField.getConditionGroup();
         List<OptionValue> allOptionValues = dropDownField.getAllOptionValues(context, WidgetWorker.getDelegator(context));
-        AutoComplete autoComplete = dropDownField.getAutoComplete();
-        String event = modelFormField.getEvent();
-        String action = modelFormField.getAction(context);
-        Boolean requiredField = modelFormField.getRequiredField();
         Integer textSize = 0;
         if (UtilValidate.isNotEmpty(dropDownField.getTextSize())) {
             try {
@@ -554,39 +549,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
                 currentValue = currentValue.substring(0, textSize - 8) + "..." + currentValue.substring(currentValue.length() - 5);
             }
         }
-        boolean ajaxEnabled = autoComplete != null && this.javaScriptEnabled;
-        String className = "";
-        String alert = "false";
-        String name = modelFormField.getName();
-        String id = modelFormField.getCurrentContainerId(context);
-        String multiple = dropDownField.getAllowMultiple() ? "multiple" : "";
-        String otherFieldName = "";
-        String formName = modelForm.getName();
-        String size = dropDownField.getSize();
-        String dDFCurrent = dropDownField.getCurrent();
-        String firstInList = "";
         String explicitDescription;
-        String allowEmpty = "";
-        List<Map<String, String>> options = new ArrayList<>();
-        StringBuilder ajaxOptions = new StringBuilder();
-        if (UtilValidate.isNotEmpty(modelFormField.getWidgetStyle())) {
-            className = modelFormField.getWidgetStyle();
-            if (modelFormField.shouldBeRed(context)) {
-                alert = "true";
-            }
-        }
-        //check for required field style on single forms
-        if ("single".equals(modelFormField.getModelForm().getType()) && modelFormField.getRequiredField()) {
-            String requiredStyle = modelFormField.getRequiredFieldStyle();
-            if (UtilValidate.isEmpty(requiredStyle)) {
-                requiredStyle = "required";
-            }
-            if (UtilValidate.isEmpty(className)) {
-                className = requiredStyle;
-            } else {
-                className = requiredStyle + " " + className;
-            }
-        }
         String currentDescription = null;
         if (UtilValidate.isNotEmpty(currentValue)) {
             for (OptionValue optionValue : allOptionValues) {
@@ -596,14 +559,6 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
                 }
             }
         }
-        int otherFieldSize = dropDownField.getOtherFieldSize();
-        if (otherFieldSize > 0) {
-            otherFieldName = dropDownField.getParameterNameOther(context);
-        }
-        // if the current value should go first, stick it in
-        if (UtilValidate.isNotEmpty(currentValue) && "first-in-list".equals(dropDownField.getCurrent())) {
-            firstInList = "first-in-list";
-        }
         explicitDescription = (currentDescription != null ? currentDescription : dropDownField.getCurrentDescription(context));
         if (UtilValidate.isEmpty(explicitDescription)) {
             explicitDescription = (FieldInfoWithOptions.getDescriptionForOptionKey(currentValue, allOptionValues));
@@ -612,10 +567,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
             explicitDescription = explicitDescription.substring(0, textSize - 8) + "..." + explicitDescription.substring(explicitDescription.length() - 5);
         }
         explicitDescription = encode(explicitDescription, modelFormField, context);
-        // if allow empty is true, add an empty option
-        if (dropDownField.getAllowEmpty()) {
-            allowEmpty = "Y";
-        }
+        /* allow-multiple is not yet manage, currently generate an error message
         List<String> currentValueList = null;
         if (UtilValidate.isNotEmpty(currentValue) && dropDownField.getAllowMultiple()) {
             // If currentValue is Array, it will start with [
@@ -624,10 +576,10 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
             } else {
                 currentValueList = UtilMisc.toList(currentValue);
             }
-        }
+        }*/
 
+        List<Map<String, String>> options = new ArrayList<>();
         Iterator<OptionValue> optionValueIter = allOptionValues.iterator();
-        int count = 0;
         while (optionValueIter.hasNext()) {
             OptionValue optionValue = optionValueIter.next();
 
@@ -639,12 +591,83 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
                 description = description.substring(0, textSize - 8) + "..." + description.substring(description.length() - 5);
             }
             option.put("description", encode(description.replaceAll("'", "\\\\\'"), modelFormField, context));  // replaceAll("'", "\\\\\'") related to OFBIZ-6504
-
+            /* allow-multiple is not yet manage, currently generate an error message
             if (UtilValidate.isNotEmpty(currentValueList)) {
                 option.put("selected", "selected");
             }
-
+            */
             options.add(option);
+        }
+
+        Map<String, Object> cb = new HashMap<>();
+        if ("single".equals(modelFormField.getModelForm().getType())) this.addTitle(cb, modelFormField, context);
+        this.addAsterisks(cb, context, modelFormField);
+        cb.put("name", name);
+        cb.put("formName", formName);
+        cb.put("id", id);
+        cb.put("currentValue", currentValue);
+        cb.put("options", options);
+        this.appendTooltip(cb, context, modelFormField);
+        this.output.putScreen("DropDownField", cb, name, explicitDescription);
+
+        // not used by Vue.Js, but seems to be usable !
+        cb.put("explicitDescription", explicitDescription);
+
+        // All not-manage attributes
+        // First attribute alert and className generate only a warning
+        this.addAlertAndClass(cb, modelFormField, context);
+        //Second, list of attributes which generate error if present because not manage and should be.
+        String noCurrentSelectedKey = dropDownField.getNoCurrentSelectedKey(context);
+        String event = modelFormField.getEvent();
+        String action = modelFormField.getAction(context);
+        String tabindex = modelFormField.getTabindex();
+        String conditionGroup = modelFormField.getConditionGroup();
+       if (dropDownField.getAllowEmpty() || dropDownField.getAllowMultiple()
+                     || UtilValidate.isNotEmpty(noCurrentSelectedKey)
+                     || ! "selected".equals(dropDownField.getCurrent())
+                     || dropDownField.getOtherFieldSize() > 0
+                     || ! "1".equals(dropDownField.getSize())
+                     || dropDownField.getAutoComplete() != null
+                     || UtilValidate.isNotEmpty(event) || UtilValidate.isNotEmpty(action)
+                     || UtilValidate.isNotEmpty(tabindex) || UtilValidate.isNotEmpty(conditionGroup)) {
+
+            if (UtilValidate.isNotEmpty(noCurrentSelectedKey)) cb.put("noCurrentSelectedKey", noCurrentSelectedKey);
+            if (dropDownField.getAllowEmpty()) cb.put("allowEmpty", "Y");
+            if (dropDownField.getAllowMultiple()) cb.put("multiple", "multiple");
+            if (! "selected".equals(dropDownField.getCurrent())) cb.put("dDFCurrent", dropDownField.getCurrent());
+            if (UtilValidate.isNotEmpty(currentValue) && "first-in-list".equals(dropDownField.getCurrent())) {
+                cb.put("firstInList", "first-in-list"); // if the current value should go first, stick it in
+            }
+            if (! "1".equals(dropDownField.getSize())) cb.put("size", dropDownField.getSize());
+            // for autocomplete see the commented code just after
+            // for otherFieldSize see the commented code just after
+            if (UtilValidate.isNotEmpty(event))              cb.put("event", event);
+            if (UtilValidate.isNotEmpty(action))             cb.put("action", action);
+            if (UtilValidate.isNotEmpty(tabindex))           cb.put("tabindex", tabindex);
+            if (UtilValidate.isNotEmpty(conditionGroup))     cb.put("conditionGroup", conditionGroup);
+            throw new IOException("FrontJsRender: a attribute is not yet implemented for date-time-field name=" + name
+                    + " in form for form name=" + modelFormField.getModelForm().getName()
+                    + " attribute is one of : allow-empty("+dropDownField.getAllowEmpty()
+                    + "), noCurrentSelectedKey("+noCurrentSelectedKey
+                    + "), allow-multiple("+dropDownField.getAllowMultiple()
+                    + "), current("+dropDownField.getCurrent()
+                    + "), size("+dropDownField.getSize()
+                    + "), other-field-size("+dropDownField.getOtherFieldSize()
+                    + "), auto-complete("+dropDownField.getAutoComplete()
+                    + "), event("+event + "), action("+action
+                    + "), tabindex("+tabindex+"), conditionGroup("+conditionGroup+")");
+        }
+
+        /* Begin autocomplete options management
+        AutoComplete autoComplete = dropDownField.getAutoComplete();
+        boolean ajaxEnabled = autoComplete != null && this.javaScriptEnabled;
+        cb.put("ajaxEnabled", ajaxEnabled);
+        StringBuilder ajaxOptions = new StringBuilder();
+        int count = 0;
+        Iterator<OptionValue> optionValueIter2 = allOptionValues.iterator(); // new iterator because,
+                                        //I not know how to re-initialize it the beginning of the list
+        while (optionValueIter2.hasNext()) {
+            OptionValue optionValue = optionValueIter2.next();
             if (ajaxEnabled) {
                 count++;
                 ajaxOptions.append(optionValue.getKey()).append(": ");
@@ -654,9 +677,24 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
                 }
             }
         }
+        cb.put("ajaxOptions", ajaxOptions.toString());
+        cb.put("frequency",     autoComplete.getFrequency());
+        cb.put("minChars",      autoComplete.getMinChars());
+        cb.put("choices",       autoComplete.getChoices());
+        cb.put("autoSelect",    autoComplete.getAutoSelect());
+        cb.put("partialSearch", autoComplete.getPartialSearch());
+        cb.put("partialChars",  autoComplete.getPartialChars());
+        cb.put("ignoreCase",    autoComplete.getIgnoreCase());
+        cb.put("fullSearch",    autoComplete.getFullSearch());
+        // End autocomplete options management
 
-        String noCurrentSelectedKey = dropDownField.getNoCurrentSelectedKey(context);
+        // Begin otherFieldSize management (if > 0)
         String otherValue = "";
+        String otherFieldName = "";
+        int otherFieldSize = dropDownField.getOtherFieldSize();
+        if (otherFieldSize > 0) {
+            otherFieldName = dropDownField.getParameterNameOther(context);
+        }
         // Adapted from work by Yucca Korpela
         // http://www.cs.tut.fi/~jkorpela/forms/combo.html
         if (otherFieldSize > 0) {
@@ -667,87 +705,16 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
             }
             Object otherValueObj = dataMap.get(otherFieldName);
             otherValue = (otherValueObj == null) ? "" : otherValueObj.toString();
-        }
-        String frequency = "";
-        String minChars = "";
-        String choices = "";
-        String autoSelect = "";
-        String partialSearch = "";
-        String partialChars = "";
-        String ignoreCase = "";
-        String fullSearch = "";
-        if (ajaxEnabled) {
-            frequency = autoComplete.getFrequency();
-            minChars = autoComplete.getMinChars();
-            choices = autoComplete.getChoices();
-            autoSelect = autoComplete.getAutoSelect();
-            partialSearch = autoComplete.getPartialSearch();
-            partialChars = autoComplete.getPartialChars();
-            ignoreCase = autoComplete.getIgnoreCase();
-            fullSearch = autoComplete.getFullSearch();
-        }
-        String tabindex = modelFormField.getTabindex();
-        Map<String, Object> cb = new HashMap<>();
-        if ("single".equals(modelFormField.getModelForm().getType())) this.addTitle(cb, modelFormField, context);
-        cb.put("name", name);
-        cb.put("className", className);
-        cb.put("alert", alert);
-        cb.put("id", id);
-        cb.put("multiple", multiple);
-        cb.put("formName", formName);
-        cb.put("otherFieldName", otherFieldName);
-        if (event != null) {
-            cb.put("event", event);
-        }
-        if (action != null) {
-            cb.put("action", action);
-        }
-        cb.put("size", size);
-        cb.put("firstInList", firstInList);
-        cb.put("currentValue", currentValue);
-        cb.put("explicitDescription", explicitDescription);
-        cb.put("allowEmpty", allowEmpty);
-        cb.put("options", options);
-        cb.put("fieldName", fieldName);
-        cb.put("otherFieldName", otherFieldName);
-        cb.put("otherValue", otherValue);
-        cb.put("otherFieldSize", otherFieldSize);
-        cb.put("dDFCurrent", dDFCurrent);
-        cb.put("ajaxEnabled", ajaxEnabled);
-        cb.put("noCurrentSelectedKey", noCurrentSelectedKey);
-        cb.put("ajaxOptions", ajaxOptions.toString());
-        cb.put("frequency", frequency);
-        cb.put("minChars", minChars);
-        cb.put("choices", choices);
-        cb.put("autoSelect", autoSelect);
-        cb.put("partialSearch", partialSearch);
-        cb.put("partialChars", partialChars);
-        cb.put("ignoreCase", ignoreCase);
-        cb.put("fullSearch", fullSearch);
-        cb.put("conditionGroup", conditionGroup);
-        cb.put("tabindex", tabindex);
-        cb.put("requiredField", requiredField);
-        Map<String, Object> data = new HashMap<>();
-        fieldName = name;
-        fieldValue = explicitDescription;
-        // TODO check if recordPointer is used, after reading VueDropDownField.vue, it seem not. Waiting Julien validation
-        Map<String, Object> pointer = output.getRecordPointer(context);
-        if (pointer != null) {
-            pointer.put("field", name);
-            data.put("recordPointer", pointer);
-        }
-        cb.put("data", data);
+            cb.put("otherFieldName", otherFieldName);
+            cb.put("otherValue", otherValue);
+            cb.put("otherFieldSize", otherFieldSize);
 
-        this.appendTooltip(cb, context, modelFormField);
-        this.output.putScreen("DropDownField", cb, fieldName, fieldValue);
-        /*
-        ModelFormField.SubHyperlink subHyperlink = dropDownField.getSubHyperlink();
-        if (subHyperlink != null && subHyperlink.shouldUse(context)) {
-            makeHyperlinkString(cb, subHyperlink, context);
         }
         */
+
     }
 
+    // OHE point of review, to be continue
     public void renderCheckField(Appendable writer, Map<String, Object> context, CheckField checkField) {
         ModelFormField modelFormField = checkField.getModelFormField();
         String currentValue = modelFormField.getEntry(context);
