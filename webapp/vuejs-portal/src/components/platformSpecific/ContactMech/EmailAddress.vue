@@ -77,7 +77,7 @@
     props: ['contactMechList', 'editMode', 'icon', 'uiLabels', 'contactMechTypeId', 'showMore', 'purposeList', 'showLessList'],
     computed: {
       ...mapGetters({
-        uiLabel: 'ui/uiLabel'
+        commonUiLabel: 'ui/uiLabel'
       }),
       filteredContactMechList() {
         if (this.showLessList.mode === 'never') {
@@ -105,7 +105,7 @@
         return icons.hasOwnProperty(icon) ? icons[icon] : null
       },
       uiLabel(id) {
-        return this.uiLabel(id)
+        return this.commonUiLabel(id)
       },
       ctmUiLabel(label) {
         return this.uiLabels.hasOwnProperty(label) ? this.uiLabels[label] : label
