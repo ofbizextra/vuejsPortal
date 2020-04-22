@@ -13,6 +13,8 @@ export default {
   blockUi: true,
 
   components: {
+    Column: 'vue-column',
+    ColumnContainer: 'vue-column-container',
     Container: 'vue-container',
     ContentBegin: 'vue-error',
     DateTimeField: 'vue-date-time-field',

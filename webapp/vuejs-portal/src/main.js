@@ -64,6 +64,8 @@ import VueHorizontalSeparator from './components/VueHorizontalSeparator'
 import AppMenu from './components/AppMenu'
 import AppWait from './components/AppWait'
 import AppCpt from './components/AppCpt'
+import VueColumn from './components/VueColumn'
+import VueColumnContainer from './components/VueColumnContainer'
 
 // Platform Specific
 
@@ -134,6 +136,8 @@ Vue.component('vue-horizontal-separator', VueHorizontalSeparator)
 Vue.component('app-menu', AppMenu)
 Vue.component('app-wait', AppWait)
 Vue.component('app-cpt', AppCpt)
+Vue.component('vue-column', VueColumn)
+Vue.component('vue-column-container', VueColumnContainer)
 
 Vue.component('ContactMech', ContactMech)
 
