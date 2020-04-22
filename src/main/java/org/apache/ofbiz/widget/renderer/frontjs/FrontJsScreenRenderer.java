@@ -659,14 +659,14 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
         Map<String, Object> parameters = new HashMap<>();
         if (parameters.containsKey("id")) parameters.put("id", id);
         if (parameters.containsKey("style")) parameters.put("style", style);
-        this.output.putScreen("ColumnContainerBegin", parameters);
+        this.output.pushScreen("ColumnContainerBegin", parameters);
         for (ModelScreenWidget.Column column : columnContainer.getColumns()) {
             id = column.getId(context);
             style = column.getStyle(context);
             parameters = new HashMap<>();
             if (parameters.containsKey("id")) parameters.put("id", id);
             if (parameters.containsKey("style")) parameters.put("style", style);
-            this.output.putScreen("ColumnBegin", parameters);
+            this.output.pushScreen("ColumnBegin", parameters);
             for (ModelScreenWidget subWidget : column.getSubWidgets()) {
                 try {
                     subWidget.renderWidgetString(writer, context, this);
@@ -674,9 +674,9 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
                     throw new IOException(e);
                 }
             }
-            this.output.putScreen("ColumnEnd", parameters);
+            this.output.popScreen("ColumnEnd");
         }
-        this.output.putScreen("ColumnContainerEnd", parameters);
+        this.output.popScreen("ColumnContainerEnd");
     }
 
 }
