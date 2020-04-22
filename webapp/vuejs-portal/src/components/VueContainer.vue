@@ -35,7 +35,8 @@
     },
     computed: {
       ...mapGetters({
-        getWatcher: 'data/watcher'
+        getWatcher: 'data/watcher',
+        currentApi: 'backOfficeApi/currentApi'
       }),
       area() {
         return this.$store.getters['ui/area'](this.areaId)
@@ -46,12 +47,21 @@
       updateParams() {
         return this.autoUpdateParams ? this.autoUpdateParams : false
       },
+      autoUpdate() {
+        return this.autoUpdateParams || this.autoUpdateTarget
+      },
       targetUrl() {
         if (this.updateParams.hasOwnProperty('targetUrl')) {
           return this.updateParams.targetUrl
         }
         if (this.autoUpdateTarget) {
-          return this.autoUpdateTarget
+          let uri = this.currentApi + '/' + this.autoUpdateTarget
+          if (uri.includes('{')) {
+            let regexKey = /{(\w+)}/
+            let regexReplace = /{\w+}/
+            uri = uri.replace(regexReplace, this.params[regexKey.exec(uri)[1]])
+          }
+          return uri
         }
         return ''
       },
@@ -70,13 +80,16 @@
         }
       },
       watcher() {
-        return this.$store.getters['data/watcher'](this.areaId)
+        return this.$store.getters['data/watcher'](this.watcherName)
+      },
+      watcherName() {
+        return this.props.attributes.hasOwnProperty('watcherName') ? this.props.attributes.watcherName : this.areaId
       }
     },
     methods: {},
     created() {
       if (this.updateParams || this.autoUpdateTarget) {
-        this.$store.dispatch('data/setWatcher', {watcherName: this.props.attributes.id, params: {}})
+        this.$store.dispatch('data/setWatcher', {watcherName: this.watcherName, params: {}})
       }
       if (this.areaId.includes('_modalContent')) {return}
       this.$store.dispatch('ui/deleteArea', {areaId: this.props.attributes.id})
@@ -90,7 +103,7 @@
         this.$store.dispatch('ui/deleteArea', {areaId: val.attributes.id})
       },
       watcher: function () {
-        if (this.updateParams) {
+        if (this.autoUpdate) {
           this.$store.dispatch('ui/setArea', this.setArea)
         }
       }
