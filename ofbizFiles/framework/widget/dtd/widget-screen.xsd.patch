@@ -1,8 +1,20 @@
 diff --git a/framework/widget/dtd/widget-screen.xsd b/framework/widget/dtd/widget-screen.xsd
-index 7165f416be..4f70063815 100644
+index 7165f416be..828f3a5a77 100644
 --- a/framework/widget/dtd/widget-screen.xsd
 +++ b/framework/widget/dtd/widget-screen.xsd
-@@ -411,6 +411,8 @@ under the License.
+@@ -232,6 +232,11 @@ under the License.
+                     <xs:documentation>The auto-update interval, in seconds.</xs:documentation>
+                 </xs:annotation>
+             </xs:attribute>
++            <xs:attribute type="xs:string" name="watcher-name">
++                <xs:annotation>
++                    <xs:documentation>Name of the watcher, which will trigger auto-update when it changes.</xs:documentation>
++                </xs:annotation>
++            </xs:attribute>
+         </xs:complexType>
+     </xs:element>
+     <xs:element name="horizontal-separator" substitutionGroup="AllWidgets">
+@@ -411,6 +416,8 @@ under the License.
      <xs:element name="include-portal-page" substitutionGroup="AllWidgets">
          <xs:complexType>
              <xs:attribute type="xs:string" name="id" />
@@ -11,7 +23,7 @@ index 7165f416be..4f70063815 100644
              <xs:attribute name="conf-mode" type="xs:boolean" default="false">
                  <xs:annotation>
                      <xs:documentation>Show the portal in configuration mode.</xs:documentation>
-@@ -520,6 +522,15 @@ under the License.
+@@ -520,6 +527,15 @@ under the License.
      <xs:attributeGroup name="attlist.html-template">
          <xs:attribute type="xs:string" name="location" use="required" />
      </xs:attributeGroup>

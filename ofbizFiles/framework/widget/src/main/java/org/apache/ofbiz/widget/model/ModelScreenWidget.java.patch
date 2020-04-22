@@ -1,5 +1,5 @@
 diff --git a/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelScreenWidget.java b/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelScreenWidget.java
-index 58ec24ff5d..d14a52bffb 100644
+index d0af4947ad..080b62ef15 100644
 --- a/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelScreenWidget.java
 +++ b/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelScreenWidget.java
 @@ -35,6 +35,7 @@ import org.apache.ofbiz.base.util.Debug;
@@ -10,7 +10,34 @@ index 58ec24ff5d..d14a52bffb 100644
  import org.apache.ofbiz.base.util.UtilXml;
  import org.apache.ofbiz.base.util.collections.MapStack;
  import org.apache.ofbiz.base.util.string.FlexibleStringExpander;
-@@ -1035,6 +1036,71 @@ public abstract class ModelScreenWidget extends ModelWidget {
+@@ -438,6 +439,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
+         private final FlexibleStringExpander styleExdr;
+         private final FlexibleStringExpander autoUpdateTargetExdr;
+         private final FlexibleStringExpander autoUpdateInterval;
++        private final FlexibleStringExpander watcherNameExdr;
+         private final List<ModelScreenWidget> subWidgets;
+ 
+         public Container(ModelScreen modelScreen, Element containerElement) {
+@@ -446,6 +448,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
+             this.typeExdr = FlexibleStringExpander.getInstance(containerElement.getAttribute("type"));
+             this.styleExdr = FlexibleStringExpander.getInstance(containerElement.getAttribute("style"));
+             this.autoUpdateTargetExdr = FlexibleStringExpander.getInstance(containerElement.getAttribute("auto-update-target"));
++            this.watcherNameExdr = FlexibleStringExpander.getInstance(containerElement.getAttribute("watcher-name"));
+             String autoUpdateInterval = containerElement.getAttribute("auto-update-interval");
+             if (autoUpdateInterval.isEmpty()) {
+                 autoUpdateInterval = "2";
+@@ -488,6 +491,10 @@ public abstract class ModelScreenWidget extends ModelWidget {
+             return this.autoUpdateTargetExdr.expandString(context);
+         }
+ 
++        public String getWatcherNameExdr(Map<String, Object> context) {
++            return this.watcherNameExdr.expandString(context);
++        }
++
+         public String getAutoUpdateInterval(Map<String, Object> context) {
+             return this.autoUpdateInterval.expandString(context);
+         }
+@@ -1035,6 +1042,71 @@ public abstract class ModelScreenWidget extends ModelWidget {
              return styleExdr;
          }
      }
@@ -82,7 +109,7 @@ index 58ec24ff5d..d14a52bffb 100644
  
      public static final class Form extends ModelScreenWidget {
          public static final String TAG_NAME = "include-form";
-@@ -1871,6 +1937,10 @@ public abstract class ModelScreenWidget extends ModelWidget {
+@@ -1874,6 +1946,10 @@ public abstract class ModelScreenWidget extends ModelWidget {
      public static final class PortalPage extends ModelScreenWidget {
          public static final String TAG_NAME = "include-portal-page";
          private final FlexibleStringExpander idExdr;
@@ -93,7 +120,7 @@ index 58ec24ff5d..d14a52bffb 100644
          private final FlexibleStringExpander confModeExdr;
          private final Boolean usePrivate;
  
-@@ -1879,6 +1949,15 @@ public abstract class ModelScreenWidget extends ModelWidget {
+@@ -1882,6 +1958,15 @@ public abstract class ModelScreenWidget extends ModelWidget {
              this.idExdr = FlexibleStringExpander.getInstance(portalPageElement.getAttribute("id"));
              this.confModeExdr = FlexibleStringExpander.getInstance(portalPageElement.getAttribute("conf-mode"));
              this.usePrivate = !("false".equals(portalPageElement.getAttribute("use-private")));
@@ -109,7 +136,7 @@ index 58ec24ff5d..d14a52bffb 100644
          }
  
          private GenericValue getPortalPageValue(Map<String, Object> context) {
-@@ -1916,6 +1995,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
+@@ -1919,6 +2004,7 @@ public abstract class ModelScreenWidget extends ModelWidget {
                  List<GenericValue> portletAttributes = null;
                  GenericValue portalPage = getPortalPageValue(context);
                  String actualPortalPageId = portalPage.getString("portalPageId");
@@ -117,7 +144,7 @@ index 58ec24ff5d..d14a52bffb 100644
                  portalPageColumns = EntityQuery.use(delegator)
                                                 .from("PortalPageColumn")
                                                 .where("portalPageId", actualPortalPageId)
-@@ -1976,10 +2056,16 @@ public abstract class ModelScreenWidget extends ModelWidget {
+@@ -1979,10 +2065,16 @@ public abstract class ModelScreenWidget extends ModelWidget {
                          context.put("nextColumnSeqId", nextColumnSeqId);
  
                          // Get portlet's attributes
@@ -134,7 +161,7 @@ index 58ec24ff5d..d14a52bffb 100644
  
                          ListIterator <GenericValue>attributesIterator = portletAttributes.listIterator();
                          while (attributesIterator.hasNext()) {
-@@ -2010,6 +2096,67 @@ public abstract class ModelScreenWidget extends ModelWidget {
+@@ -2013,6 +2105,67 @@ public abstract class ModelScreenWidget extends ModelWidget {
                  }
                  // Renders the portalPage footer
                  screenStringRenderer.renderPortalPageEnd(writer, context, this);
@@ -202,7 +229,7 @@ index 58ec24ff5d..d14a52bffb 100644
              } catch (IOException | GenericEntityException e) {
                  String errMsg = "Error rendering PortalPage with portalPageId [" + getId(context) + "]: " + e.toString();
                  Debug.logError(e, errMsg, MODULE);
-@@ -2051,6 +2198,41 @@ public abstract class ModelScreenWidget extends ModelWidget {
+@@ -2054,6 +2207,41 @@ public abstract class ModelScreenWidget extends ModelWidget {
          public FlexibleStringExpander getConfModeExdr() {
              return confModeExdr;
          }
