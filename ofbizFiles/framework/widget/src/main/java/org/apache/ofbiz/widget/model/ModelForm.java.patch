@@ -1,8 +1,8 @@
 diff --git a/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelForm.java b/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelForm.java
-index 7556ee4ccf..725181e172 100644
+index 35fe98f024..c51700adef 100644
 --- a/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelForm.java
 +++ b/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelForm.java
-@@ -432,7 +432,13 @@ public abstract class ModelForm extends ModelWidget {
+@@ -434,7 +434,13 @@ public abstract class ModelForm extends ModelWidget {
                  } else {
                      onPaginateUpdateAreas.add(updateArea);
                  }
@@ -17,7 +17,7 @@ index 7556ee4ccf..725181e172 100644
                  int index = onSubmitUpdateAreas.indexOf(updateArea);
                  if (index != -1) {
                      onSubmitUpdateAreas.set(index, updateArea);
-@@ -1713,13 +1719,21 @@ public abstract class ModelForm extends ModelWidget {
+@@ -1716,13 +1722,21 @@ public abstract class ModelForm extends ModelWidget {
              this.defaultServiceName = defaultServiceName;
              this.defaultEntityName = defaultEntityName;
              List<? extends Element> parameterElementList = UtilXml.childElementList(updateAreaElement, "parameter");
@@ -41,7 +41,7 @@ index 7556ee4ccf..725181e172 100644
                  this.parameterList = Collections.unmodifiableList(parameterList);
              }
              Element autoServiceParamsElement = UtilXml.firstChildElement(updateAreaElement, "auto-parameters-service");
-@@ -1760,6 +1774,10 @@ public abstract class ModelForm extends ModelWidget {
+@@ -1763,6 +1777,10 @@ public abstract class ModelForm extends ModelWidget {
              return areaId;
          }
  
@@ -52,7 +52,7 @@ index 7556ee4ccf..725181e172 100644
          public String getAreaTarget(Map<String, ? extends Object> context) {
              return FlexibleStringExpander.expandString(areaTarget, context);
          }
-@@ -1811,5 +1829,14 @@ public abstract class ModelForm extends ModelWidget {
+@@ -1814,5 +1832,14 @@ public abstract class ModelForm extends ModelWidget {
          public List<CommonWidgetModels.Parameter> getParameterList() {
              return parameterList;
          }
