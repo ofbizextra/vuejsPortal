@@ -44,10 +44,7 @@
         return this.props.hasOwnProperty('children') ? this.props.children : []
       },
       getParams() {
-        if (this.watcherName) {
           return this.$store.getters['data/watcher'](this.watcherName)
-        }
-        return {}
       },
       isPosted() {
         return this.props.hasOwnProperty('attributes')
@@ -68,7 +65,7 @@
         return this.portlet && this.portlet.hasOwnProperty('viewScreen') ? this.portlet.viewScreen : []
       },
       watcherName() {
-        return this.props.hasOwnProperty('watcherName') ? this.props.watcherName : this.props.attributes.watcherName
+        return this.props.hasOwnProperty('watcherName') && this.props.watcherName ? this.props.watcherName : this.props.hasOwnProperty('attributes') && this.props.attributes.hasOwnProperty('watcherName') ? this.props.attributes.watcherName : ''
       }
     },
     created() {
