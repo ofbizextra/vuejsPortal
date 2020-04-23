@@ -75,11 +75,11 @@ const actions = {
       }, 0)
     })
   },
-  doPut({commit, dispatch}, {uri, params, hideEventMessage, hideErrorMessage}) {
+  doGet({commit, dispatch}, {uri, hideEventMessage, hideErrorMessage}) {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
-        Vue.http.put(uri,
-          queryString.stringify({...params}),
+        Vue.http.get(uri,
+          queryString.stringify({}),
           {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}
         ).then(response => {
           if (typeof response.body === 'string' && response.body.includes('login failed')) {
