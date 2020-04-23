@@ -88,9 +88,11 @@ for an exclusive Vue.Js use.
 * screen
   ** in `<container` tag
     *** `auto-update-target` is used to bind a `watcher` to a container. +
-        To use it with setWatcher, watcherName is the containerId, and when this watcher changes a setArea is done with auto-update-target 
-        and watcher content as parameters. +
-        /!\ currently, this is not yet implemented, waiting a real use case, but all is in place to do it ;-) 
+        To use it with setWatcher, a new attribute `watcher-name` has been added and watcherName is equals this new attribute
+        if it is present otherwise it is equals to the containerId, and when the content of this this watcher changes a setArea
+        is done with auto-update-target as target and watcher content as parameters. +
+        `auto-update-target` support the REST uri format with some parameters in it include with {}, value is populate with
+        content of watcher. If uri contain, atleast one {xxx} a GET method will be used otherwise a POST.
     *** `id` is used to identify the container and enable to inject content into it with `setArea` later. +
          When setArea is done for this id, its content will be replace by the content received from area-target. +
          So, do not resend the container !
@@ -111,7 +113,9 @@ for an exclusive Vue.Js use.
     *** `event-type` +
       Define the action to be executed during the form submitting (click on submit button). It can take one of three next values :
       **** `submit` will submit the form to `area-target` with provided `parameter` elements. Like `setArea` if no `parameter`
-            are defined it will use the whole form. Error and success messages will be displayed.
+            are defined it will use the whole form. Error and success messages will be displayed. +
+            Form `target` support the REST uri format with some parameters in it include with {}, value is populate with
+            content of form - fields when submit.
       **** `setArea` update area with id `areaId` with the post result at URI `area-target` with included `parameter` elements.
       **** `setWatcher` update watcher `areaId` with included `parameter`. In case no parameter was passed to `setWatcher`
             it will use all form fields.
@@ -148,12 +152,20 @@ for an exclusive Vue.Js use.
     *** `link-type="anchor"` is used to make an internal call to FrontJs via `setArea`, `target-window` is used as
          id to update and `target` as area-target, parameters as parameters.
     *** `target-window` is used to design the watcherName that have to be updated.
+    *** `url-mode` three new modes is added to be able to give the http method to use, POST is the default
+      **** intra-get : do the http request with a GET method
+      **** intra-put : do the http request with a PUT method
+      **** intra-delete : do the http request with a DELETE method
 * menu
   ** in `<link` tag
     *** `link-type="anchor"` is used to make an internal call to FrontJs via `setArea`, `target-window` is used as
          id to update and `target` as area-target, parameters as parameters.
     *** `link-type="auto"` (default value) and `url-mode="intra-app"` call the portalPageDetail to print a new
          portal page. portalPageId should be in parameters.
+    *** `url-mode` three new modes is added to be able to give the http method to use, POST is the default
+      **** intra-get : do the http request with a GET method
+      **** intra-put : do the http request with a PUT method
+      **** intra-delete : do the http request with a DELETE method
 
 === decorator, lookup
 Currently vuejs app is call in a ftl included in the classic mainDecorator, without application menu (which are directly
@@ -224,6 +236,34 @@ there is a *showPortal* URI in vuejsPortal (CommonScreen), which is the Start po
 *applicationMenu* is a new uri which return with the FrontJsScreenViewHandler the data (ViewScreen & ViewData) from application xml menu. +
 In each fjs component, it's necessary to define a view-map entry applicationMenu pointing to a screen.xml with only the correct menu.
 
+=== REST URI
+For OFBiz applications URI structure is : resourceName}/[cover]/{Pkvalue: .*}
+
+So, for Example resource, it translate into :
+|===
+| URI                         | method        |  Goal
+| Example/find                | get           | find form to select options for list
+| Example/list                | get (via post)| Example list, +
+                                                => with a get (so without parameters) all the examples +
+                                                => with a post (parameters and _method="GET") examples selected by options
+| Example/create              | get           | create form
+| Example/edit/{exampleId}    | get           | edit form and data for the id sent
+| Example/show/{exampleId}    | get           | show form and data for the id sent
+| Example/summary/{exampleId} | get           | summary form and data for the id sent
+| Example/data/{exampleId}    | get           | just data for the id sent
+| Example/change              | post          | create a example
+| Example/change/{exampleId}  | put (via post)| update example with exampleId
+| Example/change/{exampleId}  | delete        | delete example with exampleId
+|===
+
+All these actions([cover]) is about screenlet (part of a page), if cover should be for a page, its name is suffix by Pg.
+
+[TIP]
+HTTP request other than POST method cannot have parameters (other than in URI) so to be able to do a GET or a PUT with parameters
+a workarround is to used a POST with added `<field name="_method"><hidden value="GET">` (or "PUT") in the form (or as one of the parameters).
+
+[CAUTION]
+TOMCAT httpServlet.java not manage PATCH method, so it's not usable
 
 === Added field
 A new field had been added to PortalPagePortlet entity : *watcherName* which is the name of the watcher that fire portlet update.
