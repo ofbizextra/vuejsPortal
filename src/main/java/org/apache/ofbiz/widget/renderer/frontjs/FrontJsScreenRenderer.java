@@ -661,15 +661,15 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
         String id = columnContainer.getId(context);
         String style = columnContainer.getStyle(context);
         Map<String, Object> parameters = new HashMap<>();
-        if (id != null && !id.isEmpty()) parameters.put("id", id);
-        if (style != null && !style.isEmpty()) parameters.put("style", style);
+        if (UtilValidate.isNotEmpty(id)) parameters.put("id", id);
+        if (UtilValidate.isNotEmpty(style)) parameters.put("style", style);
         this.output.pushScreen("ColumnContainerBegin", parameters);
         for (ModelScreenWidget.Column column : columnContainer.getColumns()) {
             id = column.getId(context);
             style = column.getStyle(context);
             parameters = new HashMap<>();
-            if (id != null && !id.isEmpty()) parameters.put("id", id);
-            if (style != null && !style.isEmpty()) parameters.put("style", style);
+            if (UtilValidate.isNotEmpty(id)) parameters.put("id", id);
+            if (UtilValidate.isNotEmpty(style)) parameters.put("style", style);
             this.output.pushScreen("ColumnBegin", parameters);
             for (ModelScreenWidget subWidget : column.getSubWidgets()) {
                 try {
