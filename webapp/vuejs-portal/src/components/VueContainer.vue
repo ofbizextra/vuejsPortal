@@ -88,9 +88,6 @@
     },
     methods: {},
     created() {
-      if (this.updateParams || this.autoUpdateTarget) {
-        this.$store.dispatch('data/setWatcher', {watcherName: this.watcherName, params: {}})
-      }
       if (this.areaId.includes('_modalContent')) {return}
       this.$store.dispatch('ui/deleteArea', {areaId: this.props.attributes.id})
     },
@@ -102,8 +99,8 @@
         if (this.areaId.includes('_modalContent')) {return}
         this.$store.dispatch('ui/deleteArea', {areaId: val.attributes.id})
       },
-      watcher: function () {
-        if (this.autoUpdate) {
+      watcher: function (fresh, old) {
+        if (this.autoUpdate && (old !== fresh)) {
           this.$store.dispatch('ui/setArea', this.setArea)
         }
       }
