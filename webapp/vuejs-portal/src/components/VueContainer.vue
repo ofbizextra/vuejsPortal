@@ -51,19 +51,18 @@
         return this.autoUpdateParams || this.autoUpdateTarget
       },
       targetUrl() {
+        let uri = ''
         if (this.updateParams.hasOwnProperty('targetUrl')) {
-          return this.updateParams.targetUrl
+          uri =  this.updateParams.targetUrl
         }
-        if (this.autoUpdateTarget) {
-          let uri = this.currentApi + '/' + this.autoUpdateTarget
-          if (uri.includes('{')) {
-            let regexKey = /{(\w+)}/
-            let regexReplace = /{\w+}/
-            uri = uri.replace(regexReplace, this.params[regexKey.exec(uri)[1]])
-          }
-          return uri
+        else if (this.autoUpdateTarget) {
+          uri = this.currentApi + '/' + this.autoUpdateTarget
         }
-        return ''
+        let regex = /{(\w+)}/
+        while (regex.exec(uri)) {
+          uri = uri.replace(regex, this.params[regex.exec(uri)[1]])
+        }
+        return uri
       },
       params() {
         return this.updateParams.hasOwnProperty('params') ? {...this.updateParams.params, ...this.watcher} : this.watcher
