@@ -74,6 +74,12 @@ under the License.
         <response name="success" type="request" value="json"/>
         <response name="error" type="request" value="json"/>
     </request-map>
+    <request-map uri="getHeaderInfo">
+        <security https="true" auth="true"/>
+        <event type="groovy" path="component://vuejs-portal/groovyScripts/getHeaderInfo.groovy"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
 
 
     <!-- View Mappings -->
