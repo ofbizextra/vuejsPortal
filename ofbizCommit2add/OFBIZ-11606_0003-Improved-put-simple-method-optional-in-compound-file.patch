@@ -1,0 +1,26 @@
+From 0b11156c3561cb4a0a8496a41d22f2e23b0101c8 Mon Sep 17 00:00:00 2001
+From: holivier <holivier@apache.org>
+Date: Mon, 27 Apr 2020 21:46:50 +0200
+Subject: [PATCH 3/3] Improved: put simple-method optional in compound file
+ (OFBIZ-11606)
+
+---
+ framework/widget/dtd/compound-widgets.xsd | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/framework/widget/dtd/compound-widgets.xsd b/framework/widget/dtd/compound-widgets.xsd
+index 3bb4bdcd6b..9170797af0 100644
+--- a/framework/widget/dtd/compound-widgets.xsd
++++ b/framework/widget/dtd/compound-widgets.xsd
+@@ -42,7 +42,7 @@ under the License.
+                 <xs:element ref="ws:screens"/>
+                 <xs:element ref="wt:trees" minOccurs="0" maxOccurs="1"/>
+                 <xs:element ref="wf:forms"/>
+-                <xs:element ref="sm:simple-methods"/>
++                <xs:element ref="sm:simple-methods" minOccurs="0" maxOccurs="1"/>
+             </xs:all>
+         </xs:complexType>
+     </xs:element>
+-- 
+2.11.0
+
