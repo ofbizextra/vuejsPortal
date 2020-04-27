@@ -180,7 +180,7 @@ const actions = {
       setTimeout(() => {
         wait.start(areaId)
         dispatch('incrementUpdateCpt')
-        if (params === {}) {
+        if (params.get) {
           dispatch('backOfficeApi/doGet', {uri: constants.hostUrl + targetUrl.replace('amp;', '')}, {root: true}
           ).then(response => {
             if (response.body.hasOwnProperty('_ERROR_MESSAGE_')) {

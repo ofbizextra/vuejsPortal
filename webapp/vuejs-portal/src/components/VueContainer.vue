@@ -75,7 +75,7 @@
           areaId: this.areaId,
           targetUrl: this.targetUrl,
           wait: this.$wait,
-          params: this.params
+          params: (this.autoUpdateTarget && this.autoUpdateTarget.includes('{')) ? {get:'Y'} : this.params
         }
       },
       watcher() {
