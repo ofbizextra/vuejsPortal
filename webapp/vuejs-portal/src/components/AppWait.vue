@@ -1,13 +1,14 @@
 <template>
   <div>
     <input type="hidden" id="loader-wrapper-hidden" v-if="!blockUi" v-show="waitAny"/>
-     <div id="loader-wrapper" class="text-center" v-show="waitAny">
+    <v-overlay :value="waitAny">
       <v-progress-circular
-        :indeterminate="waitAny"
-        :size=20
-        color="light-blue"
+          id="loader-wrapper"
+          indeterminate
+          :size=64
+          color="primary"
       > </v-progress-circular>
-     </div>
+    </v-overlay>
   </div>
 </template>
 
