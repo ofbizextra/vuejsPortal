@@ -3,8 +3,6 @@ import VueResource from 'vue-resource'
 import VueRouter from 'vue-router'
 
 import VueWait from 'vue-wait'
-import {BreedingRhombusSpinner} from 'epic-spinners'
-import BlockUI from 'vue-blockui'
 import _ from 'lodash'
 import VueTheMask from 'vue-the-mask'
 
@@ -77,7 +75,6 @@ Vue.use(VueResource)
 Vue.use(VueRouter)
 
 Vue.use(VueWait)
-Vue.use(BlockUI)
 Vue.use(VueTheMask)
 
 Vue.component('login', Login)
@@ -118,7 +115,6 @@ Vue.component('vue-field-row-title-cell', VueFieldRowTitleCell)
 Vue.component('vue-field-row-widget-cell', VueFieldRowWidgetCell)
 Vue.component('vue-field-group', VueFieldGroup)
 Vue.component('vue-next-prev', VueNextPrev)
-Vue.component('spinner', BreedingRhombusSpinner)
 Vue.component('vue-screenlet', VueScreenlet)
 Vue.component('vue-menu', VueMenu)
 Vue.component('vue-menu-item', VueMenuItem)
