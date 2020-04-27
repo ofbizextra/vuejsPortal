@@ -1,7 +1,7 @@
 <template>
   <v-tooltip top>
     <template v-slot:activator="{ on }">
-      <div :id="id" :name="name" v-on="fieldHelpText ? on : null">
+      <div :id="id" :name="name" class="mt-4" v-on="fieldHelpText ? on : null">
         <input type="hidden" :name="name" :value="value" :formname="formName"/>
         <v-select :label="fieldTitle" :items="options" item-value="key" item-text="description" v-model="value"
                   :hide-details="!required" dense clearable :rules="rules">

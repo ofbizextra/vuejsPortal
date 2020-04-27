@@ -1,5 +1,5 @@
 <template>
-  <v-navigation-drawer id="app-menu" :value="true" mini-variant mini-variant-width="86" mobile-break-point="0" expand-on-hover app>
+  <v-navigation-drawer class="secondary" dark id="app-menu" :value="true" mini-variant mini-variant-width="86" mobile-break-point="0" expand-on-hover app>
     <v-list-item>
       <v-list-item-content>
         <v-list-item-title class="title">Ofbiz</v-list-item-title>
@@ -7,9 +7,9 @@
       </v-list-item-content>
     </v-list-item>
     <v-divider></v-divider>
-    <v-list dense nav id="app-navigation" height="auto" v-if="menu.hasOwnProperty('viewScreen')">
+    <v-list dense nav id="app-navigation" height="auto" v-if="menu.hasOwnProperty('viewScreen')" color="secondary" link router>
       <v-list-item v-for="(link, id) in menu.viewScreen[0].children" :key="id" link
-                   :to="generateRouterLink(link.children[0].attributes.linkUrl)">
+                   :to="generateRouterLink(link.children[0].attributes.linkUrl)" dense router exact>
         <v-list-item-content>
           <v-list-item-title>
             {{link.children[0].attributes.text}}

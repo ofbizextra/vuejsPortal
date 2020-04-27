@@ -2,7 +2,7 @@
   <div id="vue-text-area-field">
     <v-tooltip top>
       <template v-slot:activator="{ on }">
-        <v-textarea :label="fieldTitle" :id="id" v-model="value" :hide-details="noRules" :rules="rules" v-on="fieldHelpText ? on : null"></v-textarea>
+        <v-textarea :label="fieldTitle" :id="id" v-model="value" hide-details="auto" :rules="rules" v-on="fieldHelpText ? on : null" auto-grow rows="1"></v-textarea>
       </template>
       <span>{{fieldHelpText}}</span>
     </v-tooltip>

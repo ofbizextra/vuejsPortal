@@ -2,8 +2,8 @@
   <v-row id="vue-submit-field" text-center class="ma-2">
     <v-btn
         raised
-        dark
         color="primary"
+        class="secondary--text"
         type="submit"
         :label="title"
         v-on:click.prevent="resolveEvents">{{title}}

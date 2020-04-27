@@ -1,28 +1,28 @@
 <template>
   <div vue-component="vue-screenlet" :id="screenletId" class="ma-1">
-      <v-toolbar v-if="showMore" dense color="primary" dark class="screenlet-title-bar">
-        <v-toolbar-title class="title">{{title}}</v-toolbar-title>
+      <v-toolbar v-if="showMore" dense color="primary" class="screenlet-title-bar ma-0 pa-0">
+        <v-toolbar-title class="title secondary--text">{{title}}</v-toolbar-title>
         <v-spacer></v-spacer>
         <vue-nav-menu v-if="navMenu" :props="navMenu" :updateStore="updateStore"></vue-nav-menu>
         <v-tooltip top>
           <template v-slot:activator="{ on }">
             <v-btn id="toggleCollapse" icon v-if="collapsible" @click="toggle" v-on="on">
-              <v-icon>{{ collapseIcon }}</v-icon>
+              <v-icon color="secondary">{{ collapseIcon }}</v-icon>
             </v-btn>
           </template>
           <span>{{toolTip}}</span>
         </v-tooltip>
       </v-toolbar>
       <v-expand-transition>
-        <v-card tile :id="collapsibleAreaId" v-show="!collapsed">
-          <v-card-text class="pa-1">
+        <v-card tile :id="collapsibleAreaId" v-show="!collapsed" class="ma-0 pa-0">
+          <v-card-text class="ma-0 pa-0">
             <div
                 v-for="(component, key) in props.children"
                 :key="key"
                 v-bind:is="constants.components[component.name]"
                 :props="component"
                 :updateStore="updateStore"
-                class="mt-2">
+                class="ma-0 pa-0">
             </div>
           </v-card-text>
         </v-card>

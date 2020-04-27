@@ -11,16 +11,16 @@ export default new Vuetify({
     dark: false,
     themes: {
       light: {
-        primary: '#cdcfd0',
-        secondary: '#999',
-        accent: '#020617',
+        primary: '#41b883',
+        secondary: '#35495e',
+        accent: '#d52c3e',
         success: '#64dd17',
         error: '#f44336'
       },
       dark: {
-        primary: '#507088',
-        secondary: '#588098',
-        accent: '#e05d30',
+        primary: '#41b883',
+        secondary: '#35495e',
+        accent: '#d52c3e',
         success: '#64dd17',
         error: '#f44336'
       }

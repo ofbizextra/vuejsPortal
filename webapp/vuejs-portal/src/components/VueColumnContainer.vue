@@ -1,6 +1,6 @@
 <template>
-  <v-container fluid>
-    <v-row id="vue-column-container">
+  <v-container fluid class="ma-0 pa-0">
+    <v-row id="vue-column-container" class="ma-0 pa-0">
       <div v-for="(component, id) in children" :key="id" v-bind:is="constants.components[component.name]" :props="component">
       </div>
     </v-row>
