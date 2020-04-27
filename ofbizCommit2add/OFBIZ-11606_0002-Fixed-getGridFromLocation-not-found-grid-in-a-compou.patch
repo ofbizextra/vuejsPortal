@@ -1,0 +1,51 @@
+From 46650c493fb9725eb91376f0b5eb4a1c3925cd3d Mon Sep 17 00:00:00 2001
+From: holivier <holivier@apache.org>
+Date: Sun, 26 Apr 2020 12:37:10 +0200
+Subject: [PATCH 2/2] Fixed: getGridFromLocation not found grid in a
+ compoundWidget file. (OFBIZ-11606)
+
+Add a check for rootElement of the FormFileDoc is equals forms, if not
+(compoundFile) find it.
+
+Add a error message if grid not found in file.
+---
+ .../main/java/org/apache/ofbiz/widget/model/GridFactory.java | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
+
+diff --git a/framework/widget/src/main/java/org/apache/ofbiz/widget/model/GridFactory.java b/framework/widget/src/main/java/org/apache/ofbiz/widget/model/GridFactory.java
+index 1bfcb87019..a7e7653dec 100644
+--- a/framework/widget/src/main/java/org/apache/ofbiz/widget/model/GridFactory.java
++++ b/framework/widget/src/main/java/org/apache/ofbiz/widget/model/GridFactory.java
+@@ -118,6 +118,9 @@ public class GridFactory {
+         if (gridFileDoc != null) {
+             // read document and construct ModelGrid for each grid element
+             Element rootElement = gridFileDoc.getDocumentElement();
++            if (!"forms".equalsIgnoreCase(rootElement.getTagName())) {
++                rootElement = UtilXml.firstChildElement(rootElement, "forms");
++            }
+             List<? extends Element> gridElements = UtilXml.childElementList(rootElement, "grid");
+             for (Element gridElement : gridElements) {
+                 String gridName = gridElement.getAttribute("name");
+@@ -140,11 +143,18 @@ public class GridFactory {
+ 
+     public static ModelGrid createModelGrid(Document gridFileDoc, ModelReader entityModelReader, VisualTheme visualTheme,
+                                             DispatchContext dispatchContext, String gridLocation, String gridName) {
+-        Element gridElement = UtilXml.firstChildElement(gridFileDoc.getDocumentElement(), "grid", "name", gridName);
++        Element rootElement = gridFileDoc.getDocumentElement();
++        if (!"forms".equalsIgnoreCase(rootElement.getTagName())) {
++            rootElement = UtilXml.firstChildElement(rootElement, "forms");
++        }
++        Element gridElement = UtilXml.firstChildElement(rootElement, "grid", "name", gridName);
+         if (gridElement == null) {
+             // Backwards compatibility - look for form definition
+             gridElement = UtilXml.firstChildElement(gridFileDoc.getDocumentElement(), "form", "name", gridName);
+         }
++        if (gridElement == null) {
++            throw new IllegalArgumentException("Could not find grid with name [" + gridName + "] in class resource [" + gridLocation + "]");
++        }
+         return createModelGrid(gridElement, entityModelReader, visualTheme, dispatchContext, gridLocation, gridName);
+     }
+ 
+-- 
+2.11.0
+

@@ -1,0 +1,146 @@
+From 9d15532b100d4e7066a937d3a2167fb6fe48c05c Mon Sep 17 00:00:00 2001
+From: holivier <holivier@apache.org>
+Date: Sat, 25 Apr 2020 09:37:24 +0200
+Subject: [PATCH 1/2] Fixed: Model Condition read the name's nodes without
+ removing the domain prefix (OFBIZ-11606)
+
+Replace all the .getNodeName() by .getLocalName() in all part of code
+where some test are done on node name.
+---
+ .../ofbiz/widget/model/AbstractModelCondition.java |  2 +-
+ .../apache/ofbiz/widget/model/ModelFormAction.java | 11 +++++----
+ .../apache/ofbiz/widget/model/ModelMenuAction.java |  2 +-
+ .../ofbiz/widget/model/ModelScreenCondition.java   |  2 +-
+ .../ofbiz/widget/model/ModelWidgetCondition.java   | 27 +++++++++++-----------
+ 5 files changed, 23 insertions(+), 21 deletions(-)
+
+diff --git a/framework/widget/src/main/java/org/apache/ofbiz/widget/model/AbstractModelCondition.java b/framework/widget/src/main/java/org/apache/ofbiz/widget/model/AbstractModelCondition.java
+index 53ebe8ec17..24357d4fcd 100644
+--- a/framework/widget/src/main/java/org/apache/ofbiz/widget/model/AbstractModelCondition.java
++++ b/framework/widget/src/main/java/org/apache/ofbiz/widget/model/AbstractModelCondition.java
+@@ -180,7 +180,7 @@ public abstract class AbstractModelCondition implements Serializable, ModelCondi
+             if (conditionElement == null) {
+                 return TRUE;
+             }
+-            String nodeName = conditionElement.getNodeName();
++            String nodeName = conditionElement.getLocalName();
+             if ("and".equals(nodeName)) {
+                 return new And(factory, modelWidget, conditionElement);
+             } else if ("xor".equals(nodeName)) {
+diff --git a/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelFormAction.java b/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelFormAction.java
+index 7b4e1c1c30..450de22b65 100644
+--- a/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelFormAction.java
++++ b/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelFormAction.java
+@@ -48,10 +48,11 @@ public abstract class ModelFormAction {
+         List<? extends Element> actionElementList = UtilXml.childElementList(parentElement);
+         List<ModelAction> actions = new ArrayList<>(actionElementList.size());
+         for (Element actionElement : UtilXml.childElementList(parentElement)) {
+-            if ("service".equals(actionElement.getNodeName())) {
++            String nodeName = actionElement.getLocalName();
++            if ("service".equals(nodeName)) {
+                 actions.add(new Service(modelForm, actionElement));
+-            } else if ("entity-and".equals(actionElement.getNodeName()) || "entity-condition".equals(actionElement.getNodeName())
+-                    || "get-related".equals(actionElement.getNodeName())) {
++            } else if ("entity-and".equals(nodeName) || "entity-condition".equals(nodeName)
++                    || "get-related".equals(nodeName)) {
+                 if (!actionElement.hasAttribute("list")) {
+                     String listName = modelForm.getListName();
+                     if (UtilValidate.isEmpty(listName)) {
+@@ -60,7 +61,7 @@ public abstract class ModelFormAction {
+                     actionElement.setAttribute("list", listName);
+                 }
+                 actions.add(AbstractModelAction.newInstance(modelForm, actionElement));
+-            } else if ("call-parent-actions".equals(actionElement.getNodeName())) {
++            } else if ("call-parent-actions".equals(nodeName)) {
+                 actions.add(new CallParentActions(modelForm, actionElement));
+             } else {
+                 actions.add(AbstractModelAction.newInstance(modelForm, actionElement));
+@@ -81,7 +82,7 @@ public abstract class ModelFormAction {
+ 
+         public CallParentActions(ModelForm modelForm, Element callParentActionsElement) {
+             super(modelForm, callParentActionsElement);
+-            String parentName = callParentActionsElement.getParentNode().getNodeName();
++            String parentName = callParentActionsElement.getParentNode().getLocalName();
+             if ("actions".equals(parentName)) {
+                 kind = ActionsKind.ACTIONS;
+             } else if ("row-actions".equals(parentName)) {
+diff --git a/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelMenuAction.java b/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelMenuAction.java
+index 529257cb5b..1a7a266cdd 100644
+--- a/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelMenuAction.java
++++ b/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelMenuAction.java
+@@ -51,7 +51,7 @@ public abstract class ModelMenuAction {
+         List<? extends Element> actionElementList = UtilXml.childElementList(parentElement);
+         List<ModelAction> actions = new ArrayList<>(actionElementList.size());
+         for (Element actionElement : actionElementList) {
+-            if ("set".equals(actionElement.getNodeName())) {
++            if ("set".equals(actionElement.getLocalName())) {
+                 actions.add(new SetField(modelMenu, actionElement));
+             } else {
+                 actions.add(AbstractModelAction.newInstance(modelMenu, actionElement));
+diff --git a/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelScreenCondition.java b/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelScreenCondition.java
+index 3a56f02ab5..5f6cca6c0d 100644
+--- a/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelScreenCondition.java
++++ b/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelScreenCondition.java
+@@ -82,7 +82,7 @@ public final class ModelScreenCondition {
+             if (conditionElement == null) {
+                 return DefaultConditionFactory.TRUE;
+             }
+-            if ("if-empty-section".equals(conditionElement.getNodeName())) {
++            if ("if-empty-section".equals(conditionElement.getLocalName())) {
+                 return new IfEmptySection(this, modelWidget, conditionElement);
+             }
+             return super.newInstance(this, modelWidget,conditionElement);
+diff --git a/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelWidgetCondition.java b/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelWidgetCondition.java
+index 6f7d17333b..7c028b64c8 100644
+--- a/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelWidgetCondition.java
++++ b/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelWidgetCondition.java
+@@ -165,32 +165,33 @@ public abstract class ModelWidgetCondition implements Serializable {
+             if (conditionElement == null) {
+                 return TRUE;
+             }
+-            if ("and".equals(conditionElement.getNodeName())) {
++            String nodeName = conditionElement.getLocalName();
++            if ("and".equals(nodeName)) {
+                 return new And(this, modelWidget, conditionElement);
+-            } else if ("xor".equals(conditionElement.getNodeName())) {
++            } else if ("xor".equals(nodeName)) {
+                 return new Xor(this, modelWidget, conditionElement);
+-            } else if ("or".equals(conditionElement.getNodeName())) {
++            } else if ("or".equals(nodeName)) {
+                 return new Or(this, modelWidget, conditionElement);
+-            } else if ("not".equals(conditionElement.getNodeName())) {
++            } else if ("not".equals(nodeName)) {
+                 return new Not(this, modelWidget, conditionElement);
+-            } else if ("if-service-permission".equals(conditionElement.getNodeName())) {
++            } else if ("if-service-permission".equals(nodeName)) {
+                 return new IfServicePermission(this, modelWidget, conditionElement);
+-            } else if ("if-has-permission".equals(conditionElement.getNodeName())) {
++            } else if ("if-has-permission".equals(nodeName)) {
+                 return new IfHasPermission(this, modelWidget, conditionElement);
+-            } else if ("if-validate-method".equals(conditionElement.getNodeName())) {
++            } else if ("if-validate-method".equals(nodeName)) {
+                 return new IfValidateMethod(this, modelWidget, conditionElement);
+-            } else if ("if-compare".equals(conditionElement.getNodeName())) {
++            } else if ("if-compare".equals(nodeName)) {
+                 return new IfCompare(this, modelWidget, conditionElement);
+-            } else if ("if-compare-field".equals(conditionElement.getNodeName())) {
++            } else if ("if-compare-field".equals(nodeName)) {
+                 return new IfCompareField(this, modelWidget, conditionElement);
+-            } else if ("if-regexp".equals(conditionElement.getNodeName())) {
++            } else if ("if-regexp".equals(nodeName)) {
+                 return new IfRegexp(this, modelWidget, conditionElement);
+-            } else if ("if-empty".equals(conditionElement.getNodeName())) {
++            } else if ("if-empty".equals(nodeName)) {
+                 return new IfEmpty(this, modelWidget, conditionElement);
+-            } else if ("if-entity-permission".equals(conditionElement.getNodeName())) {
++            } else if ("if-entity-permission".equals(nodeName)) {
+                 return new IfEntityPermission(this, modelWidget, conditionElement);
+             } else {
+-                throw new IllegalArgumentException("Condition element not supported with name: " + conditionElement.getNodeName());
++                throw new IllegalArgumentException("Condition element not supported with name: " + nodeName);
+             }
+         }
+     }
+-- 
+2.11.0
+
