@@ -52,7 +52,7 @@
     },
     methods: {
       propagate() {
-        this.$refs[this.ref][0].redirect()
+        this.$refs[this.ref][0].handleUpdate()
       }
     }
   }
