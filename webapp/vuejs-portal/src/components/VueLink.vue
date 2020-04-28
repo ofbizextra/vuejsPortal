@@ -42,7 +42,7 @@
         {{text}}
       </span>
     </a>
-    <span v-else :icon="haveIcon" @click="handleUpdate()">
+    <span v-else :icon="haveIcon">
       <v-tooltip bottom>
         <template v-slot:activator="{ on }">
           <v-icon v-if="haveIcon" v-on="on" :id="src">{{getIcon(src)}}</v-icon>
@@ -200,7 +200,11 @@
         this.$store.dispatch('data/setWatcher', {watcherName: this.targetWindow, data: this.parameterMap})
       },
       setArea() {
-        this.$store.dispatch('ui/setArea', {areaId: this.targetWindow, targetUrl: this.$store.getters['backOfficeApi/currentApi'] + '/' + this.target, wait: this.$wait})
+        this.$store.dispatch('ui/setArea', {areaId: this.targetWindow,
+                                         targetUrl: this.$store.getters['backOfficeApi/currentApi'] + '/' + this.target,
+                                              wait: this.$wait,
+                                            params: {get:'Y'}
+                                            })
       }
     }
   }
