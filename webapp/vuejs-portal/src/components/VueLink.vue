@@ -1,18 +1,5 @@
 <template>
   <div id="vue-link">
-    <form
-        v-if="linkType === 'hidden-form'"
-        v-on:click.prevent=""
-        :name="uniqueItemName"
-    >
-      <input
-          v-for="(parameter, id) in parameterMap"
-          :key="id"
-          :name="parameter.name"
-          :value="parameter.value"
-          type="hidden"
-      />
-    </form>
     <router-link
         v-if="linkType === 'auto' && urlMode === 'intra-app'"
         v-bind:id="id + '_link'"
@@ -35,7 +22,7 @@
       </span>
     </router-link>
     <a
-        v-else-if="linkType === 'auto'"
+        v-else-if="linkType === 'auto' && urlmode === 'inter-app'"
         v-bind:id="id + '_link'"
         :data-dialog-params="params"
         :data-dialog-width="width"
@@ -55,17 +42,7 @@
         {{text}}
       </span>
     </a>
-    <v-btn
-        v-else-if="linkType === 'anchor' && inline"
-        v-bind:id="id + '_link'"
-        :data-dialog-params="params"
-        :data-dialog-width="width"
-        :data-dialog-height="height"
-        :data-dialog-title="text"
-        :class="style"
-        v-on:click.prevent="redirect"
-        icon
-    >
+    <v-btn v-else :icon="haveIcon" @click="handleUpdate()">
       <v-tooltip bottom>
         <template v-slot:activator="{ on }">
           <v-icon v-if="haveIcon" v-on="on" :id="src">{{getIcon(src)}}</v-icon>
@@ -73,49 +50,10 @@
         <span>{{imgTitle}}</span>
       </v-tooltip>
       <img :src="src" :title="imgTitle" alt="" v-if="haveImage"/>
-      <span class="font-weight-regular secondary--text">
-            {{text}}
-        </span>
+      <span class="font-weight-regular">
+        {{text}}
+      </span>
     </v-btn>
-    <a
-        v-else-if="linkType === 'anchor'"
-        v-bind:id="id + '_link'"
-        :data-dialog-params="params"
-        :data-dialog-width="width"
-        :data-dialog-height="height"
-        :data-dialog-title="text"
-        :class="style"
-        v-on:click.prevent="clickDisabled ? null : redirect"
-    >
-      <v-tooltip bottom>
-        <template v-slot:activator="{ on }">
-          <v-icon v-if="haveIcon" v-on="on" :id="src">{{getIcon(src)}}</v-icon>
-        </template>
-        <span>{{imgTitle}}</span>
-      </v-tooltip>
-      <img :src="src" :title="imgTitle" alt="" v-if="haveImage"/>
-      <span class="font-weight-regular secondary--text">
-            {{text}}
-        </span>
-    </a>
-    <a
-        v-else-if="linkType === 'hidden-form' || target.length > 0"
-        v-bind:id="id"
-        v-bind:class="style"
-        v-bind:name="name"
-        v-bind:target="targetWindow"
-        v-bind:href="`${href}#${href}`"
-        v-on:click.prevent="clickDisabled ? null : redirect"
-    >
-      <v-tooltip bottom>
-        <template v-slot:activator="{ on }">
-          <v-icon v-if="haveIcon" v-on="on" :id="src">{{getIcon(src)}}</v-icon>
-        </template>
-        <span>{{imgTitle}}</span>
-      </v-tooltip>
-      <img :src="src" :title="imgTitle" alt="" v-if="haveImage">
-      {{' ' + text}}
-    </a>
   </div>
 </template>
 
@@ -244,6 +182,25 @@
             params: this.parameterMap
           })
         }
+      },
+      handleUpdate() {
+        switch (this.linkType) {
+          case 'set-watcher':
+            this.setWatcher()
+            break
+          case 'set-area':
+            this.setArea()
+            break
+          default:
+            this.$store.dispatch('backOfficeApi/addMessage', {messageContent: this.linkType + ' linkType is not yet supported.', messageType: 'error'})
+            break
+        }
+      },
+      setWatcher() {
+        this.$store.dispatch('data/setWatcher', {watcherName: this.targetWindow, data: this.parameterMap})
+      },
+      setArea() {
+        this.$store.dispatch('ui/setArea', {areaId: this.targetWindow, targetUrl: this.target, wait: this.$wait})
       }
     }
   }
