@@ -45,10 +45,11 @@ index bd23e32046..8f20b9400c 100644
                  </xs:restriction>
              </xs:simpleType>
          </xs:attribute>
-@@ -566,6 +588,8 @@ under the License.
+@@ -566,6 +588,9 @@ under the License.
              <xs:simpleType>
                  <xs:restriction base="xs:token">
                      <xs:enumeration value="intra-app" />
++                    <xs:enumeration value="intra-post" />
 +                    <xs:enumeration value="intra-put" />
 +                    <xs:enumeration value="intra-delete" />
                      <xs:enumeration value="inter-app" />
