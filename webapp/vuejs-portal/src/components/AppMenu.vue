@@ -9,7 +9,7 @@
     <v-divider></v-divider>
     <v-list dense nav id="app-navigation" height="auto" v-if="menu.hasOwnProperty('viewScreen')" color="secondary" link router>
       <v-list-item v-for="(link, id) in menu.viewScreen[0].children" :key="id" link
-                   :to="generateRouterLink(link.children[0].attributes.linkUrl)" dense router exact>
+                   :to="generateRouterLink(link.children[0].attributes.target)" dense router exact>
         <v-list-item-content>
           <v-list-item-title>
             {{link.children[0].attributes.text}}
@@ -269,7 +269,7 @@
         if (webapp === 'showPortalPage') {
           return `/portalPage/${params.portalPageId}`
         } else {
-          return `/screen/${webapp}`
+          return `/screen/${pathname}`
         }
       },
       getIcon(icon) {

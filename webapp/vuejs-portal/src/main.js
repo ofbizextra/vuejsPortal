@@ -180,6 +180,7 @@ const router = new VueRouter({
     {path: '/login', component: Login, beforeEnter: requireAuth},
     {path: '/portalPage/:portalPageId', props: true, component: Portal, beforeEnter: requireAuth},
     {path: '/screen/:screenId', props: true, component: Screen, beforeEnter: requireAuth},
+    {path: '/screen/:screenId/:cover', props: true, component: Screen, beforeEnter: requireAuth},
   ]
 })
 
