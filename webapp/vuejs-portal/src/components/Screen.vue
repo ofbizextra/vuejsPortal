@@ -30,6 +30,9 @@
       if (screenId === 'main') {
         screenId = 'mainfjs'
       }
+      if (this.$route.params.cover){
+         screenId = screenId + '/' + this.$route.params.cover
+      }
       this.$http.get(this.currentApi + '/' + screenId,
         queryString.stringify(this.$route.query),
         {headers: {'Content-Type': 'application/x-www-form-urlencoded', 'locale': 'en_US'}}
