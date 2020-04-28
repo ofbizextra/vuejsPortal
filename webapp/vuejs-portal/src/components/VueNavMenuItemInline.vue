@@ -1,6 +1,7 @@
 <template>
-  <div>
+  <div :id="id" @click="propagate">
     <div
+        :ref="ref"
         v-for="(component, index) in children"
         :key="index"
         v-bind:is="constants.components[component.name]"
@@ -32,6 +33,9 @@
       linkStr() {
         return this.props.attributes.hasOwnProperty('linkStr') ? this.props.attributes.linkStr : ''
       },
+      ref() {
+        return this.id + '_link'
+      },
       style() {
         return this.props.attributes.hasOwnProperty('style') ? this.props.attributes.style : ''
       },
@@ -39,6 +43,11 @@
         return this.props.attributes.hasOwnProperty('toolTip') ? this.props.attributes.toolTip : ''
       }
     },
+    methods: {
+      propagate() {
+        this.$refs[this.ref][0].handleUpdate()
+      }
+    }
   }
 </script>
 
