@@ -9,7 +9,7 @@
     <v-divider></v-divider>
     <v-list dense nav id="app-navigation" height="auto" v-if="menu.hasOwnProperty('viewScreen')" color="secondary" link router>
       <v-list-item v-for="(link, id) in menu.viewScreen[0].children" :key="id" link
-                   :to="generateRouterLink(link.children[0].attributes.target)" dense router exact>
+                   :to="generateRouterLink(link.children[0].attributes.target, link.children[0].attributes.parameterMap)" dense router exact>
         <v-list-item-content>
           <v-list-item-title>
             {{link.children[0].attributes.text}}
@@ -255,17 +255,9 @@
       }
     },
     methods: {
-      generateRouterLink(url) {
+      generateRouterLink(url, params) {
         let pathname = url.split('?')[0]
         let webapp = pathname.substring(pathname.lastIndexOf('/') + 1, pathname.length)
-        let search = url.split('?')[1]
-        let params = {}
-        if (search) {
-          search.split('&amp;').forEach(param => {
-            let tmp = param.split('=')
-            params[tmp[0]] = tmp[1]
-          })
-        }
         if (webapp === 'showPortalPage') {
           return `/portalPage/${params.portalPageId}`
         } else {
