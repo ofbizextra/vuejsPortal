@@ -1,5 +1,5 @@
 diff --git a/framework/widget/dtd/widget-common.xsd b/framework/widget/dtd/widget-common.xsd
-index bd23e32046..73133d9e0f 100644
+index bd23e32046..8f20b9400c 100644
 --- a/framework/widget/dtd/widget-common.xsd
 +++ b/framework/widget/dtd/widget-common.xsd
 @@ -515,6 +515,13 @@ under the License.
@@ -45,11 +45,10 @@ index bd23e32046..73133d9e0f 100644
                  </xs:restriction>
              </xs:simpleType>
          </xs:attribute>
-@@ -566,6 +588,9 @@ under the License.
+@@ -566,6 +588,8 @@ under the License.
              <xs:simpleType>
                  <xs:restriction base="xs:token">
                      <xs:enumeration value="intra-app" />
-+                    <xs:enumeration value="intra-get" />
 +                    <xs:enumeration value="intra-put" />
 +                    <xs:enumeration value="intra-delete" />
                      <xs:enumeration value="inter-app" />

@@ -26,17 +26,16 @@ index d452ef9c17..32db88abda 100644
                      </xs:restriction>
                  </xs:simpleType>
              </xs:attribute>
-@@ -1173,6 +1183,9 @@ under the License.
+@@ -1173,6 +1183,8 @@ under the License.
                      <xs:simpleType>
                          <xs:restriction base="xs:token">
                              <xs:enumeration value="intra-app" />
-+                            <xs:enumeration value="intra-get" />
 +                            <xs:enumeration value="intra-put" />
 +                            <xs:enumeration value="intra-delete" />
                              <xs:enumeration value="inter-app" />
                              <xs:enumeration value="content" />
                              <xs:enumeration value="plain" />
-@@ -1533,11 +1546,27 @@ under the License.
+@@ -1533,11 +1545,27 @@ under the License.
              <xs:documentation>Area to be updated when a field event occurs.</xs:documentation>
          </xs:annotation>
          <xs:complexType>

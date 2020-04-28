@@ -152,18 +152,17 @@ for an exclusive Vue.Js use.
     *** `link-type="anchor"` is used to make an internal call to FrontJs via `setArea`, `target-window` is used as
          id to update and `target` as area-target, parameters as parameters.
     *** `target-window` is used to design the watcherName that have to be updated.
-    *** `url-mode` three new modes is added to be able to give the http method to use, POST is the default
-      **** intra-get : do the http request with a GET method
+    *** `url-mode` two new modes is added to be able to give the http method to use, POST is the default
       **** intra-put : do the http request with a PUT method
       **** intra-delete : do the http request with a DELETE method
 * menu
   ** in `<link` tag
-    *** `link-type="anchor"` is used to make an internal call to FrontJs via `setArea`, `target-window` is used as
-         id to update and `target` as area-target, parameters as parameters.
-    *** `link-type="auto"` (default value) and `url-mode="intra-app"` call the portalPageDetail to print a new
-         portal page. portalPageId should be in parameters.
-    *** `url-mode` three new modes is added to be able to give the http method to use, POST is the default
-      **** intra-get : do the http request with a GET method
+    *** `link-type="set-area"` is used to make an internal call to FrontJs via `setArea`, `target-window` is used as
+         id to update and `target` as area-target, it's a http get so parameters should be in target and
+         if there area some {xxx} in target they will be replace by correct value with fields list in parameters.
+    *** `link-type="auto"` (default value) and `url-mode="intra-app"` call the target-url to print a new
+         page (using internal routing).
+    *** `url-mode` two new modes is added to be able to give the http method to use, POST is the default (except for setArea)
       **** intra-put : do the http request with a PUT method
       **** intra-delete : do the http request with a DELETE method
 
