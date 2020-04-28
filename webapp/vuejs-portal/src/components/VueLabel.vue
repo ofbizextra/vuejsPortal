@@ -14,7 +14,7 @@
         return this.props.attributes.hasOwnProperty('id') ? this.props.attributes.id : ''
       },
       isHeader() {
-        return ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'].includes(this.style)
+        return ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'].includes(this.style.toLocaleLowerCase())
       },
       style() {
         return this.props.attributes.hasOwnProperty('style') ? this.props.attributes.style : ''
