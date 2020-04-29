@@ -708,7 +708,8 @@
       },
       formatDate(timestamp) {
         let d = new Date(timestamp)
-        return `${d.getFullYear()}-${d.getMonth() < 9 ? '0' : ''}${d.getMonth() + 1}-${d.getDate() < 10 ? '0' : ''}${d.getDate()} ${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}.${d.getMilliseconds()}`
+               // for hours, minute and second, it's not necessary to add the zero, only for milisecond !
+        return `${d.getFullYear()}-${d.getMonth() < 9 ? '0' : ''}${d.getMonth() + 1}-${d.getDate() < 10 ? '0' : ''}${d.getDate()} ${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}.${d.getMilliseconds() < 100 ? '0' : ''}${d.getMilliseconds() < 10 ? '0' : ''}${d.getMilliseconds()}`
       },
       toggleEdit() {
         this.confirmDialog = false
