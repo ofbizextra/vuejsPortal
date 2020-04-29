@@ -185,12 +185,18 @@ const actions = {
           ).then(response => {
             if (response.body.hasOwnProperty('_ERROR_MESSAGE_')) {
               dispatch('addErrorMessage', {errorMessage: response.body['_ERROR_MESSAGE_']})
+              setTimeout(() => {
+                dispatch('wait/end', areaId, {root: true})
+              }, 0)
               reject()
             }
             if (response.body.hasOwnProperty('_ERROR_MESSAGE_LIST_')) {
               for (let errorMessage of response.body['_ERROR_MESSAGE_LIST_']) {
                 dispatch('addErrorMessage', {errorMessage})
               }
+              setTimeout(() => {
+                dispatch('wait/end', areaId, {root: true})
+              }, 0)
               reject()
             }
             commit('SET_AREA', {areaId: areaId, areaContent: response.body})
@@ -235,6 +241,9 @@ const actions = {
             setTimeout(() => {
               dispatch('wait/end', areaId, {root: true})
             }, 0)
+            setTimeout(() => {
+              dispatch('wait/end', areaId, {root: true})
+            }, 0)
             reject(error)
           })
         } else {
@@ -242,12 +251,18 @@ const actions = {
           ).then(response => {
             if (response.body.hasOwnProperty('_ERROR_MESSAGE_')) {
               dispatch('addErrorMessage', {errorMessage: response.body['_ERROR_MESSAGE_']})
+              setTimeout(() => {
+                dispatch('wait/end', areaId, {root: true})
+              }, 0)
               reject()
             }
             if (response.body.hasOwnProperty('_ERROR_MESSAGE_LIST_')) {
               for (let errorMessage of response.body['_ERROR_MESSAGE_LIST_']) {
                 dispatch('addErrorMessage', {errorMessage})
               }
+              setTimeout(() => {
+                dispatch('wait/end', areaId, {root: true})
+              }, 0)
               reject()
             }
             commit('SET_AREA', {areaId: areaId, areaContent: response.body})
