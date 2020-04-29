@@ -24,6 +24,7 @@
         <v-btn fab fixed top right @click.stop="closeModal"><v-icon>{{getIcon('mdi-close')}}</v-icon></v-btn>
         <v-card class="pa-1">
           <v-card-text class="pa-0">
+            <!-- TODO review parameter for vue-container creation, this container is never update by a watcher, only by the initial setArea -->
             <vue-container :props="{attributes: {id: name + '_lookup_modalContent'}}"
                            :auto-update-params="{targetUrl: getCurrentApi + '/' + fieldFormName, params: modalParams}">
             </vue-container>
@@ -250,11 +251,13 @@
         return str
       },
       showModal() {
+        let params = this.modalParams
+        params['presentation'] = 'layer'
         this.$store.dispatch('ui/setArea', {
           areaId: this.name + '_lookup_modalContent',
           targetUrl: `${this.$store.getters['backOfficeApi/currentApi']}/${this.fieldFormName}`,
           wait: this.$wait,
-          params: {presentation: 'layer'}
+          params: params
         }).then(() => {
             this.$store.dispatch('ui/setDialogStatus', {
               dialogId: this.id,
