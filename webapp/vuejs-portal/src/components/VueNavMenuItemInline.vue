@@ -1,3 +1,4 @@
+<!-- Component used to manage menu in line not in a pop-up -->
 <template>
   <div :id="id" @click="propagate">
     <div

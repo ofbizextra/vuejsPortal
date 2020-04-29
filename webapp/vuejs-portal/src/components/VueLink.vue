@@ -42,6 +42,18 @@
         {{text}}
       </span>
     </a>
+    <v-btn v-else-if="inline" :icon="haveIcon">
+      <v-tooltip bottom>
+        <template v-slot:activator="{ on }">
+          <v-icon v-if="haveIcon" v-on="on" :id="src">{{getIcon(src)}}</v-icon>
+        </template>
+        <span>{{imgTitle}}</span>
+      </v-tooltip>
+      <img :src="src" :title="imgTitle" alt="" v-if="haveImage"/>
+      <span class="font-weight-regular">
+        {{text}}
+      </span>
+    </v-btn>
     <span v-else :icon="haveIcon">
       <v-tooltip bottom>
         <template v-slot:activator="{ on }">
@@ -64,7 +76,7 @@
 
   export default {
     name: "VueLink",
-    props: ['props', 'updateStore', 'inline', 'clickDisabled'],  // <== TODO-TRAING OH what is the rule of inline ?
+    props: ['props', 'updateStore', 'inline', 'clickDisabled'],  // inline == true when link is call from NavMenuItemInline
     data() {
       return {
         constants: constants
@@ -87,7 +99,7 @@
         return this.props.attributes.hasOwnProperty('height') ? this.props.attributes.height : ''
       },
       href() {
-        if (this.linkType === 'hidden-form') {
+        if (this.linkType === 'hidden-form') { // TODO check why there is this test because hidden-form should be manage to the same way that auto
           return ''
         }
         let href
@@ -183,7 +195,7 @@
           })
         }
       },
-      handleUpdate() {
+      handleUpdate() { // this method is call by parent component NavMenuItem or NavMenuItemInLine
         switch (this.linkType) {
           case 'set-watcher':
             this.setWatcher()

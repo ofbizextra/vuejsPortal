@@ -1,3 +1,4 @@
+<!-- Component used to manage menu in a pop-up not in a line-->
 <template>
   <v-list-item :id="id" link @click="propagate">
     <v-list-item-content>
