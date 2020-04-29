@@ -35,6 +35,7 @@ import VueListWrapper from './components/VueListWrapper'
 import VueHeader from './components/VueHeader'
 import VueHeaderRow from './components/VueHeaderRow'
 import VueHeaderRowCell from './components/VueHeaderRowCell'
+import VueFieldTitle from './components/VueFieldTitle'
 import VueItemRow from './components/VueItemRow'
 import VueItemRowCell from './components/VueItemRowCell'
 import VueSingleWrapper from './components/VueSingleWrapper'
@@ -107,6 +108,7 @@ Vue.component('vue-list-wrapper', VueListWrapper)
 Vue.component('vue-header', VueHeader)
 Vue.component('vue-header-row', VueHeaderRow)
 Vue.component('vue-header-row-cell', VueHeaderRowCell)
+Vue.component('vue-field-title', VueFieldTitle)
 Vue.component('vue-item-row', VueItemRow)
 Vue.component('vue-item-row-cell', VueItemRowCell)
 Vue.component('vue-single-wrapper', VueSingleWrapper)

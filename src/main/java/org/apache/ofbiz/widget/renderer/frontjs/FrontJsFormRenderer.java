@@ -985,7 +985,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
                     this.output.putScreen("FieldTitle", cb);
                 } else if (modelFormField.isSortField()) {
                     renderSortField(writer, context, modelFormField, titleText);
-                } else if (modelFormField.isRowSubmit()) {
+                } else if (modelFormField.isRowSubmit()) { // TODO devra être ré-activé
                     Map<String, Object> cb = new HashMap<>();
                     cb.put("name", modelFormField.getModelForm().getName());
                     cb.put("title", titleText);
@@ -1021,9 +1021,9 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
                 cb.put("id", id);
                 cb.put("for", id);
             }
-            if ("single".equals(modelFormField.getModelForm().getType())) cb.put("single", true); // to be able to not use it in vuejs (all attributes are in field)
-                                                                                                  //   it's temporary, waiting all is ok without fieldTitle in single
-            this.output.putScreen("FieldTitle", cb);
+            if (! "single".equals(modelFormField.getModelForm().getType())) {
+                this.output.putScreen("FieldTitle", cb);
+            }
         }
     }
 

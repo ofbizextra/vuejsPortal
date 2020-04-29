@@ -29,6 +29,7 @@ export default {
     Header: 'vue-header',
     HeaderRow: 'vue-header-row',
     HeaderRowCell: 'vue-header-row-cell',
+    FieldTitle: 'vue-field-title',
     HiddenField: 'vue-hidden-field',
     HorizontalSeparator: 'vue-horizontal-separator',
     HyperlinkField: 'vue-hyperlink-field',
