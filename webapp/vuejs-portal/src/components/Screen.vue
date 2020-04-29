@@ -35,7 +35,7 @@
       }
       this.$http.get(this.currentApi + '/' + screenId,
         queryString.stringify(this.$route.query),
-        {headers: {'Content-Type': 'application/x-www-form-urlencoded', 'locale': 'en_US'}}
+        {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}
       ).then(
         response => {
           this.screen = response.body
@@ -53,7 +53,7 @@
         }
         this.$http.get(this.currentApi + '/' + screenId,
           queryString.stringify(this.$route.query),
-          {headers: {'Content-Type': 'application/x-www-form-urlencoded', 'locale': 'en_US'}}
+          {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}
         ).then(
           response => {
             this.screen = response.body

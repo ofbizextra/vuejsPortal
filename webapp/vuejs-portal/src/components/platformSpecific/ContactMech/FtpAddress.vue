@@ -48,7 +48,7 @@
           </v-list-item-subtitle>
           <v-list-item-subtitle v-if="ftpAddress.partyContactMech.hasOwnProperty('thruDate') && ftpAddress.partyContactMech.thruDate">
             <v-chip class="secondary mr-1 mb-1" x-small>
-              {{ctmUiLabel('effectiveThru')}}  {{parseDate(ftpAddress.partyContactMech.thruDate)}}
+              {{ctmUiLabel('effectiveThru')}}  {{ftpAddress.partyContactMech.thruDate}}
             </v-chip>
           </v-list-item-subtitle>
         </v-list-item-content>
@@ -172,6 +172,7 @@
       getPurposeDescription(contactMechPurposeTypeId) {
         return this.purposeList.filter(purpose => purpose.contactMechPurposeTypeId === contactMechPurposeTypeId).length > 0 ? this.purposeList.filter(purpose => purpose.contactMechPurposeTypeId === contactMechPurposeTypeId)[0].description : ''
       },
+      // currently not use, because date is formated in ofbiz
       parseDate(timestamp) {
         return new Date(parseInt(timestamp)).toLocaleDateString() + ' - ' + new Date(parseInt(timestamp)).toLocaleTimeString()
       }

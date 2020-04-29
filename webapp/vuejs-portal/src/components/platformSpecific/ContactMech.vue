@@ -26,7 +26,7 @@
       <v-dialog v-model="confirmDialog" persistent v-if="toDelete.length !== 0 && modified" max-width="600px">
         <template v-slot:activator="{on}">
           <v-btn icon v-on="on">
-            <v-icon color="green" id='mdi-check'>{{getIcon('mdi-check')}}</v-icon>
+            <v-icon color="success" id='mdi-check'>{{getIcon('mdi-check')}}</v-icon>
           </v-btn>
         </template>
         <v-card>
@@ -706,6 +706,7 @@
       displayPurpose(contactMechTypeId, purposeTypeId) {
         return this.purposeListByType[contactMechTypeId].filter(item => item.contactMechPurposeTypeId === purposeTypeId)[0].description
       },
+      // currently not used, because date is formated in ofbiz
       formatDate(timestamp) {
         let d = new Date(timestamp)
                // for hours, minute and second, it's not necessary to add the zero, only for milisecond !
@@ -1080,7 +1081,7 @@
                         params: {
                           contactMechId: contactMech.contactMech.contactMechId,
                           partyId: contactMech.partyContactMech.partyId,
-                          fromDate: this.formatDate(purpose.fromDate),
+                          fromDate: purpose.fromDate,
                           contactMechPurposeTypeId: purpose.contactMechPurposeTypeId
                         },
                         hideEventMessage: true

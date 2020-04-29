@@ -37,7 +37,7 @@
           </v-list-item-subtitle>
           <v-list-item-subtitle v-if="thruDate(contactMech)">
               <v-chip class="secondary mr-1 mb-1" x-small>
-                {{ctmUiLabel('effectiveThru')}}  {{parseDate(contactMech.partyContactMech.thruDate)}}
+                {{ctmUiLabel('effectiveThru')}}  {{contactMech.partyContactMech.thruDate}}
               </v-chip>
           </v-list-item-subtitle>
           <v-list-item-subtitle v-if="editMode && purposeList.length > 0">
@@ -117,6 +117,7 @@
       getPurposeDescription(contactMechPurposeTypeId) {
         return this.purposeList.filter(purpose => purpose.contactMechPurposeTypeId === contactMechPurposeTypeId).length > 0 ? this.purposeList.filter(purpose => purpose.contactMechPurposeTypeId === contactMechPurposeTypeId)[0].description : ''
       },
+      // currently not use, because date is formated in ofbiz
       parseDate(timestamp) {
         return new Date(parseInt(timestamp)).toLocaleDateString() + ' - ' + new Date(parseInt(timestamp)).toLocaleTimeString()
       },
