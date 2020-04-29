@@ -190,7 +190,6 @@
           this.$store.dispatch('ui/setArea', {
             areaId: this.props.attributes.targetWindow,
             targetUrl: `${this.$store.getters['backOfficeApi/currentApi']}/${this.props.attributes.target}`,
-            wait: this.$wait,
             params: this.parameterMap
           })
         }
@@ -214,7 +213,6 @@
       setArea() {
         this.$store.dispatch('ui/setArea', {areaId: this.targetWindow,
                                             targetUrl: this.$store.getters['backOfficeApi/currentApi'] + '/' + this.target,
-                                            wait: this.$wait,
                                             params: (this.urlMode === 'intra-post')? this.parameterMap : {get:'Y'}
                                             })
       }

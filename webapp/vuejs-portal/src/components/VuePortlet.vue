@@ -79,7 +79,6 @@
         this.$store.dispatch('ui/setArea', {
           areaId: this.portalPortletId + '-' + this.portletSeqId,
           targetUrl: this.$store.getters['backOfficeApi/currentApi'] + constants.showPortlet.path,
-          wait: this.$wait,
           params: {...this.currentPortalPageParams, portalPortletId: this.portalPortletId, portalPageId: this.portalPageId, portletSeqId: this.portletSeqId}
         })
       }
@@ -92,7 +91,6 @@
         this.$store.dispatch('ui/setArea', {
           areaId: this.portletId,
           targetUrl: this.$store.getters['backOfficeApi/currentApi'] + constants.showPortlet.path,
-          wait: this.$wait,
           params: {...val, portalPortletId: this.portalPortletId, portalPageId: this.portalPageId, portletSeqId: this.portletSeqId}
         })
       },
@@ -100,7 +98,6 @@
         this.$store.dispatch('ui/setArea', {
           areaId: this.portletId,
           targetUrl: this.$store.getters['backOfficeApi/currentApi'] + constants.showPortlet.path,
-          wait: this.$wait,
           params: {...val, portalPortletId: this.portalPortletId, portalPageId: this.portalPageId, portletSeqId: this.portletSeqId}
         })
       },

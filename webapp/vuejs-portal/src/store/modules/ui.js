@@ -175,10 +175,10 @@ const actions = {
       }, 0)
     })
   },
-  setArea({commit, dispatch}, {areaId, targetUrl, wait, params = {}}) {
+  setArea({commit, dispatch}, {areaId, targetUrl, params = {}}) {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
-        wait.start(areaId)
+        dispatch('wait/start', areaId, {root: true})
         dispatch('incrementUpdateCpt')
         if (params.get) {
           dispatch('backOfficeApi/doGet', {uri: constants.hostUrl + targetUrl.replace('amp;', '')}, {root: true}
@@ -221,19 +221,19 @@ const actions = {
               })
               Promise.all(records).then(() => {
                 setTimeout(() => {
-                  wait.end(areaId)
+                  dispatch('wait/end', areaId, {root: true})
                 }, 0)
                 resolve(areaId)
               })
             } else {
               setTimeout(() => {
-                wait.end(areaId)
+                dispatch('wait/end', areaId, {root: true})
               }, 0)
               resolve(areaId)
             }
           }, error => {
             setTimeout(() => {
-              wait.end(areaId)
+              dispatch('wait/end', areaId, {root: true})
             }, 0)
             reject(error)
           })
@@ -278,19 +278,19 @@ const actions = {
               })
               Promise.all(records).then(() => {
                 setTimeout(() => {
-                  wait.end(areaId)
+                  dispatch('wait/end', areaId, {root: true})
                 }, 0)
                 resolve(areaId)
               })
             } else {
               setTimeout(() => {
-                wait.end(areaId)
+                dispatch('wait/end', areaId, {root: true})
               }, 0)
               resolve(areaId)
             }
           }, error => {
             setTimeout(() => {
-              wait.end(areaId)
+              dispatch('wait/end', areaId, {root: true})
             }, 0)
             reject(error)
           })

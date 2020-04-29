@@ -256,7 +256,6 @@
         this.$store.dispatch('ui/setArea', {
           areaId: this.name + '_lookup_modalContent',
           targetUrl: `${this.$store.getters['backOfficeApi/currentApi']}/${this.fieldFormName}`,
-          wait: this.$wait,
           params: params
         }).then(() => {
             this.$store.dispatch('ui/setDialogStatus', {
