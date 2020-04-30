@@ -13,5 +13,6 @@ module.exports = {
       args[0].terserOptions.compress.pure_funcs = ['console.log']
       return args
     })
-  }
+  },
+  filenameHashing: false
 }
