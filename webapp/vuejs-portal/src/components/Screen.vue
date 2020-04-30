@@ -9,8 +9,6 @@
   import constants from './../js/constants'
   import {mapGetters} from 'vuex'
 
-  const queryString = require('query-string')
-
   export default {
     name: "Screen",
     data() {
@@ -33,14 +31,17 @@
       if (this.$route.params.cover){
          screenId = screenId + '/' + this.$route.params.cover
       }
-      this.$http.get(this.currentApi + '/' + screenId,
-        queryString.stringify(this.$route.query),
-        {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}
-      ).then(
-        response => {
-          this.screen = response.body
-        }
-      )
+      this.$wait.start(screenId)
+      this.$store.dispatch('backOfficeApi/doGet', {uri: this.currentApi + '/' + screenId})
+        .then(
+          response => {
+            this.screen = response.body
+            this.$wait.end(screenId)
+          },
+          () => {
+            this.$wait.end(screenId)
+          }
+        )
     },
     watch: {
       '$route': function () {
@@ -51,14 +52,17 @@
         if (this.$route.params.cover){
             screenId = screenId + '/' + this.$route.params.cover
         }
-        this.$http.get(this.currentApi + '/' + screenId,
-          queryString.stringify(this.$route.query),
-          {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}
-        ).then(
-          response => {
-            this.screen = response.body
-          }
-        )
+        this.$wait.start(screenId)
+        this.$store.dispatch('backOfficeApi/doGet', {uri: this.currentApi + '/' + screenId})
+          .then(
+            response => {
+              this.screen = response.body
+              this.$wait.end(screenId)
+            },
+            () => {
+              this.$wait.end(screenId)
+            }
+          )
       }
     }
   }
