@@ -6,7 +6,7 @@
           id="loader-wrapper"
           indeterminate
           :size=64
-          color="primary"
+          color="success"
       > </v-progress-circular>
     </v-overlay>
   </div>
