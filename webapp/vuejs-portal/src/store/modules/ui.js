@@ -241,9 +241,6 @@ const actions = {
             setTimeout(() => {
               dispatch('wait/end', areaId, {root: true})
             }, 0)
-            setTimeout(() => {
-              dispatch('wait/end', areaId, {root: true})
-            }, 0)
             reject(error)
           })
         } else {
