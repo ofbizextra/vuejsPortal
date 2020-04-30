@@ -41,7 +41,6 @@ const actions = {
               dialogId: 'loginDialog',
               dialogStatus: true
             }, {root: true})
-            this._vm.$modal.show('login')
             reject(response)
           }
             if (response.body.hasOwnProperty('_ERROR_MESSAGE_')) {
