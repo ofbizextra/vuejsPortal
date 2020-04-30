@@ -5,18 +5,18 @@
         <div class="screenlet-body">
           <v-card>
             <v-card-title>
-              Sign in
+              {{uiLabel('registred')}}
             </v-card-title>
             <v-card-text>
               <v-form name="loginform">
-                <v-text-field name="USERNAME" label="Username" v-model="username" size="20" type="text" />
-                <v-text-field name="PASSWORD" label="Password" autocomplete="off" v-model="password" size="20" type="password" />
+                <v-text-field name="USERNAME" :label="uiLabel('userName')" v-model="username" size="20" type="text" />
+                <v-text-field name="PASSWORD" :label="uiLabel('password')" autocomplete="off" v-model="password" size="20" type="password" />
                   <v-row justify="center">
-                    <v-btn text @click.prevent="singIn">Sign in</v-btn>
+                    <v-btn text @click.prevent="singIn">{{uiLabel('login')}}</v-btn>
                   </v-row>
                   <v-row>
                     <v-spacer></v-spacer>
-                    <a href="https://localhost:8443/exampleapi/control/forgotPassword_step1">Forgot Your Password?</a>
+                    <a href="https://localhost:8443/exampleapi/control/forgotPassword_step1">{{uiLabel('forgotYourPassword')}}?</a>
                   </v-row>
               </v-form>
             </v-card-text>
@@ -40,7 +40,8 @@
     },
     computed: {
       ...mapGetters({
-        getDialogStatus: 'ui/dialogStatus'
+        getDialogStatus: 'ui/dialogStatus',
+        uiLabel: 'ui/uiLabel'
       }),
       credential() {
         return {username: this.username, password: this.password}
@@ -58,6 +59,9 @@
       }
     },
     methods: {
+      uiLabel(label) {
+        return this.uiLabel(label)
+      },
       singIn() {
         this.$store.dispatch('login/login', this.credential)
           .then(() => {
