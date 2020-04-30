@@ -21,6 +21,7 @@ import org.apache.ofbiz.base.util.UtilProperties
 import org.apache.ofbiz.base.util.Debug
 
 uiLabelMap = UtilProperties.getResourceBundleMap("CommonUiLabels", locale)
+uiLabelMap.addBottomResourceBundle("VuejsUiLabels")
 
 vuejsUiLabel = [:]
 vuejsUiLabel.add             = uiLabelMap.CommonAdd
@@ -33,12 +34,19 @@ vuejsUiLabel.date            = uiLabelMap.CommonDate
 
 vuejsUiLabel.expandToolTip   = uiLabelMap.CommonExpand      // screenletExpand
 vuejsUiLabel.expire          = uiLabelMap.CommonExpire
+vuejsUiLabel.forgotYourPassword = uiLabelMap.CommonForgotYourPassword
+vuejsUiLabel.login           = uiLabelMap.CommonLogin
+vuejsUiLabel.loginSuccessMessage = uiLabelMap.VuejsLoginSuccessMessage
 //FormFieldTitle_expireButton
 vuejsUiLabel.ofLabel         = uiLabelMap.CommonOf          // pagination CommonRequired
+vuejsUiLabel.password        = uiLabelMap.CommonPassword
+vuejsUiLabel.rememberMe      = uiLabelMap.VuejsRememberMe
+vuejsUiLabel.registred       = uiLabelMap.CommonRegistered
 vuejsUiLabel.required        = uiLabelMap.CommonRequired
 vuejsUiLabel.showAll         = uiLabelMap.CommonShowAll
 vuejsUiLabel.summary         = uiLabelMap.CommonSummary
 vuejsUiLabel.time            = uiLabelMap.CommonTime
+vuejsUiLabel.userName        = uiLabelMap.CommonUsername
 request.setAttribute("commonUiLabels", vuejsUiLabel)
 return "success"
 
