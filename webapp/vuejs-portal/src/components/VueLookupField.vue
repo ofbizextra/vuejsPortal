@@ -217,8 +217,9 @@
           key: this.props.attributes.name,
           value: this.valueStored
         })
-        this.$store.dispatch('backOfficeApi/doPost', {
+        this.$store.dispatch('backOfficeApi/doRequest', {
           uri: this.$store.getters['backOfficeApi/apiUrl'] + '/' + this.fieldFormName,
+          mode: 'post',
           params: this.params
         }).then(result => {
           this.returnField = result.body.viewScreen[0].attributes.returnField === null ? '' : result.body.viewScreen[0].attributes.returnField

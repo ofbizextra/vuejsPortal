@@ -140,8 +140,9 @@
           let regexReplace = /{\w+}/
           uri = uri.replace(regexReplace, this.form[regexKey.exec(uri)[1]])
         }
-        return this.$store.dispatch('backOfficeApi/doPost', {
+        return this.$store.dispatch('backOfficeApi/doRequest', {
           uri: uri,
+          mode: 'post',
           params: this.form
         })
       }

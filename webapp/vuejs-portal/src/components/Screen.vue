@@ -32,7 +32,7 @@
          screenId = screenId + '/' + this.$route.params.cover
       }
       this.$wait.start(screenId)
-      this.$store.dispatch('backOfficeApi/doGet', {uri: this.currentApi + '/' + screenId})
+      this.$store.dispatch('backOfficeApi/doRequest', {uri: this.currentApi + '/' + screenId, mode: 'get'})
         .then(
           response => {
             this.screen = response.body
@@ -53,7 +53,7 @@
             screenId = screenId + '/' + this.$route.params.cover
         }
         this.$wait.start(screenId)
-        this.$store.dispatch('backOfficeApi/doGet', {uri: this.currentApi + '/' + screenId})
+        this.$store.dispatch('backOfficeApi/doRequest', {uri: this.currentApi + '/' + screenId, mode: 'get'})
           .then(
             response => {
               this.screen = response.body

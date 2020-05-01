@@ -154,8 +154,9 @@
       resolveEvent(updateArea) {
         switch (updateArea.eventType) {
           case 'post':
-            return this.$store.dispatch('backOfficeApi/doPost', {
+            return this.$store.dispatch('backOfficeApi/doRequest', {
               uri: `${this.currentApi}/${updateArea.areaTarget}`,
+              mode: 'post',
               params: updateArea.hasOwnProperty('parameterMap') ? updateArea.parameterMap : {}
             })
           case 'setArea':

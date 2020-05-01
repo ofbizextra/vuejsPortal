@@ -147,7 +147,7 @@
         this.editing = !this.editing
       },
       save() {
-        this.$store.dispatch('backOfficeApi/doPost', {uri: this.url, params: this.params}).then(() => {
+        this.$store.dispatch('backOfficeApi/doRequest', {uri: this.url, mode: 'post', params: this.params}).then(() => {
           if (this.havePointer) {
             this.$store.dispatch('data/setEntityRow', {
               entityName: this.getNestedObject(this.props, ['stPointer', 'stEntityName']),

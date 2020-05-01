@@ -181,7 +181,7 @@ const actions = {
         dispatch('wait/start', areaId, {root: true})
         dispatch('incrementUpdateCpt')
         if (params.get) {
-          dispatch('backOfficeApi/doGet', {uri: constants.hostUrl + targetUrl.replace('amp;', '')}, {root: true}
+          dispatch('backOfficeApi/doRequest', {uri: constants.hostUrl + targetUrl.replace('amp;', ''), mode: 'get'}, {root: true}
           ).then(response => {
             if (response.body.hasOwnProperty('_ERROR_MESSAGE_')) {
               dispatch('addErrorMessage', {errorMessage: response.body['_ERROR_MESSAGE_']})
@@ -244,7 +244,7 @@ const actions = {
             reject(error)
           })
         } else {
-          dispatch('backOfficeApi/doPost', {uri: constants.hostUrl + targetUrl.replace('amp;', ''), params: params}, {root: true}
+          dispatch('backOfficeApi/doRequest', {uri: constants.hostUrl + targetUrl.replace('amp;', ''), mode: 'post', params: params}, {root: true}
           ).then(response => {
             if (response.body.hasOwnProperty('_ERROR_MESSAGE_')) {
               dispatch('addErrorMessage', {errorMessage: response.body['_ERROR_MESSAGE_']})
@@ -335,7 +335,7 @@ const actions = {
   },
   loadPortalPageDetail({commit, dispatch}, {api, params}) {
     dispatch('backOfficeApi/setApi', api, {root: true})
-    dispatch('backOfficeApi/doPost', {uri: constants.hostUrl + api + constants.portalPageDetail.path, params}, {root: true}).then(response => {
+    dispatch('backOfficeApi/doRequest', {uri: constants.hostUrl + api + constants.portalPageDetail.path, mode: 'post', params}, {root: true}).then(response => {
       let portalPage = response.body
       commit('SET_CURRENT_PORTAL_PAGE_PARAMS', params)
       commit('SET_PORTAL_PAGE', {portalPageId: params.portalPageId, portalPage})
@@ -354,7 +354,7 @@ const actions = {
     }
   },
   setUiLabels({commit, dispatch}, api) {
-    dispatch('backOfficeApi/doPost', {uri: constants.hostUrl + api + constants.getCommonUiLabel}, {root: true})
+    dispatch('backOfficeApi/doRequest', {uri: constants.hostUrl + api + constants.getCommonUiLabel, mode: 'post'}, {root: true})
       .then(response => {
         commit('SET_UI_LABELS', response.body.commonUiLabels)
       })

@@ -1,17 +1,17 @@
 <template>
-  <v-navigation-drawer class="secondary" dark id="app-menu" :value="true" mini-variant mini-variant-width="86" mobile-break-point="0" expand-on-hover app>
+  <v-navigation-drawer class="primary text--secondary" id="app-menu" :value="true" mini-variant mini-variant-width="86" mobile-break-point="0" expand-on-hover app>
     <v-list-item>
       <v-list-item-content>
-        <v-list-item-title class="title">Ofbiz</v-list-item-title>
+        <v-list-item-title class="title text--secondary">Ofbiz</v-list-item-title>
         <v-list-item-subtitle>application</v-list-item-subtitle>
       </v-list-item-content>
     </v-list-item>
     <v-divider></v-divider>
-    <v-list dense nav id="app-navigation" height="auto" v-if="menu.hasOwnProperty('viewScreen')" color="secondary" link router>
+    <v-list dense nav id="app-navigation" height="auto" v-if="menu.hasOwnProperty('viewScreen')" color="primary" class="text--secondary" link router>
       <v-list-item v-for="(link, id) in menu.viewScreen[0].children" :key="id" link
                    :to="generateRouterLink(link.children[0].attributes.target, link.children[0].attributes.parameterMap)" dense router exact>
         <v-list-item-content>
-          <v-list-item-title>
+          <v-list-item-title class="text--secondary">
             {{link.children[0].attributes.text}}
           </v-list-item-title>
         </v-list-item-content>
@@ -148,8 +148,9 @@
         },
         set(value) {
           this.$vuetify.theme.dark = value
-          this.$store.dispatch('backOfficeApi/doPost', {
+          this.$store.dispatch('backOfficeApi/doRequest', {
             uri: constants.hostUrl + this.currentApi + '/ajaxSetUserPreference',
+            mode: 'post',
             params : {
               userPrefTypeId: 'DARK_MODE',
               userPrefValue: value,
@@ -164,8 +165,9 @@
         set(value) {
           this.$vuetify.theme.themes.dark.primary = value
           this.$vuetify.theme.themes.light.primary = value
-          this.$store.dispatch('backOfficeApi/doPost', {
+          this.$store.dispatch('backOfficeApi/doRequest', {
             uri: constants.hostUrl + this.currentApi + '/ajaxSetUserPreference',
+            mode: 'post',
             params : {
               userPrefTypeId: 'PRIMARY_COLOR',
               userPrefValue: value,
@@ -180,8 +182,9 @@
         set(value) {
           this.$vuetify.theme.themes.dark.secondary = value
           this.$vuetify.theme.themes.light.secondary = value
-          this.$store.dispatch('backOfficeApi/doPost', {
+          this.$store.dispatch('backOfficeApi/doRequest', {
             uri: constants.hostUrl + this.currentApi + '/ajaxSetUserPreference',
+            mode: 'post',
             params : {
               userPrefTypeId: 'SECONDARY_COLOR',
               userPrefValue: value,
@@ -196,8 +199,9 @@
         set(value) {
           this.$vuetify.theme.themes.dark.accent = value
           this.$vuetify.theme.themes.light.accent = value
-          this.$store.dispatch('backOfficeApi/doPost', {
+          this.$store.dispatch('backOfficeApi/doRequest', {
             uri: constants.hostUrl + this.currentApi + '/ajaxSetUserPreference',
+            mode: 'post',
             params : {
               userPrefTypeId: 'ACCENT_COLOR',
               userPrefValue: value,
@@ -212,8 +216,9 @@
         set(value) {
           this.$vuetify.theme.themes.dark.success = value
           this.$vuetify.theme.themes.light.success = value
-          this.$store.dispatch('backOfficeApi/doPost', {
+          this.$store.dispatch('backOfficeApi/doRequest', {
             uri: constants.hostUrl + this.currentApi + '/ajaxSetUserPreference',
+            mode: 'post',
             params : {
               userPrefTypeId: 'SUCCESS_COLOR',
               userPrefValue: value,
@@ -228,8 +233,9 @@
         set(value) {
           this.$vuetify.theme.themes.dark.error = value
           this.$vuetify.theme.themes.light.error = value
-          this.$store.dispatch('backOfficeApi/doPost', {
+          this.$store.dispatch('backOfficeApi/doRequest', {
             uri: constants.hostUrl + this.currentApi + '/ajaxSetUserPreference',
+            mode: 'post',
             params : {
               userPrefTypeId: 'ERROR_COLOR',
               userPrefValue: value,
@@ -244,8 +250,9 @@
         set(value) {
           this.$vuetify.theme.themes.dark.warning = value
           this.$vuetify.theme.themes.light.warning = value
-          this.$store.dispatch('backOfficeApi/doPost', {
+          this.$store.dispatch('backOfficeApi/doRequest', {
             uri: constants.hostUrl + this.currentApi + '/ajaxSetUserPreference',
+            mode: 'post',
             params : {
               userPrefTypeId: 'WARNING_COLOR',
               userPrefValue: value,
@@ -269,50 +276,98 @@
       }
     },
     mounted() {
-      this.$store.dispatch('backOfficeApi/doPost', {uri: 'applicationMenu', params: {}}).then(result => {
+      this.$store.dispatch('backOfficeApi/doRequest', {uri: 'applicationMenu', mode: 'post', params: {}}).then(result => {
         this.menu = result.body
       })
-      this.$store.dispatch('backOfficeApi/doPost', {uri: 'getUserPreference', params: {userPrefTypeId: 'DARK_MODE', userPrefGroupTypeId: 'FRONTJS_PREFERENCES'}}).then(result => {
+      this.$store.dispatch('backOfficeApi/doRequest', {uri: 'getUserPreference', mode: 'post', params: {userPrefTypeId: 'DARK_MODE', userPrefGroupTypeId: 'FRONTJS_PREFERENCES'}}).then(result => {
         if (result.body.hasOwnProperty('userPrefValue')) {
           this.$vuetify.theme.dark = result.body.userPrefValue === "true"
         }
       })
-      this.$store.dispatch('backOfficeApi/doPost', {uri: 'getUserPreference', params: {userPrefTypeId: 'PRIMARY_COLOR', userPrefGroupTypeId: 'FRONTJS_PREFERENCES'}}).then(result => {
+      this.$store.dispatch('backOfficeApi/doRequest', {uri: 'getUserPreference', mode: 'post', params: {userPrefTypeId: 'PRIMARY_COLOR', userPrefGroupTypeId: 'FRONTJS_PREFERENCES'}}).then(result => {
         if (result.body.hasOwnProperty('userPrefValue')) {
           this.$vuetify.theme.themes.dark.primary = result.body.userPrefValue
           this.$vuetify.theme.themes.light.primary = result.body.userPrefValue
         }
       })
-      this.$store.dispatch('backOfficeApi/doPost', {uri: 'getUserPreference', params: {userPrefTypeId: 'SECONDARY_COLOR', userPrefGroupTypeId: 'FRONTJS_PREFERENCES'}}).then(result => {
+      this.$store.dispatch('backOfficeApi/doRequest', {uri: 'getUserPreference', mode: 'post', params: {userPrefTypeId: 'SECONDARY_COLOR', userPrefGroupTypeId: 'FRONTJS_PREFERENCES'}}).then(result => {
         if (result.body.hasOwnProperty('userPrefValue')) {
           this.$vuetify.theme.themes.dark.secondary = result.body.userPrefValue
           this.$vuetify.theme.themes.light.secondary = result.body.userPrefValue
         }
       })
-      this.$store.dispatch('backOfficeApi/doPost', {uri: 'getUserPreference', params: {userPrefTypeId: 'ACCENT_COLOR', userPrefGroupTypeId: 'FRONTJS_PREFERENCES'}}).then(result => {
+      this.$store.dispatch('backOfficeApi/doRequest', {uri: 'getUserPreference', mode: 'post', params: {userPrefTypeId: 'ACCENT_COLOR', userPrefGroupTypeId: 'FRONTJS_PREFERENCES'}}).then(result => {
         if (result.body.hasOwnProperty('userPrefValue')) {
           this.$vuetify.theme.themes.dark.accent = result.body.userPrefValue
           this.$vuetify.theme.themes.light.accent = result.body.userPrefValue
         }
       })
-      this.$store.dispatch('backOfficeApi/doPost', {uri: 'getUserPreference', params: {userPrefTypeId: 'SUCCESS_COLOR', userPrefGroupTypeId: 'FRONTJS_PREFERENCES'}}).then(result => {
+      this.$store.dispatch('backOfficeApi/doRequest', {uri: 'getUserPreference', mode: 'post', params: {userPrefTypeId: 'SUCCESS_COLOR', userPrefGroupTypeId: 'FRONTJS_PREFERENCES'}}).then(result => {
         if (result.body.hasOwnProperty('userPrefValue')) {
           this.$vuetify.theme.themes.dark.success = result.body.userPrefValue
           this.$vuetify.theme.themes.light.success = result.body.userPrefValue
         }
       })
-      this.$store.dispatch('backOfficeApi/doPost', {uri: 'getUserPreference', params: {userPrefTypeId: 'ERROR_COLOR', userPrefGroupTypeId: 'FRONTJS_PREFERENCES'}}).then(result => {
+      this.$store.dispatch('backOfficeApi/doRequest', {uri: 'getUserPreference', mode: 'post', params: {userPrefTypeId: 'ERROR_COLOR', userPrefGroupTypeId: 'FRONTJS_PREFERENCES'}}).then(result => {
         if (result.body.hasOwnProperty('userPrefValue')) {
           this.$vuetify.theme.themes.dark.error = result.body.userPrefValue
           this.$vuetify.theme.themes.light.error = result.body.userPrefValue
         }
       })
-      this.$store.dispatch('backOfficeApi/doPost', {uri: 'getUserPreference', params: {userPrefTypeId: 'WARNING_COLOR', userPrefGroupTypeId: 'FRONTJS_PREFERENCES'}}).then(result => {
+      this.$store.dispatch('backOfficeApi/doRequest', {uri: 'getUserPreference', mode: 'post', params: {userPrefTypeId: 'WARNING_COLOR', userPrefGroupTypeId: 'FRONTJS_PREFERENCES'}}).then(result => {
         if (result.body.hasOwnProperty('userPrefValue')) {
           this.$vuetify.theme.themes.dark.warning = result.body.userPrefValue
           this.$vuetify.theme.themes.light.warning = result.body.userPrefValue
         }
       })
+    },
+    watch: {
+      currentApi: function (newValue) {
+        this.$store.dispatch('backOfficeApi/doRequest', {uri: constants.hostUrl + newValue + '/applicationMenu', mode: 'post', params: {}}).then(result => {
+          this.menu = result.body
+        })
+        this.$store.dispatch('backOfficeApi/doRequest', {uri: 'getUserPreference', mode: 'post', params: {userPrefTypeId: 'DARK_MODE', userPrefGroupTypeId: 'FRONTJS_PREFERENCES'}}).then(result => {
+          if (result.body.hasOwnProperty('userPrefValue')) {
+            this.$vuetify.theme.dark = result.body.userPrefValue === "true"
+          }
+        })
+        this.$store.dispatch('backOfficeApi/doRequest', {uri: 'getUserPreference', mode: 'post', params: {userPrefTypeId: 'PRIMARY_COLOR', userPrefGroupTypeId: 'FRONTJS_PREFERENCES'}}).then(result => {
+          if (result.body.hasOwnProperty('userPrefValue')) {
+            this.$vuetify.theme.themes.dark.primary = result.body.userPrefValue
+            this.$vuetify.theme.themes.light.primary = result.body.userPrefValue
+          }
+        })
+        this.$store.dispatch('backOfficeApi/doRequest', {uri: 'getUserPreference', mode: 'post', params: {userPrefTypeId: 'SECONDARY_COLOR', userPrefGroupTypeId: 'FRONTJS_PREFERENCES'}}).then(result => {
+          if (result.body.hasOwnProperty('userPrefValue')) {
+            this.$vuetify.theme.themes.dark.secondary = result.body.userPrefValue
+            this.$vuetify.theme.themes.light.secondary = result.body.userPrefValue
+          }
+        })
+        this.$store.dispatch('backOfficeApi/doRequest', {uri: 'getUserPreference', mode: 'post', params: {userPrefTypeId: 'ACCENT_COLOR', userPrefGroupTypeId: 'FRONTJS_PREFERENCES'}}).then(result => {
+          if (result.body.hasOwnProperty('userPrefValue')) {
+            this.$vuetify.theme.themes.dark.accent = result.body.userPrefValue
+            this.$vuetify.theme.themes.light.accent = result.body.userPrefValue
+          }
+        })
+        this.$store.dispatch('backOfficeApi/doRequest', {uri: 'getUserPreference', mode: 'post', params: {userPrefTypeId: 'SUCCESS_COLOR', userPrefGroupTypeId: 'FRONTJS_PREFERENCES'}}).then(result => {
+          if (result.body.hasOwnProperty('userPrefValue')) {
+            this.$vuetify.theme.themes.dark.success = result.body.userPrefValue
+            this.$vuetify.theme.themes.light.success = result.body.userPrefValue
+          }
+        })
+        this.$store.dispatch('backOfficeApi/doRequest', {uri: 'getUserPreference', mode: 'post', params: {userPrefTypeId: 'ERROR_COLOR', userPrefGroupTypeId: 'FRONTJS_PREFERENCES'}}).then(result => {
+          if (result.body.hasOwnProperty('userPrefValue')) {
+            this.$vuetify.theme.themes.dark.error = result.body.userPrefValue
+            this.$vuetify.theme.themes.light.error = result.body.userPrefValue
+          }
+        })
+        this.$store.dispatch('backOfficeApi/doRequest', {uri: 'getUserPreference', mode: 'post', params: {userPrefTypeId: 'WARNING_COLOR', userPrefGroupTypeId: 'FRONTJS_PREFERENCES'}}).then(result => {
+          if (result.body.hasOwnProperty('userPrefValue')) {
+            this.$vuetify.theme.themes.dark.warning = result.body.userPrefValue
+            this.$vuetify.theme.themes.light.warning = result.body.userPrefValue
+          }
+        })
+      }
     }
   }
 </script>
