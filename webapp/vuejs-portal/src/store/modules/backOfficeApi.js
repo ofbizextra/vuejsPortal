@@ -29,58 +29,28 @@ const getters = {
 }
 
 const actions = {
-  doPost({commit, dispatch}, {uri, params, hideEventMessage, hideErrorMessage}) {
+  doRequest({commit, dispatch}, {uri, mode, params, hideEventMessage, hideErrorMessage}) {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
-        Vue.http.post(uri,
-          queryString.stringify({...params}),
-          {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}
-        ).then(response => {
-          if (typeof response.body === 'string' && response.body.includes('login failed')) {
-            dispatch('ui/setDialogStatus', {
-              dialogId: 'loginDialog',
-              dialogStatus: true
-            }, {root: true})
-            reject(response)
-          }
-            if (response.body.hasOwnProperty('_ERROR_MESSAGE_')) {
-              if (!hideErrorMessage) {
-                commit('ADD_MESSAGE', {messageContent: response.body['_ERROR_MESSAGE_'], messageType: 'error'})
-              }
-              reject(response)
-            }
-            if (response.body.hasOwnProperty('_ERROR_MESSAGE_LIST_')) {
-              if (!hideErrorMessage) {
-                for (let errorMessage of response.body['_ERROR_MESSAGE_LIST_']) {
-                  commit('ADD_MESSAGE', {messageContent: errorMessage, messageType: 'error'})
-                }
-              }
-              reject(response)
-            }
-          if (!hideEventMessage) {
-            if (response.body.hasOwnProperty('_EVENT_MESSAGE_')) {
-              commit('ADD_MESSAGE', {messageContent: response.body['_EVENT_MESSAGE_'], messageType: 'event'})
-            }
-            if (response.body.hasOwnProperty('_EVENT_MESSAGE_LIST_')) {
-              for (let eventMessage of response.body['_EVENT_MESSAGE_LIST_']) {
-                commit('ADD_MESSAGE', {messageContent: eventMessage, messageType: 'event'})
-              }
-            }
-          }
-          resolve(response)
-        }, error => {
-          reject(error)
-        })
-      }, 0)
-    })
-  },
-  doGet({commit, dispatch}, {uri, hideEventMessage, hideErrorMessage}) {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        Vue.http.get(uri,
-          queryString.stringify({}),
-          {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}
-        ).then(response => {
+        let promise = null
+        switch (mode) {
+          case 'post':
+            promise = dispatch('doPost', {uri, params})
+            break
+          case 'get':
+            promise = dispatch('doGet', {uri})
+            break
+          case 'put':
+            promise = dispatch('doPut', {uri, params})
+            break
+          case 'delete':
+            promise = dispatch('doDelete', {uri, params})
+            break
+          default:
+            promise = dispatch('doPost', {uri, params})
+            break
+        }
+        promise.then(response => {
           if (typeof response.body === 'string' && response.body.includes('login failed')) {
             dispatch('ui/setDialogStatus', {
               dialogId: 'loginDialog',
@@ -116,6 +86,66 @@ const actions = {
         }, error => {
           reject(error)
         })
+      }, 0)
+    })
+  },
+  doPost(context, {uri, params}) {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        Vue.http.post(uri,
+          queryString.stringify({...params}),
+          {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}
+        ).then(
+          response => {
+            resolve(response)
+          }, error => {
+            reject(error)
+          })
+      }, 0)
+    })
+  },
+  doGet(context, {uri}) {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        Vue.http.get(uri,
+          queryString.stringify({}),
+          {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}
+        ).then(
+          response => {
+            resolve(response)
+          }, error => {
+            reject(error)
+          })
+      }, 0)
+    })
+  },
+  doPut(context, {uri}) {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        Vue.http.put(uri,
+          queryString.stringify({}),
+          {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}
+        ).then(
+          response => {
+            resolve(response)
+          }, error => {
+            reject(error)
+          })
+      }, 0)
+    })
+  },
+  doDelete(context, {uri}) {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        Vue.http.delete(uri,
+          queryString.stringify({}),
+          {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}
+        ).then(
+          response => {
+            resolve(response)
+          }, error => {
+            reject(error)
+          })
       }, 0)
     })
   },
