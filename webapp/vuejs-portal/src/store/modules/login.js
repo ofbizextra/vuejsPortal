@@ -70,9 +70,6 @@ const actions = {
           if ((typeof response.body === 'string' && response.body.includes('login successful')
             && !response.body._ERROR_MESSAGE_
             && !response.body._ERROR_MESSAGES_LIST_) || typeof response.body === 'object') {
-            if (this.$debug) {
-              console.log('login success')
-            }
             dispatch('backOfficeApi/addMessage', {messageContent: 'Login Successful', messageType: 'event'}, {root: true})
             commit('LOGIN_SUCCESS', credentials)
             resolve()

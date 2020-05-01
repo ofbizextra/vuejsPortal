@@ -29,34 +29,49 @@ const getters = {
 }
 
 const actions = {
-  doRequest({commit, dispatch}, {uri, mode, params, hideEventMessage, hideErrorMessage}) {
+  doRequest({commit, dispatch, rootGetters}, {uri, mode, params, hideEventMessage, hideErrorMessage}) {
     return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        let promise = null
-        switch (mode) {
-          case 'post':
-            promise = dispatch('doPost', {uri, params})
-            break
-          case 'get':
-            promise = dispatch('doGet', {uri})
-            break
-          case 'put':
-            promise = dispatch('doPut', {uri, params})
-            break
-          case 'delete':
-            promise = dispatch('doDelete', {uri, params})
-            break
-          default:
-            promise = dispatch('doPost', {uri, params})
-            break
-        }
-        promise.then(response => {
+      setTimeout(async () => {
+        let waitForLogin = false
+        do {
+          if (waitForLogin) {
+            await new Promise((res) => {
+              setTimeout(() => {
+                res()
+              },1000)
+            })
+          }
+          let promise = null
+          switch (mode) {
+            case 'post':
+              promise = dispatch('doPost', {uri, params})
+              break
+            case 'get':
+              promise = dispatch('doGet', {uri})
+              break
+            case 'put':
+              promise = dispatch('doPut', {uri, params})
+              break
+            case 'delete':
+              promise = dispatch('doDelete', {uri, params})
+              break
+            default:
+              promise = dispatch('doPost', {uri, params})
+              break
+          }
+
+          let response = await promise.catch((error) => {
+            reject(error)
+          })
+
           if (typeof response.body === 'string' && response.body.includes('login failed')) {
             dispatch('ui/setDialogStatus', {
               dialogId: 'loginDialog',
               dialogStatus: true
             }, {root: true})
-            reject(response)
+            await dispatch('login/logout', {}, {root: true})
+            waitForLogin = true
+            continue
           }
           if (response.body.hasOwnProperty('_ERROR_MESSAGE_')) {
             if (!hideErrorMessage) {
@@ -82,10 +97,9 @@ const actions = {
               }
             }
           }
+          console.log('Resolving response: ', response)
           resolve(response)
-        }, error => {
-          reject(error)
-        })
+        } while (!rootGetters['login/isLoggedIn'])
       }, 0)
     })
   },
