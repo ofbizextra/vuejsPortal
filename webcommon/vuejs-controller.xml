@@ -42,6 +42,13 @@ under the License.
         <response name="success" type="view" value="successLogin"/>
         <response name="error" type="view" value="errorLogin"/>
     </request-map>
+    <request-map uri="loginJson">
+        <security https="true" auth="false"/>
+        <event type="java" path="org.apache.ofbiz.webapp.control.LoginWorker" invoke="login"/>
+        <response name="success" type="request" value="json" />
+        <response name="requirePasswordChange" type="request" value="json" />
+        <response name="error" type="request" value="json" />
+    </request-map>
     <request-map uri="getUserPreference">
         <security https="true" auth="true" />
         <event type="service" invoke="getUserPreference" />
