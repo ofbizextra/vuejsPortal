@@ -65,12 +65,14 @@ const actions = {
           })
 
           if (typeof response.body === 'string' && response.body.includes('login failed')) {
-            dispatch('ui/setDialogStatus', {
-              dialogId: 'loginDialog',
-              dialogStatus: true
-            }, {root: true})
-            await dispatch('login/logout', {}, {root: true})
-            waitForLogin = true
+            if (!waitForLogin) {
+              dispatch('ui/setDialogStatus', {
+                dialogId: 'loginDialog',
+                dialogStatus: true
+              }, {root: true})
+              await dispatch('login/logout', {}, {root: true})
+              waitForLogin = true
+            }
             continue
           }
           if (response.body.hasOwnProperty('_ERROR_MESSAGE_')) {

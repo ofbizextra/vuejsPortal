@@ -7,7 +7,6 @@ import _ from 'lodash'
 import VueTheMask from 'vue-the-mask'
 
 import App from './components/App'
-import Login from './components/Login'
 import Portal from './components/Portal'
 import VueForm from './components/VueForm'
 import VueField from './components/VueField'
@@ -61,6 +60,7 @@ import VuePasswordField from './components/VuePasswordField'
 import VueNavMenuItemInline from './components/VueNavMenuItemInline'
 import VueHorizontalSeparator from './components/VueHorizontalSeparator'
 import AppMenu from './components/AppMenu'
+import AppBar from './components/AppBar'
 import AppWait from './components/AppWait'
 import AppCpt from './components/AppCpt'
 import VueColumn from './components/VueColumn'
@@ -78,7 +78,6 @@ Vue.use(VueRouter)
 Vue.use(VueWait)
 Vue.use(VueTheMask)
 
-Vue.component('login', Login)
 Vue.component('portal', Portal)
 Vue.component('screen', Screen)
 Vue.component('vue-form', VueForm)
@@ -136,6 +135,7 @@ Vue.component('app-wait', AppWait)
 Vue.component('app-cpt', AppCpt)
 Vue.component('vue-column', VueColumn)
 Vue.component('vue-column-container', VueColumnContainer)
+Vue.component('app-bar', AppBar)
 
 Vue.component('ContactMech', ContactMech)
 
@@ -179,40 +179,11 @@ Vue.mixin({
 const router = new VueRouter({
   mode: 'hash',
   routes: [
-    {path: '/login', component: Login, beforeEnter: requireAuth},
-    {path: '/portalPage/:portalPageId', props: true, component: Portal, beforeEnter: requireAuth},
-    {path: '/screen/:screenId', props: true, component: Screen, beforeEnter: requireAuth},
-    {path: '/screen/:screenId/:cover', props: true, component: Screen, beforeEnter: requireAuth},
+    {path: '/portalPage/:portalPageId', props: true, component: Portal},
+    {path: '/screen/:screenId', props: true, component: Screen},
+    {path: '/screen/:screenId/:cover', props: true, component: Screen},
   ]
 })
-
-function requireAuth(to, from, next) {
-  function proceed() {
-    if (store.getters['login/isLoggedIn']) {
-      if (to.path === '/login') {
-        next('/')
-      } else {
-        next()
-      }
-    } else {
-      if (to.path === '/login') {
-        next()
-      } else {
-        next('/login')
-      }
-    }
-  }
-
-  if (store.getters['login/pending']()) {
-    store.watch(store.getters['login/pending'], () => {
-      if (!store.getters['login/pending']()) {
-        proceed()
-      }
-    })
-  } else {
-    proceed()
-  }
-}
 
 new Vue({
   el: '#app',
