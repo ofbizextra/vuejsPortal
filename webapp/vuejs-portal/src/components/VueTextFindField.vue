@@ -5,7 +5,7 @@
     <v-tooltip top>
       <template v-slot:activator="{ on }">
         <v-text-field class="col-6 mt-0 mb-0"
-                      :label="fieldTitle"
+                      :label="label"
                       v-bind:name="name"
                       v-bind:size="size"
                       v-model="value"
@@ -62,6 +62,9 @@
       },
       ignCase() {
         return this.props.attributes.hasOwnProperty('ignCase') ? 'Y' : ''
+      },
+      label() {
+        return this.required ? this.fieldTitle + ' *' : this.fieldTitle
       },
       maxlength() {
         return this.props.attributes.hasOwnProperty('maxlength') ? this.props.attributes.maxlength : ''

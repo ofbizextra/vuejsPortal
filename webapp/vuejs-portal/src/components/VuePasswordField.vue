@@ -2,7 +2,7 @@
   <div id="vue-password-field">
     <v-tooltip top>
       <template v-slot:activator="{ on }">
-        <v-textField v-model="value" dense :hide-details="noRules" :rules="rules" type="password" v-on="fieldHelpText ? on : null"/>
+        <v-textField v-model="value" :label="label" dense :hide-details="noRules" :rules="rules" type="password" v-on="fieldHelpText ? on : null"/>
       </template>
       <span>{{fieldHelpText}}</span>
     </v-tooltip>
@@ -34,6 +34,9 @@
       },
       fieldHelpText() {
         return this.props.attributes.hasOwnProperty('fieldHelpText') ? this.props.attributes.fieldHelpText : ''
+      },
+      label() {
+        return this.required ? this.fieldTitle + ' *' : this.fieldTitle
       },
       maxLength() {
         return this.props.attributes.hasOwnProperty('maxLength') ? this.props.attributes.maxLength : null

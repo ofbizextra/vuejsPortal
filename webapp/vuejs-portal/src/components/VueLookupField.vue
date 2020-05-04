@@ -4,7 +4,7 @@
         <template v-slot:activator="{ on }">
           <v-combobox
               :id="id"
-              :label="fieldTitle"
+              :label="label"
               v-model="valueStored"
               class="d-inline-flex"
               :items="items"
@@ -114,6 +114,9 @@
           items.push({text: text, value: item[this.returnField]})
         }
         return items
+      },
+      label() {
+        return this.required ? this.fieldTitle + ' *' : this.fieldTitle()
       },
       maxLength() {
         return this.props.attributes.hasOwnProperty('maxLength') ? this.props.attributes.maxLength : null

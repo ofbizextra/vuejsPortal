@@ -3,7 +3,7 @@
     <template v-slot:activator="{ on }">
       <div :id="id" :name="name" class="mt-4" v-on="fieldHelpText ? on : null">
         <input type="hidden" :name="name" :value="value" :formname="formName"/>
-        <v-select :label="fieldTitle" :items="options" item-value="key" item-text="description" v-model="value"
+        <v-select :label="label" :items="options" item-value="key" item-text="description" v-model="value"
                   :hide-details="!required" dense clearable :rules="rules">
           <template slot="item" slot-scope="data">
         <span :id="data.item.key">
@@ -44,6 +44,9 @@
       },
       formName() {
         return this.props.attributes.hasOwnProperty('formName') ? this.props.attributes.formName : ''
+      },
+      label() {
+        return this.required ? this.fieldTitle + ' *' : this.fieldTitle
       },
       name() {
         return this.props.attributes.hasOwnProperty('name') ? this.props.attributes.name : ''

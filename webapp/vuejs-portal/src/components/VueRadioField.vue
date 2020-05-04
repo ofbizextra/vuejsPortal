@@ -1,7 +1,7 @@
 <template>
   <v-tooltip top>
     <template v-slot:activator="{ on }">
-      <v-radio-group id="vue-radio-field" :label="fieldTitle" v-model="value" row :hide-details="noRules" :rules="rules" v-on="fieldHelpText ? on : null">
+      <v-radio-group id="vue-radio-field" :label="label" v-model="value" row :hide-details="noRules" :rules="rules" v-on="fieldHelpText ? on : null">
 <!-- TODO: check if we need this       <input v-if="conditionGroup" type="hidden" :name="name + '_grp'" :value="conditionGroup"/>-->
         <v-radio v-for="item in props.attributes.items" :key="item.key" :label="item.description" :value="item.key">
         </v-radio>
@@ -46,6 +46,9 @@
       },
       formName() {
         return this.props.attributes.hasOwnProperty('formName') ? this.props.attributes.formName : ''
+      },
+      label() {
+        return this.required ? this.fieldTitle + ' *' : this.fieldTitle
       },
       name() {
         return this.props.attributes.hasOwnProperty('name') ? this.props.attributes.name : ''

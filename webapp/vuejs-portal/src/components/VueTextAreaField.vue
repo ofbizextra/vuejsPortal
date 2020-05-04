@@ -2,7 +2,7 @@
   <div id="vue-text-area-field">
     <v-tooltip top>
       <template v-slot:activator="{ on }">
-        <v-textarea :label="fieldTitle" :id="id" v-model="value" hide-details="auto" :rules="rules" v-on="fieldHelpText ? on : null" auto-grow rows="1"></v-textarea>
+        <v-textarea :label="label" :id="id" v-model="value" hide-details="auto" :rules="rules" v-on="fieldHelpText ? on : null" auto-grow rows="1"></v-textarea>
       </template>
       <span>{{fieldHelpText}}</span>
     </v-tooltip>
@@ -34,6 +34,9 @@
       },
       id() {
         return this.props.attributes.hasOwnProperty('id') ? this.props.attributes.id : ''
+      },
+      label() {
+        return this.required ? this.fieldTitle + ' *' : this.fieldTitle
       },
       maxLength() {
         return this.props.attributes.hasOwnProperty('maxLength') ? this.props.attributes.maxLength : ''

@@ -2,7 +2,7 @@
   <v-row id="vue-date-time-field">
     <v-tooltip top>
       <template v-slot:activator="{ on }">
-        <label class="font-weight-medium ma-2" v-on="fieldHelpText ? on : null">{{fieldTitle}}</label>
+        <label class="font-weight-medium ma-2" v-on="fieldHelpText ? on : null">{{label}}</label>
       </template>
       <span>{{fieldHelpText}}</span>
     </v-tooltip>
@@ -107,6 +107,9 @@
       },
       isTwelveHour() {
         return this.props.attributes.hasOwnProperty('isTwelveHour') && this.props.attributes.isTwelveHour === 'Y' ? this.props.attributes.isTwelveHour : false
+      },
+      label() {
+        return this.required ? this.fieldTitle + ' *' : this.fieldTitle()
       },
       name() {
         return this.props.attributes.hasOwnProperty('name') ? this.props.attributes.name : ''
