@@ -3,7 +3,7 @@ export default {
   formApiUrl: 'https://localhost:8443/example/control',
   hostUrl: 'https://localhost:8443',
   main: {path: '/main', tokenRequired: false},
-  login: {path: '/login', tokenRequired: false},
+  login: {path: '/loginJson', tokenRequired: false},
   ping: {path: '/ping', tokenRequired: false},
   ajaxCheckLogin: {path: '/ajaxCheckLogin', tokenRequired: false},
   portalPageDetail: {path: '/portalPageDetail', tokenRequired: false},
