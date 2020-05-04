@@ -99,7 +99,6 @@ const actions = {
               }
             }
           }
-          console.log('Resolving response: ', response)
           resolve(response)
         } while (!rootGetters['login/isLoggedIn'])
       }, 0)
