@@ -67,10 +67,8 @@ const actions = {
           }),
           {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}
         ).then(response => {
-          if ((typeof response.body === 'string' && response.body.includes('login successful')
-            && !response.body._ERROR_MESSAGE_
-            && !response.body._ERROR_MESSAGES_LIST_) || typeof response.body === 'object') {
-            dispatch('backOfficeApi/addMessage', {messageContent: 'Login Successful', messageType: 'event'}, {root: true})
+          if (!response.body._ERROR_MESSAGE_ && !response.body._ERROR_MESSAGES_LIST_) {
+            dispatch('backOfficeApi/addMessage', {messageContent: rootGetters['ui/uiLabels'].loginSuccessMessage, messageType: 'event'}, {root: true})
             commit('LOGIN_SUCCESS', credentials)
             resolve()
           } else {
