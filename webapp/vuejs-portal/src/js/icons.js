@@ -29,6 +29,14 @@ import {
   mdiNoteText,
   mdiWeb,
   mdiServer,
+  mdiHelp,
+  mdiAccountGroup,
+  mdiBookAccount,
+  mdiAccountArrowRight,
+  mdiTargetAccount,
+  mdiNote,
+  mdiPaperclip,
+  mdiCashMultiple, mdiTimelineText, mdiViewDashboardOutline,
 
 } from '@mdi/js'
 
@@ -63,5 +71,14 @@ export default {
   'mdi-note-text': mdiNoteText,
   'mdi-web': mdiWeb,
   'mdi-server': mdiServer,
-
+  'mdi-help': mdiHelp,
+  'mdi-account-group': mdiAccountGroup,
+  'mdi-book-account': mdiBookAccount,
+  'mdi-account-arrow-right': mdiAccountArrowRight,
+  'mdi-target-account': mdiTargetAccount,
+  'mdi-note': mdiNote,
+  'mdi-paperclip': mdiPaperclip,
+  'mdi-cash-multiple': mdiCashMultiple,
+  'mdi-timeline-text': mdiTimelineText,
+  'mdi-view-dashboard-outlined': mdiViewDashboardOutline
 };
