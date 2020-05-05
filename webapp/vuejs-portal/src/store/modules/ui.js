@@ -18,7 +18,8 @@ const state = {
   updateCpt: 0,
   collapsibleStatus: {},
   dialogStatus: {},
-  uiLabels: {}
+  uiLabels: {},
+  seleniumInfoPanels: []
 }
 
 const mutations = {
@@ -71,7 +72,13 @@ const mutations = {
   },
   SET_UI_LABELS: (state, uiLabels) => {
     Vue.set(state, 'uiLabels', uiLabels)
-  }
+  },
+  ADD_SELENIUM_INFO_PANEL(state, panel) {
+    Vue.set(state, 'seleniumInfoPanels', [...state.seleniumInfoPanels, panel])
+  },
+  DELETE_SELENIUM_INFO_PANEL(state, panel) {
+    state.seleniumInfoPanels.splice(state.seleniumInfoPanels.indexOf(panel), 1)
+  },
 }
 
 const getters = {
@@ -128,7 +135,8 @@ const getters = {
     return function (uiLabel) {
       return state.uiLabels.hasOwnProperty(uiLabel) ? state.uiLabels[uiLabel] : uiLabel
     }
-  }
+  },
+  seleniumInfoPanels: state => state.seleniumInfoPanels
 }
 
 const actions = {
@@ -358,6 +366,12 @@ const actions = {
       .then(response => {
         commit('SET_UI_LABELS', response.body.commonUiLabels)
       })
+  },
+  addSeleniumInfoPanel({commit}, {panelMessage, panelTimeout, panelTitle, panelColor}) {
+    commit('ADD_SELENIUM_INFO_PANEL', {panelMessage, panelTimeout, panelTitle, panelColor})
+  },
+  deleteSeleniumInfoPanel({commit}, infoPanel) {
+    commit('DELETE_SELENIUM_INFO_PANEL', infoPanel)
   }
 }
 
