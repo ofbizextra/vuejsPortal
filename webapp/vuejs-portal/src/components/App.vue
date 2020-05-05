@@ -6,6 +6,7 @@
       <app-wait></app-wait>
       <vue-message-list></vue-message-list>
       <vue-login></vue-login>
+      <selenium-info-panel></selenium-info-panel>
       <router-view></router-view>
     </v-content>
   </v-app>
@@ -14,13 +15,7 @@
 <script>
   export default {
     name: 'app',
-    methods: {
-      showSeleniumInfoPanel(messageContent) {
-        this.$store.dispatch('backOfficeApi/addMessage', {messageContent: messageContent, messageType: 'event'})
-      }
-    },
     mounted() {
-      window.showSeleniumInfoPanel = this.showSeleniumInfoPanel
       let pathname = window.location.pathname
       let api = pathname.substring(0, pathname.indexOf('/', 1)) + '/control'
       let webapp = pathname.substring(pathname.lastIndexOf('/') + 1, pathname.length)

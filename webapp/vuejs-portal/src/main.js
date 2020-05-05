@@ -64,6 +64,7 @@ import AppWait from './components/AppWait'
 import AppCpt from './components/AppCpt'
 import VueColumn from './components/VueColumn'
 import VueColumnContainer from './components/VueColumnContainer'
+import SeleniumInfoPanel from './components/SeleniumInfoPanel'
 
 // Platform Specific
 
@@ -134,6 +135,7 @@ Vue.component('app-wait', AppWait)
 Vue.component('app-cpt', AppCpt)
 Vue.component('vue-column', VueColumn)
 Vue.component('vue-column-container', VueColumnContainer)
+Vue.component('selenium-info-panel', SeleniumInfoPanel)
 
 Vue.component('ContactMech', ContactMech)
 
