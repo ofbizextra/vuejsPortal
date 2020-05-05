@@ -116,7 +116,7 @@
         return items
       },
       label() {
-        return this.required ? this.fieldTitle + ' *' : this.fieldTitle()
+        return this.required ? this.fieldTitle + ' *' : this.fieldTitle
       },
       maxLength() {
         return this.props.attributes.hasOwnProperty('maxLength') ? this.props.attributes.maxLength : null
