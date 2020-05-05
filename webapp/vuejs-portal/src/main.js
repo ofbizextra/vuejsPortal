@@ -60,7 +60,6 @@ import VuePasswordField from './components/VuePasswordField'
 import VueNavMenuItemInline from './components/VueNavMenuItemInline'
 import VueHorizontalSeparator from './components/VueHorizontalSeparator'
 import AppMenu from './components/AppMenu'
-import AppBar from './components/AppBar'
 import AppWait from './components/AppWait'
 import AppCpt from './components/AppCpt'
 import VueColumn from './components/VueColumn'
@@ -135,7 +134,6 @@ Vue.component('app-wait', AppWait)
 Vue.component('app-cpt', AppCpt)
 Vue.component('vue-column', VueColumn)
 Vue.component('vue-column-container', VueColumnContainer)
-Vue.component('app-bar', AppBar)
 
 Vue.component('ContactMech', ContactMech)
 
