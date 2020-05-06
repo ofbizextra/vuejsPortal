@@ -125,7 +125,7 @@
         return this.props.hasOwnProperty('stPointer')
       },
       haveUpdateAreas() {
-        return this.props.attributes.hasOwnProperty('updateAreas')
+        return this.props.attributes.hasOwnProperty('clickUpdateAreas')
       },
       imgTitle() {
         return this.props.attributes.hasOwnProperty('imgTitle') ? this.props.attributes.imgTitle : ''
@@ -159,7 +159,7 @@
         return this.havePointer ? this.pointer.attribute : this.props.attributes.hasOwnProperty('title') ? this.props.attributes.title : ''
       },
       updateAreas() {
-        return this.haveUpdateAreas ? this.props.attributes.updateAreas : []
+        return this.haveUpdateAreas ? this.props.attributes.clickUpdateAreas : []
       },
       urlMode() {
         return this.props.attributes.hasOwnProperty('urlMode') ? this.props.attributes.urlMode : 'intra-app'
@@ -170,6 +170,8 @@
         return icons.hasOwnProperty(icon) ? icons[icon] : null
       },
       resolveEvent(updateArea) {
+        // TODO-waiting use case
+        //      manage if updateArea.parameterMap is null or empty, it's all the form's fields which should be used (for parseUrl too)
         switch (updateArea.eventType) {
           case 'post':
             return this.$store.dispatch('backOfficeApi/doRequest', {
@@ -194,7 +196,7 @@
               areaId: updateArea.areaId,
               targetUrl: `${this.currentApi}/${this.parseUrl(updateArea.areaTarget, updateArea.parameterMap)}`,
               params: updateArea.parameterMap,
-              mode: Object.keys(updateArea.parameterMap).length > 0 ? 'post' : 'get'
+              mode: this.urlMode === 'intra-post' ? 'post' : 'get'
             })
           case 'setWatcher':
             this.$store.dispatch('data/setWatcher', {
@@ -214,7 +216,7 @@
                 resolve()
               }, 0)
             })
-          case 'setFieldInForm':
+          case 'setFieldInForm':     // TODO-waiting use case: setFieldInForm could be in changeUpdateAreas
             this.$store.dispatch('form/setFieldToForm', {
               formId: updateArea.areaId,
               key: updateArea.areaTarget,
@@ -291,9 +293,9 @@
       setArea() {
         this.$store.dispatch('ui/setArea', {
           areaId: this.targetWindow,
-          targetUrl: `${this.currentApi}/${this.target}`,
-          params: this.parameterMap,
-          mode: this.urlMode
+          targetUrl: `${this.currentApi}/${this.parseUrl(this.target, this.parameterMap)}`, // TODO-waiting use case,
+          params: this.parameterMap,                                                        //    if parameterMap empty and in a form then use all form's fields
+          mode: this.urlMode === 'intra-post' ? 'post' : 'get'
         })
       }
     },

@@ -257,13 +257,13 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
                 attributes.put("urlMode", hyperlinkField.getUrlMode());
         if (UtilValidate.isNotEmpty(hyperlinkField.getLinkType()))
             attributes.put("linkType", hyperlinkField.getLinkType());
-        List<ModelForm.UpdateArea> updateAreas = modelFormField.getOnClickUpdateAreas();
-        if (!updateAreas.isEmpty()) {
-            List<Map<String, Object>> updateAreasList = new ArrayList<>();
-            for (ModelForm.UpdateArea updateArea : updateAreas) {
-                updateAreasList.add(updateArea.toMap(context));
+        List<ModelForm.UpdateArea> clickUpdateAreas = modelFormField.getOnClickUpdateAreas();
+        if (!clickUpdateAreas.isEmpty()) {
+            List<Map<String, Object>> clickUpdateAreasList = new ArrayList<>();
+            for (ModelForm.UpdateArea updateArea : clickUpdateAreas) {
+                clickUpdateAreasList.add(updateArea.toMap(context));
             }
-            attributes.put("updateAreas", updateAreasList);
+            attributes.put("clickUpdateAreas", clickUpdateAreasList);
         }
         attributes.put("description", hyperlinkField.getDescription(context));
         String value = modelFormField.getEntry(context);
