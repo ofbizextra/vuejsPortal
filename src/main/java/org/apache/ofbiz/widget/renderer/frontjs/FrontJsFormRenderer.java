@@ -20,7 +20,6 @@
 package org.apache.ofbiz.widget.renderer.frontjs;
 
 import java.io.IOException;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -38,7 +37,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.ofbiz.base.util.Debug;
-import org.apache.ofbiz.base.util.StringUtil;
 import org.apache.ofbiz.base.util.UtilCodec;
 import org.apache.ofbiz.base.util.UtilFormatOut;
 import org.apache.ofbiz.base.util.UtilGenerics;
@@ -58,7 +56,7 @@ import org.apache.ofbiz.widget.model.CommonWidgetModels;
 import org.apache.ofbiz.widget.model.FieldInfo;
 import org.apache.ofbiz.widget.model.ModelForm;
 import org.apache.ofbiz.widget.model.ModelFormField;
-import org.apache.ofbiz.widget.model.ModelFormField.AutoComplete;
+//import org.apache.ofbiz.widget.model.ModelFormField.AutoComplete;
 import org.apache.ofbiz.widget.model.ModelFormField.CheckField;
 import org.apache.ofbiz.widget.model.ModelFormField.ContainerField;
 import org.apache.ofbiz.widget.model.ModelFormField.DateFindField;
@@ -83,7 +81,7 @@ import org.apache.ofbiz.widget.model.ModelFormField.SubmitField;
 import org.apache.ofbiz.widget.model.ModelFormField.TextField;
 import org.apache.ofbiz.widget.model.ModelFormField.TextFindField;
 import org.apache.ofbiz.widget.model.ModelFormField.TextareaField;
-import org.apache.ofbiz.widget.model.ModelFormFieldBuilder;
+//import org.apache.ofbiz.widget.model.ModelFormFieldBuilder;
 import org.apache.ofbiz.widget.model.ModelScreenWidget;
 import org.apache.ofbiz.widget.model.ThemeFactory;
 import org.apache.ofbiz.widget.renderer.FormRenderer;
@@ -93,7 +91,7 @@ import org.apache.ofbiz.widget.renderer.UtilHelpText;
 import org.apache.ofbiz.widget.renderer.VisualTheme;
 import org.apache.ofbiz.widget.renderer.macro.MacroFormRenderer;
 
-import com.ibm.icu.util.Calendar;
+//import com.ibm.icu.util.Calendar;
 
 //import org.apache.ofbiz.entity.GenericValue;
 
@@ -713,61 +711,59 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
 
     }
 
-    // OHE point of review, to be continue
-    public void renderCheckField(Appendable writer, Map<String, Object> context, CheckField checkField) {
+    public void renderCheckField(Appendable writer, Map<String, Object> context, CheckField checkField) throws IOException {
         ModelFormField modelFormField = checkField.getModelFormField();
         String currentValue = modelFormField.getEntry(context);
-        String conditionGroup = modelFormField.getConditionGroup();
         Boolean allChecked = checkField.isAllChecked(context);
-        boolean disabled = checkField.getDisabled();
         String id = modelFormField.getCurrentContainerId(context);
-        String className = "";
-        String alert = "false";
         String name = modelFormField.getName();
-        String event = modelFormField.getEvent();
-        String action = modelFormField.getAction(context);
-        StringBuilder items = new StringBuilder();
-        if (UtilValidate.isNotEmpty(modelFormField.getWidgetStyle())) {
-            className = modelFormField.getWidgetStyle();
-            if (modelFormField.shouldBeRed(context)) {
-                alert = "true";
-            }
-        }
-        String tabindex = modelFormField.getTabindex();
         List<OptionValue> allOptionValues = checkField.getAllOptionValues(context, WidgetWorker.getDelegator(context));
-        items.append("[");
+        List<Map<String, String>> optionValues = new LinkedList<>();
         for (OptionValue optionValue : allOptionValues) {
-            if (items.length() > 1) {
-                items.append(",");
-            }
-            items.append("{'value':'");
-            items.append(optionValue.getKey());
-            items.append("', 'description':'" + encode(optionValue.getDescription(), modelFormField, context));
-            items.append("'}");
+            optionValues.add(UtilMisc.toMap(optionValue.getKey(), optionValue.getDescription()));
         }
-        items.append("]");
         Map<String, Object> cb = new HashMap<>();
         if ("single".equals(modelFormField.getModelForm().getType())) this.addTitle(cb, modelFormField, context);
-        cb.put("items", items.toString());
-        cb.put("className", className);
-        cb.put("alert", alert);
+        cb.put("optionValues", optionValues);
         cb.put("id", id);
-        cb.put("conditionGroup", conditionGroup);
-        cb.put("allChecked", (allChecked != null ? allChecked : "\"\""));
+        if (allChecked) cb.put("allChecked", true);
         cb.put("currentValue", currentValue);
         cb.put("name", name);
-        if (event != null) {
-            cb.put("event", event);
-        }
-        if (action != null) {
-            cb.put("action", action);
-        }
-        cb.put("tabindex", tabindex);
-        cb.put("disabled", disabled);
+
         this.appendTooltip(cb, context, modelFormField);
-        this.output.putScreen("CheckField", cb);
+        this.output.putScreen("CheckField", cb, name, currentValue);
+        if (UtilValidate.isNotEmpty(cb)) { // condition always true, so IOException always occurs
+            throw new IOException("FrontJsRender: check-field is not yet manage for field name=" + name
+                    + " in form for form name=" + modelFormField.getModelForm().getName());
+        }
+        // All not-manage attributes
+        // First attribute alert and className generate only a warning
+        this.addAlertAndClass(cb, modelFormField, context);
+        //Second, list of attributes which generate error if present because not manage and should be.
+        boolean disabled = checkField.getDisabled();
+        String event = modelFormField.getEvent();
+        String action = modelFormField.getAction(context);
+        String tabindex = modelFormField.getTabindex();
+        String conditionGroup = modelFormField.getConditionGroup();
+        if (disabled
+                || UtilValidate.isNotEmpty(event) || UtilValidate.isNotEmpty(action)
+                || UtilValidate.isNotEmpty(conditionGroup) || UtilValidate.isNotEmpty(tabindex)) {
+            if (disabled)                                    cb.put("disabled", disabled);
+            if (UtilValidate.isNotEmpty(event))              cb.put("event", event);
+            if (UtilValidate.isNotEmpty(action))             cb.put("action", action);
+            if (UtilValidate.isNotEmpty(tabindex))           cb.put("tabindex", tabindex);
+            if (UtilValidate.isNotEmpty(conditionGroup))     cb.put("conditionGroup", conditionGroup);
+            throw new IOException("FrontJsRender: a attribute is not yet implemented for check-field name=" + name
+                    + " in form for form name=" + modelFormField.getModelForm().getName()
+                    + " attribute is one of : disabled("+disabled
+//                    + "), allow-multiple("+dropDownField.getAllowMultiple()
+                    + "), event("+event + "), action("+action
+                    + "), tabindex("+tabindex+"), conditionGroup("+conditionGroup+")");
+
+       }
     }
 
+    // OHE point of review, to be continue
     public void renderRadioField(Appendable writer, Map<String, Object> context, RadioField radioField) {
         String fieldName = null;
         String fieldValue = null;
