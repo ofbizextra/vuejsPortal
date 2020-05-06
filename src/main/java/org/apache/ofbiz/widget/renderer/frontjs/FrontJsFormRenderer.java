@@ -605,6 +605,8 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         cb.put("id", id);
         cb.put("currentValue", currentValue);
         cb.put("options", options);
+        String noCurrentSelectedKey = dropDownField.getNoCurrentSelectedKey(context);
+        if (UtilValidate.isNotEmpty(noCurrentSelectedKey)) cb.put("noCurrentSelectedKey", noCurrentSelectedKey);
         this.appendTooltip(cb, context, modelFormField);
         this.output.putScreen("DropDownField", cb, name, explicitDescription);
 
@@ -616,13 +618,11 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         this.addAlertAndClass(cb, modelFormField, context);
         //if (dropDownField.getAllowEmpty()) cb.put("allowEmpty", "Y"); TODO test what is manage
         //Second, list of attributes which generate error if present because not manage and should be.
-        String noCurrentSelectedKey = dropDownField.getNoCurrentSelectedKey(context);
         String event = modelFormField.getEvent();
         String action = modelFormField.getAction(context);
         String tabindex = modelFormField.getTabindex();
         String conditionGroup = modelFormField.getConditionGroup();
        if ( dropDownField.getAllowMultiple()
-                     || UtilValidate.isNotEmpty(noCurrentSelectedKey)
                      || ! "selected".equals(dropDownField.getCurrent())
                      || dropDownField.getOtherFieldSize() > 0
                      || ! "1".equals(dropDownField.getSize())
@@ -630,7 +630,6 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
                      || UtilValidate.isNotEmpty(event) || UtilValidate.isNotEmpty(action)
                      || UtilValidate.isNotEmpty(tabindex) || UtilValidate.isNotEmpty(conditionGroup)) {
 
-            if (UtilValidate.isNotEmpty(noCurrentSelectedKey)) cb.put("noCurrentSelectedKey", noCurrentSelectedKey);
             if (dropDownField.getAllowMultiple()) cb.put("multiple", "multiple");
             if (! "selected".equals(dropDownField.getCurrent())) cb.put("dDFCurrent", dropDownField.getCurrent());
             if (UtilValidate.isNotEmpty(currentValue) && "first-in-list".equals(dropDownField.getCurrent())) {
