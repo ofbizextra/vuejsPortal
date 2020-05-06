@@ -127,9 +127,15 @@ for an exclusive Vue.Js use.
   ** in `<on-field-event-update-area` tag (there can be many of them and they will be executed in xml apparition order. It will wait
       current task is completed before starting the next one.)
     *** `event-type` +
-      Define the action to be executed during the form submitting (click on submit button). It can take one of four next values :
+      Define the action to be executed during the click on the associated hyperlink (<a link or button). It can take one of next values :
       **** `post` will post at URI `area-target` with the `parameter` elements included in the tag. If there are no parameters,
         it will use the whole form. It will display error and success messages.
+      **** `put` will post at URI `area-target` with the http methof PUT if target contain {xxxx} xxxx will be replace by value
+           if xxxx is define in parameters included in the tag. If there are no parameters, it will use the whole form.
+           It will display error and success messages.
+      **** `delete` will post at URI `area-target` with the http methof DELETE if target contain {xxxx} xxxx will be replace by value
+           if xxxx is define in parameters included in the tag. If there are no parameters, it will use the whole form.
+           It will display error and success messages.
       **** `setArea` update area identified by id `area-id` with the post result to URI `area-target` with included `parameter`
         elements. If no parameters was passed it will use the whole form.
       **** `setWatcher` update watcher with watcherName `area-id` with included `parameter` elements. If no parameters was
