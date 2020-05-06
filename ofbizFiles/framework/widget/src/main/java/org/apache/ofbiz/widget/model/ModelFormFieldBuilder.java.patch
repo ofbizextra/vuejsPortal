@@ -2,11 +2,13 @@ diff --git a/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelF
 index 18fad7bf74..e17a4f616d 100644
 --- a/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelFormFieldBuilder.java
 +++ b/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelFormFieldBuilder.java
-@@ -213,6 +213,15 @@ public class ModelFormFieldBuilder {
+@@ -213,6 +213,17 @@ public class ModelFormFieldBuilder {
                      onChangeUpdateAreas.add(updateArea);
                  } else if ("click".equals(updateArea.getEventType())) {
                      onClickUpdateAreas.add(updateArea);
 +                } else if ("post".equals(updateArea.getEventType())
++                        || "put".equals(updateArea.getEventType())
++                        || "delete".equals(updateArea.getEventType())
 +                        || "setArea".equals(updateArea.getEventType())
 +                        || "setWatcher".equals(updateArea.getEventType())
 +                        || "submit".equals(updateArea.getEventType())
