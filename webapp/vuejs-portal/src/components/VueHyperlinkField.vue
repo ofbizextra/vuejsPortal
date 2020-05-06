@@ -159,6 +159,18 @@
               mode: 'post',
               params: updateArea.hasOwnProperty('parameterMap') ? updateArea.parameterMap : {}
             })
+          case 'put':
+            return this.$store.dispatch('backOfficeApi/doRequest', {
+              uri: `${this.currentApi}/${this.parseUrl(updateArea.areaTarget, updateArea.parameterMap)}`,
+              mode: 'put',
+              params: updateArea.hasOwnProperty('parameterMap') ? updateArea.parameterMap : {}
+            })
+          case 'delete':
+            return this.$store.dispatch('backOfficeApi/doRequest', {
+              uri: `${this.currentApi}/${this.parseUrl(updateArea.areaTarget, updateArea.parameterMap)}`,
+              mode: 'delete',
+              params: updateArea.hasOwnProperty('parameterMap') ? updateArea.parameterMap : {}
+            })
           case 'setArea':
             return this.$store.dispatch('ui/setArea', {
               areaId: updateArea.areaId,
