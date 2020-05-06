@@ -1,5 +1,5 @@
 diff --git a/framework/widget/dtd/widget-form.xsd b/framework/widget/dtd/widget-form.xsd
-index d452ef9c17..32db88abda 100644
+index d452ef9c17..8391c12641 100644
 --- a/framework/widget/dtd/widget-form.xsd
 +++ b/framework/widget/dtd/widget-form.xsd
 @@ -587,13 +587,23 @@ under the License.
@@ -30,13 +30,13 @@ index d452ef9c17..32db88abda 100644
                      <xs:simpleType>
                          <xs:restriction base="xs:token">
                              <xs:enumeration value="intra-app" />
-+                            <xs:enumeration value="intra-post" />
++                            <xs:enumeration value="intra-get" />
 +                            <xs:enumeration value="intra-put" />
 +                            <xs:enumeration value="intra-delete" />
                              <xs:enumeration value="inter-app" />
                              <xs:enumeration value="content" />
                              <xs:enumeration value="plain" />
-@@ -1533,11 +1546,27 @@ under the License.
+@@ -1533,11 +1546,29 @@ under the License.
              <xs:documentation>Area to be updated when a field event occurs.</xs:documentation>
          </xs:annotation>
          <xs:complexType>
@@ -48,13 +48,15 @@ index d452ef9c17..32db88abda 100644
 +            </xs:sequence>
              <xs:attribute name="event-type" use="required">
 +                <xs:annotation>
-+                    <xs:documentation>post, setArea and setWatcher are specifics for VueJs on hyperlink (or link) and are put onClickUpdateAreas list.</xs:documentation>
++                    <xs:documentation>post, put, delete, setArea and setWatcher are specifics for VueJs on hyperlink (or link) and are put onClickUpdateAreas list.</xs:documentation>
 +                </xs:annotation>
                  <xs:simpleType>
                      <xs:restriction base="xs:token">
                          <xs:enumeration value="change" />
                          <xs:enumeration value="click" />
 +                        <xs:enumeration value="post" />
++                        <xs:enumeration value="put" />
++                        <xs:enumeration value="delete" />
 +                        <xs:enumeration value="setArea" />
 +                        <xs:enumeration value="setWatcher" />
 +                        <xs:enumeration value="submit" />
