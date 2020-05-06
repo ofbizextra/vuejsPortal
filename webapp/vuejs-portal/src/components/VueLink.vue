@@ -54,7 +54,7 @@
         {{text}}
       </span>
     </v-btn>
-    <span v-else :icon="haveIcon">
+    <span v-else :icon="haveIcon"> // drove by parent handleUpdate()
       <v-tooltip bottom>
         <template v-slot:activator="{ on }">
           <v-icon v-if="haveIcon" v-on="on" :id="src">{{getIcon(src)}}</v-icon>
@@ -162,7 +162,7 @@
         return this.props.attributes.hasOwnProperty('targetWindow') ? this.props.attributes.targetWindow : ''
       },
       target() {
-        return this.props.attributes.hasOwnProperty('target') ? this.props.attributes.target : ''
+        return this.props.attributes.hasOwnProperty('target') ? this.parseUrl(this.props.attributes.target, this.parameterMap) : ''
       },
       uniqueItemName() {
         return this.props.attributes.hasOwnProperty('uniqueItemName') ? this.props.attributes.uniqueItemName : ''
@@ -203,7 +203,10 @@
             this.setArea()
             break
           default:
-            this.$store.dispatch('backOfficeApi/addMessage', {messageContent: this.linkType + ' linkType is not yet supported.', messageType: 'error'})
+            this.$store.dispatch('backOfficeApi/addMessage', {
+              messageContent: this.linkType + ' linkType is not yet supported.',
+              messageType: 'error'
+            })
             break
         }
       },
@@ -211,10 +214,11 @@
         this.$store.dispatch('data/setWatcher', {watcherName: this.targetWindow, data: this.parameterMap})
       },
       setArea() {
-        this.$store.dispatch('ui/setArea', {areaId: this.targetWindow,
-                                            targetUrl: this.$store.getters['backOfficeApi/currentApi'] + '/' + this.target,
-                                            params: (this.urlMode === 'intra-post')? this.parameterMap : {get:'Y'}
-                                            })
+        this.$store.dispatch('ui/setArea', {
+          areaId: this.targetWindow,
+          targetUrl: this.$store.getters['backOfficeApi/currentApi'] + '/' + this.target,
+          params: (this.urlMode === 'intra-post') ? this.parameterMap : {get: 'Y'}
+        })
       }
     }
   }

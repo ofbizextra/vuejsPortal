@@ -132,7 +132,7 @@
         return this.props.attributes.hasOwnProperty('imgSrc') ? this.props.attributes.imgSrc : ''
       },
       target() {
-        return this.props.attributes.hasOwnProperty('target') ? this.props.attributes.target : null
+        return this.props.attributes.hasOwnProperty('target') ? this.parseUrl(this.props.attributes.target, this.parameterMap) : null
       },
       targetWindow() {
         return this.props.attributes.hasOwnProperty('targetWindow') ? this.props.attributes.targetWindow : null
@@ -155,14 +155,14 @@
         switch (updateArea.eventType) {
           case 'post':
             return this.$store.dispatch('backOfficeApi/doRequest', {
-              uri: `${this.currentApi}/${updateArea.areaTarget}`,
+              uri: `${this.currentApi}/${this.parseUrl(updateArea.areaTarget, updateArea.parameterMap)}`,
               mode: 'post',
               params: updateArea.hasOwnProperty('parameterMap') ? updateArea.parameterMap : {}
             })
           case 'setArea':
             return this.$store.dispatch('ui/setArea', {
               areaId: updateArea.areaId,
-              targetUrl: `${this.$store.getters['backOfficeApi/currentApi']}/${updateArea.areaTarget}`,
+              targetUrl: `${this.currentApi}/${this.parseUrl(updateArea.areaTarget, updateArea.parameterMap)}`,
               params: updateArea.parameterMap
             })
           case 'setWatcher':

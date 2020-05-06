@@ -134,12 +134,7 @@
         })
       },
       submit() {
-        let uri = this.getDataFromForm({formId: this.props.attributes.formName, key: 'linkUrl'})
-        if (uri.includes('{')) {
-          let regexKey = /{(\w+)}/
-          let regexReplace = /{\w+}/
-          uri = uri.replace(regexReplace, this.form[regexKey.exec(uri)[1]])
-        }
+        let uri = this.parseUrl(this.getDataFromForm({formId: this.props.attributes.formName, key: 'linkUrl'}), this.form)
         return this.$store.dispatch('backOfficeApi/doRequest', {
           uri: uri,
           mode: 'post',

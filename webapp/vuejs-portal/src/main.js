@@ -67,7 +67,6 @@ import VueColumnContainer from './components/VueColumnContainer'
 import SeleniumInfoPanel from './components/SeleniumInfoPanel'
 
 // Platform Specific
-
 import ContactMech from './components/platformSpecific/ContactMech'
 import store from './store'
 import vuetify from '@/plugins/vuetify';
@@ -172,6 +171,14 @@ Vue.mixin({
       for (let index = 0; index < array.length; index++) {
         await callback(array[index], index, array)
       }
+    },
+    parseUrl(url, map) {
+      if (url.includes('{')) {
+        let regexKey = /{(\w+)}/
+        let regexReplace = /{\w+}/
+        url = url.replace(regexReplace, map[regexKey.exec(url)[1]])
+      }
+      return url
     }
   }
 })
