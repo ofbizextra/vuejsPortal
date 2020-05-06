@@ -54,7 +54,8 @@
         {{text}}
       </span>
     </v-btn>
-    <span v-else :icon="haveIcon"> // drove by parent handleUpdate()
+<!--    // drove by parent handleUpdate() -->
+    <span v-else :icon="haveIcon">
       <v-tooltip bottom>
         <template v-slot:activator="{ on }">
           <v-icon v-if="haveIcon" v-on="on" :id="src">{{getIcon(src)}}</v-icon>
