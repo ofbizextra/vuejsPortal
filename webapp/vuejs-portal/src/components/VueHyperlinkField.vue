@@ -293,7 +293,7 @@
           areaId: this.targetWindow,
           targetUrl: `${this.currentApi}/${this.target}`,
           params: this.parameterMap,
-          mode: Object.keys(this.parameterMap).length > 0 ? 'post' : 'get'
+          mode: this.urlMode
         })
       }
     },
