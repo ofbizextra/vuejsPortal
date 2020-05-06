@@ -74,7 +74,8 @@
         return {
           areaId: this.areaId,
           targetUrl: this.targetUrl,
-          params: (this.autoUpdateTarget && this.autoUpdateTarget.includes('{')) ? {get:'Y'} : this.params
+          params: this.params,
+          mode: (this.autoUpdateTarget && this.autoUpdateTarget.includes('{')) ? 'get' : 'post'
         }
       },
       watcher() {

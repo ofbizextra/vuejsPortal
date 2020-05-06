@@ -217,7 +217,8 @@
         this.$store.dispatch('ui/setArea', {
           areaId: this.targetWindow,
           targetUrl: this.$store.getters['backOfficeApi/currentApi'] + '/' + this.target,
-          params: (this.urlMode === 'intra-post') ? this.parameterMap : {get: 'Y'}
+          params: this.parameterMap,
+          mode: (this.urlMode === 'intra-post') ? 'post' : 'get'
         })
       }
     }

@@ -183,138 +183,76 @@ const actions = {
       }, 0)
     })
   },
-  setArea({commit, dispatch}, {areaId, targetUrl, params = {}}) {
+  setArea({commit, dispatch}, {areaId, targetUrl, params = {}, mode = 'post'}) {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         dispatch('wait/start', areaId, {root: true})
         dispatch('incrementUpdateCpt')
-        if (params.get) {
-          dispatch('backOfficeApi/doRequest', {uri: constants.hostUrl + targetUrl.replace('amp;', ''), mode: 'get'}, {root: true}
-          ).then(response => {
-            if (response.body.hasOwnProperty('_ERROR_MESSAGE_')) {
-              dispatch('addErrorMessage', {errorMessage: response.body['_ERROR_MESSAGE_']})
-              setTimeout(() => {
-                dispatch('wait/end', areaId, {root: true})
-              }, 0)
-              reject()
+        dispatch(
+          'backOfficeApi/doRequest',
+          {uri: constants.hostUrl + targetUrl.replace('amp;', ''), params, mode},
+          {root: true}
+        ).then(response => {
+          if (response.body.hasOwnProperty('_ERROR_MESSAGE_')) {
+            dispatch('addErrorMessage', {errorMessage: response.body['_ERROR_MESSAGE_']})
+            setTimeout(() => {
+              dispatch('wait/end', areaId, {root: true})
+            }, 0)
+            reject()
+          }
+          if (response.body.hasOwnProperty('_ERROR_MESSAGE_LIST_')) {
+            for (let errorMessage of response.body['_ERROR_MESSAGE_LIST_']) {
+              dispatch('addErrorMessage', {errorMessage})
             }
-            if (response.body.hasOwnProperty('_ERROR_MESSAGE_LIST_')) {
-              for (let errorMessage of response.body['_ERROR_MESSAGE_LIST_']) {
-                dispatch('addErrorMessage', {errorMessage})
-              }
-              setTimeout(() => {
-                dispatch('wait/end', areaId, {root: true})
-              }, 0)
-              reject()
-            }
-            commit('SET_AREA', {areaId: areaId, areaContent: response.body})
-            if (response.body.hasOwnProperty('viewEntities')) {
-              let entities = []
-              let records = []
-              Object.keys(response.body.viewEntities).forEach((key) => {
-                entities.push(dispatch('data/setEntity', {
-                  entityName: key,
-                  primaryKey: response.body.viewEntities[key].primaryKeys.join('-')
-                }, {
-                  root: true
-                }))
-              })
-              Promise.all(entities).then(all => {
-                all.forEach((entity => {
-                  response.body.viewEntities[entity.entityName].list.forEach((record) => {
-                    if (record.stId !== null) {
-                      let data = {
-                        entityName: entity.entityName,
-                        primaryKey: record.stId,
-                        data: record
-                      }
-                      records.push(dispatch('data/setEntityRow', data, {root: true}))
+            setTimeout(() => {
+              dispatch('wait/end', areaId, {root: true})
+            }, 0)
+            reject()
+          }
+          commit('SET_AREA', {areaId: areaId, areaContent: response.body})
+          if (response.body.hasOwnProperty('viewEntities')) {
+            let entities = []
+            let records = []
+            Object.keys(response.body.viewEntities).forEach((key) => {
+              entities.push(dispatch('data/setEntity', {
+                entityName: key,
+                primaryKey: response.body.viewEntities[key].primaryKeys.join('-')
+              }, {
+                root: true
+              }))
+            })
+            Promise.all(entities).then(all => {
+              all.forEach((entity => {
+                response.body.viewEntities[entity.entityName].list.forEach((record) => {
+                  if (record.stId !== null) {
+                    let data = {
+                      entityName: entity.entityName,
+                      primaryKey: record.stId,
+                      data: record
                     }
-                  })
-                }))
-              })
-              Promise.all(records).then(() => {
-                setTimeout(() => {
-                  dispatch('wait/end', areaId, {root: true})
-                }, 0)
-                resolve(areaId)
-              })
-            } else {
+                    records.push(dispatch('data/setEntityRow', data, {root: true}))
+                  }
+                })
+              }))
+            })
+            Promise.all(records).then(() => {
               setTimeout(() => {
                 dispatch('wait/end', areaId, {root: true})
               }, 0)
               resolve(areaId)
-            }
-          }, error => {
+            })
+          } else {
             setTimeout(() => {
               dispatch('wait/end', areaId, {root: true})
             }, 0)
-            reject(error)
-          })
-        } else {
-          dispatch('backOfficeApi/doRequest', {uri: constants.hostUrl + targetUrl.replace('amp;', ''), mode: 'post', params: params}, {root: true}
-          ).then(response => {
-            if (response.body.hasOwnProperty('_ERROR_MESSAGE_')) {
-              dispatch('addErrorMessage', {errorMessage: response.body['_ERROR_MESSAGE_']})
-              setTimeout(() => {
-                dispatch('wait/end', areaId, {root: true})
-              }, 0)
-              reject()
-            }
-            if (response.body.hasOwnProperty('_ERROR_MESSAGE_LIST_')) {
-              for (let errorMessage of response.body['_ERROR_MESSAGE_LIST_']) {
-                dispatch('addErrorMessage', {errorMessage})
-              }
-              setTimeout(() => {
-                dispatch('wait/end', areaId, {root: true})
-              }, 0)
-              reject()
-            }
-            commit('SET_AREA', {areaId: areaId, areaContent: response.body})
-            if (response.body.hasOwnProperty('viewEntities')) {
-              let entities = []
-              let records = []
-              Object.keys(response.body.viewEntities).forEach((key) => {
-                entities.push(dispatch('data/setEntity', {
-                  entityName: key,
-                  primaryKey: response.body.viewEntities[key].primaryKeys.join('-')
-                }, {
-                  root: true
-                }))
-              })
-              Promise.all(entities).then(all => {
-                all.forEach((entity => {
-                  response.body.viewEntities[entity.entityName].list.forEach((record) => {
-                    if (record.stId !== null) {
-                      let data = {
-                        entityName: entity.entityName,
-                        primaryKey: record.stId,
-                        data: record
-                      }
-                      records.push(dispatch('data/setEntityRow', data, {root: true}))
-                    }
-                  })
-                }))
-              })
-              Promise.all(records).then(() => {
-                setTimeout(() => {
-                  dispatch('wait/end', areaId, {root: true})
-                }, 0)
-                resolve(areaId)
-              })
-            } else {
-              setTimeout(() => {
-                dispatch('wait/end', areaId, {root: true})
-              }, 0)
-              resolve(areaId)
-            }
-          }, error => {
-            setTimeout(() => {
-              dispatch('wait/end', areaId, {root: true})
-            }, 0)
-            reject(error)
-          })
-        }
+            resolve(areaId)
+          }
+        }, error => {
+          setTimeout(() => {
+            dispatch('wait/end', areaId, {root: true})
+          }, 0)
+          reject(error)
+        })
       }, 0)
     })
   },

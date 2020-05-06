@@ -163,7 +163,8 @@
             return this.$store.dispatch('ui/setArea', {
               areaId: updateArea.areaId,
               targetUrl: `${this.currentApi}/${this.parseUrl(updateArea.areaTarget, updateArea.parameterMap)}`,
-              params: updateArea.parameterMap
+              params: updateArea.parameterMap,
+              mode: Object.keys(updateArea.parameterMap).length > 0 ? 'post' : 'get'
             })
           case 'setWatcher':
             this.$store.dispatch('data/setWatcher', {
