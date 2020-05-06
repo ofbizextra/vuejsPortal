@@ -18,6 +18,24 @@
       <img :src="src" :title="imgTitle" alt="" v-if="haveImage"/>
       {{description}}
     </v-btn>
+    <v-btn outlined
+           :x-small="!haveIcon"
+           :small="haveIcon"
+           color="primary"
+           v-else-if="linkType === 'set-area'"
+           :class="className"
+           v-on:click.prevent="setArea"
+           :icon="haveIcon"
+    >
+      <v-tooltip bottom>
+        <template v-slot:activator="{ on }">
+          <v-icon :id="src" v-if="haveIcon" v-on="on">{{getIcon(src)}}</v-icon>
+        </template>
+        <span>{{imgTitle}}</span>
+      </v-tooltip>
+      <img :src="src" :title="imgTitle" alt="" v-if="haveImage"/>
+      {{description}}
+    </v-btn>
     <router-link
         v-else-if="linkType === 'auto' && urlMode === 'intra-app'"
         v-bind:id="description + '_link'"
@@ -269,6 +287,14 @@
             })
           }, Promise.resolve())
         }
+      },
+      setArea() {
+        this.$store.dispatch('ui/setArea', {
+          areaId: this.targetWindow,
+          targetUrl: `${this.currentApi}/${this.target}`,
+          params: this.parameterMap,
+          mode: Object.keys(this.parameterMap).length > 0 ? 'post' : 'get'
+        })
       }
     },
     watch: {
