@@ -88,9 +88,9 @@
                 resolve()
               }, 0)
             })
-          case 'setArea':
+          case 'set-area':
             return this.setArea(updateArea)
-          case 'setWatcher':
+          case 'set-watcher':
             this.setWatcher(updateArea)
             return new Promise((resolve) => {
               setTimeout(() => {

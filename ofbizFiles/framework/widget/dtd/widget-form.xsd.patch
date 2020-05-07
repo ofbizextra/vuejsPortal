@@ -10,8 +10,8 @@ index d452ef9c17..f1e187ddab 100644
              </xs:sequence>
              <xs:attribute name="event-type" use="required">
 +                <xs:annotation>
-+                    <xs:documentation>setArea and setWatcher are specifics for VueJs and are put onSubmitUpdateAreas list.
-+                                      submit, setArea and setWatcher are activate when submit button is clicked.
++                    <xs:documentation>set-area and set-watcher are specifics for VueJs and are put onSubmitUpdateAreas list.
++                                      submit, set-area and set-watcher are activate when submit button is clicked.
 +                    </xs:documentation>
 +                </xs:annotation>
                  <xs:simpleType>
@@ -19,10 +19,10 @@ index d452ef9c17..f1e187ddab 100644
                          <xs:enumeration value="paginate" />
                          <xs:enumeration value="sort-column" />
                          <xs:enumeration value="submit" />
-+                        <xs:enumeration value="setArea" />
-+                        <xs:enumeration value="setWatcher" />
++                        <xs:enumeration value="set-area" />
++                        <xs:enumeration value="set-watcher" />
 +                        <xs:enumeration value="collapse" />
-+                        <xs:enumeration value="closeModal" />
++                        <xs:enumeration value="close-modal" />
                      </xs:restriction>
                  </xs:simpleType>
              </xs:attribute>
@@ -47,12 +47,12 @@ index d452ef9c17..f1e187ddab 100644
 +                        <xs:enumeration value="post" />
 +                        <xs:enumeration value="put" />
 +                        <xs:enumeration value="delete" />
-+                        <xs:enumeration value="setArea" />
-+                        <xs:enumeration value="setWatcher" />
++                        <xs:enumeration value="set-area" />
++                        <xs:enumeration value="set-watcher" />
 +                        <xs:enumeration value="submit" />
-+                        <xs:enumeration value="setFieldInForm" />
++                        <xs:enumeration value="set-field-in-form" />
 +                        <xs:enumeration value="collapse" />
-+                        <xs:enumeration value="closeModal" />
++                        <xs:enumeration value="close-modal" />
                      </xs:restriction>
                  </xs:simpleType>
              </xs:attribute>

@@ -88,20 +88,20 @@ for an exclusive Vue.Js use.
 * screen
   ** in `<container` tag
     *** `auto-update-target` is used to bind a `watcher` to a container. +
-        To use it with setWatcher, a new attribute `watcher-name` has been added and watcherName is equals this new attribute
-        if it is present otherwise it is equals to the containerId, and when the content of this this watcher changes a setArea
+        To use it with set-watcher, a new attribute `watcher-name` has been added and watcherName is equals this new attribute
+        if it is present otherwise it is equals to the containerId, and when the content of this this watcher changes a set-area
         is done with auto-update-target as target and watcher content as parameters. +
         `auto-update-target` support the REST uri format with some parameters in it include with {}, value is populate with
         content of watcher. If uri contain, atleast one {xxx} a GET method will be used otherwise a POST.
-    *** `id` is used to identify the container and enable to inject content into it with `setArea` later. +
-         When setArea is done for this id, its content will be replace by the content received from area-target. +
+    *** `id` is used to identify the container and enable to inject content into it with `set-area` later. +
+         When set-area is done for this id, its content will be replace by the content received from area-target. +
          So, do not resend the container !
   ** screenlet
     *** collapsible, if collapsible = "true" then it's necessary to have a "unique" id to know what collapse when button is clicked.
         choice is to *use screenlet name* as collapsible_id. Whith this choice it's possible to have multiple screenlet with
         same name or each with a different one. +
         So, it's important to give a name if collapsible ="true" otherwise collapse will collapse all screenlet without name !
-    *** id : currently not used, and not useable by a setArea
+    *** id : currently not used, and not useable by a set-area
   ** in `platform-specific`-`html` tag a new tag
     *** `vuejs` is to call a specifics vuejs component named `component-name`. +
          it's possible to give to it some parameters with sub tag `parameters`
@@ -112,17 +112,17 @@ for an exclusive Vue.Js use.
       the form default behaviour, so if you need to post in addition to vuejsPortal feature you have to add an event-type `submit`)
     *** `event-type` +
       Define the action to be executed during the form submitting (click on submit button). It can take one of three next values :
-      **** `submit` will submit the form to `area-target` with provided `parameter` elements. Like `setArea` if no `parameter`
+      **** `submit` will submit the form to `area-target` with provided `parameter` elements. Like `set-area` if no `parameter`
             are defined it will use the whole form. Error and success messages will be displayed. +
             Form `target` support the REST uri format with some parameters in it include with {}, value is populate with
             content of form - fields when submit.
-      **** `setArea` update area with id `areaId` with the post result at URI `area-target` with included `parameter` elements.
-      **** `setWatcher` update watcher `areaId` with included `parameter`. In case no parameter was passed to `setWatcher`
+      **** `set-area` update area with id `areaId` with the post result at URI `area-target` with included `parameter` elements.
+      **** `set-watcher` update watcher `areaId` with included `parameter`. In case no parameter was passed to `set-watcher`
             it will use all form fields.
       **** `collapse` do an action on collapse/expand screenlet. +
            `area-target` is the action to do : *collapse* or *expand* or *toggle*; +
            `area-id` is the `screenlet name` to change.
-      **** `closeModal` close the current modal, currently `area-id` is necessary, when modal is open for a lookup areaId is
+      **** `close-modal` close the current modal, currently `area-id` is necessary, when modal is open for a lookup areaId is
             {formName}_{fieldName};  area-target is not used, so can be left empty.
   ** in `<on-field-event-update-area` tag (there can be many of them and they will be executed in xml apparition order. It will wait
       current task is completed before starting the next one.)
@@ -136,15 +136,16 @@ for an exclusive Vue.Js use.
       **** `delete` will post at URI `area-target` with the http methof DELETE if target contain {xxxx} xxxx will be replace by value
            if xxxx is define in parameters included in the tag. If there are no parameters, it will use the whole form.
            It will display error and success messages.
-      **** `setArea` update area identified by id `area-id` with the post result to URI `area-target` with included `parameter`
-        elements. If no parameters was passed it will use the whole form.
-      **** `setWatcher` update watcher with watcherName `area-id` with included `parameter` elements. If no parameters was
-        passed it will use the whole form
-      **** `setFieldInForm` will set the value of property `area-target` from form `area-id` from the actual field value.
+      **** `set-area` update area identified by id `area-id` with the post result to URI `area-target` with included `parameter`
+           elements. If no parameters was passed it will use the whole form. The http method is POST if they are some parameters,
+           otherwise it's PUT
+      **** `set-watcher` update watcher with watcherName `area-id` with included `parameter` elements. If no parameters was
+            passed it will use the whole form.
+      **** `set-field-in-form` will set the value of property `area-target` from form `area-id` from the actual field value.
       **** `collapse` do an action on collapse/expand screenlet. +
            `area-target` is the action to do : *collapse* or *expand* or *toggle*; +
            `area-id` is the `screenlet name` to change.
-      **** `closeModal` close the current modal, `area-id` is to know which modal close, when modal is open for a lookup areaId is
+      **** `close-modal` close the current modal, `area-id` is to know which modal close, when modal is open for a lookup areaId is
             {formName}_{fieldName}; +
             if area-id is empty all modal are closed; +
             area-target is not used, so can be left empty.
@@ -155,7 +156,7 @@ for an exclusive Vue.Js use.
       **** `portletSeqId`
       **** `currentAreaId`
   ** in `<hyperlink` tag
-    *** `link-type="anchor"` is used to make an internal call to FrontJs via `setArea`, `target-window` is used as
+    *** `link-type="anchor"` is used to make an internal call to FrontJs via `set-area`, `target-window` is used as
          id to update and `target` as area-target, parameters as parameters.
     *** `target-window` is used to design the watcherName that have to be updated.
     *** `url-mode` three new modes is added to be able to give the http method to use, POST is the default
@@ -164,12 +165,12 @@ for an exclusive Vue.Js use.
       **** intra-delete : do the http request with a DELETE method
 * menu
   ** in `<link` tag
-    *** `link-type="set-area"` is used to make an internal call to FrontJs via `setArea`, `target-window` is used as
+    *** `link-type="set-area"` is used to make an internal call to FrontJs via `set-area`, `target-window` is used as
          id to update and `target` as area-target, it's a http get so parameters should be in target and
          if there area some {xxx} in target they will be replace by correct value with fields list in parameters.
     *** `link-type="auto"` (default value) and `url-mode="intra-app"` call the target-url to print a new
          page (using internal routing).
-    *** `url-mode` three new modes is added to be able to give the http method to use, POST is the default (except for setArea)
+    *** `url-mode` three new modes is added to be able to give the http method to use, POST is the default (except for set-area)
       **** intra-post : do a http POST request for the set-area, and so sending multiple parameters
       **** intra-put : do the http request with a PUT method
       **** intra-delete : do the http request with a DELETE method
@@ -195,15 +196,15 @@ is forced in the main decorator of the application.
     first one to send result in the area lookup-result
     second one to collapse Find screenlet (if you want collapse it
 [source,XML]
-       <on-event-update-area event-type="setArea" area-id="lookup-results" area-target="LookupExample"/>
+       <on-event-update-area event-type="set-area" area-id="lookup-results" area-target="LookupExample"/>
        <on-event-update-area event-type="collapse" area-id="LookupFindScreenlet" area-target="collapse"/>
 3. `LookupForm - list` :
   * for the link return field, 2 on-field-event-update-area must be added +
      first one to set Field which call the lookup with the correct value +
      second one to close the modal
 [source,XML]
-            <on-field-event-update-area event-type="setFieldInForm" area-id="SelectExample" area-target="exampleId" />
-            <on-field-event-update-area event-type="closeModal" area-id="SelectExample_exampleId" area-target="" />
+            <on-field-event-update-area event-type="set-field-in-form" area-id="SelectExample" area-target="exampleId" />
+            <on-field-event-update-area event-type="close-modal" area-id="SelectExample_exampleId" area-target="" />
 4. `FindScreenDecorator`, is a specifics one for VueJs, but its usage is same as the standard one. Its specificity is about
     ListResult update. Some modifications should be done in the find form
   * add a hidden field onlyList
@@ -211,7 +212,7 @@ is forced in the main decorator of the application.
             <field name="onlyList"><hidden value="Y"/><!-- used by FindScreenDecorator to only send list result --></field>
   * add a on-event-update-area to update List result area
 [source,XML]
-         <on-event-update-area area-target="findExample" event-type="setArea" area-id="search-results"/><!-- When parameters-map is empty all form field are sent  -->
+         <on-event-update-area area-target="findExample" event-type="set-area" area-id="search-results"/><!-- When parameters-map is empty all form field are sent  -->
   * add a on-event-update-area to collapse find screenlet (optional)
 [source,XML]
        <on-event-update-area event-type="collapse" area-id="findScreenlet" area-target="collapse"/>

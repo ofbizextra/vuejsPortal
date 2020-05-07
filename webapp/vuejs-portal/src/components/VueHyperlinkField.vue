@@ -191,14 +191,14 @@
               mode: 'delete',
               params: updateArea.hasOwnProperty('parameterMap') ? updateArea.parameterMap : {}
             })
-          case 'setArea':
+          case 'set-area':
             return this.$store.dispatch('ui/setArea', {
               areaId: updateArea.areaId,
               targetUrl: `${this.currentApi}/${this.parseUrl(updateArea.areaTarget, updateArea.parameterMap)}`,
               params: updateArea.parameterMap,
-              mode: this.urlMode === 'intra-post' ? 'post' : 'get'
-            })
-          case 'setWatcher':
+              mode: Object.keys(updateArea.parameterMap).length > 0 ? 'post' : 'get' // currently, it's not possible to have {xxx} in areaTarget and doing a get
+            })                                                                       //    because xxx can be populate with an empty parameterMap
+          case 'set-watcher':
             this.$store.dispatch('data/setWatcher', {
               watcherName: updateArea.areaId,
               params: updateArea.hasOwnProperty('parameterMap') && Object.keys(updateArea.parameterMap).length > 0 ? updateArea.parameterMap : {}
@@ -216,7 +216,7 @@
                 resolve()
               }, 0)
             })
-          case 'setFieldInForm':     // TODO-waiting use case: setFieldInForm could be in changeUpdateAreas
+          case 'set-field-in-form':     // TODO-waiting use case: setFieldInForm could be in changeUpdateAreas
             this.$store.dispatch('form/setFieldToForm', {
               formId: updateArea.areaId,
               key: updateArea.areaTarget,
@@ -227,7 +227,7 @@
                 resolve()
               }, 0)
             })
-          case 'closeModal':
+          case 'close-modal':
             if (updateArea.hasOwnProperty('areaId') && updateArea.areaId !== '') {
               this.$store.dispatch('ui/setDialogStatus', {
                 dialogId: updateArea.areaId,
