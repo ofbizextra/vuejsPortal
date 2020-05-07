@@ -9,12 +9,12 @@ index 18fad7bf74..e17a4f616d 100644
 +                } else if ("post".equals(updateArea.getEventType())
 +                        || "put".equals(updateArea.getEventType())
 +                        || "delete".equals(updateArea.getEventType())
-+                        || "setArea".equals(updateArea.getEventType())
-+                        || "setWatcher".equals(updateArea.getEventType())
++                        || "set-area".equals(updateArea.getEventType())
++                        || "set-watcher".equals(updateArea.getEventType())
 +                        || "submit".equals(updateArea.getEventType())
-+                        || "setFieldInForm".equals(updateArea.getEventType())
++                        || "set-field-in-form".equals(updateArea.getEventType())
 +                        || "collapse".equals(updateArea.getEventType())
-+                        || "closeModal".equals(updateArea.getEventType())
++                        || "close-modal".equals(updateArea.getEventType())
 +                        ) {
 +                    onClickUpdateAreas.add(updateArea);
                  }

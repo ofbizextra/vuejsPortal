@@ -42,7 +42,7 @@
     methods: {
       resolveEvent(updateArea) {
         switch (updateArea.eventType) {
-          case 'closeModal':
+          case 'close-modal':
             if (updateArea.hasOwnProperty('areaId') && updateArea.areaId !== '') {
               this.$store.dispatch('ui/setDialogStatus', {
                 dialogId: updateArea.areaId,

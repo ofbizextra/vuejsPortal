@@ -9,10 +9,10 @@ index 35fe98f024..c51700adef 100644
 -            } else if ("submit".equals(updateArea.getEventType())) {
 +            } else if ("submit".equals(updateArea.getEventType())
 +                     ||"post".equals(updateArea.getEventType())
-+                     ||"setArea".equals(updateArea.getEventType())
-+                     ||"setWatcher".equals(updateArea.getEventType())
++                     ||"set-area".equals(updateArea.getEventType())
++                     ||"set-watcher".equals(updateArea.getEventType())
 +                     ||"collapse".equals(updateArea.getEventType())
-+                     ||"closeModal".equals(updateArea.getEventType())
++                     ||"close-modal".equals(updateArea.getEventType())
 +                      ) {
                  int index = onSubmitUpdateAreas.indexOf(updateArea);
                  if (index != -1) {
