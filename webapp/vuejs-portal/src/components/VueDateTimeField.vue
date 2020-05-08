@@ -109,7 +109,7 @@
         return this.props.attributes.hasOwnProperty('isTwelveHour') && this.props.attributes.isTwelveHour === 'Y' ? this.props.attributes.isTwelveHour : false
       },
       label() {
-        return this.required ? this.fieldTitle + ' *' : this.fieldTitle()
+        return this.required ? this.fieldTitle + ' *' : this.fieldTitle
       },
       name() {
         return this.props.attributes.hasOwnProperty('name') ? this.props.attributes.name : ''
@@ -118,7 +118,7 @@
         return this.controls.required === false
       },
       required() {
-        return this.props.attributes.hasOwnProperty('required') ? this.props.attributes.required : {}
+        return this.props.attributes.hasOwnProperty('required') && this.props.attributes.required.hasOwnProperty('requiredField') && this.props.attributes.required.requiredField === "true"
       },
       rules() {
         let rules = []

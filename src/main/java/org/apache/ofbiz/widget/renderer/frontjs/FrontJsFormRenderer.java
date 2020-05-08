@@ -468,6 +468,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         String formName = modelFormField.getModelForm().getName();
         String id = modelFormField.getCurrentContainerId(context);
         Map<String, Object> attributes = new HashMap<>();
+        if ("single".equals(modelFormField.getModelForm().getType())) this.addTitle(attributes, modelFormField, context);
 
         String contextValue = modelFormField.getEntry(context, dateTimeField.getDefaultValue(context));
 
@@ -723,6 +724,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         }
         Map<String, Object> cb = new HashMap<>();
         if ("single".equals(modelFormField.getModelForm().getType())) this.addTitle(cb, modelFormField, context);
+        this.addAsterisks(cb, context, modelFormField);
         cb.put("optionValues", optionValues);
         cb.put("id", id);
         if (allChecked) cb.put("allChecked", true);
