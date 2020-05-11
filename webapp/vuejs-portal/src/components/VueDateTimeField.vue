@@ -52,6 +52,7 @@
       <v-time-picker v-model="time" :format="config.timeFormat" scrollable use-seconds @change="$refs.timeMenu.save(time)">
       </v-time-picker>
     </v-menu>
+    <v-btn class="primary mt-5 ml-2" x-small  @click="setToNow">{{uiLabel('now')}}</v-btn>
   </v-row>
 </template>
 
@@ -145,6 +146,11 @@
     methods: {
       uiLabel(label) {
         return this.uiLabel(label)
+      },
+      setToNow() {
+        let now = new Date(Date.now())
+        this.date = `${now.getFullYear()}-${now.getMonth() < 9 ? '0' : ''}${now.getMonth() + 1}-${now.getDate() < 10 ? '0' : ''}${now.getDate()}`
+        this.time = `${now.getHours() < 10 ? '0' : ''}${now.getHours()}:${now.getMinutes() < 10 ? '0' : ''}${now.getMinutes()}:${now.getSeconds() < 10 ? '0' : ''}${now.getSeconds()}`
       }
     }
     ,
