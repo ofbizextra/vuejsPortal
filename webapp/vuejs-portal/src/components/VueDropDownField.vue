@@ -33,6 +33,9 @@
           required: this.props.attributes.hasOwnProperty('requiredField') && this.props.attributes.requiredField === true
         }
       },
+      currentValue() {
+        return this.props.attributes.hasOwnProperty('currentValue') ? this.props.attributes.currentValue : null
+      },
       id() {
         return this.props.attributes.hasOwnProperty('id') ? this.props.attributes.id : ''
       },
@@ -48,8 +51,14 @@
       label() {
         return this.required ? this.fieldTitle + ' *' : this.fieldTitle
       },
+      multiple() {
+        return this.props.attributes.hasOwnProperty('multiple') ? this.props.attributes.multiple : false
+      },
       name() {
         return this.props.attributes.hasOwnProperty('name') ? this.props.attributes.name : ''
+      },
+      noCurrentSelectedKey() {
+        return this.props.attributes.hasOwnProperty('noCurrentSelectedKey') ? this.props.attributes.noCurrentSelectedKey : null
       },
       options() {
         return this.props.attributes.hasOwnProperty('options') ? this.props.attributes.options : ''
@@ -68,7 +77,7 @@
         return {
           formId: this.props.attributes.formName,
           key: this.props.attributes.name,
-          value: this.props.attributes.hasOwnProperty('currentValue') ? this.props.attributes.currentValue : this.props.attributes.multiple ? [''] : ''
+          value: this.currentValue || this.noCurrentSelectedKey || (this.multiple ? [''] : '')
         }
       },
       value: {
