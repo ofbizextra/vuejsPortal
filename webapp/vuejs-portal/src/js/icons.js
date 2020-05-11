@@ -36,7 +36,10 @@ import {
   mdiTargetAccount,
   mdiNote,
   mdiPaperclip,
-  mdiCashMultiple, mdiTimelineText, mdiViewDashboardOutline,
+  mdiCashMultiple,
+  mdiTimelineText,
+  mdiViewDashboardOutline,
+  mdiAccountCancel, mdiTextBoxSearch,
 
 } from '@mdi/js'
 
@@ -80,5 +83,7 @@ export default {
   'mdi-paperclip': mdiPaperclip,
   'mdi-cash-multiple': mdiCashMultiple,
   'mdi-timeline-text': mdiTimelineText,
-  'mdi-view-dashboard-outlined': mdiViewDashboardOutline
-};
+  'mdi-view-dashboard-outlined': mdiViewDashboardOutline,
+  'mdi-account-cancel': mdiAccountCancel,
+  'mdi-text-box-search': mdiTextBoxSearch
+}
