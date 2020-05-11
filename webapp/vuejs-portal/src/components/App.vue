@@ -22,6 +22,10 @@
       this.$store.dispatch('backOfficeApi/setApi', api)
       this.$store.dispatch('ui/setUiLabels', api)
       this.$store.dispatch('login/check').then(() => {
+        this.$store.dispatch('backOfficeApi/doRequest', {uri: 'getHeaderInfo', mode: 'post', params: {}})
+          .then(result => {
+            this.$store.dispatch('ui/setLocale', result.body.locale)
+          })
         if (webapp === 'showPortalPage') {
           let search = window.location.search.split('?').join('')
           let parametersList = search.split('&amp;')

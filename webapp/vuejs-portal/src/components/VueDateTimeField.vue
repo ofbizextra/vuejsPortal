@@ -26,7 +26,7 @@
             v-on="on"
         ></v-text-field>
       </template>
-      <v-date-picker v-model="date" scrollable @change="$refs.dateMenu.save(date)">
+      <v-date-picker v-model="date" scrollable @change="$refs.dateMenu.save(date)" :locale="language">
       </v-date-picker>
     </v-menu>
     <v-menu
@@ -49,7 +49,7 @@
             v-on="on"
         ></v-text-field>
       </template>
-      <v-time-picker v-model="time" :format="config.timeFormat" scrollable use-seconds @change="$refs.timeMenu.save(time)" >
+      <v-time-picker v-model="time" :format="config.timeFormat" scrollable use-seconds @change="$refs.timeMenu.save(time)">
       </v-time-picker>
     </v-menu>
   </v-row>
@@ -75,7 +75,8 @@
       ...mapGetters({
         getForm: 'form/form',
         getDataFromForm: 'form/fieldInForm',
-        uiLabel: 'ui/uiLabel'
+        uiLabel: 'ui/uiLabel',
+        locale: 'ui/locale'
       }),
       config() {
         return {
@@ -110,6 +111,9 @@
       },
       label() {
         return this.required ? this.fieldTitle + ' *' : this.fieldTitle
+      },
+      language() {
+        return this.locale.language
       },
       name() {
         return this.props.attributes.hasOwnProperty('name') ? this.props.attributes.name : ''

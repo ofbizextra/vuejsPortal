@@ -19,7 +19,8 @@ const state = {
   collapsibleStatus: {},
   dialogStatus: {},
   uiLabels: {},
-  seleniumInfoPanels: []
+  seleniumInfoPanels: [],
+  locale: {}
 }
 
 const mutations = {
@@ -79,6 +80,9 @@ const mutations = {
   DELETE_SELENIUM_INFO_PANEL(state, panel) {
     state.seleniumInfoPanels.splice(state.seleniumInfoPanels.indexOf(panel), 1)
   },
+  SET_LOCALE(state, locale) {
+    Vue.set(state, 'locale', locale)
+  }
 }
 
 const getters = {
@@ -136,7 +140,8 @@ const getters = {
       return state.uiLabels.hasOwnProperty(uiLabel) ? state.uiLabels[uiLabel] : uiLabel
     }
   },
-  seleniumInfoPanels: state => state.seleniumInfoPanels
+  seleniumInfoPanels: state => state.seleniumInfoPanels,
+  locale: state => state.locale
 }
 
 const actions = {
@@ -310,6 +315,9 @@ const actions = {
   },
   deleteSeleniumInfoPanel({commit}, infoPanel) {
     commit('DELETE_SELENIUM_INFO_PANEL', infoPanel)
+  },
+  setLocale({commit}, locale) {
+    commit('SET_LOCALE', locale)
   }
 }
 
