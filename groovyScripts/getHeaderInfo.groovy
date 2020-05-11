@@ -27,7 +27,9 @@ Debug.logInfo("ofbizServerName="+ofbizServerName, "getHeaderInfo")
 displayApps = org.apache.ofbiz.webapp.control.LoginWorker.getAppBarWebInfos(security, userLogin, ofbizServerName, "main")
 displaySecondaryApps = org.apache.ofbiz.webapp.control.LoginWorker.getAppBarWebInfos(security, userLogin, ofbizServerName, "secondary")
 
-primaryApps =[]
+apps = []
+primaryApps = []
+secondaryApps = []
 for (ComponentConfig.WebappInfo displayApp : displayApps) {
     appli = new HashMap()
     appli.name = displayApp.name
@@ -36,10 +38,20 @@ for (ComponentConfig.WebappInfo displayApp : displayApps) {
 //    appli.description = uiLabelMap.get(displayApp.description)
     appli.description = displayApp.description
     primaryApps.add(appli)
+    apps.add(appli)
 }
-
-request.setAttribute("displayApps", primaryApps)
-//request.setAttribute("displaySecondaryApps", displaySecondaryApps)
+for (ComponentConfig.WebappInfo displaySecondaryApp : displaySecondaryApps) {
+    appli = new HashMap()
+    appli.name = displaySecondaryApp.name
+    servletPath = org.apache.ofbiz.webapp.WebAppUtil.getControlServletPath(displaySecondaryApp)
+    appli.thisURL = StringUtil.wrapString(servletPath).toString()
+//    appli.description = uiLabelMap.get(displaySecondaryApp.description)
+    appli.description = displaySecondaryApp.description
+    secondaryApps.add(appli)
+    apps.add(appli)
+}
+request.setAttribute("displayApps", apps)
+request.setAttribute("locale",locale.getProperties())
 return "success"
 
 
