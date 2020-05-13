@@ -42,7 +42,7 @@
         {{text}}
       </span>
     </a>
-    <div v-else-if="inline" :icon="haveIcon">
+    <v-btn v-else-if="inline" :icon="haveIcon">
       <v-tooltip bottom>
         <template v-slot:activator="{ on }">
           <v-icon v-if="haveIcon" v-on="on" :id="src">{{getIcon(src)}}</v-icon>
@@ -53,7 +53,7 @@
       <span class="font-weight-regular">
         {{text}}
       </span>
-    </div>
+    </v-btn>
 <!--    // drove by parent handleUpdate() -->
     <span v-else :icon="haveIcon">
       <v-tooltip bottom>

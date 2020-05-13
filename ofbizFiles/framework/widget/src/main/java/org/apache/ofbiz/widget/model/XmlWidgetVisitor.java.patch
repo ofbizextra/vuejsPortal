@@ -1,8 +1,8 @@
 diff --git a/framework/widget/src/main/java/org/apache/ofbiz/widget/model/XmlWidgetVisitor.java b/framework/widget/src/main/java/org/apache/ofbiz/widget/model/XmlWidgetVisitor.java
-index 193a45a8b1..6e2d3793e4 100644
+index 737ced17ba..408fc92b22 100644
 --- a/framework/widget/src/main/java/org/apache/ofbiz/widget/model/XmlWidgetVisitor.java
 +++ b/framework/widget/src/main/java/org/apache/ofbiz/widget/model/XmlWidgetVisitor.java
-@@ -44,6 +44,7 @@ import org.apache.ofbiz.widget.model.ModelScreenWidget.ScreenLink;
+@@ -45,6 +45,7 @@ import org.apache.ofbiz.widget.model.ModelScreenWidget.ScreenLink;
  import org.apache.ofbiz.widget.model.ModelScreenWidget.Screenlet;
  import org.apache.ofbiz.widget.model.ModelScreenWidget.Section;
  import org.apache.ofbiz.widget.model.ModelScreenWidget.Tree;
@@ -10,7 +10,7 @@ index 193a45a8b1..6e2d3793e4 100644
  import org.apache.ofbiz.widget.model.ModelTree.ModelNode;
  import org.apache.ofbiz.widget.model.ModelTree.ModelNode.ModelSubNode;
  
-@@ -229,6 +230,16 @@ public class XmlWidgetVisitor extends XmlAbstractWidgetVisitor implements ModelW
+@@ -230,6 +231,16 @@ public class XmlWidgetVisitor extends XmlAbstractWidgetVisitor implements ModelW
      }
  
      @Override
