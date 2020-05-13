@@ -31,6 +31,10 @@
       containsNestedMenus() {
         return this.props.attributes.hasOwnProperty('containsNestedMenus') ? this.props.attributes.containsNestedMenus : ''
       },
+      id() {
+        // noinspection JSPotentiallyInvalidTargetOfIndexedPropertyAccess
+        return this.children[0].attributes.text ? this.children[0].attributes.text.split(' ').join('_') : this.children[0].attributes.src
+      },
       linkStr() {
         return this.props.attributes.hasOwnProperty('linkStr') ? this.props.attributes.linkStr : ''
       },
