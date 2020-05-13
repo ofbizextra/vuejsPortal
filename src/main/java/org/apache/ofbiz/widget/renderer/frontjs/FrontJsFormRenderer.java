@@ -793,6 +793,7 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
         cb.put("currentValue", currentValue);
         cb.put("name", name);
         cb.put("formName", formName);
+        this.addAsterisks(cb, context, modelFormField);
         this.appendTooltip(cb, context, modelFormField);
         this.output.putScreen("RadioField", cb, name, currentValue);
 
@@ -821,27 +822,21 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
        }
     }
 
-    // OHE point of review, to be continue
-    public void renderSubmitField(Appendable writer, Map<String, Object> context, SubmitField submitField) {
+    public void renderSubmitField(Appendable writer, Map<String, Object> context, SubmitField submitField) throws IOException {
         ModelFormField modelFormField = submitField.getModelFormField();
         ModelForm modelForm = modelFormField.getModelForm();
-        String event = modelFormField.getEvent();
-        String action = modelFormField.getAction(context);
         String title = modelFormField.getTitle(context);
         String name = modelFormField.getName();
-        String buttonType = submitField.getButtonType();
         String formName = FormRenderer.getCurrentFormName(modelForm, context);
-        String imgSrc = submitField.getImageLocation(context);
-        String confirmation = submitField.getConfirmation(context);
-        String className = "";
-        String alert = "false";
-        if (UtilValidate.isNotEmpty(modelFormField.getWidgetStyle())) {
-            className = modelFormField.getWidgetStyle();
-            if (modelFormField.shouldBeRed(context)) {
-                alert = "true";
-            }
-        }
         String formId = FormRenderer.getCurrentContainerId(modelForm, context);
+
+        Map<String, Object> cb = new HashMap<>();
+        if ("single".equals(modelFormField.getModelForm().getType())) this.addTitle(cb, modelFormField, context);
+
+        cb.put("formName", formName);
+        cb.put("title", encode(title, modelFormField, context));
+        cb.put("name", name);
+
         List<ModelForm.UpdateArea> updateAreas = modelForm.getOnSubmitUpdateAreas();
         // This is here for backwards compatibility. Use on-event-update-area
         // elements instead.
@@ -852,35 +847,6 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
             }
             updateAreas.add(new ModelForm.UpdateArea("submit", formId, backgroundSubmitRefreshTarget));
         }
-        boolean ajaxEnabled = (UtilValidate.isNotEmpty(updateAreas) || UtilValidate.isNotEmpty(backgroundSubmitRefreshTarget)) && this.javaScriptEnabled;
-        String ajaxUrl = "";
-        if (ajaxEnabled) {
-            ajaxUrl = createAjaxParamsFromUpdateAreas(updateAreas, "", context);
-        }
-        String tabindex = modelFormField.getTabindex();
-        Map<String, Object> cb = new HashMap<>();
-        if ("single".equals(modelFormField.getModelForm().getType())) this.addTitle(cb, modelFormField, context);
-        cb.put("buttonType", buttonType);
-        cb.put("className", className);
-        cb.put("alert", alert);
-        cb.put("formName", formName);
-        cb.put("title", encode(title, modelFormField, context));
-        cb.put("name", name);
-        if (event != null) {
-            cb.put("event", event);
-        }
-        if (action != null) {
-            cb.put("action", action);
-        }
-        cb.put("imgSrc", imgSrc);
-        if (ajaxEnabled) {
-            cb.put("containerId", formId);
-        }
-        cb.put("confirmation", confirmation);
-        if (ajaxEnabled) {
-            cb.put("ajaxUrl", ajaxUrl);
-        }
-        cb.put("tabindex", tabindex);
         if (!updateAreas.isEmpty()) {
             List<Map<String, Object>> updateAreasList = new ArrayList<>();
             for (ModelForm.UpdateArea updateArea : updateAreas) {
@@ -888,10 +854,46 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
             }
             cb.put("updateAreas", updateAreasList);
         }
+
         this.appendTooltip(cb, context, modelFormField);
         this.output.putScreen("SubmitField", cb);
+
+        // All not-manage attributes
+        // First attribute alert and className generate only a warning
+        this.addAlertAndClass(cb, modelFormField, context);
+        if (UtilValidate.isNotEmpty(submitField.getButtonType())) {
+            Debug.logWarning("Submit Field with button-type or/and XXXX is used for field name="+name+
+                    " in form with name="+formName +
+                    "  it's not manage by FrontFjRenderer", MODULE);
+            cb.put("buttonType", submitField.getButtonType());
+        }
+        //Second, list of attributes which generate error if present because not manage and should be.
+        String imgSrc = submitField.getImageLocation(context);
+        String confirmation = submitField.getConfirmation(context);
+        String event = modelFormField.getEvent();
+        String action = modelFormField.getAction(context);
+        String tabindex = modelFormField.getTabindex();
+        String conditionGroup = modelFormField.getConditionGroup();
+        if ( UtilValidate.isNotEmpty(imgSrc) || UtilValidate.isNotEmpty(confirmation)
+                || UtilValidate.isNotEmpty(event) || UtilValidate.isNotEmpty(action)
+                || UtilValidate.isNotEmpty(conditionGroup) || UtilValidate.isNotEmpty(tabindex)) {
+            if (UtilValidate.isNotEmpty(imgSrc))             cb.put("imgSrc", imgSrc);
+            if (UtilValidate.isNotEmpty(confirmation))       cb.put("confirmation", confirmation);
+            if (UtilValidate.isNotEmpty(event))              cb.put("event", event);
+            if (UtilValidate.isNotEmpty(action))             cb.put("action", action);
+            if (UtilValidate.isNotEmpty(tabindex))           cb.put("tabindex", tabindex);
+            if (UtilValidate.isNotEmpty(conditionGroup))     cb.put("conditionGroup", conditionGroup);
+            throw new IOException("FrontJsRender: a attribute is not yet implemented for submit-field name=" + name
+                    + " in form for form name=" + modelFormField.getModelForm().getName()
+                    + " attribute is one of: imgSrc("+ imgSrc
+                    + "), confirmation("+confirmation
+                    + "), event("+event + "), action("+action
+                    + "), tabindex("+tabindex+"), conditionGroup("+conditionGroup+")");
+
+       }
     }
 
+    // OHE point of review, to be continue
     public void renderResetField(Appendable writer, Map<String, Object> context, ResetField resetField) {
         ModelFormField modelFormField = resetField.getModelFormField();
         String name = modelFormField.getParameterName(context);
