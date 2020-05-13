@@ -128,7 +128,7 @@
       rules() {
         let rules = []
         if (this.controls.required) {
-          rules.push((v) => !!v || 'This field is required')
+          rules.push((v) => !!v || this.uiLabel('required'))
         }
         return rules
       },

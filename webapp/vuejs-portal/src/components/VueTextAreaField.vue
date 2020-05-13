@@ -18,7 +18,8 @@
     computed: {
       ...mapGetters({
         getForm: 'form/form',
-        getDataFromForm: 'form/fieldInForm'
+        getDataFromForm: 'form/fieldInForm',
+        uiLabel: 'ui/uiLabel'
       }),
       attributesValue() {
         return this.props.attributes.hasOwnProperty('value') ? this.props.attributes.value : ''
@@ -53,7 +54,7 @@
       rules() {
         let rules = []
         if (this.required) {
-          rules.push((v) => !!v || 'This field is required')
+          rules.push((v) => !!v || this.uiLabel('required'))
         }
         if (this.maxLength) {
           rules.push((v) => v.length > this.controls.maxLength || `This field must be less than ${this.controls.maxLength} characters` )
@@ -78,6 +79,11 @@
             value: value
           })
         }
+      }
+    },
+    methods: {
+      uiLabel(label) {
+        return this.uiLabel(label)
       }
     },
     created() {

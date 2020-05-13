@@ -38,6 +38,7 @@ vuejsUiLabel.forgotYourPassword = uiLabelMap.CommonForgotYourPassword
 vuejsUiLabel.login           = uiLabelMap.CommonLogin
 vuejsUiLabel.loginSuccessMessage = uiLabelMap.VuejsLoginSuccessMessage
 //FormFieldTitle_expireButton
+vuejsUiLabel.now             = uiLabelMap.CommonNow
 vuejsUiLabel.ofLabel         = uiLabelMap.CommonOf          // pagination CommonRequired
 vuejsUiLabel.password        = uiLabelMap.CommonPassword
 vuejsUiLabel.rememberMe      = uiLabelMap.VuejsRememberMe

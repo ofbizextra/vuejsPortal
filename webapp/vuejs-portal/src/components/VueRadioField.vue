@@ -27,7 +27,8 @@
     computed: {
       ...mapGetters({
         getDataFromForm: 'form/fieldInForm',
-        getForm: 'form/form'
+        getForm: 'form/form',
+        uiLabel: 'ui/uiLabel'
       }),
       conditionGroup() {
         return this.props.attributes.hasOwnProperty('conditionGroup') ? this.props.conditionGroup : ''
@@ -62,7 +63,7 @@
       rules() {
         let rules = []
         if (this.required) {
-          rules.push((v) => !!v || 'This field is required')
+          rules.push((v) => !!v || this.uiLabel('required'))
         }
         return rules
       },
@@ -89,6 +90,9 @@
     methods: {
       clear() {
         this.value = ''
+      },
+      uiLabel(label) {
+        return this.uiLabel(label)
       }
     },
     created() {
