@@ -90,9 +90,6 @@
     methods: {
       clear() {
         this.value = ''
-      },
-      uiLabel(label) {
-        return this.uiLabel(label)
       }
     },
     created() {

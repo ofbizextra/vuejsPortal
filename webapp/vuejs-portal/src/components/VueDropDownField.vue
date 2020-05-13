@@ -94,11 +94,6 @@
         }
       }
     },
-    methods: {
-      uiLabel(label) {
-        return this.uiLabel(label)
-      }
-    },
     created() {
       this.$store.dispatch('form/setFieldToForm', this.storeForm)
     },

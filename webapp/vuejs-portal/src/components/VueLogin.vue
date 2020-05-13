@@ -59,9 +59,6 @@
       }
     },
     methods: {
-      uiLabel(label) {
-        return this.uiLabel(label)
-      },
       singIn() {
         this.$store.dispatch('login/login', this.credential)
           .then(() => {

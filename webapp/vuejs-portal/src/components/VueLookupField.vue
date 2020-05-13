@@ -215,9 +215,6 @@
       getIcon(icon) {
         return icons.hasOwnProperty(icon) ? icons[icon] : null
       },
-      uiLabel(label) {
-        return this.uiLabel(label)
-      },
       updateWordList() {
         this.$store.dispatch('form/setFieldToForm', {
           formId: this.props.attributes.formName,
