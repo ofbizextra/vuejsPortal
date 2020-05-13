@@ -372,7 +372,7 @@ public class FrontJsScreenRenderer implements ScreenStringRenderer {
             parameters.put("collapsibleAreaId","screenlet_" + screenLetsIdCounter + "_col");
             screenLetsIdCounter++;
         }
-        if (UtilValidate.isNotEmpty(screenlet.padded())) {
+        if (! screenlet.padded()) { // default value is true, equal false only if attribute is present with false or naviguation-form is used
             Debug.logWarning("screenlet attribute padded is used in screenlet with title="+title+
                     "  it's not manage by FrontFjRenderer", MODULE);
             parameters.put("padded", screenlet.padded());

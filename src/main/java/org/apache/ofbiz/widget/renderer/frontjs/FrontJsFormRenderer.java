@@ -757,7 +757,64 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
             throw new IOException("FrontJsRender: a attribute is not yet implemented for check-field name=" + name
                     + " in form for form name=" + modelFormField.getModelForm().getName()
                     + " attribute is one of : disabled("+disabled
-//                    + "), allow-multiple("+dropDownField.getAllowMultiple()
+                    + "), event("+event + "), action("+action
+                    + "), tabindex("+tabindex+"), conditionGroup("+conditionGroup+")");
+
+       }
+    }
+
+    public void renderRadioField(Appendable writer, Map<String, Object> context, RadioField radioField) throws IOException {
+        ModelFormField modelFormField = radioField.getModelFormField();
+        String currentValue = modelFormField.getEntry(context);
+        String name = modelFormField.getName();
+        String formName = radioField.getModelFormField().getModelForm().getName();
+
+        Map<String, Object> cb = new HashMap<>();
+        if ("single".equals(modelFormField.getModelForm().getType())) this.addTitle(cb, modelFormField, context);
+
+        List<ModelForm.UpdateArea> clickUpdateAreas = modelFormField.getOnClickUpdateAreas();
+        if (!clickUpdateAreas.isEmpty()) {
+            List<Map<String, Object>> clickUpdateAreasList = new ArrayList<>();
+            for (ModelForm.UpdateArea updateArea : clickUpdateAreas) {
+                clickUpdateAreasList.add(updateArea.toMap(context));
+            }
+            cb.put("clickUpdateAreas", clickUpdateAreasList);
+        }
+
+        List<OptionValue> allOptionValues = radioField.getAllOptionValues(context, WidgetWorker.getDelegator(context));
+        List<Map<String, String>> items = new ArrayList<>();
+        for (OptionValue optionValue : allOptionValues) {
+            items.add(UtilMisc.toMap(
+                    "key", optionValue.getKey(),
+                    "description",encode(optionValue.getDescription(), modelFormField, context)));
+        }
+        cb.put("items", items);
+
+        cb.put("currentValue", currentValue);
+        cb.put("name", name);
+        cb.put("formName", formName);
+        this.appendTooltip(cb, context, modelFormField);
+        this.output.putScreen("RadioField", cb, name, currentValue);
+
+        // All not-manage attributes
+        // First attribute alert and className generate only a warning
+        this.addAlertAndClass(cb, modelFormField, context);
+        //Second, list of attributes which generate error if present because not manage and should be.
+        String event = modelFormField.getEvent();
+        String action = modelFormField.getAction(context);
+        String tabindex = modelFormField.getTabindex();
+        String conditionGroup = modelFormField.getConditionGroup();
+        String noCurrentSelectedKey = radioField.getNoCurrentSelectedKey(context); // info: it is manage for drop-donw
+        if ( UtilValidate.isNotEmpty(noCurrentSelectedKey)
+                || UtilValidate.isNotEmpty(event) || UtilValidate.isNotEmpty(action)
+                || UtilValidate.isNotEmpty(conditionGroup) || UtilValidate.isNotEmpty(tabindex)) {
+            if (UtilValidate.isNotEmpty(event))              cb.put("event", event);
+            if (UtilValidate.isNotEmpty(action))             cb.put("action", action);
+            if (UtilValidate.isNotEmpty(tabindex))           cb.put("tabindex", tabindex);
+            if (UtilValidate.isNotEmpty(conditionGroup))     cb.put("conditionGroup", conditionGroup);
+            throw new IOException("FrontJsRender: a attribute is not yet implemented for radio-field name=" + name
+                    + " in form for form name=" + modelFormField.getModelForm().getName()
+                    + " attribute is one of: noCurrentSelectedKey("+noCurrentSelectedKey
                     + "), event("+event + "), action("+action
                     + "), tabindex("+tabindex+"), conditionGroup("+conditionGroup+")");
 
@@ -765,69 +822,6 @@ public final class FrontJsFormRenderer implements FormStringRenderer {
     }
 
     // OHE point of review, to be continue
-    public void renderRadioField(Appendable writer, Map<String, Object> context, RadioField radioField) {
-        String fieldName = null;
-        String fieldValue = null;
-        ModelFormField modelFormField = radioField.getModelFormField();
-        List<OptionValue> allOptionValues = radioField.getAllOptionValues(context, WidgetWorker.getDelegator(context));
-        String currentValue = modelFormField.getEntry(context);
-        String conditionGroup = modelFormField.getConditionGroup();
-        String className = "";
-        String alert = "false";
-        String name = modelFormField.getName();
-        String event = modelFormField.getEvent();
-        String action = modelFormField.getAction(context);
-        Boolean requiredField = modelFormField.getRequiredField();
-        List<Map<String, String>> items = new ArrayList<>();
-        if (UtilValidate.isNotEmpty(modelFormField.getWidgetStyle())) {
-            className = modelFormField.getWidgetStyle();
-            if (modelFormField.shouldBeRed(context)) {
-                alert = "true";
-            }
-        }
-        String noCurrentSelectedKey = radioField.getNoCurrentSelectedKey(context);
-        String tabindex = modelFormField.getTabindex();
-        String formName = radioField.getModelFormField().getModelForm().getName();
-
-        for (OptionValue optionValue : allOptionValues) {
-            Map<String, String> item = new HashMap<>();
-
-            item.put("key", optionValue.getKey());
-            item.put("description",encode(optionValue.getDescription(), modelFormField, context));
-            items.add(item);
-        }
-        Map<String, Object> cb = new HashMap<>();
-        if ("single".equals(modelFormField.getModelForm().getType())) this.addTitle(cb, modelFormField, context);
-        cb.put("items", items);
-        cb.put("className", className);
-        cb.put("alert", alert);
-        cb.put("currentValue", currentValue);
-        cb.put("noCurrentSelectedKey", noCurrentSelectedKey);
-        cb.put("name", name);
-        if (event != null) {
-            cb.put("event", event);
-        }
-        if (action != null) {
-            cb.put("action", action);
-        }
-        cb.put("conditionGroup", conditionGroup);
-        cb.put("tabindex", tabindex);
-        cb.put("formName", formName);
-        cb.put("requiredField", requiredField);
-        Map<String, Object> data = new HashMap<>();
-        fieldName = name;
-        fieldValue = currentValue;
-        // TODO check if recordPointer is used, should read VueRadioField.vue to check.
-        Map<String, Object> pointer = output.getRecordPointer(context);
-        if (pointer != null) {
-            pointer.put("field", name);
-            data.put("recordPointer", pointer);
-        }
-        cb.put("data", data);
-        this.appendTooltip(cb, context, modelFormField);
-        this.output.putScreen("RadioField", cb, fieldName, fieldValue);
-    }
-
     public void renderSubmitField(Appendable writer, Map<String, Object> context, SubmitField submitField) {
         ModelFormField modelFormField = submitField.getModelFormField();
         ModelForm modelForm = modelFormField.getModelForm();

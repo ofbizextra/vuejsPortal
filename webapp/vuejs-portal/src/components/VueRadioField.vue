@@ -2,7 +2,6 @@
   <v-tooltip top>
     <template v-slot:activator="{ on }">
       <v-radio-group id="vue-radio-field" :label="label" v-model="value" row :hide-details="noRules" :rules="rules" v-on="fieldHelpText ? on : null">
-<!-- TODO: check if we need this       <input v-if="conditionGroup" type="hidden" :name="name + '_grp'" :value="conditionGroup"/>-->
         <v-radio v-for="item in props.attributes.items" :key="item.key" :label="item.description" :value="item.key">
         </v-radio>
         <v-tooltip bottom v-if="value">
@@ -30,9 +29,6 @@
         getForm: 'form/form',
         uiLabel: 'ui/uiLabel'
       }),
-      conditionGroup() {
-        return this.props.attributes.hasOwnProperty('conditionGroup') ? this.props.conditionGroup : ''
-      },
       currentValue() {
         return this.props.attributes.hasOwnProperty('currentValue') ? this.props.attributes.currentValue : ''
       },
