@@ -33,7 +33,7 @@
           xl: false
         }
         if (this.style) {
-          this.style.split(' ').forEach(val => {
+          this.style.split().forEach(val => {
             let tmp = val.split('-')
             gridVal[tmp[0]] = tmp[1]
           })

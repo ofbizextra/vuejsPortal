@@ -22,7 +22,7 @@
       </span>
     </router-link>
     <a
-        v-else-if="linkType === 'auto' && urlmode === 'inter-app'"
+        v-else-if="linkType === 'auto' && urlMode === 'inter-app'"
         v-bind:id="id + '_link'"
         :data-dialog-params="params"
         :data-dialog-width="width"
@@ -42,7 +42,7 @@
         {{text}}
       </span>
     </a>
-    <v-btn v-else-if="inline" :icon="haveIcon">
+    <div v-else-if="inline" :icon="haveIcon">
       <v-tooltip bottom>
         <template v-slot:activator="{ on }">
           <v-icon v-if="haveIcon" v-on="on" :id="src">{{getIcon(src)}}</v-icon>
@@ -53,7 +53,7 @@
       <span class="font-weight-regular">
         {{text}}
       </span>
-    </v-btn>
+    </div>
 <!--    // drove by parent handleUpdate() -->
     <span v-else :icon="haveIcon">
       <v-tooltip bottom>

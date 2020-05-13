@@ -39,7 +39,7 @@
         this.$store.dispatch('ui/deleteSeleniumInfoPanel', infoPanel)
       },
       showSeleniumInfoPanel({panelMessage, panelTimeout, panelTitle, panelColor}) {
-        this.$store.dispatch('ui/addSeleniumInfoPanel', {panelMessage, panelTimeout, panelTitle, panelColor})
+        this.$store.dispatch('ui/addSeleniumInfoPanel', {panelMessage: panelMessage, panelTimeout, panelTitle, panelColor})
       }
     },
     created() {

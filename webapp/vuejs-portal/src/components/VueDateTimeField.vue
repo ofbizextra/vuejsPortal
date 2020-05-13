@@ -144,9 +144,6 @@
       }
     },
     methods: {
-      uiLabel(label) {
-        return this.uiLabel(label)
-      },
       setToNow() {
         let now = new Date(Date.now())
         this.date = `${now.getFullYear()}-${now.getMonth() < 9 ? '0' : ''}${now.getMonth() + 1}-${now.getDate() < 10 ? '0' : ''}${now.getDate()}`
