@@ -1,4 +1,6 @@
-= vuejsPortal plugin
+vuejsPortal plugin
+==================
+
 This plugin is a Apache OFBiz plugin it's build as a POC,
 so sometine it's speaking about vue.js sometime frontjs sometine Portal sometine screen,
 lookup to the documentation to have the current status.
