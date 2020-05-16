@@ -200,33 +200,10 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 
-=========================================================================
 
-This product bundles "jQuery" and "jQuery" plugins and extensions, which are available
-under the "MIT" license. For details, see:
-webpos/webapp/webpos/images/js/jquery.hotkeys-0.7.9.min.js
-webpos/webapp/webpos/images/js/WebPosHotkeys.js
 
-=========================================================================
+=======================================================================
+This product bundles "xxxxxxxx", which is available
+under the "XXXX" License. For details, see http://xxxxxxx
 
-This product bundles files from the "Birt" technology platform (www.eclipse.org/birt/)
-which are available under the "Eclipse Public License - v 1.0".
-For details, see birt/webapp/birt/webcontent/birt/
-=========================================================================
-
-This product bundles "Webhelp for DocBook", which is available
-under the "MIT" License. For details, see cmssite/template/docbook/webhelp/
-
-=========================================================================
-
-This product bundles "DocBook XSL Stylesheets 1.77.1", which is available
-under the "MIT" license.
-For details, see cmssite/template/docbook/
-=========================================================================
-
-This product bundles "Bootstrap", which is available
-under the "MIT" license.
-For details, see:
-ecommerce/webapp/ecommerce/js
-ecommerce/webapp/ecommerce/css
 
