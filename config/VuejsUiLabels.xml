@@ -1226,9 +1226,9 @@
         <value xml:lang="en">Encryption Length</value>
         <value xml:lang="zh">密钥长度</value>
     </property>
-    <property key="VuejsloginSuccessMessage">
-        <value xml:lang="en">Login Successful, your previous action has not be done, re-do it</value>
-        <value xml:lang="fr">Connexion réussie, l'action précédente n'a pas été exécuté, refaite la</value>
+    <property key="VuejsLoginSuccessMessage">
+        <value xml:lang="en">Login Successful</value>
+        <value xml:lang="fr">Connexion réussie</value>
     </property>
     <property key="VuejsRememberMe">
         <value xml:lang="en">Remember me</value>
