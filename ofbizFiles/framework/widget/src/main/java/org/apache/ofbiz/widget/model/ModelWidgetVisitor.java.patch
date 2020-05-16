@@ -1,8 +1,8 @@
 diff --git a/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelWidgetVisitor.java b/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelWidgetVisitor.java
-index a1f89bb845..cf64777125 100644
+index f081f98314..d42b52efef 100644
 --- a/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelWidgetVisitor.java
 +++ b/framework/widget/src/main/java/org/apache/ofbiz/widget/model/ModelWidgetVisitor.java
-@@ -70,6 +70,8 @@ public interface ModelWidgetVisitor {
+@@ -68,6 +68,8 @@ public interface ModelWidgetVisitor {
  
      void visit(ModelScreenWidget.Label label) throws Exception;
  

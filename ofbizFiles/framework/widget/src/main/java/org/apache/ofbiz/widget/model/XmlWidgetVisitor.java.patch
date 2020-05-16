@@ -1,8 +1,8 @@
 diff --git a/framework/widget/src/main/java/org/apache/ofbiz/widget/model/XmlWidgetVisitor.java b/framework/widget/src/main/java/org/apache/ofbiz/widget/model/XmlWidgetVisitor.java
-index 737ced17ba..408fc92b22 100644
+index 0777a7058e..c7ecc9fa64 100644
 --- a/framework/widget/src/main/java/org/apache/ofbiz/widget/model/XmlWidgetVisitor.java
 +++ b/framework/widget/src/main/java/org/apache/ofbiz/widget/model/XmlWidgetVisitor.java
-@@ -45,6 +45,7 @@ import org.apache.ofbiz.widget.model.ModelScreenWidget.ScreenLink;
+@@ -44,6 +44,7 @@ import org.apache.ofbiz.widget.model.ModelScreenWidget.ScreenLink;
  import org.apache.ofbiz.widget.model.ModelScreenWidget.Screenlet;
  import org.apache.ofbiz.widget.model.ModelScreenWidget.Section;
  import org.apache.ofbiz.widget.model.ModelScreenWidget.Tree;

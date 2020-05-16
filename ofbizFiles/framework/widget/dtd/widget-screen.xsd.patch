@@ -1,5 +1,5 @@
 diff --git a/framework/widget/dtd/widget-screen.xsd b/framework/widget/dtd/widget-screen.xsd
-index 7165f416be..828f3a5a77 100644
+index 087809b15c..affa29d11b 100644
 --- a/framework/widget/dtd/widget-screen.xsd
 +++ b/framework/widget/dtd/widget-screen.xsd
 @@ -232,6 +232,11 @@ under the License.
@@ -23,9 +23,9 @@ index 7165f416be..828f3a5a77 100644
              <xs:attribute name="conf-mode" type="xs:boolean" default="false">
                  <xs:annotation>
                      <xs:documentation>Show the portal in configuration mode.</xs:documentation>
-@@ -520,6 +527,15 @@ under the License.
-     <xs:attributeGroup name="attlist.html-template">
+@@ -521,6 +528,15 @@ under the License.
          <xs:attribute type="xs:string" name="location" use="required" />
+         <xs:attribute type="xs:boolean" name="multi-block" use="optional" default="false" />
      </xs:attributeGroup>
 +    <xs:element name="vuejs" substitutionGroup="HtmlWidgets">
 +      <xs:complexType>
