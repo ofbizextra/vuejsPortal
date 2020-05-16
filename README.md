@@ -9,12 +9,12 @@ It's goal is to be a base to a future Apache OFBiz plugin integrated to Apache O
 
 The latest about this OFBiz plugin can be found in the documentation (see below)
 
-#Implementation
-##For developers
+# Implementation
+## For developers
 1. clone the repo in the plugins folder of your OFBiz location
 2. restart your OFBiz implementation
 3. load data sets of the plugin via webtools/import
 
 
-#Documentation
+# Documentation
 All documentation and detail about this plugin is on https://ofbizextra.org/ofbizextra_adocs/docs/asciidoc/developer-manual.html#_frontjs_portal
